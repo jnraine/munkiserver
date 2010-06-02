@@ -1,0 +1,17 @@
+<h2>New bundle</h2>
+
+<% form_for(@bundle) do |f| %>
+	<%= f.error_messages %>
+	<p>
+		<%= f.text_field :name %>
+		<%= subtle_value(@bundle,:name) %>
+	</p>
+	<p>
+		<%= f.text_area :description, :size => "30x6" %>
+		<%= subtle_value(@bundle, :description) %>
+	</p>
+	<p>Environment <%= f.collection_select :environment_id, Environment.all, :id, :name %></p>
+	<p>
+	<%= f.submit 'Create' %>
+	</p>
+<% end %>

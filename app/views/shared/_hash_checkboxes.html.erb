@@ -1,0 +1,11 @@
+<h4><%= locals[:options][:title] %></h4>
+<ul>
+	<% locals[:h].each do |k,v| %>
+		<% name = "#{locals[:options][:name]}[#{k}]" %>
+		<li>
+			<%= label_tag "#{name}_checkbox", k.to_s.titleize %> 
+			<%= hidden_field_tag name, 0 %>
+			<%= check_box_tag name, 1, v, :id => "#{name}_checkbox" %>
+		</li>
+	<% end -%>
+</ul>

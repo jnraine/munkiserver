@@ -1,0 +1,30 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+bob:
+  id: 1
+  username: bob
+  salt: 1000
+  email: bob@mcbob.com
+  hashed_password: 77a0d943cdbace52716a9ef9fae12e45e2788d39 # test
+
+existingbob:
+  id: 2
+  salt: 1000
+  username: existingbob
+  email: exbob@mcbob.com
+  hashed_password: 77a0d943cdbace52716a9ef9fae12e45e2788d39 # test
+
+longbob:
+  id: 3
+  salt: 1000
+  username: longbob
+  email: lbob@mcbob.com
+  hashed_password: 00728d3362c26746ec25963f71be022b152237a9 # longtest
+  
+jraine:
+  id: 4
+  salt: 1000
+  username: jraine
+  email: jraine@sfu.ca
+  hashed_password: 77a0d943cdbace52716a9ef9fae12e45e2788d39 # test
+  super_user: true

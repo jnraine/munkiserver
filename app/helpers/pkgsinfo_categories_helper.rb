@@ -1,0 +1,2 @@
+module PkgsinfoCategoriesHelper
+end

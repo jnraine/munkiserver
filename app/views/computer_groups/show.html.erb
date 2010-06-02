@@ -1,0 +1,14 @@
+<h2><%= @computer_group.name %></h2>
+
+<p>
+	<% if @computer_group.description.blank? %>
+		<em>No description</em>
+	<% else %>
+		<%= @computer_group.description %>
+	<% end -%>
+</p>
+
+<%= inventory(@computer_group,true) %>
+
+<%= link_to 'Edit', edit_computer_group_path(@computer_group) %> |
+<%= link_to 'List', computer_groups_path %>

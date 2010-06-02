@@ -1,0 +1,99 @@
+Firefox:
+  id: 1 
+  version: 1.0.0
+  package_branch_id: 1
+  unit_id: 1
+  environment_id: 1
+  description: "A cool web browser"
+  package_category_id: 1
+  receipts: "--- \n- filename: Firefox-3.5.2.pkg\n  installed_size: 51948\n  packageid: ca.sfu.its.firefox.pkg\n  version: 3.5.4.0.0\n"
+  supported_architectures: "--- \n- powerpc\n- i386\n"
+  RestartAction: None
+  package_path: 
+  autoremove: false
+  installer_type: 
+  installed_size: 51948
+  installer_item_size: 192
+  installer_item_location: Firefox.dmg
+  installer_choices_xml: 
+  uninstall_method: removepackages
+  uninstallable: true
+  minimum_os_version: 10.4.0
+  requires: 
+  update_for: 
+  installer_item_checksum: 
+  
+Firefox2:
+  id: 2
+  version: 2.0.0
+  package_branch_id: 1
+  unit_id: 1
+  environment_id: 1
+  description: "A cool web browser"
+  package_category_id: 1
+  receipts: "--- \n- filename: Firefox-3.5.2.pkg\n  installed_size: 51948\n  packageid: ca.sfu.its.firefox.pkg\n  version: 3.5.4.0.0\n"
+  supported_architectures: "--- \n- powerpc\n- i386\n"
+  RestartAction: None
+  package_path: 
+  autoremove: false
+  installer_type: 
+  installed_size: 51948
+  installer_item_size: 192
+  installer_item_location: Firefox.dmg
+  installer_choices_xml: 
+  uninstall_method: removepackages
+  uninstallable: true
+  minimum_os_version: 10.4.0
+  requires: 
+  update_for: 
+  installer_item_checksum:
+
+Firefox3:
+  id: 3
+  version: 3.0.0
+  package_branch_id: 1
+  unit_id: 1
+  environment_id: 1
+  description: "A cool and advanced web browser"
+  package_category_id: 1
+  receipts: "--- \n- filename: Firefox-3.6.2.pkg\n  installed_size: 551948\n  packageid: ca.sfu.its.firefox.pkg\n  version: 3.5.4.0.0\n"
+  supported_architectures: "--- \n- powerpc\n- i386\n"
+  RestartAction: None
+  package_path: 
+  autoremove: false
+  installer_type: 
+  installed_size: 51948
+  installer_item_size: 192
+  installer_item_location: Firefox.dmg
+  installer_choices_xml: 
+  uninstall_method: removepackages
+  uninstallable: true
+  minimum_os_version: 10.4.0
+  requires: 
+  update_for: 
+  installer_item_checksum: 
+    
+Firefox4:
+  id: 4
+  version: 4.0.0
+  package_branch_id: 1
+  unit_id: 1
+  environment_id: 1
+  description: "A cool and its browser"
+  package_category_id: 1
+  receipts: "--- \n- filename: Firefox-3.6.2.pkg\n  installed_size: 551948\n  packageid: ca.sfu.its.firefox.pkg\n  version: 3.5.4.0.0\n"
+  supported_architectures: "--- \n- powerpc\n- i386\n"
+  RestartAction: None
+  package_path: 
+  autoremove: false
+  installer_type: 
+  installed_size: 51948
+  installer_item_size: 192
+  installer_item_location: Firefox.dmg
+  installer_choices_xml: 
+  uninstall_method: removepackages
+  uninstallable: true
+  minimum_os_version: 10.4.0
+  requires: 
+  update_for: 
+  installer_item_checksum: 

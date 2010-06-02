@@ -1,0 +1,21 @@
+<h2>User</h2>
+
+<h3>Info</h3>
+<p>Username: <%= @user.username %></p>
+<p>Email: <%= @user.email %></p>
+
+<h3>Units</h3>
+<% if @user.units.empty? %>
+	<p>This user has no access to any units</p>
+<% end -%>
+<% @user.units.each do |unit| %>
+	<h4><%= unit.name %></h4>
+	<% membership = @user.membership(unit) %>
+	<ul>
+		<% membership.acls.each do |name,bool| %>
+			<li><%= name.to_s.titleize %> - <%= bool %></li>
+		<% end -%>
+	</ul>
+<% end -%>
+
+<%= link_to "Edit user", edit_user_path(@user) %>

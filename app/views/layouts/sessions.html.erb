@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>Munki Server: <%= controller.action_name %></title>
+	<%= stylesheet_link_tag 'blueprint/screen.css', :media => "screen, projection" %>
+	<%= stylesheet_link_tag 'blueprint/print.css', :media => "print" %>
+	<!--[if lt IE 8]>
+	<link rel="stylesheet" href="stylesheets/blueprint/ie.css" type="text/css" media="screen, projection">
+	<![endif]-->
+	<%= stylesheet_link_tag 'jquery.asmselect' %>
+	<%= stylesheet_link_tag 'dropdown/styles.css', 'dropdown/theme.css' %>
+	<%= stylesheet_link_tag 'style' %>
+	
+	<%= javascript_include_tag :defaults, 'jquery','jquery.asmselect' %>
+	<%= javascript_include_tag 'actb/actb', 'actb/common.js' %>
+	<%= csrf_meta_tag %>
+	
+	<style type="text/css">
+		body {
+			background-image:url("/images/login_bg.jpg");
+			background-color:#222;
+		}
+		.notice {
+			background-color:#fff;
+		}
+		.warning {
+			background-color:#fff;
+		}
+	</style>
+</head>
+<body>
+<div id="session_flash">
+	<% flash.each do |key, msg| %>
+		<%= content_tag :div, msg, :class => "message #{key}" %>
+	<% end %>
+</div>
+<div id="session">
+	<div id="session_top"><%= image_tag 'header_graphic.png' %></div>
+	<div id="words_header">
+		<p id="site_motto">Manage your <span class="jump_text">macs</span></p>
+		<h1 id="site_title">Munki Server</h1>
+	</div>
+	<%= yield %>
+	<div id="session_bottom"><%= image_tag 'footer_graphic.png' %></div>
+</div>
+</body>
+</html>

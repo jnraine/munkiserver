@@ -1,0 +1,11 @@
+<h2>Editing unit</h2>
+
+<% form_for(@unit) do |f| %>
+  <%= f.error_messages %>
+	<p><%= f.text_field :name %> Name</p>
+	<p><%= f.text_area :description, :size => "30x3" %></p>
+	<%= render :partial => 'edit_members' %>
+	<p><%= f.submit 'Update' %></p>
+<% end %>
+
+<%= link_to 'Show', @unit %>

@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  receive_email_notifications: false
+  user_id: 1
+
+two:
+  id: 2
+  receive_email_notifications: false
+  user_id: 2
+
+c:
+  id: 3
+  receive_email_notifications: false
+  user_id: 3
+
+
+d:
+  receive_email_notifications: false
+  user_id: 4

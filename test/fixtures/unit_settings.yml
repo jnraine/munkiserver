@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  notify_users: false
+  unit_email: unit_maillist@sfu.ca
+  regular_events: "--- \n:new_package_added: true\n"
+  warning_events: "--- \n:something_might_break: true\n"
+  error_events: "--- \n:invalid_plist: true\n"
+  unit_id: 1
+  version_tracking: true
+
+b:
+  id: 2
+  notify_users: false
+  unit_email: unit_maillist@sfu.ca
+  regular_events: "--- \n:new_package_added: true\n"
+  warning_events: "--- \n:something_might_break: true\n"
+  error_events: "--- \n:invalid_plist: true\n"
+  unit_id: 2
+  version_tracking: true

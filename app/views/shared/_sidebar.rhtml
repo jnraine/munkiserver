@@ -1,0 +1,4 @@
+<% @sidebar.each do |element| %>
+	<%= content_tag("h4",element['title']) %>
+	<%= content_tag(:div,element['content'], :class => "box") %>
+<% end unless @sidebar.blank? -%>

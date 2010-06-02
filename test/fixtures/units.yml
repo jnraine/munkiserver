@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+burnaby:
+  id: 1
+  name: IT Burnaby
+  description: This is the unit for Burnaby campus
+  key: "j$(f3j(Faslsf39f20FJD39jF#*$))"
+
+vancouver:
+  id: 2
+  name: IT Vancouver
+  description: This is the unit for Vancouver campus
+  key: 230498fj23fjfj3($(*R3)3jr93fj)

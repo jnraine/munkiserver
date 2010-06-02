@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  name: Web_browsers
+  environment_id: 1
+  unit_id: 1
+  
+four:
+  id: 2
+  name: Math
+  environment_id: 1
+  unit_id: 2
+
+three:
+  id: 3
+  name: Utils
+  environment_id: 2
+  unit_id: 1
+  
+two:
+  id: 4
+  name: Print_drivers
+  environment_id: 2
+  unit_id: 2

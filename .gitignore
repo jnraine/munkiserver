@@ -1,0 +1,8 @@
+.bundle
+*.DS_Store
+packages
+gem.old
+public/icons
+db/*.sqlite3
+log/*.log
+tmp/**/*

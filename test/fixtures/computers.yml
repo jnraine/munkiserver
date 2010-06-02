@@ -1,0 +1,244 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  mac_address: ff:ff:ff:ff:ff:fa
+  name: test1.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 1
+  unit_id: 1
+  
+two:
+  id: 2
+  mac_address: ff:ff:ff:ff:ff:fb
+  name: test2.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+a:
+  id: 3
+  mac_address: ff:ff:ff:ff:ff:fc
+  name: test3.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+b:
+  id: 4
+  mac_address: ff:ff:ff:ff:ff:fd
+  name: test4.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+c:
+  id: 5
+  mac_address: ff:ff:ff:ff:ff:fe
+  name: test5.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+d:
+  id: 6
+  mac_address: ff:ff:ff:ff:ff:ff
+  name: test6.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+e:
+  id: 7
+  mac_address: ff:ff:ff:ff:ff:f1
+  name: test7.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+f:
+  id: 8
+  mac_address: ff:ff:ff:ff:ff:f2
+  name: test8.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+g:
+  id: 9
+  mac_address: ff:ff:ff:ff:ff:f3
+  name: test9.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+h:
+  id: 10
+  mac_address: ff:ff:ff:ff:ff:f4
+  name: test10.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+i:
+  id: 11
+  mac_address: ff:ff:ff:ff:ff:f5
+  name: test11.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+j:
+  id: 12
+  mac_address: ff:ff:ff:ff:ff:f6
+  name: test12.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+k:
+  id: 13
+  mac_address: ff:ff:ff:ff:ff:f7
+  name: test13.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+l:
+  id: 14
+  mac_address: ff:ff:ff:ff:ff:f8
+  name: test14.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+m:
+  id: 15
+  mac_address: ff:ff:ff:ff:ff:f9
+  name: test15.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+n:
+  id: 16
+  mac_address: ff:ff:ff:ff:ff:f0
+  name: test16.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+o:
+  id: 17
+  mac_address: ff:ff:ff:ff:ff:1a
+  name: test17.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+p:
+  id: 18
+  mac_address: ff:ff:ff:ff:ff:1b
+  name: test18.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+q:
+  id: 19
+  mac_address: ff:ff:ff:ff:ff:1c
+  name: test19.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+r:
+  id: 20
+  mac_address: ff:ff:ff:ff:ff:1d
+  name: test20.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+s:
+  id: 21
+  mac_address: ff:ff:ff:ff:ff:1e
+  name: test21.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+t:
+  id: 22
+  mac_address: ff:ff:ff:ff:ff:1f
+  name: test22.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+u:
+  id: 23
+  mac_address: ff:ff:ff:ff:ff:11
+  name: test23.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+v:
+  id: 24
+  mac_address: ff:ff:ff:ff:ff:12
+  name: test24.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+w:
+  id: 25
+  mac_address: ff:ff:ff:ff:ff:13
+  name: test25.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+x:
+  id: 26
+  mac_address: ff:ff:ff:ff:ff:14
+  name: test26.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2
+
+y:
+  id: 27
+  mac_address: ff:ff:ff:ff:ff:15
+  name: test27.sfu.ca
+  computer_model_id: 1
+  computer_group_id: 1
+  environment_id: 2
+  unit_id: 2

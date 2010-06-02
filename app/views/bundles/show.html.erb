@@ -1,0 +1,12 @@
+<h2><%= @bundle.name %></h2>
+<p>
+	<% if @bundle.description.blank? %>
+		<em>No Description</em>
+	<% else %>
+		<%= @bundle.description %>
+	<% end -%>
+</p>
+
+<%= inventory(@bundle,true) %>
+
+<%= link_to 'Edit', edit_bundle_path(@bundle) %>

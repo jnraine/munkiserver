@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+# 
+# one:
+#   manifest_id: 1
+#   manifest_type: Computer
+#   bundle_id: 1
+# 
+# two:
+#   manifest_id: 1
+#   manifest_type: Bundle
+#   bundle_id: 2

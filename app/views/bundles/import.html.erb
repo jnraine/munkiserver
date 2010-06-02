@@ -1,0 +1,12 @@
+<h2>Import group manifest</h2>
+
+<% form_tag({:action => "createImport"}, :multipart => true) do %>
+	<p>
+	Name: <%= text_field_tag "group[name]", "" %>
+	</p>
+	<p>
+		<%= text_area_tag "group[description]", nil, { :size => "30x5" } %>
+	</p>
+	<%= file_field_tag 'plist' %>
+	<%= submit_tag 'Import' %>
+<% end %>

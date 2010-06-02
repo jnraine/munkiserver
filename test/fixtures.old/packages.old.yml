@@ -1,0 +1,247 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  version: 3.0.5
+  package_branch_id: 1
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+
+two:
+  id: 2
+  version: 3.5.0
+  package_branch_id: 1
+  environment_id: 1
+  package_category_id: 2
+  unit_id: 1
+
+three:
+  id: 3
+  version: 3.6.0
+  package_branch_id: 1
+  environment_id: 1
+  package_category_id: 3
+  unit_id: 1
+  
+four:
+  id: 4
+  version: 10.0.0
+  package_branch_id: 3
+  environment_id: 1
+  package_category_id: 4
+  unit_id: 1
+  
+five:
+  id: 5
+  version: 10.1.0
+  package_branch_id: 3
+  environment_id: 2
+  package_category_id: 1
+  unit_id: 2
+  
+six:
+  id: 6
+  version: 2.0.0
+  package_branch_id: 4
+  environment_id: 2
+  package_category_id: 1
+  unit_id: 2
+seven:
+  id: 7
+  version: 4.0.0
+  package_branch_id: 2
+  environment_id: 2
+  package_category_id: 2
+  unit_id: 2
+eight:
+  id: 8
+  version: 1.0.0
+  package_branch_id: 5
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+  
+nine:
+  id: 9
+  version: 2.0.0
+  package_branch_id: 5
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+
+ten:
+  id: 10
+  version: 3.0.0
+  package_branch_id: 5
+  environment_id: 2
+  package_category_id: 1
+  unit_id: 1
+
+eleven:
+  id: 11
+  version: 4.0.0
+  package_branch_id: 5
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+  
+z:
+  id: 12
+  version: 1.0.0
+  package_branch_id: 6
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+
+c:
+  id: 13
+  version: 2.0.0
+  package_branch_id: 6
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+
+tevvn:
+  id: 14
+  version: 3.0.0
+  package_branch_id: 6
+  environment_id: 2
+  package_category_id: 1
+  unit_id: 1
+
+bvcxbvx:
+  id: 15
+  version: 4.0.0
+  package_branch_id: 6
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+  
+sdfsdf:
+  id: 16
+  version: 1.0.0
+  package_branch_id: 7
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 2
+
+csdfg:
+  id: 17
+  version: 2.0.0
+  package_branch_id: 7
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 2
+
+tevsdfgvn:
+  id: 18
+  version: 3.0.0
+  package_branch_id: 7
+  environment_id: 2
+  package_category_id: 1
+  unit_id: 2
+
+bvcxsdfgbvx:
+  id: 19
+  version: 4.0.0
+  package_branch_id: 7
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 2
+  
+asdfsdfsdf:
+  id: 20
+  version: 1.0.0
+  package_branch_id: 8
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 2
+
+csdfasdfg:
+  id: 21
+  version: 2.0.0
+  package_branch_id: 8
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 2
+
+tevsdfgvasdfn:
+  id: 22
+  version: 3.0.0
+  package_branch_id: 8
+  environment_id: 2
+  package_category_id: 1
+  unit_id: 2
+
+bvcxsdfgbvxasdf:
+  id: 23
+  version: 4.0.0
+  package_branch_id: 8
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 2
+  
+asdfasdfsdfsdf:
+  id: 24
+  version: 1.0.0
+  package_branch_id: 9
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+
+csdfasasdfdfg:
+  id: 25
+  version: 2.0.0
+  package_branch_id: 9
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+
+tasdfevsdfgvasdfn:
+  id: 26
+  version: 3.0.0
+  package_branch_id: 9
+  environment_id: 2
+  package_category_id: 1
+  unit_id: 1
+
+bvcxsasdfdfgbvxasdf:
+  id: 27
+  version: 4.0.0
+  package_branch_id: 9
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+
+asdfasdfsdfsdf:
+  id: 28
+  version: 1.0.0
+  package_branch_id: 10
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+
+csdfasasdfdfg:
+  id: 29
+  version: 2.0.0
+  package_branch_id: 10
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1
+
+tasdfevsdfgvasdfn:
+  id: 30
+  version: 3.0.0
+  package_branch_id: 10
+  environment_id: 2
+  package_category_id: 1
+  unit_id: 1
+
+bvcxsasdfdfgbvxasdf:
+  id: 31
+  version: 4.0.0
+  package_branch_id: 10
+  environment_id: 1
+  package_category_id: 1
+  unit_id: 1

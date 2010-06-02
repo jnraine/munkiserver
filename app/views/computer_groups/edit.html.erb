@@ -1,0 +1,13 @@
+<h2>Editing <%= @computer_group %></h2>
+
+<% form_for(@computer_group) do |f| %>
+	<%= f.error_messages %>
+	
+	<p><%= f.text_field :name %></p>
+	<p><%= f.text_area :description, :size => "30x6" %></p>
+	<%= tabled_asm_select(@computer_group) %>
+	<p><%= f.submit 'Update' %></p>
+<% end %>
+
+<%= link_to 'Show', @computer_group %> |
+<%= link_to 'Back', computer_groups_path %>

@@ -1,0 +1,82 @@
+have_library: checking for fdatasync() in -lrt... -------------------- no
+
+"gcc -o conftest -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/i386-darwin10.3.0 -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/ruby/backward -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1 -I.  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE    -O2 -g -Wall -Wno-parentheses -pipe -fno-common conftest.c  -L. -L/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/lib -L. -L/usr/local/lib     -lruby-static  -lpthread -ldl -lobjc  "
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main() {return 0;}
+/* end */
+
+"gcc -o conftest -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/i386-darwin10.3.0 -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/ruby/backward -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1 -I.  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE    -O2 -g -Wall -Wno-parentheses -pipe -fno-common conftest.c  -L. -L/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/lib -L. -L/usr/local/lib     -lruby-static -lrt  -lpthread -ldl -lobjc  "
+conftest.c: In function ‘t’:
+conftest.c:5: error: ‘fdatasync’ undeclared (first use in this function)
+conftest.c:5: error: (Each undeclared identifier is reported only once
+conftest.c:5: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))fdatasync; return 0; }
+/* end */
+
+"gcc -o conftest -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/i386-darwin10.3.0 -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/ruby/backward -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1 -I.  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE    -O2 -g -Wall -Wno-parentheses -pipe -fno-common conftest.c  -L. -L/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/lib -L. -L/usr/local/lib     -lruby-static -lrt  -lpthread -ldl -lobjc  "
+conftest.c: In function ‘t’:
+conftest.c:5: warning: implicit declaration of function ‘fdatasync’
+ld: library not found for -lrt
+collect2: ld returned 1 exit status
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { fdatasync(); return 0; }
+/* end */
+
+--------------------
+
+have_header: checking for sqlite3.h... -------------------- yes
+
+"gcc -E -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/i386-darwin10.3.0 -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/ruby/backward -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1 -I.  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE    -O2 -g -Wall -Wno-parentheses -pipe -fno-common  conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <sqlite3.h>
+/* end */
+
+--------------------
+
+have_library: checking for sqlite3_open() in -lsqlite3... -------------------- yes
+
+"gcc -o conftest -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/i386-darwin10.3.0 -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/ruby/backward -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1 -I.  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE    -O2 -g -Wall -Wno-parentheses -pipe -fno-common conftest.c  -L. -L/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/lib -L. -L/usr/local/lib     -lruby-static -lsqlite3  -lpthread -ldl -lobjc  "
+conftest.c: In function ‘t’:
+conftest.c:5: error: ‘sqlite3_open’ undeclared (first use in this function)
+conftest.c:5: error: (Each undeclared identifier is reported only once
+conftest.c:5: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))sqlite3_open; return 0; }
+/* end */
+
+"gcc -o conftest -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/i386-darwin10.3.0 -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1/ruby/backward -I/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/include/ruby-1.9.1 -I.  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE    -O2 -g -Wall -Wno-parentheses -pipe -fno-common conftest.c  -L. -L/Users/jraine/.rvm/rubies/ruby-1.9.1-p378/lib -L. -L/usr/local/lib     -lruby-static -lsqlite3  -lpthread -ldl -lobjc  "
+conftest.c: In function ‘t’:
+conftest.c:5: warning: implicit declaration of function ‘sqlite3_open’
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { sqlite3_open(); return 0; }
+/* end */
+
+--------------------
+

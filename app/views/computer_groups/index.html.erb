@@ -1,0 +1,28 @@
+<h2>Computer groups</h2>
+
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Computers</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<% @computer_groups.each do |computer_group| %>
+	<tr>
+		<td><%= link_to computer_group.name, computer_group %></td>
+		<td><%= computer_group.description %></td>
+		<td><%= computer_group.computers.count %></td>
+		<td>
+			<%= link_to 'Edit', edit_computer_group_path(computer_group) %>
+			<%= link_to 'Remove', computer_group, :confirm => 'Are you sure?', :method => :delete %>
+			<%= link_to 'Manifest', manifest_path('computer_groups',computer_group.id,computer_group.name) %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New computer group', new_computer_group_path %>

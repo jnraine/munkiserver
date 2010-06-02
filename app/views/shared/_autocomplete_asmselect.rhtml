@@ -1,0 +1,12 @@
+<%= text_field_tag "#{autocomplete_id}" %>
+
+<script type="text/javascript">
+	var <%= element_id %>Choices = new Array('<%= choices.collect { |choice| escape_javascript(choice.to_s) }.join("','") %>');
+	var <%= element_id %> = new actb(document.getElementById('<%= autocomplete_id %>'),<%= element_id %>Choices);
+	<%= element_id %>.actb_bgColor = '#594F4F';
+	<%= element_id %>.actb_hColor = '#45ADA8';
+	jQuery(function() {
+		jQuery("#<%= autocomplete_id %>").subtle_value('<%= default_value %>');
+		jQuery("#<%= autocomplete_id %>").push_value_to_asmselect();
+	});
+</script>

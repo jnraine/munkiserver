@@ -1,0 +1,9 @@
+Uniqueness of VERSION for a package branch
+===
+- In order to use package string parsing (as found in PackageService.parse_package_strings()), there must not be two packages in the same branch with the same version.  This destroys the uniqueness of the string.  This would cause problems with the web interface and possibly also on the client side.
+
+Retrieving the least specific package relationship
+====
+
+- There are all sorts of relationship models that tie computers, bundles, computer groups, and even packages, to packages.  These relationships can be to a package branch only (and related to a package by the latest version) or to a specific package, regardless of version.  There needs to be a method that returns the least specific version of that relationship.  For example, if I have a computer that requires the latest version of Firefox and version 4.1 of Safari, I will get back a PackageBranch and a Package instance.
+- This will allow the tas fields to properly show what is already selected, based on string parsing (mentioned above)

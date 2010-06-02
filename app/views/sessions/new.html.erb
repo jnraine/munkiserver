@@ -1,0 +1,8 @@
+<div id="login_form">
+	<% form_tag "/create_session" do %>
+		<%= text_field_tag "username" %>
+		<%= subtle_value_tag("username", "Username") %><br />
+		<%= password_field_tag "pass" %><br />
+		<%= submit_tag "Login" %>
+	<% end %>
+</div>

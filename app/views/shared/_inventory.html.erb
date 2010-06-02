@@ -1,0 +1,21 @@
+<table class="packagePicker">
+	<thead>
+		<tr>
+			<th>Bundles</th>
+			<th>Installs</th>
+			<th>Uninstalls</th>
+		</tr>
+	</thead>
+	<tr>
+		<td><%= bundle_list(model_obj.bundles) %></td>
+		<td id="installs_view_content">
+			<%= pkg_list(model_obj.installs) %>
+			<% if false %>
+				<%= link_to_remote("choose version",
+									:url => {:action => "rollback", :controller => "ajax", :type => "installs", :id => model_obj.id, :model => model_obj.class.to_s},
+									:update => { :success => "installs_view_content", :failure => "installs_view_content" }) %>
+			<% end %>
+		</td>
+		<td><%= pkg_list(model_obj.uninstalls) %></td>
+	</tr>
+</table>
