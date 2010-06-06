@@ -2,7 +2,7 @@ class PackagesController < ApplicationController
   def index
     # Set environment
     @env = Environment.find_by_id(params[:eid])
-    @env ||= Environment.first
+    @env ||= Environment.default_view
     # Get package branches and binds them to the current scope
     @package_branches = PackageBranch.unit_and_environment(current_unit,@env)
     @packages = @package_branches.map(&:latest)

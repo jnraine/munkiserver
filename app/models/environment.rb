@@ -1,6 +1,3 @@
-class EnvironmentNotFound < Exception
-end
-
 class Environment < ActiveRecord::Base
   has_many :computers
   has_many :computer_groups
@@ -16,6 +13,13 @@ class Environment < ActiveRecord::Base
     e = Environment.find_by_name("Development")
     e ||= Environment.find_by_name("Staging")
     e ||= Environment.find_by_name("Testing")
+    e ||= Environment.first
+    e
+  end
+
+  # Get the default environment for the view layer
+  def self.default_view
+    e = Environment.find_by_name("Production")
     e ||= Environment.first
     e
   end
@@ -39,7 +43,13 @@ class Environment < ActiveRecord::Base
   end
   
   # A string representation of the object
-  def to_s
-    name
+  def to_s(style = nil)    
+    case style
+    when :unique then super
+    else name
+    end
   end
+end
+
+class EnvironmentNotFound < Exception
 end

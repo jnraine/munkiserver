@@ -6,56 +6,28 @@
 		<%= submit_tag "Filter" %>
 	<% end -%>
 	</div>
-	<div class="span-16 last" style="text-align:right;">
-		<% form_tag "...", :name => "bulk_edit" do %>
-			<a href="javascript:void();" onClick="SetAllCheckBoxes('bulk_edit','selected_records[]',true)">all</a>, 
-			<a href="javascript:void();"onClick="SetAllCheckBoxes('bulk_edit','selected_records[]',false)">none</a>
-			<%= submit_tag "Remove",:confirm => "Are you sure you want to remove all selected records?" %>
-	</div>
-	<div class="span-16 last" style="text-align:right;">
-		<%= select_tag :computer_group_id, computer_group_options, {:default => 'Choose a group'} %>
-		<%= submit_tag "Move" %>
-	</div>
+	<% form_tag "...", :name => "bulk_edit", :id => "bulk_edit_form" do %>
+		<div class="span-16 last" style="text-align:right;">
+				<a href="javascript:void();" onClick="SetAllCheckBoxes('bulk_edit','selected_records[]',true)">all</a>, 
+				<a href="javascript:void();"onClick="SetAllCheckBoxes('bulk_edit','selected_records[]',false)">none</a>
+				<%= submit_tag "Remove",:confirm => "Are you sure you want to remove all selected records?" %>
+		</div>
+		<div class="span-16 last" style="text-align:right;">
+			<%= select_tag :computer_group_id, computer_group_options, {:default => 'Choose a group'} %>
+			<%= submit_tag "Move" %>
+		</div>
+	<script type="text/javascript">
+		// To stop any bulk edit queries from being made (it hasn't been implemented yet)
+		jQuery('#bulk_edit_form').submit(function () {
+			alert("Sorry! Bulk edit has not been implemented yet.");
+			return false
+		});
+	</script>
 	
-	<% unless params[:hostname].blank? %>
-		<p>Showing computers with hostnames containing "<%= params[:hostname] %>"</p>
-	<% end -%>
-	<p><%= record_count(@computers) %></p>
-	<%= will_paginate @computers %>
-	
-	<% if @computers.length > 0 %>
-		<table>
-			<thead>
-				<tr>
-					<th><!-- checkbox header --></th>
-					<th><!-- icon header --></th>
-					<th>
-						<%= link_to 'Hostname', {:action => "index", :col => "hostname", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
-					</th>
-					<th>
-						<%= link_to 'MAC Address', {:action => "index", :col => "mac_address", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
-					</th>
-					<th>Environment</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
+		<% unless params[:hostname].blank? %>
+			<p>Showing computers with hostnames containing "<%= params[:hostname] %>"</p>
+		<% end -%>
 
-		<% @computers.each do |computer| %>
-		  <tr>
-			<td><%= check_box_tag("selected_records[]",computer.id) %></td>
-			<td><%= image_tag("#{computer.icon.public_filename}", :width => "64px")%>
-		    <td><%= link_to computer.hostname, computer %></td>
-			<td><%= computer.mac_address %></td>
-			<td><%= computer.environment %></td>
-		    <td>
-				<%= link_to 'Edit', edit_computer_path(computer) %> 
-				<%= link_to 'Remove', computer, :confirm => "Are you sure you want to remove #{computer.hostname}?", :method => :delete %>
-				<%= link_to 'Manifest', manifest_path(computer.class.to_s.underscore.pluralize,computer.id,computer.name) %>
-			</td>
-		  </tr>
-		<% end %>
-		</table>
-	<% end %>
-<% end -%>
-	<%= will_paginate @computers %>
+		<%= computer_table(@computers) %>
+	<% end -%>
 </div>

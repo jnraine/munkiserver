@@ -3,7 +3,7 @@ class CreateEnvironments < ActiveRecord::Migration
     create_table :environments do |t|
       t.string :name
       t.text :description
-      t.text :environment_ids, :default => [].to_yaml
+      t.text :environment_ids, :default => "--- []"
 
       t.timestamps
     end

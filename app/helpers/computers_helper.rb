@@ -7,7 +7,13 @@ module ComputersHelper
                               														 :soft_info => computer.computer_group.name,
                               														 :bold_info => computer.mac_address }
 	end
-	
+
+  # Prints a computer table listing
+  # Is paginated by default using will_paginate.  Pass false to disable.
+  def computer_table(computers, paginate = true, bulk_edit = true)
+    render :partial => 'computers/computer_table', :locals => {:computers => computers, :paginate => paginate, :bulk_edit => bulk_edit}
+  end
+
 	def computer_group_links
     computer_groups = ComputerGroup.unit(current_unit)
     unless computer_groups.empty?

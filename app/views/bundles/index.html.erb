@@ -1,27 +1,29 @@
 <h2>Listing bundles</h2>
 <p><%= record_count(@bundles) %></p>
 <% if @bundles.length > 0 %>
-<table>
-	<thead>
-		<tr>
-			<th></th>
-			<th>Name</th>
-			<th>Description</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-
-<% @bundles.each do |bundle| %>
-  <tr>
-	<td><input type="checkbox" /></td>
-    <td><%= link_to bundle, bundle %></td>
-	<td><%= bundle.description %></td>
-    <td>
-		<%= link_to 'Edit', edit_bundle_path(bundle) %> 
-		<%= link_to 'Remove', bundle, :confirm => "Are you sure you want to remove #{bundle}?", :method => :delete %>
-		<%= link_to 'Manfest', manifest_path('bundles',bundle.id,bundle.name) %>
-	</td>
-  </tr>
-<% end %>
-</table>
+	<table>
+		<thead>
+			<tr>
+				<th></th>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<% @bundles.each do |b| %>
+		  <tr>
+			<td><input type="checkbox" /></td>
+		    <td><%= link_to b, b %></td>
+			<td><%= b.description %></td>
+		    <td>
+				<%= link_to 'Edit', edit_bundle_path(b) %> 
+				<%= link_to 'Remove', b, :confirm => "Are you sure you want to remove #{b}?", :method => :delete %>
+				<%= link_to 'Manfest', bundle_path(b, :format => :manifest) %>
+			</td>
+		  </tr>
+		<% end %>
+	</table>
+<% else %>
+	<h5>There are no <%= params[:controller].humanize.downcase %> in this unit!</h5>
+	<p>Why don't you add <%= link_to "one", new_bundle_path %>?</p>
 <% end %>

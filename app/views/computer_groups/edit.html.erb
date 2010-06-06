@@ -6,6 +6,7 @@
 	<p><%= f.text_field :name %></p>
 	<p><%= f.text_area :description, :size => "30x6" %></p>
 	<%= tabled_asm_select(@computer_group) %>
+	<% # tabled_asm_select(@computer_group.computers_tas) %>
 	<p><%= f.submit 'Update' %></p>
 <% end %>
 

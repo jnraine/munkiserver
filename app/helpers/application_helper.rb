@@ -119,7 +119,7 @@ module ApplicationHelper
   
   def record_count(model_objs,word = "record")
     if model_objs.empty?
-      content_tag(:em, "no records")
+      content_tag(:em, "displaying 0 of " + pluralize(0,word))
     else
       if model_objs.class == WillPaginate::Collection
         # If results are paginated

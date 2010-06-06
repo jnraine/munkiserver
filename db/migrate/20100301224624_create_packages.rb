@@ -21,6 +21,7 @@ class CreatePackages < ActiveRecord::Migration
       t.string :RestartAction
       t.string :package_path
       t.boolean :autoremove, :default => false
+      t.boolean :shared, :default => false
       
       # Install info
       t.string :installer_type

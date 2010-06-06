@@ -174,6 +174,7 @@ module Manifest
         h[:managed_uninstalls] = managed_uninstalls.collect(&:to_s)
         h
       end
+      alias :serialize_for_plist_super :serialize_for_plist
 
       # Converts serialized object into plist string
       def to_plist
@@ -187,7 +188,27 @@ module Manifest
         end
         a
       end
-
+      
+      # Attempts a couple different queries in order of importance to
+      # find the appropriate record for the show action
+      def self.find_for_show(s)
+        # Find by ID
+        record = self.where(:id => s).first
+        # Find by id-name
+        match = s.match(/(\d+)(-)(.+)(\.plist)/)
+        if record.nil? and match.class == Array
+          id = match[1]
+          name = match[3]
+          record ||= self.where(:id => id, :name => name).first
+        end
+        # Return results
+        record
+      end
+      # Alias to allow quasi super access
+      class << self
+        alias :find_for_show_super :find_for_show
+      end
+      
       # Default parameters for the table_asm_select method
       # Returns values for self
       def tas_params

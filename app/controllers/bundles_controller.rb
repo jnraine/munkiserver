@@ -60,10 +60,11 @@ class BundlesController < ApplicationController
   end
 
   def show
-    @bundle = Bundle.find(params[:id])
+    @bundle = Bundle.find_for_show(params[:id])
     
     respond_to do |format|
       format.html
+      format.manifest { render :text => @bundle.to_plist }
       format.plist { render :text => @bundle.to_plist }
     end
   end

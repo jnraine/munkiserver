@@ -25,8 +25,14 @@ class ComputerGroupsController < ApplicationController
   def destroy
     @computer_group = ComputerGroup.find(params[:id])
     
-    if @computer_group.destroy
-      flash[:notice] = "Computer group was destroyed successfully"
+    begin
+      if @computer_group.destroy
+        flash[:notice] = "Computer group was destroyed successfully"
+      else
+        flash[:error] = "Failed to remove computer group!"
+      end
+    rescue ComputerGroupException
+      flash[:error] = "You cannot remove the last computer group from this unit!"
     end
     
     respond_to do |format|
@@ -60,10 +66,11 @@ class ComputerGroupsController < ApplicationController
   end
 
   def show
-    @computer_group = ComputerGroup.find(params[:id])
+    @computer_group = ComputerGroup.find_for_show(params[:id])
     
     respond_to do |format|
       format.html
+      format.manifest { render :text => @computer_group.to_plist }
       format.plist { render :text => @computer_group.to_plist }
     end
   end

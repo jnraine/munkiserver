@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(:version => 20100507220559) do
   create_table "environments", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.text     "environment_ids", :default => "'--- []\n\n'"
+    t.text     "environment_ids", :default => "--- []"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(:version => 20100507220559) do
     t.string   "RestartAction"
     t.string   "package_path"
     t.boolean  "autoremove",                :default => false
+    t.boolean  "shared",                    :default => false
     t.string   "installer_type"
     t.integer  "installed_size"
     t.integer  "installer_item_size"

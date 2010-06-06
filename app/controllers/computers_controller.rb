@@ -29,11 +29,13 @@ class ComputersController < ApplicationController
   end
 
   def show
-    @computer = Computer.unit(current_unit).find(params[:id])
+    @computer = Computer.find_for_show(params[:id])
     
     respond_to do |format|
       format.html
-      format.plist { render :layout => false, :text => @computer.to_plist}
+      format.manifest { render :text => @computer.to_plist}
+      format.plist { render :text => @computer.to_plist}
+      format.client_prefs { render :text => @computer.client_prefs.to_plist }
     end
   end
 

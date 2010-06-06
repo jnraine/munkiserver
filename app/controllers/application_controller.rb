@@ -5,15 +5,16 @@ class ApplicationController < ActionController::Base
   before_filter :require_login
   
   def super_user?
+    puts "From app con"
     current_user.super_user?
   end
   
   def current_unit
-    Unit.find(session[:unit_id])
+    @current_unit ||= Unit.find(session[:unit_id])
   end
   
   def current_user
-    User.find_by_username(session[:username])
+    @current_user ||= User.find_by_username(session[:username])
   end
   
   def logged_in?
@@ -22,9 +23,18 @@ class ApplicationController < ActionController::Base
   
   # Redirects user to login path if logged_in returns false
   def require_login
-    unless logged_in?
+    unless logged_in? or excluded?
       flash[:warning] = "You must be logged in to view that page"
       redirect_to login_path
+    end
+  end
+  
+  # Checks to see if the requested page is excluded from login requirements
+  def excluded?
+    excluded = false
+    allowed = [:show => [:manifest, :client_prefs, :plist],:download => [:all]]
+    allowed.each do |action,allowed_formats|
+      excluded = true if action.to_s == params[:action] and (allowed_formats.include?(params[:format].to_sym) or allowed_format.include?(:all))
     end
   end
   

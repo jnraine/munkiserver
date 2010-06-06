@@ -1,17 +1,10 @@
-namespace :init do
-  desc "Initialize models at deployment"
-  task :models => :environment do
-    print "Adding package categories..."
-    `rake init:package_categories`
-    puts "done"
-
-    print "Adding computer models..."
-    `rake init:computer_models`
-    puts "done"
-    
-    print "Adding generic icon..."
-    `rake init:generic_icon`
-    puts "done"
+namespace :bootstrap do
+  desc "Call all the bootstrap tasks"
+  task :all do
+    tasks = tasks_in_namespace("bootstrap")
+    tasks.each do |task|
+      Rake::Task[task].invoke
+    end
   end
   
   desc "Add a generic icon to the Icon model"
@@ -85,4 +78,67 @@ namespace :init do
       r.save
     end
   end
+  
+  desc "Load default unit"
+  task :unit, :name, :needs => :environment do |t, args|
+    name = args.name
+    name ||= "Default"
+    u = Unit.find_or_create_by_name(name)
+    u.key = Unit.generate_key
+    u.description = "Created by bootstrap"
+    unless u.save
+      puts "Default user failed to save: " + u.errors.inspect
+    end
+  end
+  
+  desc "Create default computer group"
+  task :computer_group, :name, :needs => :environment do |t, args|
+    name = args.name
+    name ||= "Default"
+    cg = ComputerGroup.find_or_create_by_name(name)
+    cg.description = "Created by bootstrap"
+    cg.unit = Unit.first
+    unless cg.save
+      puts "Default user failed to save: " + cg.errors.inspect
+    end
+  end
+  
+  desc "Load base user"
+  task :user, :name, :needs => :environment do |t, args|
+    username = args.name
+    username ||= "default"
+    u = User.find_or_create_by_username(username)
+    u.email = "donotreply@gmail.com"
+    u.password = "password"
+    u.password_confirmation = "password"
+    u.super_user = true
+    u.save
+    u.units = [Unit.first]
+    unless u.save
+      puts "Default user failed to save: " + u.errors.inspect
+    end
+  end
+  
+  desc "Load base environments"
+  task :environments do |t, args|
+    e = Environment.find_or_create_by_name("Staging")
+    e.description = "Created by bootstrap"
+    unless e.save
+      puts "Staging environment failed to save: " + e.errors.inspect
+    end
+    e = Environment.find_or_create_by_name("Production")
+    e.description = "Created by bootstrap"
+    unless e.save
+      puts "Production environment failed to save: " + e.errors.inspect
+    end
+  end
+end
+
+private
+def tasks_in_namespace(ns)
+  #grab all tasks in the supplied namespace
+  tasks = Rake.application.tasks.select { |t| t.name =~ /^#{ns}:/ }
+
+  #make sure we don't include the :all task
+  tasks.reject! { |t| t.name =~ /:all/ }
 end

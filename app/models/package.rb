@@ -20,6 +20,10 @@ class Package < ActiveRecord::Base
   
   before_save :save_package_branch
   
+  FORM_OPTIONS = {:restart_actions => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
+                  :os_versions => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
+                  :installer_types => [['Package',''],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']]}
+  
   # Virtual attribute for accessing the associated package
   # branch name which this package belongs to
   def name
@@ -44,6 +48,38 @@ class Package < ActiveRecord::Base
   # Virtual attribute setter
   def display_name=(value)
     package_branch.display_name = value
+  end
+  
+  # Virtual attribute getter
+  # Converts the receipts array into a plist
+  def receipts_plist
+    begin
+      receipts.to_plist
+    rescue NoMethodError
+    end
+  end
+  
+  # Virtual attribute setter
+  # Takes a plist string and converts it to a ruby object and assigns it to receipts
+  def receipts_plist=(value)
+    obj = value.from_plist
+    receipts = obj
+  end
+  
+  # Virtual attribute getter
+  # Converts the installs array into a plist
+  def installs_plist
+    begin
+      installs.to_plist
+    rescue NoMethodError
+    end
+  end
+  
+  # Virtual attribute setter
+  # Takes a plist string and converts it to a ruby object and assigns it to receipts
+  def installs_plist=(value)
+    obj = value.from_plist
+    installs = obj
   end
 
   # Attempts to save the package branch and returns the result
@@ -310,7 +346,7 @@ class Package < ActiveRecord::Base
       [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
        :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
        :installer_item_location,:uninstall_method,:uninstaller_item_location,:uninstaller_item_size,:uninstallable,
-       :requires,:update_for,:catalogs,:supported_architectures].each do |key|
+       :requires,:update_for,:catalogs,:supported_architectures,:version].each do |key|
         h[key.to_s] = self.send(key) unless self.send(key).blank?
       end
       if raw_mode == "Append"

@@ -1,28 +1,31 @@
 <h2>Computer groups</h2>
 
-<table>
-	<thead>
+<% if @computer_groups.length > 0 %>
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Computers</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<% @computer_groups.each do |cg| %>
 		<tr>
-			<th>Name</th>
-			<th>Description</th>
-			<th>Computers</th>
-			<th>Actions</th>
+			<td><%= link_to cg.name, cg %></td>
+			<td><%= cg.description %></td>
+			<td><%= cg.computers.count %></td>
+			<td>
+				<%= link_to 'Edit', edit_computer_group_path(cg) %>
+				<%= link_to 'Remove', cg, :confirm => "Are you sure you want to remove #{cg}?", :method => :delete %>
+				<%= link_to 'Manifest', computer_group_path(cg, :format => :manifest) %>
+			</td>
 		</tr>
-	</thead>
-	<% @computer_groups.each do |computer_group| %>
-	<tr>
-		<td><%= link_to computer_group.name, computer_group %></td>
-		<td><%= computer_group.description %></td>
-		<td><%= computer_group.computers.count %></td>
-		<td>
-			<%= link_to 'Edit', edit_computer_group_path(computer_group) %>
-			<%= link_to 'Remove', computer_group, :confirm => 'Are you sure?', :method => :delete %>
-			<%= link_to 'Manifest', manifest_path('computer_groups',computer_group.id,computer_group.name) %>
-		</td>
-	</tr>
-	<% end %>
+		<% end -%>
 </table>
-
-<br />
+<% else %>
+	<h5>There are no <%= params[:controller].humanize.downcase %> in this unit!</h5>
+	<p>Why don't you add <%= link_to "one", new_computer_group_path %>?</p>
+<% end %>
 
 <%= link_to 'New computer group', new_computer_group_path %>

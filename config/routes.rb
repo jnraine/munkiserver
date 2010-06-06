@@ -20,8 +20,8 @@ Munki::Application.routes.draw do |map|
 
   # Make munki-client-friendly URLs
   map.catalog 'catalogs/:unit_id-:environment_name.plist', :action => 'show', :controller => 'catalogs', :format => 'plist'
-  map.manifest ':controller/:id-:name.plist', :action => 'show', :format => 'plist', :name => /[A-Za-z0-9_\.]+/
-  map.download_package 'packages/:installer_item_location', :controller => 'packages', :action => 'download', :installer_item_location => /.+/
+  map.manifest ':controller/:id.plist', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.]+/
+  map.download_package 'pkgs/:installer_item_location', :controller => 'packages', :action => 'download', :installer_item_location => /.+/
 
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'
