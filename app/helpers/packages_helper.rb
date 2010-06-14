@@ -113,32 +113,11 @@ module PackagesHelper
   
   # Check version tracker for package updates, display available updates
   def available_updates
-    version_tracker_url = "http://www.versiontracker.com/dyn/moreinfo/macosx/"
-    # Get the latest version of all version trackable packages
-    pkgs = Pkgsinfo.version_trackable.all(:conditions => {:id => Pkgsinfo.latest_package_ids})
-    newer_available = []
-    if check_versions?
-      session[:newer_versions] = []
-      pkgs.each do |pkg|
-        info = scrape_latest_version_info(pkg)
-        
-        # If latest_version or download_url is blank, don't compare versions
-        unless(info['latest_version'].blank? or info['download_url'].blank?)
-          # Strip ".0" from end of version three times
-          formatted_version = pkg.version.sub(/\.0$/,'').sub(/\.0$/,'').sub(/\.0$/,'')
-          if info['latest_version'] > formatted_version
-            newer_available << pkg
-            session[:newer_versions] << {'download_url' => info['download_url'], 
-                                          'version' => info['latest_version'], 
-                                          'display_name' => pkg.display_name, 
-                                          'version_tracker_id' => pkg.version_tracker_id}
-          end
-        end
-      end
-    end
-    render :partial => 'available_updates', :locals => {:pkgs => newer_available,
-                                                        :version_tracker_url => version_tracker_url,
-                                                        :newer_versions => session[:newer_versions]}
+    # Grab all package branches in for this unit
+    pbs = PackageBranch.unit(current_unit)
+    # Remove branches if there isn't a new version
+    pbs.delete_if {|pb| !pb.new_version? }.compact
+    render :partial => 'available_updates', :locals => {:package_branches => pbs}
   end
   
   

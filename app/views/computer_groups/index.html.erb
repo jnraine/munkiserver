@@ -7,6 +7,7 @@
 				<th>Name</th>
 				<th>Description</th>
 				<th>Computers</th>
+				<th>Environment</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -15,9 +16,10 @@
 			<td><%= link_to cg.name, cg %></td>
 			<td><%= cg.description %></td>
 			<td><%= cg.computers.count %></td>
+			<td><%= cg.environment %></td>
 			<td>
-				<%= link_to 'Edit', edit_computer_group_path(cg) %>
-				<%= link_to 'Remove', cg, :confirm => "Are you sure you want to remove #{cg}?", :method => :delete %>
+				<%= link_to 'Edit', edit_computer_group_path(cg) %> |
+				<%= link_to 'Remove', cg, :confirm => "Are you sure you want to remove #{cg}?", :method => :delete %> |
 				<%= link_to 'Manifest', computer_group_path(cg, :format => :manifest) %>
 			</td>
 		</tr>

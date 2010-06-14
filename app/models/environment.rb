@@ -11,8 +11,8 @@ class Environment < ActiveRecord::Base
   # and production environment, dev is the starting environment
   def self.start
     e = Environment.find_by_name("Development")
-    e ||= Environment.find_by_name("Staging")
     e ||= Environment.find_by_name("Testing")
+    e ||= Environment.find_by_name("Staging")
     e ||= Environment.first
     e
   end

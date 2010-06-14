@@ -22,6 +22,7 @@ class CreatePackages < ActiveRecord::Migration
       t.string :package_path
       t.boolean :autoremove, :default => false
       t.boolean :shared, :default => false
+      t.string :version_tracker_version
       
       # Install info
       t.string :installer_type

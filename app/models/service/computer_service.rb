@@ -108,8 +108,8 @@ class ComputerService
     end
     
     # Modify for a specific hostname
-    unless params[:hostname].blank?
-      computers = computers.where(["hostname LIKE ?","%#{params[:hostname]}%"])
+    unless params[:name].blank?
+      computers = computers.where(["name LIKE ?","%#{params[:name]}%"])
     end
     
     # Add pagination using will_paginate gem

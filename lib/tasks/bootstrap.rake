@@ -1,9 +1,12 @@
+require 'ruby-debug'
 namespace :bootstrap do
   desc "Call all the bootstrap tasks"
   task :all do
     tasks = tasks_in_namespace("bootstrap")
     tasks.each do |task|
       Rake::Task[task].invoke
+      # Had some failing tasks, give them a second to breathe
+      sleep 1
     end
   end
   
@@ -25,8 +28,10 @@ namespace :bootstrap do
     # Add the records
     a.each do |h|
       r = PackageCategory.find_or_create_by_name(h[:name])
-      i = Icon.new(:uploaded_data => LocalFile.new(h[:icon_path]))
-      r.icon = i
+      if r.icon.nil?
+        i = Icon.new(:uploaded_data => LocalFile.new(h[:icon_path]))
+        r.icon = i
+      end
       r.save
     end
   end
@@ -73,8 +78,11 @@ namespace :bootstrap do
     # Add the records
     a.each do |h|
       r = ComputerModel.find_or_create_by_name(h[:name])
-      i = Icon.new(:uploaded_data => LocalFile.new(h[:icon_path]))
-      r.icon = i
+      # Add an icon if there isn't already on
+      if r.icon.nil?
+        i = Icon.new(:uploaded_data => LocalFile.new(h[:icon_path]))
+        r.icon = i
+      end
       r.save
     end
   end
@@ -93,18 +101,23 @@ namespace :bootstrap do
   
   desc "Create default computer group"
   task :computer_group, :name, :needs => :environment do |t, args|
+    # Makes we have a unit and an environment to assign
+    Rake::Task["bootstrap:unit"].invoke if Unit.count == 0
+    Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
     name = args.name
     name ||= "Default"
     cg = ComputerGroup.find_or_create_by_name(name)
     cg.description = "Created by bootstrap"
     cg.unit = Unit.first
     unless cg.save
-      puts "Default user failed to save: " + cg.errors.inspect
+      puts "Default computer group failed to save: " + cg.errors.inspect
     end
   end
   
   desc "Load base user"
   task :user, :name, :needs => :environment do |t, args|
+    # Make sure we have a unit to assign
+    Rake::Task["bootstrap:unit"].invoke if Unit.count == 0
     username = args.name
     username ||= "default"
     u = User.find_or_create_by_username(username)
@@ -138,7 +151,6 @@ private
 def tasks_in_namespace(ns)
   #grab all tasks in the supplied namespace
   tasks = Rake.application.tasks.select { |t| t.name =~ /^#{ns}:/ }
-
   #make sure we don't include the :all task
   tasks.reject! { |t| t.name =~ /:all/ }
 end

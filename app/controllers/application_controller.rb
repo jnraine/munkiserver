@@ -21,6 +21,14 @@ class ApplicationController < ActionController::Base
     current_user != nil
   end
   
+  # Run a rake task in the background
+  # TO-DO could improve performance if using a gem (rake loads environment every single time)
+  def call_rake(task, options = {})
+    options[:rails_env] ||= Rails.env
+    args = options.map { |k,v| "#{k.to_s.upcase}='#{v}'" }
+    system "rake #{task} #{args.join(' ')} --trace >> #{Rails.root}/log/rake.log &"
+  end
+  
   # Redirects user to login path if logged_in returns false
   def require_login
     unless logged_in? or excluded?

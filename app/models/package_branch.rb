@@ -18,9 +18,10 @@ class PackageBranch < ActiveRecord::Base
   has_many :require_items, :dependent => :destroy
   has_many :update_for_items, :dependent => :destroy
   has_many :all_packages, :order => 'version desc', :class_name => "Package"
-  has_one :new_version, :dependent => :destroy, :class_name => "VersionTracker"
+  has_one :version_tracker, :dependent => :destroy, :autosave => true
   
-  before_save :verify_display_name
+  before_save :require_display_name
+  before_save :require_version_tracker
   
   # Returns the latest package (based on version)
   # in the package branch.  Results are scoped if scoped? returns true
@@ -28,9 +29,18 @@ class PackageBranch < ActiveRecord::Base
     package(unit_member)
   end
   
+  # Get all package branches mentioned by unit
+  def self.unit(unit)
+    Package.unit(unit).map {|p| p.package_branch }.uniq
+  end
+  
   # Get the latest package within a unit and environment
   def latest_where_unit_and_environment(unit,env)
-    packages.where(:unit_id => unit.id, :environment_id => env.id).order('version desc').first
+    latest_where_unit(unit).where(:environment_id => env.id)
+  end
+  
+  def latest_where_unit(unit)
+    packages.where(:unit_id => unit.id).order('version desc').limit(1)
   end
   
   # Extends the functionality of the association dynamic method to
@@ -49,6 +59,25 @@ class PackageBranch < ActiveRecord::Base
       all_packages.where(:unit_id => @unit_id, :environment_id => @environment_id)
     else
       all_packages
+    end
+  end
+  
+  # Virtual attribute that retrieves the web ID from the version tracker
+  # record associated to this package branch
+  def version_tracker_web_id
+    version_tracker.web_id unless version_tracker.nil?
+  end
+  
+  def version_tracker_web_id=(value)
+    version_tracker.web_id = value unless version_tracker.nil?
+  end
+  
+  # True if a newer version is available in this branch
+  def new_version?
+    begin
+      vtv < version_tracker.version
+    rescue ArgumentError
+      false
     end
   end
   
@@ -71,14 +100,19 @@ class PackageBranch < ActiveRecord::Base
     p.first
   end
   
+  # Checks if version_tracker is nil and creates one if it is
+  def require_version_tracker
+    self.version_tracker = build_version_tracker if self.version_tracker.nil?
+  end
+  
   # Checks if display_name is blank, if so, it makes it the value of name
-  def verify_display_name
+  def require_display_name
     self.display_name = self.name if self.display_name.blank?
   end
   
-  # Checks if a new version is available
-  def new_version_available?
-    new_version != nil
+  # Grabs vtv from latest package
+  def vtv
+    latest.vtv unless latest.nil?
   end
 
   # Sets iVars @environment_id and @unit_id to bind this record, temporarily, to a certain scope
@@ -125,7 +159,12 @@ class PackageBranch < ActiveRecord::Base
     pbs
   end
   
-  def to_s
-    name
+  # Overrides default to string method.  Specifies version if this package
+  # isn't the latest of the current units
+  def to_s(style = nil)    
+    case style
+      when :pretty then display_name
+      else name
+    end
   end
 end

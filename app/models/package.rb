@@ -1,9 +1,6 @@
-class InvalidPackageUpload < Exception
-end
-
 class Package < ActiveRecord::Base
   magic_mixin :unit_member
-  belongs_to :package_branch
+  belongs_to :package_branch, :autosave => true
   belongs_to :package_category
   belongs_to :icon
   
@@ -85,11 +82,6 @@ class Package < ActiveRecord::Base
   # Attempts to save the package branch and returns the result
   def save_package_branch
     package_branch.save if package_branch.changed?
-  end
-  
-  # Virtual attribute getter
-  def version_tracker_web_id
-    package_branch.version_tracker_web_id
   end
   
   def environments
@@ -322,17 +314,18 @@ class Package < ActiveRecord::Base
     yaml
   end
   
-  # Getter for the raw_tags attribute
-  # Returns a raw plist (or a blank string)
-  # def raw_tags
-  #   s = read_attribute(:raw_tags).from_yaml
-  #   plist_string = nil
-  #   begin
-  #     plist_string = s.to_plist
-  #   rescue NoMethodError
-  #   end
-  #   plist_string
-  # end
+  # Get the version that corresponds with the version tracker version
+  # This is intended to handle some oddities in the version tracker
+  # database.  For example, if you version 3.0.1 and version tracker
+  # has the same version but written as 3.0.1b, you may manually override
+  # otherwise, it will return the version of this record.
+  # This getter will grab the version attribute if version_tracker_version
+  # is nil. Used by VersionTracker class.
+  def vtv
+    vtv = version_tracker_version
+    vtv = version if vtv.blank?
+    vtv
+  end
   
   # Create a hash intended for plist output
   # Won't include the entire object attributes
@@ -384,27 +377,43 @@ class Package < ActiveRecord::Base
     supported_architectures.include?("ppc")
   end
   
+  # If the package branch's version tracker "looks_good", returns true
+  def trackable?
+    begin
+      package_branch.version_tracker.looks_good?
+    rescue NoMethodError
+      false
+    end
+  end
+  
   # Takes a tmp file, moves it to the appropriate place, and checks it in
-  # Return value is the same as Package.checkin
-  def self.upload(tmp_file)
+  # Return value is the same as Package.checkin.  If it fails, it will raise
+  # an InvalidPackageUpload exception
+  def self.upload(file, options = {})
+    original_filename = nil
+    if file.respond_to?(:original_filename)
+      original_filename = file.original_filename
+    else
+      original_filename = File.basename(file.path)
+    end
     # Add timestamp to original filename
-    installer_item_name = Time.now.strftime("%Y.%m.%d.%H%M%S") + "_" + tmp_file.original_filename
+    installer_item_name = Time.now.strftime("%Y.%m.%d.%H%M%S") + "_" + original_filename
     # Create absolute path
     dest_path = Munki::Application::PACKAGE_DIR + installer_item_name
     # Make sure a file of that name doesn't already exist and fix it if it does
     if File.exists?(dest_path)
-      installer_item_name = Time.now.strftime("%Y.%m.%d.%H%M%S") + "_" + rand(1001) + "_" + tmp_file.original_filename
+      installer_item_name = Time.now.strftime("%Y.%m.%d.%H%M%S") + "_" + rand(1001) + "_" + original_filename
       dest_path = Munki::Application::PACKAGE_DIR + installer_item_name
     end
     # Move from the tmp location to destination
-    FileUtils.move(tmp_file.path,dest_path)
+    FileUtils.move(file.path,dest_path)
     dest_path = Package.rename_installer_item(dest_path)
     # Check package in
     begin
-      Package.checkin(dest_path)
+      Package.checkin(dest_path, options)
     rescue InvalidPackageUpload
       FileUtils.remove(dest_path)
-      raise InvalidPackageUpload
+      raise InvalidPackageUpload("There was a problem checking in #{dest_path}. It has been deleted.")
     end
   end
   
@@ -431,12 +440,20 @@ class Package < ActiveRecord::Base
   # Pass path to package.  Returns a helpful hash
   # => :package - An new, unsaved package instance
   # => :plist_string - The string split out by MAKEPKGINFO
-  def self.checkin(path)
+  def self.checkin(path, options = {})
+    # Format options into command line options
+    cmd_line_options = options.map do |k,v| 
+      # Escape for spaces
+      v = v.gsub(/ /,'\ ')
+      "--#{k}=#{v}" unless v.blank?
+    end
+    cmd_line_options = cmd_line_options.compact
+    debugger
     # Rename package on disk to match proper style
     path = Package.rename_installer_item(path)
     logger.info "Checking in #{path}..."
     tmp_file_path = "/tmp/mor-#{rand(1000)}.plist"
-    logger.info `#{Munki::Application::MAKEPKGINFO} "#{path}" > "#{tmp_file_path}"`
+    logger.info `#{Munki::Application::MAKEPKGINFO} #{cmd_line_options.join(" ")} "#{path}" > "#{tmp_file_path}"`
     exit_status = `echo $?`.chomp
     
     package = nil

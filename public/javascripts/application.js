@@ -225,10 +225,18 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 			objCheckBoxes[i].checked = CheckValue;
 }
 
-$('dropdown_link').onmouseover = function() {
-	this.show();
+// Submits the form for auto packaging, while creating a nice alert and "take over screen"
+function submit_auto_package(jq_id) {
+	if(confirm("Are you sure you want to auto package? This may take some time.")) {
+		jQuery(jq_id).submit();
+	}
+	return false;
 }
 
-$('dropdown_link').onmouseout = function() {
-	this.hide();
-}
+// $('dropdown_link').onmouseover = function() {
+// 	this.show();
+// }
+// 
+// $('dropdown_link').onmouseout = function() {
+// 	this.hide();
+// }

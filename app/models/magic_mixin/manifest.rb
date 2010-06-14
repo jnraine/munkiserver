@@ -32,19 +32,6 @@ module Manifest
       
       magic_mixin :unit_member
       
-      validate :presence_of_icon
-      
-      # Ensures that an icon is present
-      # Should be added to all models that
-      # use icons.  Eventually add the ability
-      # to ask self for a generic icon, thereby
-      # giving computers a specific "generic" icon
-      def presence_of_icon
-        if icon.blank?
-          icon = Icon.generic
-        end
-      end
-      
       # Return all the environments visible to this object
       def environments
         environment.environments

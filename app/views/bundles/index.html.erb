@@ -7,6 +7,7 @@
 				<th></th>
 				<th>Name</th>
 				<th>Description</th>
+				<th>Environment</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -15,9 +16,10 @@
 			<td><input type="checkbox" /></td>
 		    <td><%= link_to b, b %></td>
 			<td><%= b.description %></td>
+			<td><%= b.environment %></td>
 		    <td>
-				<%= link_to 'Edit', edit_bundle_path(b) %> 
-				<%= link_to 'Remove', b, :confirm => "Are you sure you want to remove #{b}?", :method => :delete %>
+				<%= link_to 'Edit', edit_bundle_path(b) %> |
+				<%= link_to 'Remove', b, :confirm => "Are you sure you want to remove #{b}?", :method => :delete %> |
 				<%= link_to 'Manfest', bundle_path(b, :format => :manifest) %>
 			</td>
 		  </tr>

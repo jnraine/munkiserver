@@ -12,27 +12,37 @@ class PackagesController < ApplicationController
     end
   end
 
-  def create
+  def create 
+    # Assign @h
     begin
-      @h = Package.upload(params[:data])
+      # If you upload a package
+      @h = Package.upload(params[:data],params[:options]) unless params[:data].nil?
+      # If you pass a version tracker ID
+      @h = VersionTracker.find_or_create_by_web_id(params[:version_tracker_web_id]).to_package unless params[:version_tracker_web_id].nil?
+    rescue PackageError => e
+      invalid_package = true
+      flash[:error] = "Invalid package uploaded: #{e.message}"
+    rescue AutoPackageError => e
+      invalid_package = true
+      flash[:error] = "There was a problem while auto packaging: #{e.message}"
+    end
+
+    # Assign @package
+    unless @h.nil? or @h[:package].nil?
       @package = @h[:package]
       @package.unit = current_unit
-      invalid_package_upload = false
-    rescue InvalidPackageUpload
+    else
       @package = Package.new
-      invalid_package_upload = true
     end
     
     respond_to do |format|
-      if invalid_package_upload == false and @package.save
+      if !invalid_package and @package.save
+        # Success
         flash[:notice] = "Package successfully saved"
         format.html { redirect_to edit_package_path(@package) }
-      elsif invalid_package_upload
-        flash[:error] = "Invalid package file uploaded!"
-        format.html { render new_package_path }
       else
-        flash[:error] = "Package failed to save!"
-        format.html { render new_package_path }
+        # Failure
+        format.html { redirect_to :back }
       end
     end
   end
@@ -86,5 +96,12 @@ class PackagesController < ApplicationController
   # Used to download the actual package (typically a .dmg)
   def download
     send_file Munki::Application::PACKAGE_DIR + params[:installer_item_location]
+  end
+  
+  # Used to check for available updates across all units
+  def check_for_updated
+    call_rake("packages:check_for_updates")
+    flash[:notice] = "Checking for updates now"
+    redirect_to :back
   end
 end

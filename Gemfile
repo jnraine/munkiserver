@@ -18,14 +18,10 @@ gem "sqlite3-ruby", :require => "sqlite3"
 # gem "aws-s3", :require => "aws/s3"
 gem "plist", "3.1.0"
 gem "will_paginate", "3.0.pre"
+gem "nokogiri"
 # Used for ACLs (NOT IMPLEMENTED!)
 # gem "declarative_authorization"
 
-## Bundle gems used only in certain environments:
-# gem "rspec", :group => :test
-# group :test do
-#   gem "webrat"
-# end
 group :development do
 	gem "ruby-debug19" , :require => "ruby-debug"
 end

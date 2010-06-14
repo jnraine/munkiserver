@@ -26,7 +26,7 @@ class ComputerGroup < ActiveRecord::Base
     end
   end
   # Every ComputerGroup has the first environment  
-  before_validation { self.environment = Environment.first }
+  # before_validation { self.environment = Environment.first }
 end
 
 class ComputerGroupException < Exception

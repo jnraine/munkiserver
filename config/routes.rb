@@ -6,7 +6,7 @@ Munki::Application.routes.draw do |map|
   map.resources :user_settings
   map.resources :computer_groups
   map.resources :bundles
-  map.resources :packages
+  map.resources :packages, :collection => {:check_for_updated => :any}
   map.resources :computers, :new => {:import => :get}, :collection => {:create_import => :any}
   map.resources :users
   map.resources :units

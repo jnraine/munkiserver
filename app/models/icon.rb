@@ -1,9 +1,10 @@
 class Icon < ActiveRecord::Base
   has_many :packages
-  has_many :computers
-  has_many :bundles
-  has_many :computer_groups
   has_many :computer_models
+  # Not ready for these to have icons yet
+  # has_many :computers
+  # has_many :bundles
+  # has_many :computer_groups
   
   has_attachment :content_type => :image,
                   :storage => :file_system,
@@ -15,7 +16,9 @@ class Icon < ActiveRecord::Base
   
   # Make sure we have at least a default icon
   def self.generic
-    self.find_by_filename("generic.png")
+    i = find_by_filename("generic.png")
+    i ||= self.first
+    i
   end
   
   def to_s

@@ -120,7 +120,6 @@ ActiveRecord::Schema.define(:version => 20100507220559) do
   create_table "package_branches", :force => true do |t|
     t.string   "name"
     t.string   "display_name"
-    t.string   "version_tracker_web_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -151,6 +150,7 @@ ActiveRecord::Schema.define(:version => 20100507220559) do
     t.string   "package_path"
     t.boolean  "autoremove",                :default => false
     t.boolean  "shared",                    :default => false
+    t.string   "version_tracker_version"
     t.string   "installer_type"
     t.integer  "installed_size"
     t.integer  "installer_item_size"
@@ -265,7 +265,8 @@ ActiveRecord::Schema.define(:version => 20100507220559) do
 
   create_table "version_trackers", :force => true do |t|
     t.integer  "package_branch_id"
-    t.string   "available_version"
+    t.integer  "web_id"
+    t.string   "version"
     t.string   "download_url"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -5,6 +5,18 @@ class Computer < ActiveRecord::Base
   belongs_to :computer_group
   
   validate :computer_model
+  # validate :presence_of_icon
+  # 
+  # # Ensures that an icon is present
+  # # Should be added to all models that
+  # # use icons.  Eventually add the ability
+  # # to ask self for a generic icon, thereby
+  # # giving computers a specific "generic" icon
+  # def presence_of_icon
+  #   if icon.blank?
+  #     icon = Icon.generic
+  #   end
+  # end
   
   # Getter for virtual attribute hostname
   def hostname

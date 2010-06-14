@@ -8,6 +8,10 @@
 			<td><%= f.text_field :name %></td>
 		</tr>
 		<tr>
+			<td>Environment</td>
+			<td><%= f.collection_select :environment_id, Environment.all, :id, :name %></td>
+		</tr>
+		<tr>
 			<td colspan="2"><%= f.text_area :description, :size => "40x3" %></td>
 		</tr>
 	</table>

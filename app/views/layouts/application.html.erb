@@ -62,10 +62,10 @@
 				</ul>
 			</div>
 			<% if logged_in? %>
-				<div id="search">
+				<!-- <div id="search">
 					<%= text_field_tag "search_field" %>
 					<%= submit_tag "Search" %>
-				</div>
+				</div> -->
 			<% end -%>
 		</div>
 	
@@ -104,7 +104,8 @@
 					<%= link_to("Packages", packages_url) %>
 						<ul>
 							<li><%= link_to "List packages", packages_url %></li>
-							<li><%= link_to "Upload package", new_package_url %></li>
+							<li><%= link_to "Add package", new_package_url %></li>
+							<li><%= link_to "Check for updates", check_for_updated_packages_url %></li>
 						</ul>
 					</li>
 				</ul>
