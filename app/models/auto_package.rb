@@ -1,7 +1,8 @@
 module AutoPackage
   require 'open-uri'
   
-  SUPPORTED_EXTENSIONS = ["dmg"]
+  UNZIP = "/usr/bin/unzip"
+  SUPPORTED_EXTENSIONS = ["dmg","zip"]
   
   # Downloads file from a URL and turns it into a Package record
   def self.from_url(url)
@@ -41,16 +42,66 @@ module AutoPackage
     match[2] unless match.nil?
   end
   
-    def self.from_path(path)
+  def self.from_path(path)
     extension = grep_extension(path)
     if extension == "dmg"
-      f = File.new(path)
-      Package.upload(f)
+      self.dmg(path)
+    elsif extension == "zip"
+      self.zip(path)
     else
-      raise IncompatiblePackageType
+      raise IncompatiblePackageType("Please supply a supported item: #{SUPPORTED_EXTENSIONS.join(", ")}")
     end
   end
-end
-
-class AutoPackageError < Exception
+  
+  # Auto package a dmg file at path
+  def self.dmg(path)
+    # Create a file object
+    f = File.new(path)
+    # Upload to server
+    Package.upload(f)
+  end
+  
+  # Auto package a zip file at path
+  def self.zip(path)
+    # Unzip
+    # Get original filename without extension
+    original_name = File.basename(path).sub(/\.[A-Za-z]+$/,'')
+    # Remove extension from path
+    extract_dir = File.dirname(path) + "/" + original_name
+    # Add date stamp
+    # extract_dir = File.dirname(extract_dir) + "/" + Time.now.to_s(:ordered_numeric) + File.basename(extract_dir)
+    debugger
+    # Create destination directory
+    extract_dir = self.unzip(path,extract_dir)
+    # Make sure we're OK
+    if extract_dir.nil?
+      raise AutoPackageError.new("Unable to unzip #{path}")
+    end
+    
+    # Wrap in a DMG
+    dmg_path = wrap_contents_in_dmg(extract_dir)
+    if dmg_path.nil?
+      raise AutoPackageError.new("Unable to wrap #{extract_dir} into a DMG")
+    end
+    self.dmg(dmg_path)
+  end
+  
+  # Takes a path to a directory and creates a DMG from everything inside that directory
+  # Returns dmg path if success, nil if failure
+  def self.wrap_contents_in_dmg(path)
+    dmg_path = path + ".dmg"
+    exit = `hdiutil create -srcfolder #{path} #{dmg_path} >> /dev/null; echo $?`.chomp.to_i
+    if exit == 0
+      dmg_path
+    end
+  end
+  
+  # Unzip a file to destination.  Returns destination directory if success, otherwise, nil
+  def self.unzip(path_to_zip,extract_dest)
+    # logger.info("Unzipping #{path_to_zip} into #{extract_dest}")
+    exit = `#{UNZIP} -o #{path_to_zip} -d #{extract_dest} >> /dev/null; echo $?`.chomp.to_i
+    if exit == 0
+      extract_dest
+    end
+  end
 end

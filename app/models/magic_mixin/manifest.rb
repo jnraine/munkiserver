@@ -231,6 +231,14 @@ module Manifest
           :selected_options => model_obj.uninstalls_package_branch_ids }]
       end
       
+      # Return the default record
+      # Requires a unit to be passed
+      def self.default(unit)
+        r = self.unit(unit).find_by_name("Default")
+        r ||= self.unit(unit).find_by_name("default")
+        r ||= self.unit(unit).first
+      end
+      
       # ===================
       # = Code ends here! =
       # ===================

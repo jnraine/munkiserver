@@ -397,7 +397,7 @@ class Package < ActiveRecord::Base
       original_filename = File.basename(file.path)
     end
     # Add timestamp to original filename
-    installer_item_name = Time.now.strftime("%Y.%m.%d.%H%M%S") + "_" + original_filename
+    installer_item_name = Time.now.to_s(:ordered_numeric) + "_" + original_filename
     # Create absolute path
     dest_path = Munki::Application::PACKAGE_DIR + installer_item_name
     # Make sure a file of that name doesn't already exist and fix it if it does
@@ -448,7 +448,6 @@ class Package < ActiveRecord::Base
       "--#{k}=#{v}" unless v.blank?
     end
     cmd_line_options = cmd_line_options.compact
-    debugger
     # Rename package on disk to match proper style
     path = Package.rename_installer_item(path)
     logger.info "Checking in #{path}..."

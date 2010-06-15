@@ -11,6 +11,9 @@ module Munki
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # Current version
+    VERSION = "0.5"
+    
     # Add additional load paths for your own custom dirs
     # config.load_paths += %W( #{config.root}/extras )
     config.load_paths += %W(
@@ -20,6 +23,7 @@ module Munki
         #{Rails.root}/app/models/service
       )
 
+    # Add custom mime types
     Mime::Type.register "text/plist", :plist
     
     # Where we store the packages

@@ -18,6 +18,8 @@ class Computer < ActiveRecord::Base
   #   end
   # end
   
+  before_save :require_computer_group
+  
   # Getter for virtual attribute hostname
   def hostname
     name
@@ -36,6 +38,12 @@ class Computer < ActiveRecord::Base
   # For will_paginate gem
   def self.per_page
     10
+  end
+
+  # Make sure this computer is assigned a computer group
+  # if it isn't, assign the default computer group
+  def require_computer_group
+    self.computer_group = ComputerGroup.default(self.unit) if self.computer_group.nil?
   end
 
   def catalogs

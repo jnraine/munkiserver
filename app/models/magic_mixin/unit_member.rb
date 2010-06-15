@@ -24,7 +24,7 @@ module UnitMember
       
       # Returns a list of type self that belong to the same unit and environment as unit_member
       def self.unit_member(unit_member)
-        self.unit(unit_member.unit).environments(unit_member.environments)
+        self.unit(unit_member.unit).environments([unit_member.environment])
       end
       
       # ===================

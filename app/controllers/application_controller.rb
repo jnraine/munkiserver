@@ -10,7 +10,10 @@ class ApplicationController < ActionController::Base
   end
   
   def current_unit
-    @current_unit ||= Unit.find(session[:unit_id])
+    begin
+      @current_unit ||= Unit.find(session[:unit_id])
+    rescue ActiveRecord::RecordNotFound
+    end
   end
   
   def current_user
@@ -38,12 +41,18 @@ class ApplicationController < ActionController::Base
   end
   
   # Checks to see if the requested page is excluded from login requirements
+  # hashes like this: action => [formats, as, array]
   def excluded?
     excluded = false
-    allowed = [:show => [:manifest, :client_prefs, :plist],:download => [:all]]
+    # Specify what actions and formats are allowed
+    allowed = {:show => [:manifest, :client_prefs, :plist],:download => [:all]}
+    # Set format
+    format = params[:format].nil? ? "" : params[:format]
     allowed.each do |action,allowed_formats|
-      excluded = true if action.to_s == params[:action] and (allowed_formats.include?(params[:format].to_sym) or allowed_format.include?(:all))
+      # See if this action/format combo was included
+      excluded = true if (action.to_s == params[:action] and allowed_formats.include?(format.to_sym)) or allowed_formats.include?(:all)
     end
+    excluded
   end
   
   def fake_login

@@ -1,2 +1,2 @@
-<%= link_to computer_group_link.name, :controller => 'computers', :action => 'index', :cgid => computer_group_link.id %>
+<%= link_to computer_group_link.name, computer_group_path(computer_group_link) %>
 (<%= computer_group_link.computers.count %>) <br />

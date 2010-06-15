@@ -33,7 +33,7 @@
 		<td><%= c.environment %></td>
 	    <td>
 			<%= link_to 'Edit', edit_computer_path(c) %> |
-			<%= link_to 'Remove', c, :confirm => "Are you sure you want to remove #{c.hostname}?", :method => :delete %> |
+			<%= link_to 'Destroy', c, :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %> |
 			<%= link_to 'Manifest', computer_path(c, :format => :manifest) %> |
 			<%= link_to 'Client Prefs', computer_path(c, :format => :client_prefs) %>
 		</td>
@@ -41,7 +41,7 @@
 	<% end %>
 	</table>
 <% else %>
-	<h5>There are no computers in this unit!</h5>
+	<h5>There are no computers here!</h5>
 	<p>Why don't you add <%= link_to "one", new_computer_path %> or <%= link_to "a few", import_new_computer_path %>?</p>
 <% end %>
 <%= will_paginate computers if paginate %>

@@ -56,7 +56,7 @@ class ComputerService
     cg = nil
     if computer_group_id == 0
       cg = ComputerGroup.unit(unit).find_by_name(h["listName"])
-      cg ||= ComputerGroup.new({:name => h["listName"], :unit_id => unit.id})
+      cg ||= ComputerGroup.new({:name => h["listName"], :unit_id => unit.id, :environment_id => environment_id})
       cg.save if cg.new_record?
     elsif computer_group_id > 0
       cg = ComputerGroup.find_by_id(computer_group_id)
