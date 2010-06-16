@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: SessionsController [Rails Application Documentation]</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }<\/style>" )
+
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">SessionsController</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+
+
+                <a href="../files/app/controllers/sessions_controller_rb.html">
+
+                app/controllers/sessions_controller.rb
+
+                </a>
+
+
+        <br />
+
+            </td>
+        </tr>
+
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+
+                <a href="ApplicationController.html">
+
+                ApplicationController
+
+               </a>
+
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+  <div id="contextContent">
+
+   </div>
+
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+
+        <a href="#M000044">create</a>&nbsp;&nbsp;
+
+        <a href="#M000046">destroy</a>&nbsp;&nbsp;
+
+        <a href="#M000043">new</a>&nbsp;&nbsp;
+
+        <a href="#M000045">update</a>&nbsp;&nbsp;
+
+      </div>
+    </div>
+
+  </div>
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+    <!-- if method_list -->
+
+    <div id="methods">
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+
+      <div id="method-M000044" class="method-detail">
+        <a name="M000044"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000044" class="method-signature">
+
+          <span class="method-name">create</span><span class="method-args">()</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p>
+Creates a new user session
+</p>
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000044-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000044-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/sessions_controller.rb, line 9</span>
+ 9:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>
+10:     <span class="ruby-identifier">u</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">authenticate</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:username</span>],<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:pass</span>])
+11:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">nil?</span>
+12:       <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:error</span>] = <span class="ruby-value str">&quot;Incorrect username or password&quot;</span>
+13:       <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">login_path</span>
+14:     <span class="ruby-keyword kw">else</span>
+15:       <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:username</span>] = <span class="ruby-identifier">u</span>.<span class="ruby-identifier">username</span>
+16:       <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:unit_id</span>] = <span class="ruby-identifier">u</span>.<span class="ruby-identifier">unit_ids</span>.<span class="ruby-identifier">first</span>
+17:       <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">root_path</span>
+18:     <span class="ruby-keyword kw">end</span>
+19:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div id="method-M000046" class="method-detail">
+        <a name="M000046"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000046" class="method-signature">
+
+          <span class="method-name">destroy</span><span class="method-args">()</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p>
+Logs the user out of the current session
+</p>
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000046-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000046-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/sessions_controller.rb, line 32</span>
+32:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>
+33:     <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:username</span>] = <span class="ruby-keyword kw">nil</span>
+34:     <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:unit_id</span>] = <span class="ruby-keyword kw">nil</span>
+35:     <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-value str">&quot;You have been logged out of your session&quot;</span>
+36:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">login_path</span>
+37:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div id="method-M000043" class="method-detail">
+        <a name="M000043"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000043" class="method-signature">
+
+          <span class="method-name">new</span><span class="method-args">()</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000043-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000043-source">
+<pre>
+   <span class="ruby-comment cmt"># File app/controllers/sessions_controller.rb, line 4</span>
+4:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">new</span>
+5:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">root_path</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">logged_in?</span>
+6:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div id="method-M000045" class="method-detail">
+        <a name="M000045"></a>
+
+        <div class="method-heading">
+
+          <a href="#M000045" class="method-signature">
+
+          <span class="method-name">update</span><span class="method-args">()</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p>
+Switches the unit_id session var if the current user is a member of that
+unit
+</p>
+
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000045-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000045-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/sessions_controller.rb, line 22</span>
+22:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>
+23:     <span class="ruby-identifier">new_unit</span> = <span class="ruby-constant">Unit</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:unit_id</span>])
+24:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">member_of</span>(<span class="ruby-identifier">new_unit</span>)
+25:       <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:unit_id</span>] = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:unit_id</span>] 
+26:     <span class="ruby-keyword kw">end</span>
+27:     <span class="ruby-comment cmt"># case params[:a]</span>
+28:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:a</span>], <span class="ruby-identifier">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:c</span>]
+29:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+
+
+
+
+  </div>
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
