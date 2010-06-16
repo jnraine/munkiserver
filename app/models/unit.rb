@@ -5,7 +5,7 @@ class Unit < ActiveRecord::Base
   has_many :bundles, :dependent => :destroy
   has_many :packages, :dependent => :destroy
   
-  has_many :memberships
+  has_many :memberships, :dependent => :destroy
   has_many :users, :through => :memberships
   
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
@@ -19,6 +19,7 @@ class Unit < ActiveRecord::Base
           :create_package,:read_package,:edit_package,:destroy_package]
   
   before_save :check_settings
+  after_save :require_computer_group
   
   # Returns the membership that self and user share
   def membership(user)
@@ -35,15 +36,26 @@ class Unit < ActiveRecord::Base
     users
   end
   
+  # Creates default computer group if there are none assigned to this unit
+  def require_computer_group
+    create_default_computer_group if self.computer_groups.count == 0
+  end
+  
+  # Attempts to create and save a computer group named "Default"
+  def create_default_computer_group
+    cg = ComputerGroup.unit(self).find_by_name("Default")
+    cg ||= ComputerGroup.new({:name => "Default", :unit_id => self.id, :environment_id => Environment.first.id})
+    cg.save
+  end
+  
   # Returns an array of tas option hashes
   def tas_params
-    [{"title" => "Users",
-      "model_name" => "unit",
-      "attribute_name" => "user_ids",
-      "select_title" => "Select a new member",
-      "options" =>  User.all.collect {|u| [u.username, u.id] },
-      "selected_options" => user_ids
-      }]
+    [{:title => "Users",
+      :model_name => "unit",
+      :attribute_name => "user_ids",
+      :select_title => "Select a new member",
+      :options =>  User.all.collect {|u| [u.username, u.id] },
+      :selected_options => user_ids}]
   end
   
   # Checks if a unit has a settings association

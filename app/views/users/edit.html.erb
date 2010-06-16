@@ -12,6 +12,10 @@
 			<td><%= f.text_field :email %></td>
 		</tr>
 		<tr>
+			<td>Super User</td>
+			<td><%= f.check_box :super_user %></td>
+		</tr>
+		<tr>
 			<td colspan="2"><%= label_tag "change_password_checkbox", "Change Password" %> <%= check_box_tag "change_password", "on", false, {:id => "change_password_checkbox"} %></td>
 		<tr>
 			<td>Password</td>
@@ -27,4 +31,4 @@
 	</p>
 <% end %>
 
-<%= link_to 'Show', @group %>
+<%= link_to 'Show', user_path(@user) %>

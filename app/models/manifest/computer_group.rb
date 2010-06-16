@@ -19,11 +19,12 @@ class ComputerGroup < ActiveRecord::Base
     
   # Extend the destroy method to not destroy the last one in that unit
   def destroy
-    if ComputerGroup.find_all_by_unit_id(self.unit_id).count == 1
-      raise ComputerGroupException.new("Attempt to remove last computer group in unit failed!")
-    else
-      super
-    end
+    # if ComputerGroup.find_all_by_unit_id(self.unit_id).count == 1
+    #   raise ComputerGroupException.new("Attempt to remove last computer group in unit failed!")
+    # else
+    #   super
+    # end
+    super
   end
 end
 

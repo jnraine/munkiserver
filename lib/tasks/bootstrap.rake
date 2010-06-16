@@ -109,6 +109,8 @@ namespace :bootstrap do
     cg = ComputerGroup.find_or_create_by_name(name)
     cg.description = "Created by bootstrap"
     cg.unit = Unit.first
+    cg.environment = Environment.find_by_name("Production")
+    cg.environment = Environment.first if cg.environment.nil?
     unless cg.save
       puts "Default computer group failed to save: " + cg.errors.inspect
     end

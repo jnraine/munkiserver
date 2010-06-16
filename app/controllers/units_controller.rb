@@ -51,11 +51,16 @@ class UnitsController < ApplicationController
   def destroy
     @unit = Unit.find(params[:id])
     unit_name = @unit.name
-
+    unit_id = @unit.id
+    
     respond_to do |format|
       if @unit.destroy
+        if session[:unit_id].to_i == unit_id
+          session[:unit_id] = current_user.units.first.id
+          @current_unit = Unit.find(session[:unit_id])
+        end
         flash[:notice] = "#{unit_name} was successfully remove"
-        format.html { redirect_to(units_path) }      
+        format.html { redirect_to(units_path) }
         format.xml { head :ok }
       else
         flash[:error] = "Failed to removed #{unit_name}!"

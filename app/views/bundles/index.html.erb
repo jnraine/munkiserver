@@ -1,6 +1,6 @@
 <h2>Listing bundles</h2>
-<p><%= record_count(@bundles) %></p>
 <% if @bundles.length > 0 %>
+	<p><%= record_count(@bundles) %></p>
 	<table>
 		<thead>
 			<tr>
@@ -26,6 +26,7 @@
 		<% end %>
 	</table>
 <% else %>
-	<h5>There are no <%= params[:controller].humanize.downcase %> in this unit!</h5>
+	<h5>There are no <%= params[:controller].humanize.downcase %> here!</h5>
 	<p>Why don't you add <%= link_to "one", new_bundle_path %>?</p>
 <% end %>
+<%= link_to "New bundle", new_bundle_path %>

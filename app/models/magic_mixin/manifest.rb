@@ -10,7 +10,7 @@ module Manifest
       # ====================
       
       # Validations
-      validates_uniqueness_of :name
+      validate :uniqueness_of_name_in_unit
       validates_presence_of :name
       
       # Bundles
@@ -31,6 +31,20 @@ module Manifest
       attr_is_hash :version_rollback
       
       magic_mixin :unit_member
+      
+      # True if name attribute is unique in the unit
+      def uniqueness_of_name_in_unit
+        # Create flag
+        is_unique = true
+        # Fetch all records from the same unit as self
+        records = self.class.unit(self.unit)
+        # Check each record and see if any one has the same name as self (except for self)
+        records.each do |r|
+          is_unique = false if r.name == self.name and r.id != self.id
+        end
+        # Return answer
+        errors.add_to_base("Name (#{self.name}) has already been taken in this unit (#{self.unit})") unless is_unique
+      end
       
       # Return all the environments visible to this object
       def environments

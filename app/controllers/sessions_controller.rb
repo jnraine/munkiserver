@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_filter :require_login, :only => ['new','create']
+  skip_before_filter :require_login, :only => ['new','create','destroy']
   
   def new
     redirect_to root_path if logged_in?

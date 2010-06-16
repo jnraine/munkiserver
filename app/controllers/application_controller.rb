@@ -13,6 +13,10 @@ class ApplicationController < ActionController::Base
     begin
       @current_unit ||= Unit.find(session[:unit_id])
     rescue ActiveRecord::RecordNotFound
+      # If you can't find the unit with the session ID
+      session[:unit_id] = current_user.units.first.id
+      # Assign it again
+      @current_unit ||= Unit.find(session[:unit_id])
     end
   end
   
@@ -32,9 +36,15 @@ class ApplicationController < ActionController::Base
     system "rake #{task} #{args.join(' ')} --trace >> #{Rails.root}/log/rake.log &"
   end
   
-  # Redirects user to login path if logged_in returns false
+  # Redirects user to login path if logged_in returns false.
   def require_login
-    unless logged_in? or excluded?
+    # If we are logged in or the action we are requesting is excluded from login requirement
+    if logged_in? or action_and_format_excluded?
+      if logged_in? and current_user.units.empty?
+        flash[:warning] = "You are not permitted to any units!"
+        render :file => "#{Rails.root}/public/generic_error.html", :layout => false
+      end
+    else
       flash[:warning] = "You must be logged in to view that page"
       redirect_to login_path
     end
@@ -42,7 +52,7 @@ class ApplicationController < ActionController::Base
   
   # Checks to see if the requested page is excluded from login requirements
   # hashes like this: action => [formats, as, array]
-  def excluded?
+  def action_and_format_excluded?
     excluded = false
     # Specify what actions and formats are allowed
     allowed = {:show => [:manifest, :client_prefs, :plist],:download => [:all]}
@@ -50,7 +60,11 @@ class ApplicationController < ActionController::Base
     format = params[:format].nil? ? "" : params[:format]
     allowed.each do |action,allowed_formats|
       # See if this action/format combo was included
-      excluded = true if (action.to_s == params[:action] and allowed_formats.include?(format.to_sym)) or allowed_formats.include?(:all)
+      if action.to_s == params[:action] and allowed_formats.include?(format.to_sym)
+        excluded = true 
+      elsif action.to_s == params[:action] and allowed_formats.include?(:all)
+        excluded = true
+      end
     end
     excluded
   end

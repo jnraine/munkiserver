@@ -4,7 +4,9 @@
   <%= f.error_messages %>
 	<p><%= f.text_field :name %> Name</p>
 	<p><%= f.text_area :description, :size => "30x3" %></p>
-	<%= render :partial => 'edit_members' %>
+	<div id="members">
+		<%= tabled_asm_select(@unit) %>
+	</div>
 	<p><%= f.submit 'Update' %></p>
 <% end %>
 
