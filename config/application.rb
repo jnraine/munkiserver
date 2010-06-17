@@ -12,7 +12,7 @@ module Munki
     # -- all .rb files in that directory are automatically loaded.
 
     # Current version
-    VERSION = "0.5.0.1"
+    VERSION = "0.5.0.2"
     
     # Add additional load paths for your own custom dirs
     # config.load_paths += %W( #{config.root}/extras )
