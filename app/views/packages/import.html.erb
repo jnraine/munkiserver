@@ -1,0 +1,9 @@
+<h2>Import package info plist</h2>
+
+<% form_tag({:action => "createImport"}, :multipart => true) do %>
+	<p>Plist: <%= file_field_tag 'plist' %></p>
+	<p>Image: <%= file_field_tag 'image' %></p>
+	<%= submit_tag 'Import' %>
+<% end %>
+
+<%= link_to 'Back', :action => 'index' %>

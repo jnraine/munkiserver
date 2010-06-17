@@ -1,0 +1,46 @@
+<table class="gui" id="gui_installs_table">
+	<thead>
+		<tr>
+			<th><span title="Type">Type</span></th>
+			<th><span title="Path">Path</span></th>
+			<th><span title="CFBundleName">Bundle Name</span></th>
+			<th><span title="CFBundleIdentifier">Bundle ID</span></th>
+			<th><span title="CFBundleShortVersionString">Version</span></th>
+			<th><span title="md5checksum">Checksum</span></th>
+			<th></th>
+		</tr>
+	</thead>
+	<% installs.each do |install| %>
+		<% if install.class == Array %>
+			<%= render :partial => 'gui_install_row', :locals => {:install => install,:type => (install['type'] or 'application') } %>
+		<% end -%>
+	<% end -%>
+</table>
+
+<script type='text/javascript'>
+function add_install() {
+	jQuery('#gui_installs_table').append('<%= escape_javascript(render(:partial => 'gui_install_row', :locals => {:install => Package.blank_install,:type => 'application'})) %>');
+}
+function change_install_type(el) {
+	// Select parent table row
+	var parent_row = el.parentNode.parentNode;
+	switch(el.value) {
+		case 'application':
+			//parent_row.before('<%= escape_javascript(render(:partial => 'gui_install_row', :locals => {:install => Package.blank_install,:type => 'application'})) %>');
+			jQuery(parent_row).before('<%= escape_javascript(render(:partial => 'gui_install_row', :locals => {:install => Package.blank_install,:type => 'application'})) %>');
+			break;
+		case 'bundle':
+			jQuery(parent_row).before('<%= escape_javascript(render(:partial => 'gui_install_row', :locals => {:install => Package.blank_install,:type => 'bundle'})) %>');
+			break;
+		case 'plist':
+			jQuery(parent_row).before('<%= escape_javascript(render(:partial => 'gui_install_row', :locals => {:install => Package.blank_install,:type => 'plist'})) %>');
+			break;
+		case 'file':
+			jQuery(parent_row).before('<%= escape_javascript(render(:partial => 'gui_install_row', :locals => {:install => Package.blank_install,:type => 'file'})) %>');
+			break;
+	}
+	parent_row.remove();
+}
+</script>
+
+<%= link_to_function "Add install item", "add_install()" %>

@@ -1,0 +1,23 @@
+<table class="gui" id="gui_receipts_table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Package</th>
+			<th>Size</th>
+			<th>Package Identifier</th>
+			<th>Version</th>
+			<th></th>
+		</tr>
+	</thead>
+	<% receipts.each do |receipt| %>
+		<%= render :partial => 'gui_receipt_row', :locals => {:receipt => receipt} %>
+	<% end -%>
+</table>
+
+<script type='text/javascript'>
+function add_receipt() {
+	jQuery('#gui_receipts_table').append('<%= escape_javascript(render(:partial => 'gui_receipt_row', :locals => {:receipt => Package.blank_receipt})) %>');
+}
+</script>
+
+<%= link_to_function "Add receipt", "add_receipt()" %>

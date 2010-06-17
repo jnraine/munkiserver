@@ -1,6 +1,8 @@
 .bundle
 *.DS_Store
-packages
+packages/
+# Don't ignore app/views/packages
+!app/views/packages
 gem.old
 public/icons
 db/*.sqlite3

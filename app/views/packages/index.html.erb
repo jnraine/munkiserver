@@ -1,0 +1,27 @@
+<% content_for :sidebar do %>
+	<%= recent_packages %>
+	<%= available_updates %>
+<% end -%>
+
+<h2>Listing packages</h2>
+<div id="environment_links">
+	|
+	<% Environment.all.each do |env| %>
+		<% if @env.id == env.id %>
+			<%= env.to_s + " (#{Package.where(:environment_id => env.id).count})" %>
+		<% else %>
+			<%= link_to env.to_s + " (#{Package.where(:environment_id => env.id).count})", packages_path(:eid => env.id) %>
+		<% end -%>
+		|
+	<% end -%>
+</div>
+
+<h3><%= @env %></h3>
+
+<% if @packages.length == 0 %>
+	<h5>There are no packages in the <%= @env.to_s.downcase %> environment</h5>
+	<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
+<% else %>
+	<p><%= record_count(@packages) %></p>
+	<%= package_table(@packages) %>
+<% end %>

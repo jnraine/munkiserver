@@ -1,0 +1,73 @@
+<h2>New package</h2>
+<% unless @h.nil? %>
+	<div>
+		<% unless @package.errors.empty? %>
+			<h4>Errors</h4>
+			<ul>
+			<% @package.errors.each do |k,v| %>
+				<li><%= "#{k.to_s} #{v}" %>
+			<% end -%>
+			</ul>
+		<% end -%>
+		<p>Here is the plist that makepkginfo spit out:</p>
+		<pre><%= @h[:plist_string] %></pre>
+	</div>
+<% end -%>
+<div id="new_package_form_container">
+	<h3>Upload</h3>
+	<p>
+		Choose a .dmg to upload
+		<%= helpful_info("You cannot upload packages, applications, or Adobe installers without wrapping them in a disk image first!") %>
+	</p>
+	<% form_for(@package, :html => {:multipart => true, :id => "new_upload_package_form"}) do |f| %>
+		<div>
+			<p><%= file_field_tag :data %></p>
+			<p><%= text_field_tag "options[pkgname]" %> Custom package path</p>
+			<p><%= text_field_tag "options[appname]" %> Custom application path</p>
+			<p><%= submit_tag 'Upload' %></p>
+		</div>
+	<% end %>
+	<h3>Grab</h3>
+	<p>
+		Find an application on versiontracker.com and paste the ID here
+		<%= helpful_info("This only works for drag-and-drop apps wrapped in DMGs. Support will come for different cases...but not yet. The ID for an application can be found at the end of the URL: e.g. http://www.versiontracker.com/dyn\n/moreinfo/macosx/########") %>
+	</p>
+	<% form_for(@package, :html => {:multipart => true, :id => "new_version_tracker_package_form"}) do |f| %>
+		<p>
+			<%= text_field_tag :version_tracker_web_id %> Version Tracker web ID <br />
+			<%= submit_tag 'Grab' %>
+		</p>
+	<% end %>
+	<p><em>Large packages may take some time to process</em></p>
+</div>
+<div id="progress_container">
+	<h4 class="title">Creating new package</h4>
+	<p><%= image_tag('horizontal_progress.gif') %></p>
+</div>
+<script type="text/javascript">
+	jQuery("#progress_container").hide();
+	jQuery("#new_upload_package_form").submit(function() {
+		var filename = jQuery("#data").val();
+		dots = filename.split(".");
+		extension = "." + dots[dots.length-1];
+		if (extension == ".dmg") {
+			jQuery("#new_package_form_container").slideUp("fast");
+			jQuery("#progress_container .title").html("Uploading");
+			jQuery("#progress_container").slideDown("slow");
+		} else {
+			alert("Please choose a .dmg");
+			return false;
+		}
+	});
+	jQuery("#new_version_tracker_package_form").submit(function() {
+		var vt_id = jQuery('#version_tracker_web_id').val();
+		if (vt_id.match(/^\d+$/) !== null) {
+			jQuery("#new_package_form_container").slideUp("fast");
+			jQuery("#progress_container .title").html("Grabbing");
+			jQuery("#progress_container").slideDown("slow");
+		} else {
+			alert("Please input only digits as the version tracker web ID");
+			return false;
+		}
+	});
+</script>

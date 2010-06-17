@@ -1,0 +1,58 @@
+<%= package_header(@package) %>
+
+<% unless @package.description.blank? %>
+	<p><%= @package.description %></p>
+<% else %>
+	<p><em>No description</em></p>
+<% end -%>
+
+<table class="form">
+	<tr>
+		<td><strong>Environment</strong></td>
+		<td><%= @package.environment %></td>
+	</tr>
+	<tr>
+		<td><strong>Category</strong></td>
+		<td>
+			<%= @package.package_category %>
+		</td>
+	</tr>
+	<tr>
+		<td><strong>Uninstallable?</strong></td>
+		<td><%= @package.uninstallable == 1 ? "Yes" : "No" %></td>
+	</tr>
+	<tr>
+		<td><strong>Minimum OS</strong></td>
+		<td><%= @package.minimum_os_version %></td>
+	</tr>
+	<tr>
+		<td><strong>Package size</strong></td>
+		<td><%= humanize_kilobytes(@package.installer_item_size) %></td>
+	</tr>
+	<tr>
+		<td><strong>Installed size</strong> </td>
+		<td><%= humanize_kilobytes(@package.installed_size) %></td>
+	</tr>
+	<% if @package.update_for.length > 0 %>
+		<tr>
+			<td><strong>Update for</strong></td>
+			<td>
+				<% @package.update_for.each do |p| %>
+					<%= p.to_s(:unique) %><br />
+				<% end -%>
+			</td>
+		</tr>
+	<% end -%>
+	<tr>
+		<td><strong>Dependancies</strong></td>
+		<td>
+			<% if @package.requires.nil? or @package.requires.empty? %>
+				None
+			<% else %>
+				<%= @package.requires.collect { |p| link_to p.to_s(:pretty_with_version), p }.join("<br />").html_safe %>
+			<% end%>
+		</td>
+	</tr>
+</table>
+
+<%= link_to 'Edit', edit_package_path(@package) %> | <%= link_to 'Download', download_package_path(@package.installer_item_location) %>

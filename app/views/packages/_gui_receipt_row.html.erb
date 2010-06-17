@@ -1,0 +1,18 @@
+<% random = rand(100000) %>
+		<tr>
+			<td>
+				<%= text_field_tag "gui_receipts[#{random}][filename]", receipt['filename'], :size => "14" %>
+			</td>
+			<td>
+				<%= text_field_tag "gui_receipts[#{random}][installed_size]", receipt['installed_size'], :size => "8" %>
+			</td>
+			<td>
+				<%= text_field_tag "gui_receipts[#{random}][packageid]", receipt['packageid'], :size => "25" %>
+			</td>
+			<td>
+				<%= text_field_tag "gui_receipts[#{random}][version]", receipt['version'], :size => "7" %>
+			</td>
+			<td>
+				<%= link_to_function 'Remove', 'this.parentNode.parentNode.remove()' %>
+			</td>
+		</tr>

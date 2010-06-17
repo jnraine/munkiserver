@@ -1,0 +1,15 @@
+<% unless invalid_plists.empty? %>
+	<h4>Plist errors!</h4>
+	<div class="important box">
+		<% invalid_plists.each do |invalid_plist|%>
+			<p>
+				<%= link_to invalid_plist['pkgsinfo'].display_name, edit_pkgsinfo_path(invalid_plist['pkgsinfo']) %>
+				<ul>
+					<% invalid_plist['errors'].each do |error| %>
+						<li><%= error %></li>
+					<% end -%>
+				</ul>
+			</p>
+		<% end -%>
+	</div>
+<% end -%>

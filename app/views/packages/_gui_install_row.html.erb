@@ -1,0 +1,32 @@
+<% random = rand(100000) %>
+		<tr>
+			<td>
+				<%= select_tag "gui_installs[][type]", options_for_select([['Application','application'],['Bundle','bundle'],['Plist','plist'],['File','file'],], type), :onchange => "change_install_type(this);" %>
+			</td>
+			<td>
+				<%= text_field_tag "gui_installs[][path]", install['path'], :size => "10" %>
+			</td>
+			<td>
+				<% if type == 'application' %>
+					<%= text_field_tag "gui_installs[][CFBundleName]", install['CFBundleName'], :size => "14" %>
+				<% end -%>
+			</td>
+			<td>
+				<% if type == 'application' %>
+					<%= text_field_tag "gui_installs[][CFBundleIdentifier]", install['CFBundleIdentifier'], :size => "14" %>
+				<% end -%>
+			</td>
+			<td>
+				<% if type != 'file' %>
+					<%= text_field_tag "gui_installs[][CFBundleShortVersionString]", install['CFBundleShortVersionString'], :size => "4" %>
+				<% end -%>
+			</td>
+			<td>
+				<% if type == 'file' %>
+					<%= text_field_tag "gui_installs[][md5checksum]", install['md5checksum'], :size => "7" %>
+				<% end -%>
+			</td>
+			<td>
+				<%= link_to_function 'Remove', 'this.parentNode.parentNode.remove()' %>
+			</td>
+		</tr>

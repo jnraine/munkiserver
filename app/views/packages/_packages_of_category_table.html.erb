@@ -1,0 +1,17 @@
+<h4><%= category_name.capitalize %></h4>
+<table>
+	<thead>
+		<tr>
+			<!-- <th> Checkbox</th> -->
+			<th><!-- Icon --></th>
+			<th>Branch</th>
+			<th>Display</th>
+			<th>Version</th>
+			<th>Trackable</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<% packages.each do |package| %>
+		<%= render :partial => 'package_table_row', :locals => {:package => package} %>
+	<% end -%>
+</table>

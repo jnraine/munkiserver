@@ -1,0 +1,24 @@
+<table class="gui">
+	<tr>
+	<% sorted_choices.each do |title, choices| %>
+		<% if choices.length > 0 %>
+			<td>
+				<strong><%= title.capitalize %></strong>
+			<p>
+			<% choices.each do |id,attributes| %>
+				<%= hidden_field_tag "gui_installer_choices[#{id}][selected]", "false", :id => "gui_installer_choices_#{id}_not_selected" %>
+				<%= check_box_tag "gui_installer_choices[#{id}][selected]", "true", checked = attributes['selected'] %> 
+				<%= label_tag "gui_installer_choices_#{id}_selected", id %> 
+				<% unless attributes['enabled'] %>
+					<span class="quiet">(disabled)</span>
+				<% end -%>
+				<%= hidden_field_tag "gui_installer_choices[#{id}][enabled]", attributes['enabled'] %>
+				<%= hidden_field_tag "gui_installer_choices[#{id}][visible]", attributes['visible'] %>
+				<br />
+			<% end -%>	
+			</p>
+			<td/>
+		<% end -%>
+	<% end -%>
+	</tr>
+</table>

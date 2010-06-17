@@ -1,0 +1,256 @@
+<% content_for :sidebar do %>
+	<h4>Upgrade for</h4>
+	<div class="box">
+		If this package updates (adds to) another package, select the package branch that is updated.
+	</div>
+	
+	<h4>Dependancies</h4>
+	<div class="box">
+		Select packages that must be present for this package to function properly.  Dependancies are version specific.
+	</div>
+	<h4>Create package variation</h4>
+	<div class="box">
+		Needs to be added.
+	</div>
+<% end -%>
+
+<h2>Editing a package</h2>
+
+<%= package_header(@package) %>
+
+<p><em>Editing the name property will change the stream of applications this package belongs to</em></p>
+
+<% form_for(@package, :html => {:multipart => true} ) do |f| %>
+	<%= f.error_messages %>
+<table class="form">
+	<tr>
+		<td>
+			Display name
+		</td>
+		<td>
+			<%= f.text_field :display_name %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Name (<%= field_lock_control("package_name") %>)
+		</td>
+		<td>
+			<%= f.text_field :name, :disabled => true %>
+			<%= helpful_info('The name field controls what stream of packages this belongs.  If you are updating older packages with this package, ensure the names match.') %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Version
+		</td>
+		<td>
+			<%= f.text_field :version %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Version Tracker Version
+		</td>
+		<td>
+			<%= f.text_field :version_tracker_version %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Version Tracker Web ID
+		</td>
+		<td>
+			<%= f.text_field :version_tracker_web_id %>
+			<%= helpful_info("Enter version tracker ID to automatically track future versions of this application/package") %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Installer (<%= field_lock_control("package_installer_item_location") %>)
+		</td>
+		<td>
+			<%= f.text_field :installer_item_location, :disabled => true %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Installer Size (<%= field_lock_control("package_installer_item_size") %>)
+		</td>
+		<td>
+			<%= f.text_field :installer_item_size, :disabled => true %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Installed Size (<%= field_lock_control("package_installed_size") %>)
+		</td>
+		<td>
+			<%= f.text_field :installed_size, :disabled => true %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Installer Type
+		</td>
+		<td>
+			<%= f.select :installer_type, options_for_select(Package::FORM_OPTIONS[:installer_types],@package.installer_type) %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Custom Package Path
+		</td>
+		<td>
+			<%= f.text_field :package_path %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Category
+		</td>
+		<td>
+			<%= f.collection_select :package_category_id, PackageCategory.all, :id, :name %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Restart Action
+		</td>
+		<td>
+			<%= f.select :RestartAction, options_for_select(Package::FORM_OPTIONS[:restart_actions],@package.RestartAction) %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			OS
+		</td>
+		<td>			
+			<%= select_tag "#{@package.class.to_s.downcase}[minimum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],@package.minimum_os_version) %> to
+			<%= select_tag "#{@package.class.to_s.downcase}[maximum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],@package.maximum_os_version) %>
+		</td>
+	</tr>
+	<tr>
+		<td>Environment</td>
+		<td><%= f.collection_select :environment_id, Environment.all, :id, :name %></td>
+	</tr>
+	<tr>
+		<td>Supported Architectures</td>
+		<td>
+			<%= check_box_tag 'package[supported_architectures][]', 'i386', @package.intel?, :id => 'package_supported_architectures_i386' %>
+			<%= label_tag 'package_supported_architectures_i386', 'Intel' %>
+			
+			<%= check_box_tag 'package[supported_architectures][]', 'ppc', @package.ppc?, :id => 'package_supported_architectures_ppc'  %>
+			<%= label_tag 'package_supported_architectures_ppc', 'PPC' %>
+		</td>
+	</tr>
+	<tr>
+		<td>Autoremove</td>
+		<td>
+			<%= f.check_box :autoremove %>
+		</td>
+	</tr>
+	<tr>
+		<td>Uninstallable</td>
+		<td>
+			<%= f.check_box :uninstallable %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Uninstall Method
+		</td>
+		<td>
+			<%= f.radio_button :uninstall_method, 'removepackages' %>
+			<%= label_tag 'package_uninstall_method_removepackages', 'Remove Packages' %><br />
+
+			<%= f.radio_button :uninstall_method, 'remove_app' %>
+			<%= label_tag 'package_uninstall_method_remove_app', 'Remove App' %><br />
+
+			<%= f.radio_button :uninstall_method, 'uninstaller' %>
+			<%= label_tag 'package_uninstall_method_uninstaller', ('Uninstaller' + f.text_field(:uninstaller_item_location)).html_safe %><br />
+
+			<%= f.radio_button :uninstall_method, 'AdobeUberUninstaller' %>
+			<%= label_tag 'package_uninstall_method_adobeuberuninstaller', 'AdobeUberUninstaller' %><br />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Icon
+		</td>
+		<td>
+			<%= image_tag(@package.icon.public_filename, :height => "30px", :style => "vertical-align:middle;") %>
+			<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<h4>Description</h4>
+			<%= f.text_area :description, :size => "80x4" %>
+		</td>
+	</tr>
+	<tr>
+		<td><%= f.submit 'Update' %></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<%= tabled_asm_select(@package) %>
+		</td>	
+	</tr>
+	<% unless @package.installer_appdmg? %>
+		<tr>
+			<td colspan="2">
+				<h4>Receipts</h4>
+				<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
+				# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
+				<div id="gui_receipts_container">
+					# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
+				</div>
+				-->
+				<div id="receipts_plist_container">
+					<%= f.text_area :receipts_plist, :size => "80x20" %>
+				</div>
+				<!-- <hr /> -->
+			</td>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="2">
+			<h4>Installs</h4>
+			 <!-- #radio_button_tag 'installs_mode', 'gui', checked = true # label_tag 'installs_mode_gui', 'GUI'
+			 #radio_button_tag 'installs_mode', 'text' # label_tag 'installs_mode_text', 'Text'<br />
+			<div id="gui_installs_container">
+				render :partial => 'gui_installs', :locals => {:installs => @package.installs}
+			</div>
+			 -->
+			<div id="installs_plist_container">
+				<%= f.text_area :installs_plist, :size => "80x20" %>
+			</div>
+			<!-- <hr /> -->
+		</td>
+	</tr>
+	<% if @package.installer_package? %>
+		<tr>
+			<td colspan="2">
+				<h4><%= f.label :use_installer_choices, "Installer Choices" %></h4>
+				<p>Needs to be added.</p>
+			</td>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="2">
+			<h4>
+				Raw tags 
+				<%= f.select :raw_mode_id, options_for_select([[Package.raw_mode(0),0],[Package.raw_mode(1),1],[Package.raw_mode(2),2]],@package.raw_mode_id) %>
+				<%= helpful_info("Raw tags allow the ability to add extra Plist tags to the manifest.  Must be formatted as a valid plist with a dictionary at the root. If you define a tag that is already defined above, the raw tag overwrites it.  In append mode, the tags are added to the info plist.  In exclusive mode, only the tags shown here are used.") %>
+			</h4>
+			<div>
+				<%= text_area_tag "package[raw_tags]", (@package.raw_tags.to_plist unless @package.raw_tags.nil?), :size => "80x15" %>
+			</div>
+		</td>
+	</tr>
+</table>
+<p><%= f.submit 'Update' %></p>
+<% end %>
+
+<%= link_to 'Show', @package %>
