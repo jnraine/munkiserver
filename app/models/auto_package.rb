@@ -111,7 +111,6 @@ module AutoPackage
     extract_dir = File.dirname(path) + "/" + original_name
     # Add date stamp
     # extract_dir = File.dirname(extract_dir) + "/" + Time.now.to_s(:ordered_numeric) + File.basename(extract_dir)
-    debugger
     # Create destination directory
     extract_dir = self.unzip(path,extract_dir)
     # Make sure we're OK

@@ -388,7 +388,7 @@ class Package < ActiveRecord::Base
   
   # Takes a tmp file, moves it to the appropriate place, and checks it in
   # Return value is the same as Package.checkin.  If it fails, it will raise
-  # an InvalidPackageUpload exception
+  # an PackageError exception
   def self.upload(file, options = {})
     original_filename = nil
     if file.respond_to?(:original_filename)
@@ -411,9 +411,9 @@ class Package < ActiveRecord::Base
     # Check package in
     begin
       Package.checkin(dest_path, options)
-    rescue InvalidPackageUpload
+    rescue PackageError
       FileUtils.remove(dest_path)
-      raise InvalidPackageUpload("There was a problem checking in #{dest_path}. It has been deleted.")
+      raise PackageError("There was a problem checking in #{dest_path}. It has been deleted.")
     end
   end
   
@@ -500,7 +500,7 @@ class Package < ActiveRecord::Base
     p = Package.new
     h = File.read(plist_file).from_plist
     if h.nil?
-      raise InvalidPackageUpload
+      raise PackageError("There was a problem parsing the plist provided from makepkginfo")
     else
       # Remove items that we don't need
       h.delete('catalogs')
