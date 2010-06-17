@@ -6,6 +6,8 @@ module AutoPackage
   
   # Downloads file from a URL and turns it into a Package record
   def self.from_url(url)
+    # For special cases, reformat the URL
+    url = reformat_url(url)
     # Derive original filename
     begin
       original_filename = url.match(/(\/)([^\/]+)$/)[2]
@@ -34,6 +36,45 @@ module AutoPackage
     # Open new file handle
     f = File.open(tmp_path)
     self.from_path(tmp_path)
+  end
+  
+  # Reforms url for special cases, such as firefox download.
+  # 
+  # When adding another case, do the following:
+  # => Create #{url_type}_url? method that is true or false if URL is that type
+  # => Create format_#{url_type}_url method that takes a url of that type and returns a formatted version
+  # => Add a if #{url_type} then return #{url_type.to_sym}
+  def self.reformat_url(url)
+    url_type = url_type(url)
+    # Reformat the URL based on the type
+    send "format_#{url_type}_url", url
+  end
+  
+  # Return symbol representation of url type
+  def self.url_type(url)
+    if firefox_url?(url)
+      return :firefox
+    else
+      :normal
+    end
+  end
+  
+  # Don't do anything to the URl.  We only have this to simplify the reformat_url method
+  def self.format_normal_url(url)
+    url
+  end
+  
+  # True if resembles firefox url
+  def self.firefox_url?(url)
+    url.match(/http:\/\/www\.mozilla\.com\/[^\/]*\/?products\/download\.html.+/) != nil
+  end
+  
+  # Take a firefox URL type and return a formatted one
+  def self.format_firefox_url(url)
+    get_string = url.match(/(http:\/\/www\.mozilla\.com\/[^\/]*\/?products\/download\.html)(.+)/)[2]
+    version = get_string.match(/(\?product=firefox-)([\d\.]+)(.+)/)[2]
+    # Add version to proper URL
+    "http://releases.mozilla.org/pub/mozilla.org/firefox/releases/#{version}/mac/en-US/Firefox%20#{version}.dmg"
   end
   
   # Derives extension from string
