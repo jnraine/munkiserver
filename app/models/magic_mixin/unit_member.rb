@@ -18,6 +18,7 @@ module UnitMember
       scope :environment, lambda { |p| where(:environment_id => p.id) }
       scope :environment_ids, lambda { |ids| where(:environment_id => ids) }
       scope :environments, lambda { |p| where(:environment_id => p.collect(&:id)) }
+      scope :unit_and_environment, lambda { |u,e| where(:unit_id => u.id, :environment_id => e.id) }
       
       validates_presence_of :environment_id
       validates_presence_of :unit_id

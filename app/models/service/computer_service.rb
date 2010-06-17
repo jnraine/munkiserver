@@ -91,9 +91,10 @@ class ComputerService
   
   # Returns a collection based on the params passed as well as a unit.
   # Intended to encapsulate the typical query done for the index action.
-  def self.collect(params,unit)
+  def self.collect(params, unit, env)
     # Grab the computers belonging to a specific unit
-    computers = Computer.unit(unit)
+    # Set environment
+    computers = Computer.unit_and_environment(unit,env)
     
     # Modify the query for sorting
     unless params[:order].blank?

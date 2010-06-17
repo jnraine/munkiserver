@@ -1,4 +1,15 @@
 <div id="computer_listing">
+	<div id="environment_links">
+		|
+		<% Environment.all.each do |env| %>
+			<% if @env.id == env.id %>
+				<%= env.to_s + " (#{Computer.where(:environment_id => env.id).count})" %>
+			<% else %>
+				<%= link_to env.to_s + " (#{Computer.where(:environment_id => env.id).count})", computers_path(:eid => env.id) %>
+			<% end -%>
+			|
+		<% end -%>
+	</div>
 	<% # computer_group_header(@computer_group_id) %>
 	<div class="span-16 last" style="text-align:right;">
 	<% form_tag computers_url, :id => "filter_form", :method => 'get' do %>

@@ -4,7 +4,7 @@ module ComputersHelper
   def computer_header(computer)
     render :partial => 'shared/record_header', :locals => {:title => computer.hostname,
                               														 :img => computer.icon.public_filename,
-                              														 :soft_info => computer.computer_group.name,
+                              														 :soft_info => computer.computer_group,
                               														 :bold_info => computer.mac_address }
 	end
 

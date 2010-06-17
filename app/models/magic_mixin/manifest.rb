@@ -185,7 +185,7 @@ module Manifest
       def included_manifests
         a = bundles.collect {|e| "#{e.to_s(:path)}.plist"}
         if self.respond_to?(:computer_group)
-          a << "#{computer_group.to_s(:path)}.plist"
+          a << "#{computer_group.to_s(:path)}.plist" unless computer_group.nil?
         end
         a
       end

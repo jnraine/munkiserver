@@ -18,7 +18,7 @@ class Computer < ActiveRecord::Base
   #   end
   # end
   
-  before_save :require_computer_group
+  # before_save :require_computer_group
   
   # Getter for virtual attribute hostname
   def hostname
@@ -42,8 +42,9 @@ class Computer < ActiveRecord::Base
 
   # Make sure this computer is assigned a computer group
   # if it isn't, assign the default computer group
+  # No longer used, instead, trying to not assume a computer has a group
   def require_computer_group
-    self.computer_group = ComputerGroup.default(self.unit) if self.computer_group.nil?
+    self.computer_group_id = ComputerGroup.default(self.unit).id if self.computer_group_id.nil?
   end
 
   def catalogs

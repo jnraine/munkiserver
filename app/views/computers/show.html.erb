@@ -11,7 +11,7 @@
 <h4>Computer (<%= link_to "edit", edit_computer_url(@computer) %>)</h4>
 <%= inventory(@computer,true) %>
 
-<% unless @computer.computer_group.id == 0 %>
+<% unless @computer.computer_group.nil? %>
 	<h4>Computer Group (<%= link_to "edit", edit_computer_group_url(@computer.computer_group) %>)</h4>
 	<%= inventory(@computer.computer_group) %>
 <% else %>
