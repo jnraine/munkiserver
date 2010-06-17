@@ -89,6 +89,7 @@ namespace :bootstrap do
   
   desc "Load default unit"
   task :unit, :name, :needs => :environment do |t, args|
+    Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
     name = args.name
     name ||= "Default"
     u = Unit.find_or_create_by_name(name)

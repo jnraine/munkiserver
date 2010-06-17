@@ -45,7 +45,7 @@ class Unit < ActiveRecord::Base
   def create_default_computer_group
     cg = ComputerGroup.unit(self).find_by_name("Default")
     cg ||= ComputerGroup.new({:name => "Default", :unit_id => self.id, :environment_id => Environment.first.id})
-    cg.save
+    cg.save and self.save
   end
   
   # Returns an array of tas option hashes
