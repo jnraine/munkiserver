@@ -1,10 +1,10 @@
 class Package < ActiveRecord::Base
   magic_mixin :unit_member
+  
+  # Dependancy relationships
   belongs_to :package_branch, :autosave => true
   belongs_to :package_category
   belongs_to :icon
-  
-  # Dependancy relationships
   has_many :require_items, :as => :manifest
   has_many :update_for_items, :as => :manifest
   
@@ -60,7 +60,7 @@ class Package < ActiveRecord::Base
   # Takes a plist string and converts it to a ruby object and assigns it to receipts
   def receipts_plist=(value)
     obj = value.from_plist
-    receipts = obj
+    self.receipts = obj
   end
   
   # Virtual attribute getter
@@ -76,7 +76,40 @@ class Package < ActiveRecord::Base
   # Takes a plist string and converts it to a ruby object and assigns it to receipts
   def installs_plist=(value)
     obj = value.from_plist
-    installs = obj
+    self.installs = obj
+  end
+
+  # Virtual attribute that parses the array value of a tabled asm select into package and 
+  # package branches and assigns that value to the upgrade_for attribute
+  def update_for_tas=(value)
+    self.update_for = Package.parse_package_strings(value) if value != nil
+  end
+
+  # Virtual attribute that parses the array value of a tabled asm select into package and 
+  # package branches and assigns that value to the requires attribute
+  def requires_tas=(value)
+    self.requires = Package.parse_package_strings(value) if value != nil
+  end
+
+  # Takes an array of strings and returns either a package or a package branch
+  # depending on the format of the string.
+  # => Package record returned if matching: "#{package_branch_name}-#{version}"
+  # => PackageBranch record returned if matching: "#{package_branch_name}"
+  def self.parse_package_strings(a)
+    items = []
+    a.each do |name|
+      if split = name.match(/(.+)(-)(.+)/)
+        # For packages
+        pb = PackageBranch.where(:name => split[1]).limit(1).first
+        p = Package.where(:package_branch_id => pb.id, :version => split[3]).first
+        items << p unless p.nil?
+      else
+        # For package branches
+        pb = PackageBranch.where(:name => name).limit(1).first
+        items << pb unless pb.nil?
+      end
+    end
+    items
   end
 
   # Attempts to save the package branch and returns the result
@@ -175,9 +208,10 @@ class Package < ActiveRecord::Base
     update_for_items.collect(&:package)
   end
   
-  # Getter that aggregates the update_for ids
+  # Getter that aggregates the update_for_items package branch ids
+  # TO-DO This is an unintuative design and will be confusing: update_for returns packages, update_for_ids returns package branch IDs
   def update_for_ids
-    update_for.map(&:id)
+    update_for_items.map(&:package_branch).map(&:id)
   end
 
   def update_for=(list)
@@ -203,6 +237,12 @@ class Package < ActiveRecord::Base
     super
   end
   
+  # Get the latest package from a specific unit and environment
+  def self.latest_from_unit_and_environment(u,e)
+    pbs = PackageBranch.unit_and_environment(u,e)
+    pbs.map(&:latest)
+  end
+  
   # Default parameters for the table_asm_select method
   # Returns values for self
   def tas_params
@@ -223,14 +263,14 @@ class Package < ActiveRecord::Base
     # Array for table_asm_select
     [{:title => "Update for",
       :model_name => model_name,
-      :attribute_name => "update_for",
+      :attribute_name => "update_for_tas",
       :select_title => "Select a package",
       :options => update_for_options,
       :selected_options => model_obj.update_for_ids,
       :helpful_string => "Select a package branch that this package updates"},
      {:title => "Requires",
       :model_name => model_name,
-      :attribute_name => "requires",
+      :attribute_name => "requires_tas",
       :select_title => "Select a package",
       :options => requires_options,
       :selected_options => requires_selected,
@@ -402,7 +442,7 @@ class Package < ActiveRecord::Base
     dest_path = Munki::Application::PACKAGE_DIR + installer_item_name
     # Make sure a file of that name doesn't already exist and fix it if it does
     if File.exists?(dest_path)
-      installer_item_name = Time.now.strftime("%Y.%m.%d.%H%M%S") + "_" + rand(1001) + "_" + original_filename
+      installer_item_name = Time.now.to_s(:ordered_numeric) + "_" + rand(1001) + "_" + original_filename
       dest_path = Munki::Application::PACKAGE_DIR + installer_item_name
     end
     # Move from the tmp location to destination
@@ -466,10 +506,14 @@ class Package < ActiveRecord::Base
       # Set defaults based on previous records with the same name
       existing_version = Package.where(:package_branch_id => package.package_branch_id).order('version DESC').first
       unless existing_version.nil?
-        package.description = existing_version.description
-        package.icon = existing_version.icon
-        package.package_category_id = existing_version.package_category_id
-        package.installs = existing_version.installs
+        # Call package.attr = existing_version.attr to assign inheritable attributes to the new package
+        self.inherited_attributes.each do |attr|
+          package.send("#{attr}=",existing_version.send(attr)) unless existing_version.send(attr).blank?
+        end
+        # package.description = existing_version.description
+        #         package.icon = existing_version.icon
+        #         package.package_category_id = existing_version.package_category_id
+        #         package.installs = existing_version.installs
       end
 
       # Determine installer_choices
@@ -486,6 +530,11 @@ class Package < ActiveRecord::Base
     File.unlink(tmp_file_path)
     # Return hash
     hash
+  end
+  
+  # A list of attributes that are inherited by new packages, if a previous version exists
+  def self.inherited_attributes
+    [:description, :icon, :package_category_id]
   end
   
   # Returns a hash of default attributes that are used to intialize

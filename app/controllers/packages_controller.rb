@@ -3,10 +3,11 @@ class PackagesController < ApplicationController
     # Set environment
     @env = Environment.find_by_id(params[:eid])
     @env ||= Environment.default_view
-    # Get package branches and binds them to the current scope
-    @package_branches = PackageBranch.unit_and_environment(current_unit,@env)
-    @packages = @package_branches.map(&:latest)
-    
+    # TO-DO This query can be rethought because of the way the view uses this list of packages
+    # it might be better to grab all the package branches from this environment and then iterate
+    # through those grabbing all the different versions using the @packages@ method.
+    @packages = Package.latest_from_unit_and_environment(current_unit,@env)
+
     respond_to do |format|
       format.html
     end
@@ -65,10 +66,11 @@ class PackagesController < ApplicationController
 
   def update
     @package = Package.unit(current_unit).find(params[:id])
-    @package_service = PackageService.new(@package,params[:package])
+    debugger
+    # @package_service = PackageService.new(@package,params[:package])
   
     respond_to do |format|
-      if @package_service.save
+      if @package.save
         flash[:notice] = "Package was successfully updated."
         format.html { redirect_to package_path(@package) }
         format.xml { head :ok }

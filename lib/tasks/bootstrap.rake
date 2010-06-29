@@ -74,7 +74,8 @@ namespace :bootstrap do
          {:name => "PowerBook G4 Titanium",:icon_path => "#{path}/com.apple.powerbook-g4-titanium.png"},
          {:name => "PowerMac G4 Graphite",:icon_path => "#{path}/com.apple.powermac-g4-graphite.png"},
          {:name => "PowerMac G4 Quicksilver",:icon_path => "#{path}/com.apple.powermac-g4-quicksilver.png"},
-         {:name => "PowerMac G5",:icon_path => "#{path}/com.apple.powermac-g5.png"}]
+         {:name => "PowerMac G5",:icon_path => "#{path}/com.apple.powermac-g5.png"},
+         {:name => "VMWare Fusion",:icon_path => "#{path}/vmware_fusion.png"}]
     # Add the records
     a.each do |h|
       r = ComputerModel.find_or_create_by_name(h[:name])

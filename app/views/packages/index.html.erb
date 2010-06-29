@@ -4,17 +4,17 @@
 <% end -%>
 
 <h2>Listing packages</h2>
-<div id="environment_links">
+<P id="environment_links">
 	|
 	<% Environment.all.each do |env| %>
 		<% if @env.id == env.id %>
-			<%= env.to_s + " (#{Package.where(:environment_id => env.id).count})" %>
+			<%= env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})" %>
 		<% else %>
-			<%= link_to env.to_s + " (#{Package.where(:environment_id => env.id).count})", packages_path(:eid => env.id) %>
+			<%= link_to env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})", packages_path(:eid => env.id) %>
 		<% end -%>
 		|
 	<% end -%>
-</div>
+</P>
 
 <h3><%= @env %></h3>
 

@@ -3,7 +3,6 @@
 	<div class="box">
 		Hostname and MAC address are required.  <br />
 		Ensure MAC address is formatted properly (e.g. aa:00:bb:22:cc:33). <br />
-		Ensure hostname is an FQDN (e.g. test.sfu.ca).
 	</div>
 <% end -%>
 <h2>New computer</h2>
@@ -12,7 +11,7 @@
 	<%= f.error_messages %>
 	<table class="form">
 		<tr>
-			<td>Hostname</td>
+			<td>Name / Hostname</td>
 			<td><%= f.text_field :name, :size => 18 %></td>
 		</tr>
 		<tr>

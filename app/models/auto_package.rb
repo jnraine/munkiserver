@@ -1,3 +1,14 @@
+# Auto package takes a file (in the form of a URL or path) and determines if it can automatically package it
+# and add it to the munki server.
+# 
+# Cases covered:
+# => URL to .dmg files
+# => URL to .zip files
+# => Firefox download redirect page
+# 
+# Cases that need to be accounted for:
+# => Source forge download redirect page
+# => VLZ download mirror page
 module AutoPackage
   require 'open-uri'
   

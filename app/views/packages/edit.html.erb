@@ -54,6 +54,7 @@
 		</td>
 		<td>
 			<%= f.text_field :version_tracker_version %>
+			<%= helpful_info("Optionally, specify a version string used when comparing this package to the latest on versiontracker.com") %>
 		</td>
 	</tr>
 	<tr>
@@ -99,7 +100,7 @@
 	</tr>
 	<tr>
 		<td>
-			Custom Package Path
+			Custom Package Path (<%= field_lock_control("package_package_path") %>)
 		</td>
 		<td>
 			<%= f.text_field :package_path %>

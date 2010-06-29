@@ -20,23 +20,23 @@ class PackageService
   # => Package record returned if matching: "#{package_branch_name}-#{version}"
   # => PackageBranch record returned if matching: "#{package_branch_name}"
   def self.parse_package_strings(a)
-    installs = []
+    items = []
     a.each do |name|
       if split = name.match(/(.+)(-)(.+)/)
         # For packages
         pb = PackageBranch.where(:name => split[1]).limit(1).first
         p = Package.where(:package_branch_id => pb.id, :version => split[3]).first
-        installs << p unless p.nil?
+        items << p unless p.nil?
       else
         # For package branches
         pb = PackageBranch.where(:name => name).limit(1).first
-        installs << pb unless pb.nil?
+        items << pb unless pb.nil?
       end
     end
-    installs
+    items
   end
   
-  # Perform a save on the @Qpackage object (after assigning all the *installs)
+  # Perform a save on the @package object (after assigning all the *installs)
   def save
     @package.update_attributes(@attr)
   end

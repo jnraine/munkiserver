@@ -22,6 +22,10 @@ gem "nokogiri"
 # Used for ACLs (NOT IMPLEMENTED!)
 # gem "declarative_authorization"
 
+# group :production do
+#   gem 'mysql'
+# end
+
 group :development do
 	gem "ruby-debug19" , :require => "ruby-debug"
 end
