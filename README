@@ -39,7 +39,7 @@ For some cases, such as a drag-and-drop application install, munkiserver provide
 	
 == First login
 
-A user is created by the bootstrapper with the username 'default' and the password 'password'.  Use this after setting up the server.
+A user is created by the bootstrapper with the username 'default' and the password 'Password1'.  Use this after setting up the server.
 
 == State of the code
 

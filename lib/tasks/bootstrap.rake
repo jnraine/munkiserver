@@ -126,8 +126,8 @@ namespace :bootstrap do
     username ||= "default"
     u = User.find_or_create_by_username(username)
     u.email = "donotreply@gmail.com"
-    u.password = "password"
-    u.password_confirmation = "password"
+    u.password = "Password1"
+    u.password_confirmation = "Password1"
     u.super_user = true
     u.save
     u.units = [Unit.first]
