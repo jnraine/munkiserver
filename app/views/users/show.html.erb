@@ -1,20 +1,35 @@
 <h2>User</h2>
 
-<h3>Info</h3>
-<p>
-	Username: <%= @user.username %><br />
-	Email: <%= @user.email %><br />
-	Super user: <%= @user.super_user? ? "Yes" : "No" %>
-</p>
+<h3>Info</h3> 
+
+<table class="form">
+	<tr>
+		<td>Username: <%= @user.username %></td>
+	</tr>
+	<tr>
+		<td>Email: <%= @user.email %></td>
+	</tr>
+	<tr>
+		<td>Super user: <%= @user.super_user? ? "Yes" : "No" %></td>
+	</tr>
+</table>
+
 
 <h3>Units</h3>
+
 <% if @user.units.empty? %>
-	<p>This user has no access to any units</p>
+<table class="form">
+	<tr>
+		<td>This user has no access to any units.</td>
+	</tr>
 <% end -%>
 <ul>
 	<% @user.units.each do |unit| %>
-		<li><%= unit %></li>
+	<tr>
+		<td><li><%= unit %></li></td>
 	<% end -%>
+	</tr>
 </ul>
+</table>
 
-<%= link_to "Edit user", edit_user_path(@user) %>
+<%= link_to "Edit", edit_user_path(@user) %> | <%= link_to "Back", users_path %>

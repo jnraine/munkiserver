@@ -1,0 +1,29 @@
+<%= form_for(@user) do |f| %>
+	<%= f.error_messages %>
+	<table class="form">
+		<tr>
+			<td>Username</td>
+			<td><%= f.text_field :username %></td>
+			<td><%= helpful_info("Username must be between 3-40 characters in length.") %></td>
+		</tr>
+		<tr>
+			<td>Email</td>
+			<td><%= f.text_field :email %></td>
+			<td><%= helpful_info("Requires a valid email address.") %></td>
+		</tr>
+		<tr>
+			<td>Password</td>
+			<td><%= f.password_field :password %></td>
+			<td><%= helpful_info("#{User.password_constraints}") %></td>
+			
+		</tr>
+		<tr>
+			<td>Verify</td>
+			<td><%= f.password_field :password_confirmation %></td>
+			<td><%= helpful_info("#{User.password_constraints}") %></td>
+		</tr>
+	</table>
+	<p>
+	<%= f.submit 'Submit' %>
+	</p>
+<% end %>

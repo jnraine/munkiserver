@@ -1,13 +1,33 @@
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
+  
+  @@password_constraints = {:pass_len => "must be between 5-24 characters",
+    :pass_nums => "must contain at least one number",
+    :pass_upper => "must contain at least one upper case character",
+    :pass_lower => "must contain at least one lower case character"}
+
   validates_length_of :username, :within => 3..40
-  validates_length_of :password, :within => 5..40, :if => :password_changed?
-  validates_presence_of :username, :email, :salt
+  # ensure password has enough letters, but not too many
+  validates_length_of :password, :in => 5..24, :if => :password_changed?,
+    :message => @@password_constraints[:pass_len]
+  # ensure password contains at least one number
+  validates_format_of :password, :with => /[0-9]/, :if => :password_changed?,
+    :message => @@password_constraints[:pass_nums]
+  # ensure password contains at least one upper case  
+  validates_format_of :password, :with => /[A-Z]/, :if => :password_changed?,
+    :message => @@password_constraints[:pass_upper]
+  # ensure password contains at least one lower case  
+  validates_format_of :password, :with => /[a-z]/, :if => :password_changed?,
+    :message => @@password_constraints[:pass_lower]
+  validates_presence_of :username, :email
+  validates_presence_of :salt,
+    :message => "is missing. New users require a password."
   validates_presence_of :password, :password_confirmation, :if => :password_changed?
   validates_uniqueness_of :username, :email
-  validates_confirmation_of :password
-  validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :message => "Invalid email"
+  validates_confirmation_of :password, :if => :password_changed?
+  validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, 
+    :message => "address doesn't look valid"
   
   attr_protected :id, :salt
   attr_accessor :password
@@ -18,7 +38,11 @@ class User < ActiveRecord::Base
   has_one :settings, :dependent => :destroy, :class_name => "UserSetting", :autosave => true
 
   before_save :check_settings
-
+  
+  def self.password_constraints
+    @@password_constraints.values
+  end
+  
   # Generate a random string consisting of strings and digits
   # with a length of up to len characters
   def self.random_string(len)
@@ -40,8 +64,10 @@ class User < ActiveRecord::Base
   
   def password=(pass)
     @password = pass
-    self.salt = User.random_string(10) unless self.salt?
-    self.hashed_password = User.encrypt(@password, self.salt)
+    unless @password.blank?  
+      self.salt = User.random_string(10) unless self.salt?
+      self.hashed_password = User.encrypt(@password, self.salt)
+    end
   end
   
   def self.authenticate(username, pass)

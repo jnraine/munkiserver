@@ -1,34 +1,6 @@
 <h2>Editing user</h2>
 
-<% form_for(@user) do |f| %>
-	<%= f.error_messages %>
-	<table class="form">
-		<tr>
-			<td>Username</td>
-			<td><%= f.text_field :username %></td>
-		</tr>
-		<tr>
-			<td>Email</td>
-			<td><%= f.text_field :email %></td>
-		</tr>
-		<tr>
-			<td>Super User</td>
-			<td><%= f.check_box :super_user %></td>
-		</tr>
-		<tr>
-			<td colspan="2"><%= label_tag "change_password_checkbox", "Change Password" %> <%= check_box_tag "change_password", "on", false, {:id => "change_password_checkbox"} %></td>
-		<tr>
-			<td>Password</td>
-			<td><%= f.password_field :password %></td>
-		</tr>
-		<tr>
-			<td>Verify</td>
-			<td><%= f.password_field :password_confirmation %></td>
-		</tr>
-	</table>
-	<p>
-	<%= f.submit 'Update' %>
-	</p>
-<% end %>
+<%= render :partial => 'form' %>
+
 
 <%= link_to 'Show', user_path(@user) %>
