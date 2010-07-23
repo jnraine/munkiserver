@@ -39,8 +39,8 @@ class CreatePackages < ActiveRecord::Migration
       t.boolean :uninstallable, :default => true      
 
       # Dependancy
-      t.text :requires
-      t.text :update_for
+      # t.text :requires
+      # t.text :update_for
       
       # For yet-to-be-made munki repo
       t.string :installer_item_checksum

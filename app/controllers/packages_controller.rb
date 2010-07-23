@@ -66,11 +66,9 @@ class PackagesController < ApplicationController
 
   def update
     @package = Package.unit(current_unit).find(params[:id])
-    debugger
-    # @package_service = PackageService.new(@package,params[:package])
-  
+    
     respond_to do |format|
-      if @package.save
+      if @package.update_attributes(params[:package])
         flash[:notice] = "Package was successfully updated."
         format.html { redirect_to package_path(@package) }
         format.xml { head :ok }

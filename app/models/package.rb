@@ -253,9 +253,10 @@ class Package < ActiveRecord::Base
   # Takes an object of the current class and returns params
   def self.tas_params(model_obj)
     # Get all the package branches associated with this unit and environment
-    update_for_options = PackageBranch.unit_member(model_obj).map { |e| [e,e] unless e.id == model_obj.package_branch.id }.compact
-    update_for_selected = model_obj.update_for_items.map(&:package_branches).map(&:to_s)
-    requires_options = Package.where(:unit_id => model_obj.unit_id).where("id != #{model_obj.id}").map { |e| [e.to_s(:version),e.to_s(:version)] }
+    update_for_options = PackageBranch.unit_member(model_obj).map { |e| [e.to_s,e.to_s] unless e.id == model_obj.package_branch.id }.compact
+    update_for_selected = model_obj.update_for.map(&:package_branch).map(&:to_s)
+    # update_for_selected = model_obj.update_for_items.map(&:package_branches).map(&:to_s)
+    requires_options = Package.unit_member(model_obj).where("id != #{model_obj.id}").map { |e| [e.to_s(:version),e.to_s(:version)] }
     requires_selected = model_obj.require_items.map(&:package).map {|e| e.to_s(:version) }
     
     model_name = self.to_s.underscore
@@ -266,7 +267,7 @@ class Package < ActiveRecord::Base
       :attribute_name => "update_for_tas",
       :select_title => "Select a package",
       :options => update_for_options,
-      :selected_options => model_obj.update_for_ids,
+      :selected_options => update_for_selected,
       :helpful_string => "Select a package branch that this package updates"},
      {:title => "Requires",
       :model_name => model_name,
@@ -376,17 +377,27 @@ class Package < ActiveRecord::Base
       h = raw_tags unless raw_tags.blank?
     else
       # Take care of the straight forward mappings
-      [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
-       :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
-       :installer_item_location,:uninstall_method,:uninstaller_item_location,:uninstaller_item_size,:uninstallable,
-       :requires,:update_for,:catalogs,:supported_architectures,:version].each do |key|
-        h[key.to_s] = self.send(key) unless self.send(key).blank?
+      keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
+              :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
+              :installer_item_location,:uninstall_method,:uninstaller_item_location,:uninstaller_item_size,:uninstallable,
+              :requires,:update_for,:catalogs,:supported_architectures,:version]
+       
+      keys.each do |key|
+        h[key.to_s] = self.send(key) if self.send(key).present?
       end
+      
       if raw_mode == "Append"
         h = h.merge(raw_tags) unless raw_tags.blank?
       end
     end
     h
+  end
+  
+  # Tells plist gem how to serialize this object
+  # Turns the package into a string and then converts
+  # that string into a plist node using the Plist gem
+  def to_plist_node
+    Plist::Emit.plist_node(self.to_s)
   end
 
   def raw_mode
@@ -453,7 +464,7 @@ class Package < ActiveRecord::Base
       Package.checkin(dest_path, options)
     rescue PackageError
       FileUtils.remove(dest_path)
-      raise PackageError("There was a problem checking in #{dest_path}. It has been deleted.")
+      raise PackageError("There was a problem checking in #{dest_path}. It should be deleted.")
     end
   end
   

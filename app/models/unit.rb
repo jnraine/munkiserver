@@ -31,9 +31,14 @@ class Unit < ActiveRecord::Base
     user_ids.include?(user.id)
   end
   
-  # Alias to user association
+  # Alias to user association getter
   def members
     users
+  end
+  
+  # Alias to user association setter
+  def members=(value)
+    self.users = value
   end
   
   # Creates default computer group if there are none assigned to this unit
