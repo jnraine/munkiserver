@@ -29,7 +29,7 @@ A user is created by the bootstrapper with the username 'default' and the passwo
 This code is relatively untested and currently relies on a sqlite3 database backend.  I wouldn't recommend putting this into production quite yet.  I do recommend you install it on a server (or workstation, for that matter) and test it on one or two computers.  Munki is a gentle manager and can be added and removed very easily to any computer.
 
 A production-ready version of the code should be available just as soon as I can test it thoroughly and put it into production on our campus.
-	
+
 ## Other comments
 
 -	Right now, Munki environments do not mingle.  This means that if a computer is "Production" and a package is "Staging", you cannot assign the package to the computer.
