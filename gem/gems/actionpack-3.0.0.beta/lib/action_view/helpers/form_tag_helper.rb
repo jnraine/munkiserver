@@ -32,12 +32,12 @@ module ActionView
       #   form_tag('/upload', :multipart => true)
       #   # => <form action="/upload" method="post" enctype="multipart/form-data">
       #
-      #   <% form_tag('/posts')do -%>
+      #   <%= form_tag('/posts')do -%>
       #     <div><%= submit_tag 'Save' %></div>
       #   <% end -%>
       #   # => <form action="/posts" method="post"><div><input type="submit" name="submit" value="Save" /></div></form>
       # 
-      #  <% form_tag('/posts', :remote => true) %>
+      #  <%= form_tag('/posts', :remote => true) %>
       #   # => <form action="/posts" method="post" data-remote="true">
       #   
       def form_tag(url_for_options = {}, options = {}, *parameters_for_url, &block)
@@ -173,7 +173,7 @@ module ActionView
       # Creates a file upload field.  If you are using file uploads then you will also need
       # to set the multipart option for the form tag:
       #
-      #   <% form_tag '/upload', :multipart => true do %>
+      #   <%= form_tag '/upload', :multipart => true do %>
       #     <label for="file">File to Upload</label> <%= file_field_tag "file" %>
       #     <%= submit_tag %>
       #   <% end %>

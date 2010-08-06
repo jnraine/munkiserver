@@ -10,7 +10,7 @@
 <p>Select an ARD export plist file and a destination computer group.</p>
 
 <div>
-<% form_tag({:action => "create_import"}, :multipart => true) do %>
+<%= form_tag({:action => "create_import"}, :multipart => true) do %>
 	<p><%= file_field_tag 'computer[plist]' %></p>
 	<p>
 		Computer group: 

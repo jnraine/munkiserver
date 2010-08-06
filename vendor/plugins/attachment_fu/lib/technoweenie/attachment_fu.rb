@@ -1,7 +1,7 @@
 module Technoweenie # :nodoc:
   module AttachmentFu # :nodoc:
     @@default_processors = %w(ImageScience Rmagick MiniMagick Gd2 CoreImage)
-    @@tempfile_path      = File.join(RAILS_ROOT, 'tmp', 'attachment_fu')
+    @@tempfile_path      = File.join(Rails.root, 'tmp', 'attachment_fu')
     @@content_types      = [
       'image/jpeg',
       'image/pjpeg',
@@ -326,7 +326,7 @@ module Technoweenie # :nodoc:
       # This method handles the uploaded file object.  If you set the field name to uploaded_data, you don't need
       # any special code in your controller.
       #
-      #   <% form_for :attachment, :html => { :multipart => true } do |f| -%>
+      #   <%= form_for :attachment, :html => { :multipart => true } do |f| -%>
       #     <p><%= f.file_field :uploaded_data %></p>
       #     <p><%= submit_tag :Save %>
       #   <% end -%>

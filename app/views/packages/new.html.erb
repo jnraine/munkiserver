@@ -19,7 +19,7 @@
 		Choose a .dmg to upload
 		<%= helpful_info("You cannot upload packages, applications, or Adobe installers without wrapping them in a disk image first!") %>
 	</p>
-	<% form_for(@package, :html => {:multipart => true, :id => "new_upload_package_form"}) do |f| %>
+	<%= form_for(@package, :html => {:multipart => true, :id => "new_upload_package_form"}) do |f| %>
 		<div>
 			<p><%= file_field_tag :data %></p>
 			<p>
@@ -55,7 +55,7 @@
 		Find an application on versiontracker.com and paste the ID here
 		<%= helpful_info("This only works for drag-and-drop apps wrapped in DMGs. Support will come for different cases...but not yet. The ID for an application can be found at the end of the URL: e.g. http://www.versiontracker.com/dyn\n/moreinfo/macosx/########") %>
 	</p>
-	<% form_for(@package, :html => {:multipart => true, :id => "new_version_tracker_package_form"}) do |f| %>
+	<%= form_for(@package, :html => {:multipart => true, :id => "new_version_tracker_package_form"}) do |f| %>
 		<p>
 			<%= text_field_tag :version_tracker_web_id %> Version Tracker web ID <br />
 			<%= submit_tag 'Grab' %>

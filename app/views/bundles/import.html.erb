@@ -1,6 +1,6 @@
 <h2>Import group manifest</h2>
 
-<% form_tag({:action => "createImport"}, :multipart => true) do %>
+<%= form_tag({:action => "createImport"}, :multipart => true) do %>
 	<p>
 	Name: <%= text_field_tag "group[name]", "" %>
 	</p>

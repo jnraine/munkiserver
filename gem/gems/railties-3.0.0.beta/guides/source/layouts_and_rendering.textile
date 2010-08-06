@@ -817,7 +817,7 @@ You can also pass local variables into partials, making them even more powerful 
 * +_form.html.erb+
 
 <erb>
-<% form_for(zone) do |f| %>
+<%= form_for(zone) do |f| %>
   <p>
     <b>Zone name</b><br />
     <%= f.text_field :name %>

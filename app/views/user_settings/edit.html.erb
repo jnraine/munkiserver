@@ -1,7 +1,7 @@
 <h2>Edit user settings</h2>
 <h3><%= @user_setting.user %></h3>
 
-<% form_for(@user_setting) do |f| %>
+<%= form_for(@user_setting) do |f| %>
 	<%= f.error_messages %>
 	<p>
 		<%= f.label :receive_email_notifications %>

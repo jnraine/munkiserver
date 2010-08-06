@@ -8,9 +8,10 @@ class PackageCategory < ActiveRecord::Base
     # Depending on the installer_type, assign a specific package category
     case installer_type
       when "appdmg" then d = self.find_by_name("Application")
+      when "adobeuberinstaller" then d = self.find_by_name("Application")
       else d = self.find_by_name("Misc")
     end
-
+    # If the above assignment fails, grab the first available package category
     d ||= self.first
     d
   end

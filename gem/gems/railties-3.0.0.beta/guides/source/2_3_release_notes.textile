@@ -335,7 +335,7 @@ end
 You can write this view in Rails 2.3:
 
 <erb>
-<% form_for @customer do |customer_form| %>
+<%= form_for @customer do |customer_form| %>
   <div>
     <%= customer_form.label :name, 'Customer Name:' %>
     <%= customer_form.text_field :name %>

@@ -2,7 +2,7 @@
 source 'http://gemcutter.org'
 
 
-gem "rails", "3.0.0.beta3"
+gem "rails", "3.0.0.rc"
 
 ## Bundle edge rails:
 # gem "rails", :git => "git://github.com/rails/rails.git"
@@ -27,5 +27,5 @@ gem "nokogiri"
 # end
 
 group :development do
-	gem "ruby-debug19" , :require => "ruby-debug"
+  # gem "ruby-debug19" , :require => "ruby-debug"
 end

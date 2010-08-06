@@ -16,7 +16,7 @@ module Munki
     
     # Add additional load paths for your own custom dirs
     # config.load_paths += %W( #{config.root}/extras )
-    config.load_paths += %W(
+    config.autoload_paths += %W(
         #{Rails.root}/app/models/join_models
         #{Rails.root}/app/models/magic_mixin
         #{Rails.root}/app/models/manifest
@@ -30,7 +30,6 @@ module Munki
     PACKAGE_DIR = Rails.root + "packages"
     # Make sure the dir exists
     FileUtils.mkdir_p(PACKAGE_DIR)
-    
     # Command line utilities
     MAKEPKGINFO = Pathname.new("/usr/local/munki/makepkginfo")
 
@@ -55,6 +54,9 @@ module Munki
     #   g.template_engine :erb
     #   g.test_framework  :test_unit, :fixture => true
     # end
+    
+    # A secret is required to generate an integrity hash for cookie session data
+    config.secret_token = "d24c49a98769afee486d236d82820f20fa0cd219581c024232d615c9f64eafa1e72dc07bd91f070cbb3c61ecb82e276d986ca42397d7cf08b98ef3139ca970c2"
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password

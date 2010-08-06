@@ -561,7 +561,7 @@ The +new.html.erb+ view displays this empty Post to the user:
 <erb>
 <h1>New post</h1>
 
-<% form_for(@post) do |f| %>
+<%= form_for(@post) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -666,7 +666,7 @@ After finding the requested post, Rails uses the +edit.html.erb+ view to display
 <erb>
 <h1>Editing post</h1>
 
-<% form_for(@post) do |f| %>
+<%= form_for(@post) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -764,7 +764,7 @@ As you saw earlier, the scaffold-generated views for the +new+ and +edit+ action
 <tt>_form.html.erb</tt>:
 
 <erb>
-<% form_for(@post) do |f| %>
+<%= form_for(@post) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -1092,7 +1092,7 @@ The +views/comments/new.html.erb+ view:
 <erb>
 <h1>New comment</h1>
 
-<% form_for([@post, @comment]) do |f| %>
+<%= form_for([@post, @comment]) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -1135,7 +1135,7 @@ The +views/comments/edit.html.erb+ view:
 <erb>
 <h1>Editing comment</h1>
 
-<% form_for([@post, @comment]) do |f| %>
+<%= form_for([@post, @comment]) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -1243,7 +1243,7 @@ You'll also need to modify +views/posts/_form.html.erb+ to include the tags:
 
 <erb>
 <% @post.tags.build if @post.tags.empty? %>
-<% form_for(@post) do |post_form| %>
+<%= form_for(@post) do |post_form| %>
   <%= post_form.error_messages %>
 
   <p>

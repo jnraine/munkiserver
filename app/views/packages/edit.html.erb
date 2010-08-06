@@ -20,7 +20,7 @@
 
 <p><em>Editing the name property will change the stream of applications this package belongs to</em></p>
 
-<% form_for(@package, :html => {:multipart => true} ) do |f| %>
+<%= form_for(@package, :html => {:multipart => true} ) do |f| %>
 	<%= f.error_messages %>
 <table class="form">
 	<tr>

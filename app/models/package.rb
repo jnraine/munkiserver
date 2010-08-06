@@ -373,8 +373,8 @@ class Package < ActiveRecord::Base
   # but only the ones relevant for munki clients
   def serialize_for_plist
     h = {}
-    if raw_mode == "Exclusive"
-      h = raw_tags unless raw_tags.blank?
+    if exclusively_raw?
+      h = raw_tags
     else
       # Take care of the straight forward mappings
       keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
@@ -386,9 +386,7 @@ class Package < ActiveRecord::Base
         h[key.to_s] = self.send(key) if self.send(key).present?
       end
       
-      if raw_mode == "Append"
-        h = h.merge(raw_tags) unless raw_tags.blank?
-      end
+      h = h.merge(raw_tags) if append_raw?
     end
     h
   end
@@ -399,18 +397,31 @@ class Package < ActiveRecord::Base
   def to_plist_node
     Plist::Emit.plist_node(self.to_s)
   end
-
-  def raw_mode
-    Package.raw_mode(raw_mode_id)
+  
+  def no_raw?
+    raw_mode_id == 0
   end
-
+  
+  def append_raw?
+    raw_mode_id == 1
+  end
+  
+  def exclusively_raw?
+    raw_mode_id == 2
+  end
+  
   # Store raw_mode ID map
+  # Used in the view or other places that benefit from human readable names
   def self.raw_mode(int)
     case int
       when 0 then "None"
       when 1 then "Append"
       when 2 then "Exclusive"
     end
+  end
+  
+  def raw_mode
+    self.raw_mode(raw_mode_id)
   end
 
   # Converts serialized object into plist string
@@ -471,6 +482,9 @@ class Package < ActiveRecord::Base
   # Renames item at path with escaped installer item name
   # Pass an absolute path for best results
   def self.rename_installer_item(path)
+    # Convert path to Pathname object
+    path = Pathname.new(path)
+    # Split up path for manipulation
     dir = File.dirname(path)
     name = File.basename(path)
     # Escape it
@@ -521,10 +535,6 @@ class Package < ActiveRecord::Base
         self.inherited_attributes.each do |attr|
           package.send("#{attr}=",existing_version.send(attr)) unless existing_version.send(attr).blank?
         end
-        # package.description = existing_version.description
-        #         package.icon = existing_version.icon
-        #         package.package_category_id = existing_version.package_category_id
-        #         package.installs = existing_version.installs
       end
 
       # Determine installer_choices
@@ -554,6 +564,13 @@ class Package < ActiveRecord::Base
     {:supported_architectures => ['i386','ppc']}
   end
   
+  # Returns array of attributes that a package object knows how to deal with
+  # Includes manually added virtual attributes, not stored directly to a db column
+  def self.known_attributes
+    # TO-DO find a better way to return a list of attribute keys
+    @known_attributes = Package.new.attributes.keys + ["display_name"]
+  end
+  
   # Creates Pkgsinfo model object from valid plist
   # Typically, this method is passed the output file created from makepkgsinfo (upon upload or check-in)
   def self.import(plist_file)
@@ -569,9 +586,21 @@ class Package < ActiveRecord::Base
       # Find or create a package branch for this
       p.name = h['name']
       h.delete('name')
+      # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
+      h.each do |k,v|
+        unless known_attributes.include?(k)
+          # Add non-attribute tag to raw_tags
+          p.raw_tags = p.raw_tags.merge({k => v})
+          # Remove non-attribute from hash
+          h.delete(k)
+          # Change raw_mode to append
+          p.raw_mode_id = 1
+        end
+      end
+      
       # This will barf if a key exists in h that isn't an attribute of this model
       p.attributes = h
-      # Assign a package category
+      # Assign a package category based on the installer_type
       p.package_category_id = PackageCategory.default(p.installer_type).id
       p
     end

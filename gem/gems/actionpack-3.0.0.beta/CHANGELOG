@@ -61,7 +61,7 @@
 
 * Make the form_for and fields_for helpers support the new Active Record nested update options.  #1202 [Eloy Duran]
 
-		<% form_for @person do |person_form| %>
+		<%= form_for @person do |person_form| %>
 		  ...
 		  <% person_form.fields_for :projects do |project_fields| %>
 		    <% if project_fields.object.active? %>
@@ -1064,25 +1064,25 @@
 
 * Added record identifications to FormHelper#form_for and PrototypeHelper#remote_form_for [David Heinemeier Hansson]. Examples:
 
-    <% form_for(@post) do |f| %>
+    <%= form_for(@post) do |f| %>
       ...
     <% end %>
   
   This will expand to be the same as:
   
-    <% form_for :post, @post, :url => post_path(@post), :html => { :method => :put, :class => "edit_post", :id => "edit_post_45" } do |f| %>
+    <%= form_for :post, @post, :url => post_path(@post), :html => { :method => :put, :class => "edit_post", :id => "edit_post_45" } do |f| %>
       ...
     <% end %>
   
   And for new records:
   
-    <% form_for(Post.new) do |f| %>
+    <%= form_for(Post.new) do |f| %>
       ...
     <% end %>
   
   This will expand to be the same as:
   
-    <% form_for :post, @post, :url => posts_path, :html => { :class => "new_post", :id => "new_post" } do |f| %>
+    <%= form_for :post, @post, :url => posts_path, :html => { :class => "new_post", :id => "new_post" } do |f| %>
       ...
     <% end %>
 
@@ -1877,7 +1877,7 @@ superclass' view_paths.  [Rick Olson]
 
 * Allow form_for and fields_for to work with indexed form inputs.  [Jeremy Kemper, Matt Lyon]
 
-  <% form_for 'post[]', @post do |f| -%>
+  <%= form_for 'post[]', @post do |f| -%>
   <% end -%>
 
 * Remove leak in development mode by replacing define_method with module_eval. [Nicholas Seckar]
@@ -2476,7 +2476,7 @@ superclass' view_paths.  [Rick Olson]
 
 * Allow form_for and fields_for to work with indexed form inputs.  [Jeremy Kemper, Matt Lyon]
 
-  <% form_for 'post[]', @post do |f| -%>
+  <%= form_for 'post[]', @post do |f| -%>
   <% end -%>
 
 * Remove leak in development mode by replacing define_method with module_eval. [Nicholas Seckar]
@@ -2702,11 +2702,11 @@ superclass' view_paths.  [Rick Olson]
 
 * Change #form_for and #fields_for so that the second argument is not required [Dave Thomas]
 
-    <% form_for :post, @post, :url => { :action => 'create' } do |f| -%>
+    <%= form_for :post, @post, :url => { :action => 'create' } do |f| -%>
     
   becomes...
   
-    <% form_for :post, :url => { :action => 'create' } do |f| -%>
+    <%= form_for :post, :url => { :action => 'create' } do |f| -%>
 
 * Update to script.aculo.us 1.6 [Thomas Fuchs]
 
@@ -3104,14 +3104,14 @@ Default YAML web services were retired, ActionController::Base.param_parsers car
 
 * Added FormHelper#form_for and FormHelper#fields_for that makes it easier to work with forms for single objects also if they don't reside in instance variables [David Heinemeier Hansson]. Examples:
 
-  <% form_for :person, @person, :url => { :action => "update" } do |f| %>
+  <%= form_for :person, @person, :url => { :action => "update" } do |f| %>
     First name: <%= f.text_field :first_name %>
     Last name : <%= f.text_field :last_name %>
     Biography : <%= f.text_area :biography %>
     Admin?    : <%= f.check_box :admin %>
   <% end %>
 
-  <% form_for :person, person, :url => { :action => "update" } do |person_form| %>
+  <%= form_for :person, person, :url => { :action => "update" } do |person_form| %>
     First name: <%= person_form.text_field :first_name %>
     Last name : <%= person_form.text_field :last_name %>
     
