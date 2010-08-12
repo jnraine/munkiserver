@@ -16,8 +16,8 @@ gem "sqlite3-ruby", :require => "sqlite3"
 # gem "hpricot", "0.6"
 # gem "sqlite3-ruby", :require => "sqlite3"
 # gem "aws-s3", :require => "aws/s3"
-gem "plist", "3.1.0"
-gem "will_paginate", "3.0.pre"
+# gem "plist", "3.1.0" # Now using as a plugin
+gem "will_paginate", "3.0.pre2"
 gem "nokogiri"
 # Used for ACLs (NOT IMPLEMENTED!)
 # gem "declarative_authorization"
@@ -27,5 +27,5 @@ gem "nokogiri"
 # end
 
 group :development do
-  # gem "ruby-debug19" , :require => "ruby-debug"
+  gem "ruby-debug19" , :require => "ruby-debug"
 end

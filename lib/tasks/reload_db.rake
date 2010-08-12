@@ -25,19 +25,18 @@ end
 
 # ENV cascades down to other tasks
 # Arguments are specified at invoke
-namespace :test do
-  require 'ruby-debug'
-  task :args, :first, :second, :third, :needs => :environment do |t,args|
-    debugger
-    puts "We made it"
-  end
-  
-  task :call, :needs => :environment do |t, args|
-    Rake::Task["test:invoke"].invoke(1,2)
-  end
-  
-  task :invoke, :first, :second, :needs => :environment do |t, args|
-    debugger
-    puts "We are invoking"
-  end
-end
+# namespace :test do
+#   task :args, :first, :second, :third, :needs => :environment do |t,args|
+#     debugger
+#     puts "We made it"
+#   end
+#   
+#   task :call, :needs => :environment do |t, args|
+#     Rake::Task["test:invoke"].invoke(1,2)
+#   end
+#   
+#   task :invoke, :first, :second, :needs => :environment do |t, args|
+#     debugger
+#     puts "We are invoking"
+#   end
+# end

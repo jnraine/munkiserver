@@ -8,6 +8,7 @@ class SessionsController < ApplicationController
   # Creates a new user session
   def create
     u = User.authenticate(params[:username],params[:pass])
+    debugger
     if u.nil?
       flash[:error] = "Incorrect username or password"
       redirect_to login_path

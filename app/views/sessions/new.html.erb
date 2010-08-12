@@ -3,6 +3,6 @@
 		<%= text_field_tag "username" %>
 		<%= subtle_value_tag("username", "Username") %><br />
 		<%= password_field_tag "pass" %><br />
-		<%= submit_tag "Login" %>
+		<%= submit_tag "Login (#{Rails.env})" %>
 	<% end %>
 </div>

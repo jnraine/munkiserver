@@ -1,4 +1,3 @@
-require 'ruby-debug'
 namespace :bootstrap do
   desc "Call all the bootstrap tasks"
   task :all do
@@ -10,12 +9,12 @@ namespace :bootstrap do
     end
   end
   
-  desc "Add a generic icon to the Icon model"
-  task :generic_icon => :environment do
-    path = Rails.root.to_s + "/public/default_icons"
-    i = Icon.new(:uploaded_data => LocalFile.new("#{path}/generic.png"))
-    i.save
-  end
+  # desc "Add a generic icon to the Icon model"
+  # task :generic_icon => :environment do
+  #   path = Rails.root.to_s + "/public/default_icons"
+  #   i = Icon.new(:uploaded_data => LocalFile.new("#{path}/generic.png"))
+  #   i.save
+  # end
   
   desc "Intialize PackageCategory with default categories"
   task :package_categories => :environment do
@@ -28,11 +27,20 @@ namespace :bootstrap do
     # Add the records
     a.each do |h|
       r = PackageCategory.find_or_create_by_name(h[:name])
+      # Add an icon if there isn't one already
+      print "Adding #{h[:name]} package category..."
       if r.icon.nil?
-        i = Icon.new(:uploaded_data => LocalFile.new(h[:icon_path]))
+        f = File.new(h[:icon_path])
+        i = Icon.new
+        i.photo = f
+        print "icon saved..." if i.save
         r.icon = i
+        f.close
+        sleep 1
       end
-      r.save
+      if r.save
+        puts "OK"
+      end
     end
   end
   
@@ -79,12 +87,20 @@ namespace :bootstrap do
     # Add the records
     a.each do |h|
       r = ComputerModel.find_or_create_by_name(h[:name])
-      # Add an icon if there isn't already on
+      # Add an icon if there isn't one already
+      print "Adding #{h[:name]} computer model..."
       if r.icon.nil?
-        i = Icon.new(:uploaded_data => LocalFile.new(h[:icon_path]))
+        f = File.new(h[:icon_path])
+        i = Icon.new
+        i.photo = f
+        print "icon saved..." if i.save
         r.icon = i
+        f.close
+        sleep 1
       end
-      r.save
+      if r.save
+        puts "OK"
+      end
     end
   end
   

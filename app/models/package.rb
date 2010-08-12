@@ -140,7 +140,7 @@ class Package < ActiveRecord::Base
   # Creates a new icon object and assigns to self.icon
   def new_icon=(value)
     unless value.blank?
-      i = Icon.new({:uploaded_data => value})
+      i = Icon.new({:photo => value})
       # If icon is saved, assign it to the record
       self.icon = i if i.save
     end

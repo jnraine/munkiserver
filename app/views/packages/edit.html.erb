@@ -180,7 +180,7 @@
 			Icon
 		</td>
 		<td>
-			<%= image_tag(@package.icon.public_filename, :height => "30px", :style => "vertical-align:middle;") %>
+			<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") %>
 			<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
 		</td>
 	</tr>

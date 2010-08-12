@@ -3,7 +3,7 @@ module ComputersHelper
   # Builds a computer page (show/edit) header from a computer object
   def computer_header(computer)
     render :partial => 'shared/record_header', :locals => {:title => computer.hostname,
-                              														 :img => computer.icon.public_filename,
+                              														 :img => computer.icon.url,
                               														 :soft_info => computer.computer_group,
                               														 :bold_info => computer.mac_address }
 	end

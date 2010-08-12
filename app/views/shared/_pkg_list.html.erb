@@ -1,6 +1,6 @@
 <% package_list.each do |pkg| %>
 	<div class="packageListItem">
-		<%= image_tag("#{pkg.icon}") %>
+		<%= image_tag pkg.icon.url(:tiny) %>
 		<span><%= pkg %></span>
 	</div>
 <% end %>

@@ -2,7 +2,7 @@
 	<!-- <td>
 		<input type="checkbox" />
 	</td> -->
-	<td><%= image_tag(package.icon.public_filename, :height => "64px") %></td>
+	<td><%= image_tag(package.icon.url(:small)) %></td>
 	<td><%= package %></td>
 	<td>
 		<% package.versions.each do |pkg| %>
@@ -16,11 +16,6 @@
 	</td>
 	<td>
 		<% package.versions.each do |pkg| %>
-			<%= "&#10003;".html_safe if pkg.trackable? %><br />
-		<% end -%>
-	</td>
-	<td>
-		<% package.versions.each do |pkg| %>
 			<%= link_to 'Edit', edit_package_path(pkg) %> |
 			<% if super_user? %>
 				<%= link_to('Destroy', pkg, :confirm => "Are you sure you want to destroy #{pkg.to_s(:version)}?", :method => :delete) %> |
@@ -28,5 +23,8 @@
 			<%= link_to 'Download', download_package_path(pkg.installer_item_location) %>
 			<br />
 		<% end -%>
+	</td>
+	<td>
+		<%= "&#10003;".html_safe if package.trackable? %>
 	</td>
 </tr>
