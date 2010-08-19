@@ -12,13 +12,6 @@ class Icon < ActiveRecord::Base
                     :path => ":rails_root/public/assets/:attachment/:id/:style/:filename",
                     :url => "/assets/:attachment/:id/:style/:filename"
   
-  # Make sure we have at least a default icon
-  def self.generic
-    i = find_by_filename("generic.png")
-    i ||= self.first
-    i
-  end
-  
   # A shortcut to get the url for self.photo
   def url(type = nil)
     begin

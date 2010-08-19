@@ -13,31 +13,34 @@ class PackagesController < ApplicationController
     end
   end
 
+  # TO-DO clean up this a messy action
   def create 
-    # Assign @h
+    # Assign @hash
+    # @hash stores two entries:
+    # => :package - A Package object
+    # => :plist_plist - A plist as a string, the output of makepkginfo
     begin
-      # If you upload a package
-      @h = Package.upload(params[:data],params[:options]) unless params[:data].nil?
-      # If you pass a version tracker ID
-      @h = VersionTracker.find_or_create_by_web_id(params[:version_tracker_web_id]).to_package unless params[:version_tracker_web_id].nil?
+      case params[:commit]
+        when "Upload" then @hash = Package.upload(params[:data],params[:options])
+        when "Grab" then @hash = VersionTracker.find_or_create_by_web_id(params[:version_tracker_web_id]).to_package
+      end
     rescue PackageError => e
-      invalid_package = true
       flash[:error] = "Invalid package uploaded: #{e.message}"
     rescue AutoPackageError => e
-      invalid_package = true
       flash[:error] = "There was a problem while auto packaging: #{e.message}"
     end
 
     # Assign @package
-    unless @h.nil? or @h[:package].nil?
-      @package = @h[:package]
+    # Make sure @hash and @hash[:package] were set
+    unless @hash.nil? or @hash[:package].nil?
+      @package = @hash[:package]
       @package.unit = current_unit
     else
       @package = Package.new
     end
     
     respond_to do |format|
-      if !invalid_package and @package.save
+      if @package.save
         # Success
         flash[:notice] = "Package successfully saved"
         format.html { redirect_to edit_package_path(@package) }

@@ -14,8 +14,10 @@ class Package < ActiveRecord::Base
   serialize :raw_tags
   
   scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u.id) }
+  scope :shared, where(:shared => true)
   
   before_save :save_package_branch
+  before_save :require_icon
   
   FORM_OPTIONS = {:restart_actions => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
@@ -131,7 +133,7 @@ class Package < ActiveRecord::Base
     begin
       i = Icon.find(icon_id)
     rescue ActiveRecord::RecordNotFound
-      i = package_category.icon
+      i = package_category.icon if package_category.respond_to?(:icon)
     end
     i
   end
@@ -228,13 +230,12 @@ class Package < ActiveRecord::Base
     package_branch.version_tracker_web_id = value
   end
   
-  # Extend save
-  # => Ensure we have at least a generic icon!
-  def save
+  # Require icon
+  def require_icon
     if self.icon == nil
-      self.icon = Icon.generic
+      self.icon = Icon.new
+      self.icon.save
     end
-    super
   end
   
   # Get the latest package from a specific unit and environment
@@ -475,7 +476,7 @@ class Package < ActiveRecord::Base
       Package.checkin(dest_path, options)
     rescue PackageError
       FileUtils.remove(dest_path)
-      raise PackageError("There was a problem checking in #{dest_path}. It should be deleted.")
+      raise PackageError.new("There was a problem checking in #{dest_path}. It should be deleted.")
     end
   end
   
@@ -577,7 +578,7 @@ class Package < ActiveRecord::Base
     p = Package.new
     h = File.read(plist_file).from_plist
     if h.nil?
-      raise PackageError("There was a problem parsing the plist provided from makepkginfo")
+      raise PackageError.new("There was a problem parsing the plist provided from makepkginfo")
     else
       # Remove items that we don't need
       h.delete('catalogs')
