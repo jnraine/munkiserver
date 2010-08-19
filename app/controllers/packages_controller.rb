@@ -24,10 +24,8 @@ class PackagesController < ApplicationController
         when "Upload" then @hash = Package.upload(params[:data],params[:options])
         when "Grab" then @hash = VersionTracker.find_or_create_by_web_id(params[:version_tracker_web_id]).to_package
       end
-    rescue PackageError => e
-      flash[:error] = "Invalid package uploaded: #{e.message}"
-    rescue AutoPackageError => e
-      flash[:error] = "There was a problem while auto packaging: #{e.message}"
+    rescue Exception => e
+      flash[:error] = "Unable to add package: #{e.message}"
     end
 
     # Assign @package

@@ -31,11 +31,16 @@ class VersionTracker < ActiveRecord::Base
     if looks_good?
       # Load informational page from version tracker
       info_doc = Nokogiri::HTML(open(info_url))
-      # Grab app version
-      latest_version = info_doc.at_css(".appVersion").text
-      # Grab download redirect url
-      download_redirect_url = info_doc.at_css(".product-quick-links h2 a")[:href]
-    
+      # In case our web site is malformed, let's catch the errors
+      begin
+        # Grab app version
+        latest_version = info_doc.at_css(".appVersion").text
+        # Grab download redirect url
+        download_redirect_url = info_doc.at_css(".product-quick-links h2 a")[:href]
+      rescue NoMethodError => e
+        raise VersionTrackerError.new("Malformed version tracker website at #{info_url}: #{e}")
+      end
+      
       # Grab download url
       unless download_redirect_url == nil
         # Replace spaces with encoding (%20)

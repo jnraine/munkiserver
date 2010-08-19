@@ -3,3 +3,6 @@ end
 
 class AutoPackageError < Exception
 end
+
+class VersionTrackerError < Exception
+end

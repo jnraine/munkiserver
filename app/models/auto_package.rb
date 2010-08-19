@@ -28,7 +28,11 @@ module AutoPackage
     # Derive extension
     extension = grep_extension(original_filename)
     unless SUPPORTED_EXTENSIONS.include?(extension)
-      raise AutoPackageError.new("#{extension} is not a supported extension for auto packaging!")
+      if extension == ''
+        raise AutoPackageError.new("No extension found on download URL: #{url}")
+      else
+        raise AutoPackageError.new("#{extension} is not a supported extension for auto packaging!")
+      end
     end
     # Download package
     begin
