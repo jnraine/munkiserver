@@ -610,10 +610,4 @@ class Package < ActiveRecord::Base
       p
     end
   end
-  
-  # Get all the packages shared to a given unit
-  # Takes into account what packages already exist in a given unit
-  def shared_to(unit)
-    
-  end
 end
