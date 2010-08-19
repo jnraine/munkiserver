@@ -8,7 +8,6 @@ class SessionsController < ApplicationController
   # Creates a new user session
   def create
     u = User.authenticate(params[:username],params[:pass])
-    debugger
     if u.nil?
       flash[:error] = "Incorrect username or password"
       redirect_to login_path
@@ -23,9 +22,13 @@ class SessionsController < ApplicationController
   def update
     new_unit = Unit.find(params[:unit_id])
     if current_user.member_of(new_unit)
-      session[:unit_id] = params[:unit_id] 
+      session[:unit_id] = params[:unit_id]
     end
-    # case params[:a]
+    # Don't redirect to show or edit actions
+    excluded_actions = ["show", "edit"]
+    if excluded_actions.include?(params[:a])
+      params[:a] = "index"
+    end
     redirect_to :action => params[:a], :controller => params[:c]
   end
   

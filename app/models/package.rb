@@ -156,6 +156,7 @@ class Package < ActiveRecord::Base
   end
 
   # Extend destroy method
+  # TO-DO Delete package from hard drive if no other package is referring to it
   def destroy
     destroy_pb_if_necessary
     super
@@ -475,8 +476,11 @@ class Package < ActiveRecord::Base
     begin
       Package.checkin(dest_path, options)
     rescue PackageError
-      FileUtils.remove(dest_path)
-      raise PackageError.new("There was a problem checking in #{dest_path}. It should be deleted.")
+      if FileUtils.remove(dest_path)
+        raise PackageError.new("There was a problem checking in #{dest_path}")
+      else
+        raise PackageError.new("There was a problem checking in #{dest_path}. Unable to delete it.")
+      end
     end
   end
   
@@ -605,5 +609,11 @@ class Package < ActiveRecord::Base
       p.package_category_id = PackageCategory.default(p.installer_type).id
       p
     end
+  end
+  
+  # Get all the packages shared to a given unit
+  # Takes into account what packages already exist in a given unit
+  def shared_to(unit)
+    
   end
 end

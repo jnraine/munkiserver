@@ -10,6 +10,7 @@ Munki::Application.routes.draw do |map|
   map.resources :computers, :new => {:import => :get}, :collection => {:create_import => :any}
   map.resources :users
   map.resources :units
+  map.resources :shared_packages, :member => {:import => :get}
 
   # Session
   map.login 'login', :action => 'new', :controller => 'sessions'

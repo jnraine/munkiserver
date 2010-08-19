@@ -28,19 +28,15 @@ namespace :bootstrap do
     a.each do |h|
       r = PackageCategory.find_or_create_by_name(h[:name])
       # Add an icon if there isn't one already
-      print "Adding #{h[:name]} package category..."
       if r.icon.nil?
         f = File.new(h[:icon_path])
         i = Icon.new
         i.photo = f
-        print "icon saved..." if i.save
+        i.save
         r.icon = i
         f.close
-        sleep 1
       end
-      if r.save
-        puts "OK"
-      end
+      r.save
     end
   end
   
@@ -88,19 +84,15 @@ namespace :bootstrap do
     a.each do |h|
       r = ComputerModel.find_or_create_by_name(h[:name])
       # Add an icon if there isn't one already
-      print "Adding #{h[:name]} computer model..."
       if r.icon.nil?
         f = File.new(h[:icon_path])
         i = Icon.new
         i.photo = f
-        print "icon saved..." if i.save
+        i.save
         r.icon = i
         f.close
-        sleep 1
       end
-      if r.save
-        puts "OK"
-      end
+      r.save
     end
   end
   
