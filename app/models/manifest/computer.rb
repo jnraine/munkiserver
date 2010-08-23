@@ -26,7 +26,7 @@ class Computer < ActiveRecord::Base
     computer_model.icon
   end
   
-  # For will_paginate gem
+  # For will_paginate gem.  Sets the default number of records per page.
   def self.per_page
     10
   end

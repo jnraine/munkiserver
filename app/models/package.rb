@@ -23,6 +23,11 @@ class Package < ActiveRecord::Base
                   :os_versions => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
                   :installer_types => [['Package',''],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']]}
   
+  # Validate the object
+  def validate
+    
+  end
+  
   # Virtual attribute for accessing the associated package
   # branch name which this package belongs to
   def name
@@ -61,8 +66,12 @@ class Package < ActiveRecord::Base
   # Virtual attribute setter
   # Takes a plist string and converts it to a ruby object and assigns it to receipts
   def receipts_plist=(value)
-    obj = value.from_plist
-    self.receipts = obj
+    begin
+      obj = value.from_plist
+      self.receipts = obj
+    rescue RuntimeError
+      raise PackageError.new("Invalid plist string passed to receipts_plist setter")
+    end
   end
   
   # Virtual attribute getter
@@ -77,8 +86,12 @@ class Package < ActiveRecord::Base
   # Virtual attribute setter
   # Takes a plist string and converts it to a ruby object and assigns it to receipts
   def installs_plist=(value)
-    obj = value.from_plist
-    self.installs = obj
+    begin
+      obj = value.from_plist
+      self.installs = obj
+    rescue RuntimeError
+      raise PackageError.new("Invalid plist string passed to installs_plist setter")
+    end
   end
 
   # Virtual attribute that parses the array value of a tabled asm select into package and 
@@ -216,7 +229,8 @@ class Package < ActiveRecord::Base
   def update_for_ids
     update_for_items.map(&:package_branch).map(&:id)
   end
-
+  
+  # Pass an array of packages and package branches
   def update_for=(list)
     build_package_association_assignment(:update_for_items,list)
   end
@@ -341,11 +355,8 @@ class Package < ActiveRecord::Base
     ["#{unit.id}_#{environment}.plist"]
   end
   
-  # Setter for the raw_tags attribute
-  # Converts the plist string value to
-  # a ruby object and assigns it to the 
-  # attribute
-  # Takes a raw plist string
+  # Setter for the raw_tags attribute. Converts the plist string value to
+  # a ruby object and assigns it to the attribute. Takes a raw plist string.
   def raw_tags=(value)
     begin
       obj = Plist.parse_xml(value)
@@ -609,5 +620,10 @@ class Package < ActiveRecord::Base
       p.package_category_id = PackageCategory.default(p.installer_type).id
       p
     end
+  end
+  
+  # True if update_for or requires have items
+  def has_dependencies?
+    update_for.length > 0 or requires.length > 0
   end
 end

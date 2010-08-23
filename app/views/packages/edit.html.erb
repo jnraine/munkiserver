@@ -24,6 +24,11 @@
 	<%= f.error_messages %>
 <table class="form">
 	<tr>
+		<td colspan='2'>
+			<h4>Package Branch <%= helpful_info('Changes to these fields effect all packages in this branch') %></h4>
+		</td>
+	</tr>
+	<tr>
 		<td>
 			Display name
 		</td>
@@ -42,6 +47,20 @@
 	</tr>
 	<tr>
 		<td>
+			Version Tracker Web ID
+		</td>
+		<td>
+			<%= f.text_field :version_tracker_web_id %>
+			<%= helpful_info("Enter version tracker ID to automatically track future versions of this application/package. Changes made to this field effect other packages in this branch.") %>
+		</td>
+	</tr>
+	<tr>
+		<td colspan='2'>
+			<h4>Package <%= helpful_info('Changes to these fields effect only this package') %></h4>
+		</td>
+	</tr>
+	<tr>
+		<td>
 			Version
 		</td>
 		<td>
@@ -55,15 +74,6 @@
 		<td>
 			<%= f.text_field :version_tracker_version %>
 			<%= helpful_info("Optionally, specify a version string used when comparing this package to the latest on versiontracker.com") %>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Version Tracker Web ID
-		</td>
-		<td>
-			<%= f.text_field :version_tracker_web_id %>
-			<%= helpful_info("Enter version tracker ID to automatically track future versions of this application/package") %>
 		</td>
 	</tr>
 	<tr>
@@ -158,7 +168,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td>Share with others units</td>
+		<td>Share with other units</td>
 		<td>
 			<%= f.check_box :shared %>
 		</td>

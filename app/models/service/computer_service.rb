@@ -114,7 +114,9 @@ class ComputerService
     end
     
     # Add pagination using will_paginate gem
-    computers = computers.paginate(:page => params[:page], :per_page => 10)
+    per_page = params[:per_page]
+    per_page ||= Computer.per_page
+    computers = computers.paginate(:page => params[:page], :per_page => per_page)
 
     # Return our results
     computers

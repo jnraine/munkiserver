@@ -9,8 +9,13 @@ class SharedPackagesController < ApplicationController
   def import
     @shared_package = Package.shared.where("unit_id != #{current_unit.id}").find(params[:id])
     @package = Package.new(@shared_package.attributes)
+    
+    # Do custom stuff to imported package
     @package.unit = current_unit
     @package.environment = Environment.start
+    @package.update_for = []
+    @package.requires = []
+    
     respond_to do |format|
       if @package.save
         flash[:notice] = "Successfully imported #{@shared_package.display_name} (#{@shared_package.version})"

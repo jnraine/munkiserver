@@ -7,6 +7,7 @@
 	<h5>There are no shared packages</h5>
 <% else %>
 	<p><%= record_count(@shared_packages) %></p>
+	<p><em>Dependencies (found in "Update For" and "Requires" columns) are not imported!</em></p>
 	<table>
 		<thead>
 			<tr>
@@ -41,7 +42,13 @@
 					<% end -%>
 				</td>
 				<td><%= package.unit %></td>
-				<td><%= link_to "Import", import_shared_package_path(package) %></td>
+				<td>
+					<% if package.has_dependencies? %>
+						<%= link_to "Import", import_shared_package_path(package), {"data-confirm-message" => "Warning: This item has dependencies which will NOT be imported!"} %>
+					<% else %>
+						<%= link_to "Import", import_shared_package_path(package) %>
+					<% end -%>
+				</td>
 			</tr>
 		<% end -%>
 	</table>

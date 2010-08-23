@@ -22,10 +22,11 @@
 	<%= form_for(@package, :html => {:multipart => true, :id => "new_upload_package_form"}) do |f| %>
 		<div>
 			<p><%= file_field_tag :data %></p>
+			<h4>OPTIONAL</h4>
 			<p>
 				<%= text_field_tag "options[pkgname]" %> 
-				Custom package path
-				<%= helpful_info("If the upload is a disk image containing
+				Package name
+				<%= helpful_info("From makepkginfo help page: If the upload is a disk image containing
 				                  multiple packages, or the package to be installed
 				                  is not at the root of the mounted disk image, this
 				                  is a relative path from the root of the mounted
@@ -40,8 +41,8 @@
 			</p>
 			<p>
 				<%= text_field_tag "options[appname]" %> 
-				Custom application path
-				<%= helpful_info("If the upload is a disk image with a
+				Application path
+				<%= helpful_info("From makepkginfo help page: If the upload is a disk image with a
 				                  drag-and-drop application, this is the name or
 				                  relative path of the application
 				                  to be installed. Useful if there

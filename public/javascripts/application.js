@@ -89,6 +89,16 @@ jQuery(document).ready(function() {
 			jQuery('#user_password_confirmation').attr("disabled",true);
 		}
 	})
+	
+	// Helps provide an easy way to show confirm windows
+	// on any link easily using the attribute data-confirm-message
+	jQuery('a').click(function() {
+		// When the data-confirm-message attribute exists, pop up a confirm window
+		var message = jQuery(this).attr('data-confirm-message');
+		if( message !== undefined) {
+			return confirm(message);
+		}
+	});
 });
 
 // AJAX hostname search/filter
