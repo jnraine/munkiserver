@@ -2,11 +2,17 @@
 
 <%= form_for(@computer_group) do |f| %>
 	<%= f.error_messages %>
-	<p><%= f.text_field :name %></p>
-	<p><%= f.text_area :description, :size => "30x6" %></p>
+	<p>
+		<%= f.text_field :name %>
+		<%= subtle_value('computer_group',:name) %>
+	</p>
+	<p>
+		<%= f.text_area :description, :size => "30x6" %>
+		<%= subtle_value('computer_group', :description) %>
+	</p>
 	<p>Environment <%= f.collection_select :environment_id, Environment.all, :id, :name %></p>
 	<p>
-		<%= f.submit 'Create' %>
+	<%= f.submit 'Create' %>
 	</p>
 <% end %>
 

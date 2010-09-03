@@ -3,9 +3,9 @@
 		|
 		<% Environment.all.each do |env| %>
 			<% if @env.id == env.id %>
-				<%= env.to_s + " (#{Computer.where(:environment_id => env.id).count})" %>
+				<%= env.to_s + " (#{Computer.where(:environment_id => env.id, :unit_id => current_unit.id).count})" %>
 			<% else %>
-				<%= link_to env.to_s + " (#{Computer.where(:environment_id => env.id).count})", computers_path(:eid => env.id) %>
+				<%= link_to env.to_s + " (#{Computer.where(:environment_id => env.id, :unit_id => current_unit.id).count})", computers_path(:eid => env.id) %>
 			<% end -%>
 			|
 		<% end -%>

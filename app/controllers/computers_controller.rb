@@ -86,6 +86,8 @@ class ComputersController < ApplicationController
     begin
       @computers = ComputerService.import(params[:computer],current_unit)
     rescue NoMethodError
+      e = "Please select a plist file"
+    rescue => e
     end
       
     unless @computers.nil?
@@ -96,7 +98,7 @@ class ComputersController < ApplicationController
     
     respond_to do |format|
       if @computers.nil?
-        flash[:error] = "There was a problem while parsing the plist"
+        flash[:error] = "There was a problem while parsing the plist: #{e}"
         format.html { redirect_to import_new_computer_path }
       elsif @computers.count > 0
         flash[:notice] = "#{@computers.count} of #{@total} computers imported into #{@computers.first.computer_group}"

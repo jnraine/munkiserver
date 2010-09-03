@@ -228,9 +228,13 @@ module ApplicationHelper
   
   # Apply a "subtle value" to an object attribute (or pass static value)
   def subtle_value(model_obj,attribute,value = nil)
-    model_class = model_obj.class.to_s.downcase
+    if model_obj.class == String
+      model_table = model_obj
+    else
+      model_table = model_obj.class.to_s.downcase
+    end
     attribute = attribute.to_s
-    dom_id = "#{model_class}_#{attribute}"
+    dom_id = "#{model_table}_#{attribute}"
     value ||= attribute.humanize
     subtle_value_tag(dom_id,value)
   end
