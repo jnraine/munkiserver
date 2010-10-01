@@ -13,6 +13,7 @@
 	<% # computer_group_header(@computer_group_id) %>
 	<div class="span-16 last" style="text-align:right;">
 	<%= form_tag computers_url, :id => "filter_form", :method => 'get' do %>
+		<%= hidden_field_tag "eid", params['eid'] %>
 		<%= text_field_tag "name", params['name'] %>
 		<%= submit_tag "Filter" %>
 	<% end -%>

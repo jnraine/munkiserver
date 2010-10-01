@@ -370,3 +370,13 @@ thead th a:hover {
 	text-align:right;
 	margin-top:-77px;
 }
+
+.errorExplanation {
+	padding:10px;
+	color:#fff;
+	background-color:#594F4F;
+}
+
+.errorExplanation h2 {
+	color:#fff;
+}

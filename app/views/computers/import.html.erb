@@ -7,14 +7,12 @@
 
 <div>
 <%= form_tag({:action => "create_import"}, :multipart => true) do %>
-	<p><%= file_field_tag 'computer[plist]' %></p>
 	<p>
 		Computer group 
 		<%= select_tag "computer[computer_group_id]", options_for_select([["(Automatic)", 0]] + ComputerGroup.unit(current_unit).collect {|e| [e.name,e.id]}) %>
 		<%= helpful_info("Select a group to import into, or let automatic mode determine the group name from the plist")%><br />
-		Environment 
-		<%= select_tag "computer[environment_id]", options_for_select(Environment.all.collect {|e| [e.name,e.id]}) %>
 	</p>
+	<p><%= file_field_tag 'computer[plist]' %></p>
 	<p><%= submit_tag 'Import' %></p>
 <% end %>
 </div>

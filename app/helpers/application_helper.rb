@@ -70,13 +70,13 @@ module ApplicationHelper
     end
     
     # Let us know if we're passing blank parameters (we shouldn't be)
-    parameters.each do |section|
-      section.each do |key, val|
-        if section[key].blank?
-          puts "Error: parameters #{key} was blank!"
-        end
-      end
-    end
+    # parameters.each do |section|
+    #       section.each do |key, val|
+    #         if section[key].blank?
+    #           puts "Error: parameters #{key} was blank!"
+    #         end
+    #       end
+    #     end
     
     htmlcode = "<table class='#{table_class}'>\n"
     
@@ -100,9 +100,7 @@ module ApplicationHelper
       htmlcode += hidden_field_tag("#{section[:model_name]}[#{section[:attribute_name]}][]",'')
       htmlcode += select_tag("#{section[:model_name]}[#{section[:attribute_name]}]", options_for_select(section[:options],section[:selected_options]), :multiple => true, :title => section[:select_title])
       #htmlcode += text_field_with_auto_complete(:quickly, section['title'].to_sym, { :size => 20, :class => "quickly_complete_field" }, { :url => formatted_pkgsinfo_index_path(:js), :method => :get, :with => "'search=' + element.value" })
-      htmlcode += autocomplete_asmselect(section[:title],
-                                          section[:options].collect { |el| el[0] },
-                                          "type a name...")
+      htmlcode += autocomplete_asmselect(section[:title],section[:options].collect { |el| el[0] },"type a name...")
       htmlcode += "\t\t</td>\n"
     end
     htmlcode += "\t</tr>\n"

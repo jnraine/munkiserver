@@ -67,7 +67,7 @@ class PackagesController < ApplicationController
 
   def update
     @package = Package.unit(current_unit).find(params[:id])
-    
+
     respond_to do |format|
       if @package.update_attributes(params[:package])
         flash[:notice] = "Package was successfully updated."
@@ -75,7 +75,7 @@ class PackagesController < ApplicationController
         format.xml { head :ok }
       else
         flash[:error] = "Could not update package!"
-        format.html { redirect_to edit_package(@package) }
+        format.html { render :action => "edit" }
         format.xml { render :xml => @package.errors, :status => :unprocessable_entity }
       end
     end

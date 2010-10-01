@@ -217,7 +217,10 @@
 	<% unless @package.installer_appdmg? %>
 		<tr>
 			<td colspan="2">
-				<h4>Receipts</h4>
+				<h4>
+					Receipts
+					<%= helpful_info("Must be a valid plist with an array as the root object") %>
+				</h4>
 				<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
 				# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
 				<div id="gui_receipts_container">
@@ -233,7 +236,10 @@
 	<% end %>
 	<tr>
 		<td colspan="2">
-			<h4>Installs</h4>
+			<h4>
+				Installs
+				<%= helpful_info("Must be a valid plist with an array as the root object") %>
+			</h4>
 			 <!-- #radio_button_tag 'installs_mode', 'gui', checked = true # label_tag 'installs_mode_gui', 'GUI'
 			 #radio_button_tag 'installs_mode', 'text' # label_tag 'installs_mode_text', 'Text'<br />
 			<div id="gui_installs_container">

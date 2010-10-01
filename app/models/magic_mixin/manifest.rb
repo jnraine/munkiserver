@@ -221,7 +221,12 @@ module Manifest
       def self.tas_params(model_obj)
         # Get all the package branches associated with this unit and environment
         pkg_branch_options = PackageBranch.unit_member(model_obj).collect { |e| [e.name,e.id] }
-        bundle_options = Bundle.unit_member(model_obj).collect { |e| [e.name,e.id] }
+        if model_obj.class == Bundle
+          bundle_options = Bundle.where('unit_id <> ?',model_obj.id).unit_member(model_obj).collect { |e| [e.name,e.id] }
+        else
+          bundle_options = Bundle.unit_member(model_obj).collect { |e| [e.name,e.id] }
+        end
+        
         model_name = self.to_s.underscore
 
         # Array for table_asm_select

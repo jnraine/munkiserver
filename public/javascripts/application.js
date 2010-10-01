@@ -143,18 +143,20 @@ jQuery.fn.extend({
 		jQuery.each(option_tags, function() {
 			option_values.push(this.text);
 		});
-		this.keypress(function (e) { 
+		this.keypress(function (e) {
 			if(e.which == 13) {
 				text_field_value = this.value;
-				value_matches_option = option_values.some(
-					function (element) {
-						return (element == text_field_value); 
+				// If the text input matches an item in our list, select it
+				// Find a match
+				var matching_option_tag = '';
+				jQuery("#" + asmSelect_id).children('option').each(function(){
+					if(this.innerHTML == text_field_value) {	
+						matching_option_tag = this;
+						jQuery("#" + asmSelect_id).val(matching_option_tag.value);
+						jQuery("#" + asmSelect_id).change();
 					}
-				);
-				if(value_matches_option) {
-					jQuery("#" + asmSelect_id).val(this.value);
-					jQuery("#" + asmSelect_id).change();
-				}
+				});
+				// Clear auto complete text field
 				this.clear();
 				return false;
 			}

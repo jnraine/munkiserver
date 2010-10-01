@@ -12,7 +12,7 @@
 		</tr>
 		<tr>
 			<td>Computer Group</td>
-			<td><%= f.collection_select :computer_group_id, ComputerGroup.unit(current_unit), :id, :name %></td>
+			<td><%= f.collection_select :computer_group_id, ComputerGroup.unit_member(@computer), :id, :name %></td>
 		</tr>
 		<tr>
 			<td>

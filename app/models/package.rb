@@ -19,14 +19,12 @@ class Package < ActiveRecord::Base
   before_save :save_package_branch
   before_save :require_icon
   
+  validates :receipts, :plist_array => true
+  validates :installs, :plist_array => true
+  
   FORM_OPTIONS = {:restart_actions => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
-                  :installer_types => [['Package',''],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']]}
-  
-  # Validate the object
-  def validate
-    
-  end
+                  :installer_types => [['Package',''],['Copy From DMG','copyfromdmg'],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']]}
   
   # Virtual attribute for accessing the associated package
   # branch name which this package belongs to
@@ -54,44 +52,48 @@ class Package < ActiveRecord::Base
     package_branch.display_name = value
   end
   
+  def plist_virtual_attribute_set(attribute, value)
+    begin
+      obj = value.from_plist
+      self.send("#{attribute}=", obj)
+    rescue RuntimeError
+      # Cache string value
+      instance_variable_set("@cached_#{attribute}_plist",value)
+      self.send("#{attribute}=", nil)
+    end
+  end
+  
+  def plist_virtual_attribute_get(attribute)
+    begin
+      send(attribute).to_plist
+    rescue NoMethodError
+      instance_variable_get("@cached_#{attribute}_plist")
+    end
+  end
+  
   # Virtual attribute getter
   # Converts the receipts array into a plist
   def receipts_plist
-    begin
-      receipts.to_plist
-    rescue NoMethodError
-    end
+    plist_virtual_attribute_get(:receipts)
   end
   
   # Virtual attribute setter
   # Takes a plist string and converts it to a ruby object and assigns it to receipts
+  # If the plist string passed is not valid, nil is assigned instead
   def receipts_plist=(value)
-    begin
-      obj = value.from_plist
-      self.receipts = obj
-    rescue RuntimeError
-      raise PackageError.new("Invalid plist string passed to receipts_plist setter")
-    end
+    plist_virtual_attribute_set(:receipts,value)
   end
   
   # Virtual attribute getter
   # Converts the installs array into a plist
   def installs_plist
-    begin
-      installs.to_plist
-    rescue NoMethodError
-    end
+    plist_virtual_attribute_get(:installs)
   end
   
   # Virtual attribute setter
   # Takes a plist string and converts it to a ruby object and assigns it to receipts
   def installs_plist=(value)
-    begin
-      obj = value.from_plist
-      self.installs = obj
-    rescue RuntimeError
-      raise PackageError.new("Invalid plist string passed to installs_plist setter")
-    end
+    plist_virtual_attribute_set(:installs,value)
   end
 
   # Virtual attribute that parses the array value of a tabled asm select into package and 
@@ -171,6 +173,7 @@ class Package < ActiveRecord::Base
   # Extend destroy method
   # TO-DO Delete package from hard drive if no other package is referring to it
   def destroy
+    delete_package_file_if_necessary
     destroy_pb_if_necessary
     super
   end
@@ -184,6 +187,14 @@ class Package < ActiveRecord::Base
     # this one, destroy the package branch
     if pb.packages.length == 1 and pb.packages.first.id == self.id
       pb.destroy
+    end
+  end
+  
+  # Delete package on filesystem if no other package record is referring to it
+  def delete_package_file_if_necessary
+    # Unless, other packages reference the package on the filesystem
+    unless Package.where(:installer_item_location => self.installer_item_location).length > 1
+      FileUtils.remove(Munki::Application::PACKAGE_DIR + self.installer_item_location)
     end
   end
   

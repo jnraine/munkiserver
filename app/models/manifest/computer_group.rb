@@ -16,15 +16,15 @@ class ComputerGroup < ActiveRecord::Base
       :options => computer_options,
       :selected_options => self.computer_ids }]
   end
-    
-  # Extend the destroy method to not destroy the last one in that unit
-  def destroy
-    # if ComputerGroup.find_all_by_unit_id(self.unit_id).count == 1
-    #   raise ComputerGroupException.new("Attempt to remove last computer group in unit failed!")
-    # else
-    #   super
-    # end
-    super
+  
+  # Extend environment_id attribute setter
+  # => When changing the environment, change the environment of all the members as well
+  def environment_id=(value)
+    computers.each do |c|
+      c.environment_id = value
+      c.save
+    end
+    super(value)
   end
 end
 
