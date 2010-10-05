@@ -1,11 +1,10 @@
 class ApplicationController < ActionController::Base
   helper :all
-  protect_from_forgery
+  protect_from_forgery :except => [:checkin]
   
   before_filter :require_login
   
   def super_user?
-    puts "From app con"
     current_user.super_user?
   end
   
@@ -55,7 +54,7 @@ class ApplicationController < ActionController::Base
   def action_and_format_excluded?
     excluded = false
     # Specify what actions and formats are allowed
-    allowed = {:show => [:manifest, :client_prefs, :plist],:download => [:all]}
+    allowed = {:show => [:manifest, :client_prefs, :plist],:download => [:all], :checkin => [:all]}
     # Set format
     format = params[:format].nil? ? "" : params[:format]
     allowed.each do |action,allowed_formats|

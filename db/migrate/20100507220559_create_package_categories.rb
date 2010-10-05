@@ -4,7 +4,6 @@ class CreatePackageCategories < ActiveRecord::Migration
       t.string :name
       t.text :description
       t.integer :icon_id
-
       t.timestamps
     end
   end

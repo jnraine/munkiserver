@@ -4,12 +4,17 @@ class Computer < ActiveRecord::Base
   belongs_to :computer_model
   belongs_to :computer_group
   
+  has_many :client_logs
+  
   # Validations
   validate :computer_model
   # mac_address attribute must look something like ff:12:ff:34:ff:56
   validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/
   
   # before_save :require_computer_group
+  
+  # Maybe I shouldn't be doing this
+  include ActionView::Helpers
   
   # Getter for virtual attribute hostname
   def hostname
@@ -70,7 +75,7 @@ class Computer < ActiveRecord::Base
     h
   end
   
-  # Extended from manifest magic_mixin, addess mac_address matching
+  # Extended from manifest magic_mixin, adds mac_address matching
   def self.find_for_show(s)
     record = find_for_show_super(s)
     # For mac_address
@@ -88,6 +93,20 @@ class Computer < ActiveRecord::Base
   def presence_of_computer_model
     if computer_model.nil?
       computer_model = ComputerModel.default
+    end
+  end
+  
+  # Return the latest instance of ClientLog
+  def last_run
+    client_logs.last
+  end
+  
+  # Returns, in words, the time since last run
+  def time_since_last_run
+    unless last_run.nil?
+      time_ago_in_words(last_run.created_at) + " ago"
+    else
+      "Never"
     end
   end
 end

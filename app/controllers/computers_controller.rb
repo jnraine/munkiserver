@@ -109,4 +109,13 @@ class ComputersController < ApplicationController
       end
     end
   end
+  
+  # Allows a computer to checkin with the server, notifying it
+  # of the last successful munki run.  May be extended in the future.
+  def checkin
+    @computer = Computer.find_for_show(params[:id])
+    @computer.client_logs.build(:details => params[:details])
+    @computer.save
+    render :text => ''
+  end
 end

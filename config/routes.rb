@@ -18,6 +18,9 @@ Munki::Application.routes.draw do |map|
   map.logout 'logout', :action => 'destroy', :controller => 'sessions'
   # map.change_unit 'change_unit/:unit_id', :action => 'update', :controller => 'sessions'
   match 'unit/:unit_id/:c/:a' => 'sessions#update', :as => 'change_unit'
+  
+  # Computer checkin URL
+  match 'checkin/:id' => 'computers#checkin', :method => :post
 
   # Make munki-client-friendly URLs
   map.catalog 'catalogs/:unit_id-:environment_name.plist', :action => 'show', :controller => 'catalogs', :format => 'plist'

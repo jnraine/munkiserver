@@ -1,0 +1,10 @@
+#!/bin/sh
+# A commit script that bumps the version 
+# and then completes the GIT commit.
+
+# Get relative path directory
+RELPATH=`dirname $0`
+# Bump version number
+${RELPATH}/bump_version.rb
+# Commit all changes
+git commit -a

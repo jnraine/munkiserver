@@ -24,7 +24,7 @@ class Package < ActiveRecord::Base
   
   FORM_OPTIONS = {:restart_actions => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
-                  :installer_types => [['Package',''],['Copy From DMG','copyfromdmg'],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']]}
+                  :installer_types => [['Package',''],['Copy From DMG','copy_from_dmg'],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']]}
   
   # Virtual attribute for accessing the associated package
   # branch name which this package belongs to

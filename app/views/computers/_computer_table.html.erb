@@ -26,7 +26,7 @@
 				<th>
 					<%= link_to 'MAC Address', {:action => "index", :col => "mac_address", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
 				</th>
-				<th>Environment</th>
+				<th>Last Run</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -39,10 +39,10 @@
 		<td><%= image_tag c.icon.url(:small) %>
 	    <td><%= link_to c.hostname, c %></td>
 		<td><%= c.mac_address %></td>
-		<td><%= c.environment %></td>
+		<td><%= c.time_since_last_run %></td>
 	    <td>
 			<%= link_to 'Edit', edit_computer_path(c) %> |
-			<%= link_to 'Destroy', c, :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %> |
+			<%= link_to 'Destroy', c, :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %><br />
 			<%= link_to 'Manifest', computer_path(c, :format => :manifest) %> |
 			<%= link_to 'Client Prefs', computer_path(c, :format => :client_prefs) %>
 		</td>
