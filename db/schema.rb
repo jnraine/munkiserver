@@ -33,7 +33,9 @@ ActiveRecord::Schema.define(:version => 20101005034423) do
 
   create_table "client_logs", :force => true do |t|
     t.integer  "computer_id"
-    t.text     "details"
+    t.text     "managed_software_update_log"
+    t.text     "errors_log"
+    t.text     "installs_log"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

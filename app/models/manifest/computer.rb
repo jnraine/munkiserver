@@ -109,4 +109,10 @@ class Computer < ActiveRecord::Base
       "Never"
     end
   end
+  
+  # Get most recent logs in reverse chronological order
+  # Default to 15 logs
+  def recent_client_logs(num = 15)
+    ClientLog.where(:computer_id => id).limit(num).order("created_at desc")
+  end
 end

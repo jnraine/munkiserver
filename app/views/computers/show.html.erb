@@ -23,20 +23,37 @@
 	jQuery(document).ready(function() {
 		jQuery('.log-details').hide();
 		jQuery('.log-link').click(function() {
-			jQuery(this).siblings('.log-details').slideToggle();
+			// TO-DO: Make this accordion style: only one log view open at a time
+			var logDetailClass = jQuery(this).attr('data-log-detail-class');
+			jQuery("." + logDetailClass).slideToggle();
 			return false;
 		});
 	});	
 </script>
 <ul>
-	<% @computer.client_logs.reverse.each do |client_log| %>
+	<% @computer.recent_client_logs.each do |client_log| %>
 		<li>
-			<%= client_log.created_at.to_s %> - 
+			<%= client_log.created_at.localtime.to_formatted_s(:long_ordinal) %> - 
 			<%= client_log.run_type %>
-			[<%= content_tag :a, "details", {:class => "log-link", :href => "#"} %>]
-			<div class="log-details">
-				<pre><%= client_log.details %></pre>
-			</div>
+
+			<% client_log.log_attributes.each do |log_name| %>
+				<% unless client_log.read_attribute(log_name).blank? %>
+					[<%= content_tag :a, log_name.titleize, {:class => "log-link", "data-log-detail-class" => "log-detail-#{client_log.id}-#{log_name}", :href => "#"} %>]
+				<% end -%>
+			<% end -%>
+
+			<em>- <%= client_log.time_since_created_at_in_words %></em>
+
+			<% client_log.log_attributes.each do |log_name| %>
+				<% unless client_log.read_attribute(log_name).blank? %>
+					<div class="log-details log-detail-<%= client_log.id %>-<%= log_name %>">
+						<pre><%= client_log.read_attribute(log_name) %></pre>
+					</div>
+				<% end -%>
+			<% end -%>
 		</li>
+	<% end -%>
+	<% if (@computer.client_logs.count - 15) > 0 %>
+		<p>...and <%= @computer.client_logs.count - 15 %> more</p>
 	<% end -%>
 </ul>
