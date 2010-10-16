@@ -8,7 +8,7 @@ class Icon < ActiveRecord::Base
   # has_many :computer_groups
   
   has_attached_file :photo,
-                    :styles => { :tiny => "48x48>", :small => "64x64>", :medium => "128x128>", :large => "256x256>" },
+                    :styles => { :tiny => "32x32>", :small => "64x64>", :medium => "128x128>", :large => "256x256>" },
                     :path => ":rails_root/public/assets/:attachment/:id/:style/:filename",
                     :url => "/assets/:attachment/:id/:style/:filename"
   

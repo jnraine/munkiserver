@@ -187,14 +187,8 @@ textarea {
 
 /* Package picker */
 
-.packageListItem img,
-.choose_version img {
-	height:30px;
+.packagePicker td img {
 	vertical-align:middle;
-}
-
-.packagePicker td {
-	vertical-align:top;
 }
 
 .groupListItem .packageListItem {

@@ -114,7 +114,9 @@ class ComputersController < ApplicationController
   # of the last successful munki run.  May be extended in the future.
   def checkin
     @computer = Computer.find_for_show(params[:id])
-    @computer.client_logs.build(:managed_software_update_log => params[:managed_software_update_log], :errors_log => params[:errors_log], :installs_log => params[:installs_log])
+    @computer.client_logs.build(:managed_software_update_log => params[:managed_software_update_log], 
+                                :errors_log => params[:errors_log], 
+                                :installs_log => params[:installs_log])
     @computer.save
     render :text => ''
   end

@@ -1,6 +1,10 @@
-<% package_list.each do |pkg| %>
+<% item_list.each do |item| %>
 	<div class="packageListItem">
-		<%= image_tag pkg.icon.url(:tiny) %>
-		<span><%= pkg %></span>
+		<%= image_tag item.package.icon.url(:tiny) %>
+		<% if item.package_id.blank? %>
+			<span><%= item.package.to_s %></span>
+		<% else %>
+			<span><%= item.package.to_s(:pretty_with_version) %></span>
+		<% end -%>
 	</div>
 <% end %>

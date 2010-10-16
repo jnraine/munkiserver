@@ -16,12 +16,12 @@ module ApplicationHelper
   
   # Outputs code for pkg list
   # Replaces html_package_list and build_html_package_list_item method
-  def pkg_list(package_list,rollback = {})
+  def pkg_list(item_list,rollback = {})
     empty_list_message = "<p><em>No packages assigned</em></p>"
-    if package_list.empty?
+    if item_list.empty?
       empty_list_message.html_safe
     else
-      render :partial => "shared/pkg_list", :locals => {:package_list => package_list, :rollback => rollback}
+      render :partial => "shared/pkg_list", :locals => {:item_list => item_list}
     end
   end
   

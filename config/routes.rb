@@ -7,10 +7,12 @@ Munki::Application.routes.draw do |map|
   map.resources :computer_groups
   map.resources :bundles
   map.resources :packages, :collection => {:check_for_updated => :any}
-  map.resources :computers, :new => {:import => :get}, :collection => {:create_import => :any}
+  map.resources :computers, :new => {:import => :get}
   map.resources :users
   map.resources :units
   map.resources :shared_packages, :member => {:import => :get}
+  match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get
+  match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :method => :get
 
   # Session
   map.login 'login', :action => 'new', :controller => 'sessions'

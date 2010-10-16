@@ -1,0 +1,26 @@
+<% if @install_items.length > 0 %>
+	<%= form_tag update_multiple_install_items_path do |f| %>
+		<table class="form">
+			<% for it in @install_items %>  
+				<%= fields_for "install_items[]", it do |f| %>
+					<tr>
+						<td>
+							<%= image_tag it.package.icon.url(:tiny) %>
+							<%= it.package_branch %>
+						</td>
+						<td>
+							<%= f.select :package_id, options_for_select(it.versions_for_select(@computer),it.package_id) %>
+						</td>
+					</tr>
+				<% end %>
+			<% end %>
+		</table>
+	
+		<p>
+			<%= hidden_field_tag 'computer_id', @computer.id %>
+			<%= submit_tag 'Update' %>
+		</p>
+	<% end -%>
+<% else %>
+	<p>No install items</p>
+<% end -%>

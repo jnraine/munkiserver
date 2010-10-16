@@ -51,16 +51,115 @@ module Manifest
         environment.environments
       end
       
-      # Concatentates installs (specified by admins) and user installs (specified
-      # by users) to create the managed_installs virtual attribute
+      # Returns an array of strings representing managed_installs
+      # based on the items specified in install_items
       def managed_installs
-        installs + user_installs
+        mi = []
+        install_items.each do |install_item|
+          if install_item.package_id.blank?
+            mi << install_item.package.to_s
+          else
+            mi << install_item.package.to_s(:version)
+          end
+        end
+        mi
       end
 
       # Concatentates installs (specified by admins) and user installs (specified
       # by users) to create the managed_installs virtual attribute
       def managed_uninstalls
-        uninstalls + user_uninstalls
+        mui = []
+        uninstall_items.each do |uninstall_item|
+          if uninstall_item.package_id.blank?
+            mui << uninstall_item.package.to_s
+          else
+            mui << uninstall_item.package.to_s(:version)
+          end
+        end
+        mui
+      end
+      
+      # Pass a package object or package ID to append the package to this record
+      # If the package's package branch, or another version of the package is specified
+      # this package replaces the old
+      def append_package_install(package)
+        begin
+          # Try to find the package, unless we have a package instance
+          package = Package.find(package) unless package.class == Package
+        rescue
+          raise ComputerException.new("Malformed argument passed to append_package_install method")
+        end
+        its = self.install_items
+        # Remove install items referring to the same package branch as "package"
+        its = its.map do |it|
+          it unless it.package_branch.id == package.package_branch.id
+        end
+        its = its.compact
+        its << self.install_items.build({:package_id => package.id, :package_branch_id => package.package_branch.id})
+        self.install_items = its
+      end
+
+      # Add package objects or IDs using append_package_installs
+      # TO-DO Could be improved by rewrite, as it simply calls another,
+      # more expensive method
+      def append_package_installs(packages)
+        packages.map {|package| self.append_package_branch_install(package) }
+      end
+      
+      # Pass a package branch object or package branch ID to append the 
+      # package branch to this record.  If the package's package branch, 
+      # or another version of the package is specified this package 
+      # replaces the old
+      def append_package_branch_install(pb)
+        begin
+          # Try to find the package, unless we have a package instance
+          pb = PackageBranch.find(pb) unless pb.class == PackageBranch
+        rescue
+          raise ComputerException.new("Malformed argument passed to append_package_branch_install method")
+        end
+        its = self.install_items
+        # Remove install items referring to the same package branch as "pb"
+        its = its.map do |it|
+          it unless it.package_branch.id == pb.id
+        end
+        its = its.compact
+        its << self.install_items.build({:package_branch_id => pb.id})
+        self.install_items = its
+      end
+      
+      # Add package branch items using append_package_branch_installs
+      # TO-DO Could be improved by rewrite, as it simply calls another,
+      # more expensive method
+      def append_package_branch_installs(pbs)
+        pbs.map {|pb| self.append_package_branch_install(pb) }
+      end
+      
+      # Pass a list of Package records or package IDs and install_item associations will be built
+      def package_installs=(packages)
+        package_objects = [];
+        packages.each do |package|
+          if package.class == Package
+            package_objects << package
+          else
+            p = Package.where(:id => package.to_i).limit(1).first
+            package_objects << p unless p.nil?
+          end
+        end
+        self.installs = package_objects
+      end
+      
+      # Pass a list of Package records or package IDs and install_item associations will be built
+      def package_branch_installs=(package_branches)
+        pb_objects = [];
+        pbs.each do |package_branch|
+          if package_branch.class == PackageBranch
+            pb_objects << package_branch
+          else
+            pb = PackageBranch.where(:id => package_branch.to_i).limit(1).first
+            pbs_objects << p unless p.nil?
+          end
+        end
+        self.installs = pb_objects
       end
       
       # Assign the list of items to a specific association (assoc)
@@ -171,8 +270,8 @@ module Manifest
         h = {}
         h[:name] = name
         h[:included_manifests] = included_manifests
-        h[:managed_installs] = managed_installs.collect(&:to_s)
-        h[:managed_uninstalls] = managed_uninstalls.collect(&:to_s)
+        h[:managed_installs] = managed_installs
+        h[:managed_uninstalls] = managed_uninstalls
         h
       end
       alias :serialize_for_plist_super :serialize_for_plist

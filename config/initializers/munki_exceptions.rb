@@ -6,3 +6,6 @@ end
 
 class VersionTrackerError < Exception
 end
+
+class ComputerError < Exception
+end
