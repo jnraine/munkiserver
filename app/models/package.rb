@@ -26,6 +26,32 @@ class Package < ActiveRecord::Base
                   :os_versions => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
                   :installer_types => [['Package',''],['Copy From DMG','copy_from_dmg'],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']]}
   
+  # Returns array of packages shared to this unit that have not been imported yet.  This is 
+  # determined by comparing installer_item_location values.
+  def self.shared_to_unit(unit)
+    # Installer item locations from unit
+    installer_item_locations = Package.where("unit_id == #{unit.id}").map(&:installer_item_location)
+    # Packages shared from other units
+    # TO-DO at the time of writing this there didn't seem to be a nice way to complete "NOT IN" sql statement so I hand coded it...possible sql injection security hole
+    packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN (#{installer_item_locations.map {|e| "'#{e}'"}.join(",")})")
+    # Delete packages that refer to an installer item used by another package in unit
+    # packages.delete_if {|p| installer_item_locations.include?(p.installer_item_location)}
+  end
+  
+  # Recent items from other units that are shared
+  def self.shared_recent(unit, time = 7.days.ago)
+    shared_to_unit(unit).where("created_at > ?", time)
+  end
+  
+  # Returns array of packages shared to this unit that have been imported.  This is determined by
+  # installer_item_location value
+  def self.shared_to_unit_and_imported(unit)
+    # Installer item locations from unit
+    installer_item_locations = Package.where("unit_id == #{unit.id}").map(&:installer_item_location)
+    # Packages shared from other units
+    Package.shared.where("unit_id != #{unit.id}").where(:installer_item_location => installer_item_locations)
+  end
+  
   # Virtual attribute for accessing the associated package
   # branch name which this package belongs to
   def name

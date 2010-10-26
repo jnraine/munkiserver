@@ -8,7 +8,10 @@
 			<th>Display</th>
 			<th>Version</th>
 			<th>Actions</th>
-			<th>Trackable</th>
+			<th>
+				Update
+				<%= helpful_info("If a checkmark appears, there is a newer version of this package shared by another unit. Go to 'shared packages' to import.") %>
+			</th>
 		</tr>
 	</thead>
 	<% packages.each do |package| %>

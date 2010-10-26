@@ -1,6 +1,7 @@
 class SharedPackagesController < ApplicationController
   def index
-    @shared_packages = Package.shared.where("unit_id != #{current_unit.id}")
+    @shared_packages = Package.shared_to_unit(current_unit)
+    @imported_packages = Package.shared_to_unit_and_imported(current_unit)
   end
   
   # Updates the shared package resource by adding a new instance of that package
@@ -15,6 +16,7 @@ class SharedPackagesController < ApplicationController
     @package.environment = Environment.start
     @package.update_for = []
     @package.requires = []
+    @package.shared = false
     
     respond_to do |format|
       if @package.save

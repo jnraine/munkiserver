@@ -40,7 +40,7 @@ class PackageBranch < ActiveRecord::Base
   end
   
   def latest_where_unit(unit)
-    packages.where(:unit_id => unit.id).order('version desc').limit(1)
+    packages.where(:unit_id => unit.id).order('version desc').limit(1).first
   end
   
   # Extends the functionality of the association dynamic method to
@@ -142,6 +142,21 @@ class PackageBranch < ActiveRecord::Base
   # Get the associated unit
   def unit
     Unit.find_by_id(@unit_id)
+  end
+  
+  # True if there is a newer version of in this package branch
+  # available from a unit different than unit
+  def new_version_shared?(unit)
+    # Latest package from unit
+    latest_package = self.latest_where_unit(unit)
+    # Packages from this branch, which are shared, not part of unit
+    latest_shared_package = self.all_packages.shared.where("unit_id != #{unit.id}").order("version desc").limit(1).first
+    # latest_package or latest_shared_package might be nil.  Let's be lazy and just rescue and assume false
+    begin
+      latest_package.version < latest_shared_package.version
+    rescue NoMethodError
+      false
+    end
   end
   
   # Return the package branches available to a given unit member

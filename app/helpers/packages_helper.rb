@@ -38,7 +38,8 @@ module PackagesHelper
 	
 	def recent_packages
 	 pkgs = Package.recent(current_unit)
-	 render :partial => 'recent', :locals  => { :pkgs => pkgs }
+	 shared_pkgs = Package.shared_recent(current_unit)
+	 render :partial => 'recent', :locals  => { :pkgs => pkgs, :shared_pkgs => shared_pkgs }
 	end
 	
 	def package_table(packages)

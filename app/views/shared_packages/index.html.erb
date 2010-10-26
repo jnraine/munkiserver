@@ -1,55 +1,5 @@
 <% content_for :sidebar do %>
 <% end -%>
 
-<h2>Listing shared packages</h2>
-
-<% if @shared_packages.length == 0 %>
-	<h5>There are no shared packages</h5>
-<% else %>
-	<p><%= record_count(@shared_packages) %></p>
-	<p><em>Dependencies (found in "Update For" and "Requires" columns) are not imported!</em></p>
-	<table>
-		<thead>
-			<tr>
-				<!-- <th> Checkbox</th> -->
-				<th><!-- Icon --></th>
-				<th>Branch</th>
-				<th>Display</th>
-				<th>Version</th>
-				<th>Update For</th>
-				<th>Requires</th>
-				<th>Unit</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<% @shared_packages.each do |package| %>
-			<tr>
-				<!-- <td>
-					<input type="checkbox" />
-				</td> -->
-				<td><%= image_tag package.icon.url(:tiny) %></td>
-				<td><%= package.name %></td>
-				<td><%= package.display_name %></td>
-				<td><%= package.version %></td>
-				<td>
-					<% package.update_for.each do |uf| %>
-						<%= "#{uf.name} (#{uf.version})" %><br />
-					<% end -%>
-				</td>
-				<td>
-					<% package.requires.each do |r| %>
-						<%= "#{r.name} (#{r.version})" %><br />
-					<% end -%>
-				</td>
-				<td><%= package.unit %></td>
-				<td>
-					<% if package.has_dependencies? %>
-						<%= link_to "Import", import_shared_package_path(package), {"data-confirm-message" => "Warning: This item has dependencies which will NOT be imported!"} %>
-					<% else %>
-						<%= link_to "Import", import_shared_package_path(package) %>
-					<% end -%>
-				</td>
-			</tr>
-		<% end -%>
-	</table>
-<% end %>
+<%= render :partial => "shared_package_table", :locals => {:title => "shared packages", :packages => @shared_packages} %>
+<%= render :partial => "shared_package_table", :locals => {:title => "imported packages", :packages => @imported_packages} %>

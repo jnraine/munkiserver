@@ -25,6 +25,6 @@
 		<% end -%>
 	</td>
 	<td>
-		<%= "&#10003;".html_safe if package.trackable? %>
+		<%= "&#10003;".html_safe if package.package_branch.new_version_shared?(package.unit) %>
 	</td>
 </tr>
