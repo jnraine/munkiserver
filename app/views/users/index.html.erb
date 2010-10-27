@@ -10,7 +10,7 @@
 	<% @users.each do |user| %>
 		<tr>
 			<td><%= link_to user.username  %></td>
-			<td><%= user.super_user? ? "&#10003;"  %></td>
+			<td><%= "&#10003;".html_safe if user.super_user?  %></td>
 			<td><%= user.email %></td>
 			<td>
 				<%= link_to "Edit", edit_user_path(user) %>
