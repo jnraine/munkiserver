@@ -436,6 +436,8 @@ class Package < ActiveRecord::Base
         h[key.to_s] = self.send(key) if self.send(key).present?
       end
       
+      # Add append any special cases to the hash
+      h["requires"] = self.requires.map {|p| p.to_s(:version) } unless self.requires.empty?
       h = h.merge(raw_tags) if append_raw?
     end
     h
