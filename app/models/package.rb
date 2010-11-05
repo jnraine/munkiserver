@@ -220,7 +220,11 @@ class Package < ActiveRecord::Base
   def delete_package_file_if_necessary
     # Unless, other packages reference the package on the filesystem
     unless Package.where(:installer_item_location => self.installer_item_location).length > 1
-      FileUtils.remove(Munki::Application::PACKAGE_DIR + self.installer_item_location)
+      begin
+        FileUtils.remove(Munki::Application::PACKAGE_DIR + self.installer_item_location)
+      rescue
+        logger.error "Unable to remove #{self.installer_item_location} from filesystem"
+      end
     end
   end
   
@@ -503,33 +507,49 @@ class Package < ActiveRecord::Base
   # Takes a tmp file, moves it to the appropriate place, and checks it in
   # Return value is the same as Package.checkin.  If it fails, it will raise
   # an PackageError exception
-  def self.upload(file, options = {})
+  def self.upload(file, pkginfo, options = {})
     original_filename = nil
     if file.respond_to?(:original_filename)
       original_filename = file.original_filename
     else
       original_filename = File.basename(file.path)
     end
+    
     # Add timestamp to original filename
     installer_item_name = Time.now.to_s(:ordered_numeric) + "_" + original_filename
     # Create absolute path
     dest_path = Munki::Application::PACKAGE_DIR + installer_item_name
+    
     # Make sure a file of that name doesn't already exist and fix it if it does
     if File.exists?(dest_path)
       installer_item_name = Time.now.to_s(:ordered_numeric) + "_" + rand(1001) + "_" + original_filename
       dest_path = Munki::Application::PACKAGE_DIR + installer_item_name
     end
+    
     # Move from the tmp location to destination
     FileUtils.move(file.path,dest_path)
     dest_path = Package.rename_installer_item(dest_path)
-    # Check package in
-    begin
-      Package.checkin(dest_path, options)
-    rescue PackageError
-      if FileUtils.remove(dest_path)
-        raise PackageError.new("There was a problem checking in #{dest_path}")
-      else
-        raise PackageError.new("There was a problem checking in #{dest_path}. Unable to delete it.")
+    
+    # Checkin the package if the munki tools are available, or import if they are not
+    if Munki::Application::MUNKI_TOOLS_AVAILABLE
+      # Check package in
+      begin
+        Package.checkin(dest_path, options)
+      rescue PackageError
+        if FileUtils.remove(dest_path)
+          raise PackageError.new("There was a problem checking in #{dest_path}")
+        else
+          raise PackageError.new("There was a problem checking in #{dest_path}. Unable to delete it.")
+        end
+      end
+    else
+      begin
+        pkginfo_string = File.read(pkginfo)
+        p = Package.import(pkginfo_string)
+        p.installer_item_location = dest_path
+        {:package => p, :plist_string => pkginfo_string}
+      rescue Exception => e
+        raise PackageError.new("There was an error while importing #{File.basename(dest_path)}")
       end
     end
   end
@@ -554,6 +574,173 @@ class Package < ActiveRecord::Base
     else
       path
     end
+  end
+  
+  # Creates a package instance from a temporary file, pkginfo file, and options.
+  # Returns an unsaved instance of the Package class
+  def self.create_from_tmp_file(tmp_file,pkginfo_file = nil, options = {})
+    file = self.init_tmp_file(tmp_file)
+    self.create(file,pkginfo_file,options)
+  end
+  
+  # Renames and moves temporary files to the appropriate package store. Returns
+  # a File object for newly renamed/moved file
+  def self.init_tmp_file(tmp_file)
+    destination_path = nil
+    
+    # Get the absolute path for the package store
+    begin
+      unique_name = self.uniquify_name(tmp_file.original_filename)
+      destination_path = Pathname.new(Munki::Application::PACKAGE_DIR + unique_name)
+    end while File.exists?(destination_path)
+    
+    # Move tmp_file to the package store
+    begin
+      FileUtils.mv tmp_file.path, destination_path
+    rescue Errno::EACCES => e
+      raise PackageError.new("Unable to write to package store")
+    end
+    
+    # Return the package as a File object
+    begin
+      File.new(destination_path)
+    rescue
+      raise PackageError.new("Unable to read #{destination_path}")
+    end
+  end
+  
+  # Create a unique name from a string by prepending the current timestamp
+  # and adding a random number
+  def self.uniquify_name(name)
+    Time.now.to_s(:ordered_numeric) + rand(10001).to_s + "_" + name
+  end
+  
+  # Instantiate a package object from a package file and an optional
+  # pkginfo file, as well as some options
+  def self.create(package_file, pkginfo_file = nil, options = {})
+    package = nil
+
+    # Create a package
+    if Munki::Application::MUNKI_TOOLS_AVAILABLE and pkginfo_file.nil?
+      package = self.process_package package_file, options[:makepkginfo_options]
+    elsif pkginfo_file.present?
+      package = self.process_pkginfo pkginfo_file
+    else
+      raise PackageError.new("Package file and/or pkginfo file missing")
+    end
+    
+    # Apply munkiserver attributes
+    package = self.apply_munki_server_attributes(package,options[:attributes])
+    
+    # Apply attributes from existing version in the same unit
+    package = self.apply_old_version_attributes(package)
+  end
+  
+  # Run makepkginfo on server against package file to generate a pkginfo
+  def self.process_package(file,makepkginfo_options = {})
+    # Generate command-line options array
+    cmd_line_options = makepkginfo_options.map do |k,v| 
+      v = v.gsub(/ /,'\ ')
+      "--#{k}=#{v}" unless v.blank?
+    end
+    cmd_line_options = cmd_line_options.compact
+    
+    # Run makepkginfo
+    stdout_tmp_path = Pathname.new("/tmp/ms-#{File.basename(file)}-#{rand(100001)}.plist")
+    stderr_tmp_path = Pathname.new("/tmp/ms-#{File.basename(file)}-#{rand(100001)}.plist")
+    `(#{Munki::Application::MAKEPKGINFO} #{cmd_line_options.join(" ")} "#{file.path}" 2>&1 1>&3 | tee "#{stdout_tmp_path}") 3>&1 1>&2 | tee "#{stderr_tmp_path}"`
+    exit_status = `echo $?`.chomp.to_i
+    pkginfo = File.new(stdout_tmp_path)
+    
+    package = nil
+    # Process pkginfo
+    if exit_status == 0
+      package = self.process_pkginfo(pkginfo)
+    else
+      raise PackageError.new(stderr + "\n" + stdout)
+    end
+    
+    # Remove tmp files (no error checking)
+    FileUtils.rm(stdout_tmp_path)
+    FileUtils.rm(stderr_tmp_path)
+    
+    package
+  end
+  
+  # Instantiate a package from a pkginfo file
+  def self.process_pkginfo(file)
+    pkginfo_hash = nil
+    
+    # Parse plist
+    begin
+      pkginfo_hash = Plist.parse_xml(File.read(file))
+    rescue RuntimeError => e
+      raise PackageError("Unable to parse pkginfo file -- Plist.parse_xml raised RuntimeError: #{e}")
+    end
+    
+    # Make sure pkginfo_hash isn't nil
+    if pkginfo_hash.nil?
+      raise PackageError("Unable to parse pkginfo file -- Plist.parse_xml returned nil")
+    end
+    
+    # Create a package from hash
+    self.process_pkginfo_hash(pkginfo_hash)
+  end
+  
+  # Applies munki server attributes (environment, unit) to a package.
+  def self.apply_munki_server_attributes(package, unit_id, environment_id = nil)
+    environment_id ||= Environment.start
+    
+    package.unit_id = unit_id
+    package.environment_id = environment_id
+    
+    package
+  end
+  
+  # Apply inherited attributes (as defined by self.inherited_attributes)
+  # from an older version from the package's package branch and unit
+  def self.apply_old_version_attributes(package)
+    old_version = Package.where(:package_branch_id => package.package_branch_id, :unit_id => package.unit_id).order('version DESC').first
+    if old_version.present?
+      self.inherited_attributes.each do |attr|
+        package.send("#{attr}=",old_version.send(attr)) unless old_version.send(attr).blank?
+      end
+    end
+    package
+  end
+  
+  # Instantiate a package from a hash. Deals with non-applicable values
+  # generated by makepkginfo (such as the catalogs array) and other 
+  # munki server special cases
+  def self.process_pkginfo_hash(pkginfo_hash)
+    package = Package.new
+    
+    # Remove items that we don't need
+    pkginfo_hash.delete('catalogs')
+
+    # Find or create a package branch for this
+    package.name = pkginfo_hash['name']
+    pkginfo_hash.delete('name')
+
+    # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
+    pkginfo_hash.each do |k,v|
+      unless known_attributes.include?(k)
+        # Add non-attribute tag to raw_tags
+        package.raw_tags = package.raw_tags.merge({k => v})
+        # Remove non-attribute from hash
+        pkginfo_hash.delete(k)
+        # Change raw_mode to append
+        package.raw_mode_id = 1
+      end
+    end
+    
+    # Assign attributes to package
+    package.attributes = pkginfo_hash
+    
+    # Assign a package category based on the installer_type
+    package.package_category_id = PackageCategory.default(package.installer_type).id
+    
+    package
   end
   
   # Creates valid and populated Pkgsinfo object

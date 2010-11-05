@@ -15,26 +15,12 @@ class PackagesController < ApplicationController
 
   # TO-DO clean up this a messy action
   def create 
-    # Assign @hash
-    # @hash stores two entries:
-    # => :package - A Package object
-    # => :plist_plist - A plist as a string, the output of makepkginfo
     begin
-      case params[:commit]
-        when "Upload" then @hash = Package.upload(params[:data],params[:options])
-        when "Grab" then @hash = VersionTracker.find_or_create_by_web_id(params[:version_tracker_web_id]).to_package
-      end
-    rescue Exception => e
-      flash[:error] = "Unable to add package: #{e.message}"
-    end
-
-    # Assign @package
-    # Make sure @hash and @hash[:package] were set
-    unless @hash.nil? or @hash[:package].nil?
-      @package = @hash[:package]
-      @package.unit = current_unit
-    else
+      @package = Package.create_from_tmp_file(params[:package_file],params[:pkginfo_file], {:makepkginfo_options => params[:makepkginfo_options],
+                                                                                            :attributes => {:unit_id => current_unit.id}})
+    rescue PackageError => e
       @package = Package.new
+      flash[:error] = e.to_s
     end
     
     respond_to do |format|
@@ -44,6 +30,7 @@ class PackagesController < ApplicationController
         format.html { redirect_to edit_package_path(@package) }
       else
         # Failure
+        flash[:error] = "Failed to add package: " + flash[:error]
         format.html { redirect_to :back }
       end
     end
