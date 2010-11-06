@@ -16,12 +16,12 @@ module ApplicationHelper
   
   # Outputs code for pkg list
   # Replaces html_package_list and build_html_package_list_item method
-  def pkg_list(item_list,rollback = {})
+  def pkg_list(item_list,target = nil)
     empty_list_message = "<p><em>No packages assigned</em></p>"
     if item_list.empty?
       empty_list_message.html_safe
     else
-      render :partial => "shared/pkg_list", :locals => {:item_list => item_list}
+      render :partial => "shared/pkg_list", :locals => {:item_list => item_list, :target => target}
     end
   end
   
@@ -35,8 +35,8 @@ module ApplicationHelper
     end
   end
   
-  def inventory(model_obj,rollback_option = false)
-    render :partial => "shared/inventory", :locals => {:model_obj => model_obj, :rollback_option => rollback_option}
+  def inventory(model_obj,target = nil)
+    render :partial => "shared/inventory", :locals => {:model_obj => model_obj, :target => target}
   end
   
   # Pass an array of group names.  Pushes installed package names into second argument and uninstalled package names into third argument.  Calls itself for groups of passed groups names (checks fourth argument for already visited group names)

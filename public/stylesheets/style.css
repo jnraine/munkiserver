@@ -374,3 +374,8 @@ thead th a:hover {
 .errorExplanation h2 {
 	color:#fff;
 }
+
+.installed-mark {
+	color: green;
+	font-size:1.6em;
+}

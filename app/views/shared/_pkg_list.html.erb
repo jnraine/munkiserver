@@ -6,5 +6,8 @@
 		<% else %>
 			<span><%= item.package.to_s(:pretty_with_version) %></span>
 		<% end -%>
+		<% if target.respond_to?(:installed?) and target.installed?(item.package) %>
+			<span class="installed-mark">&nbsp;&#10003;</span>
+		<% end -%>
 	</div>
 <% end %>

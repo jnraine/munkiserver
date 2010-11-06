@@ -115,4 +115,18 @@ class Computer < ActiveRecord::Base
   def recent_client_logs(num = 15)
     ClientLog.where(:computer_id => id).limit(num).order("created_at desc")
   end
+  
+  # Check the client logs and determine if this item has been installed or not
+  def installed?(package)
+    display_name = package.display_name
+    version = package.version
+    log = last_managed_software_update_log
+    log.match(/#{Regexp.escape(display_name)} version (#{Regexp.escape(version)}) \(or newer\) is already installed/).present?
+  end
+  
+  # Gets the last managed software update log (nil if none)
+  def last_managed_software_update_log
+    logs = client_logs.last
+    logs.managed_software_update_log unless logs.nil?
+  end
 end
