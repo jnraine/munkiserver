@@ -26,12 +26,12 @@ module ApplicationHelper
   end
   
   # Outputs code for group list
-  def bundle_list(bundle_list,rollback = {})
+  def bundle_list(bundle_list,target = nil)
     empty_list_message = "<p><em>No bundles assigned</em></p>"
     if bundle_list.empty?
       empty_list_message.html_safe
     else
-      render :partial => "shared/bundle_list", :locals => {:bundle_list => bundle_list, :rollback => rollback}
+      render :partial => "shared/bundle_list", :locals => {:bundle_list => bundle_list, :target => target}
     end
   end
   

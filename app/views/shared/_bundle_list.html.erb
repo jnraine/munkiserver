@@ -8,12 +8,12 @@
 	
 	<% unless bundle.installs.empty? %>
 		<span class="groupListingContentsTitle">Install</span>
-		<%= pkg_list(bundle.installs) %>
+		<%= pkg_list(bundle.install_items,target) %>
 	<% end %>
 
 	<% unless bundle.uninstalls.empty? %>
 		<span class="groupListingContentsTitle">Uninstall</span>
-		<%= pkg_list(bundle.uninstalls) %>
+		<%= pkg_list(bundle.uninstall_items) %>
 	<% end %>
 </div>
 <% end %>
