@@ -118,6 +118,8 @@ class ComputersController < ApplicationController
                                 :errors_log => params[:errors_log], 
                                 :installs_log => params[:installs_log])
     @computer.save
+    @computer.error_mailer.deliver if @computer.error_mailer_due?
+        
     render :text => ''
   end
 end

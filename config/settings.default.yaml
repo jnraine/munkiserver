@@ -1,0 +1,11 @@
+:action_mailer:
+  :delivery_method: :smtp
+  :smtp_settings:
+    :address: "smpt.example.com"
+    :port: 587
+    :user_name: 'username'
+    :password: 'password'
+    :authentication: :login
+    :enable_starttls_auto: true
+  # :sendmail_settings:
+  #   :location: /usr/sbin/sendmail

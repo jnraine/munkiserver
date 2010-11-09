@@ -13,6 +13,8 @@ module Munki
 
     # Current version
     VERSION = File.read("#{Rails.root}/config/VERSION")
+    # Load server configuration YAML file
+    settings = YAML.load(File.read("#{Rails.root}/config/settings.yaml"))
     
     # Add additional load paths for your own custom dirs
     # config.load_paths += %W( #{config.root}/extras )
@@ -60,5 +62,10 @@ module Munki
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password
+    
+    config.action_mailer.delivery_method = settings[:action_mailer][:delivery_method]
+    config.action_mailer.sendmail_settings = settings[:action_mailer][:sendmail_settings] if settings[:action_mailer][:delivery_method] == :sendmail
+    config.action_mailer.smtp_settings = settings[:action_mailer][:smtp_settings] if settings[:action_mailer][:delivery_method] == :smtp
+    config.action_mailer.raise_delivery_errors = true
   end
 end

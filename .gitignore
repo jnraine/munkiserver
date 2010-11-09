@@ -1,4 +1,5 @@
 .bundle
+config/settings.yaml
 *.DS_Store
 packages/
 # Don't ignore app/views/packages

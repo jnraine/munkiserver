@@ -1,0 +1,11 @@
+<h3><%= pluralize @computers.count, "dormant computer" %> in <%= @unit.name %> unit</h3>
+
+<% @computers.each do |computer| %>
+	<div>
+		<%= computer %> (<%= computer.computer_group %>)
+		<ul>
+			<li>Last successful run: <%= computer.time_since_last_successful_run %></li>
+			<li>Last run: <%= computer.time_since_last_run %></li>
+		<ul>
+	</div>
+<% end -%>

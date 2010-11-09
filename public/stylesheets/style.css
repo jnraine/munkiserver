@@ -48,11 +48,18 @@ a:hover {
 	margin-bottom:0px;
 }
 
-#app_menu {
-	height:36px;
+#app-menu {
+	height:30px;
+	margin-bottom:6px;
+	color:#fff;
+	background-color:#594F4F;
+	border-bottom-left-radius:10px;
+	border-bottom-right-radius:10px;
+	-moz-border-bottom-left-radius:10px;
+	-moz-border-bottom-right-radius:10px;
 }
 
-#app_menu li {
+#app-menu li {
 	/* Application menu */
 	padding-right:10px;
 }
@@ -300,7 +307,9 @@ thead th,
 .box a:hover,
 .box,
 thead th a,
-thead th a:hover {
+thead th a:hover,
+#app-menu a,
+#app-menu a:hover {
 	/* Box text color */
 	color:#fff;
 }
@@ -376,6 +385,6 @@ thead th a:hover {
 }
 
 .installed-mark {
-	color: green;
+	color: #594F4F;
 	font-size:1.6em;
 }

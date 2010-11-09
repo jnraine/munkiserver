@@ -1,0 +1,21 @@
+<h3>Errors occurred on <%= @computer %></h3>
+<h4>This client successfully completed a managed software update <strong><%= @computer.time_since_last_successful_run %></strong></h4>
+
+<div>
+	Error log:
+	<pre><%= @computer.last_run.errors_log %></pre>
+</div>
+
+<% if @computer.last_run.managed_software_update_log.present? %>
+<div>
+	Managed Software Update log:
+	<pre><%= @computer.last_run.managed_software_update_log %></pre>
+</div>
+<% end -%>
+
+<% if @computer.last_run.installs_log.present? %>
+<div>
+	Install log:
+	<pre><%= @computer.last_run.installs_log %></pre>
+</div>
+<% end -%>

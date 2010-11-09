@@ -16,6 +16,13 @@ class Computer < ActiveRecord::Base
   # Maybe I shouldn't be doing this
   include ActionView::Helpers
   
+  # Computers are considered dormant when they haven't checked in for 
+  # longer than value of dormant_interval.  Value stored in method
+  # instead of constant to ensure the value is up-to-date at all times
+  def self.dormant_interval
+    7.days.ago
+  end
+  
   # Getter for virtual attribute hostname
   def hostname
     name
@@ -34,6 +41,27 @@ class Computer < ActiveRecord::Base
   # For will_paginate gem.  Sets the default number of records per page.
   def self.per_page
     10
+  end
+
+  # Filters dormant computers from Computer model.  Because this method
+  # must filter based on ClientLog relationships, this method does not
+  # return an ActiveRecord::Relation instance.  If you pass a unit, it 
+  # return dormant computers from that unit only.
+  def self.dormant(unit = nil)
+    dormant = []
+    computers = Computer.unit(unit) if unit.present?
+    computers ||= Computer.all
+    computers.each do |computer|
+      if computer.dormant?
+        dormant << computer
+      end
+    end
+    dormant
+  end
+
+  # Examines the client logs of a computer to determine if it has been dormant
+  def dormant?
+    (self.last_successful_run.nil? and self.created_at < self.class.dormant_interval) or (self.last_successful_run.created_at < self.class.dormant_interval)
   end
 
   # Make sure this computer is assigned a computer group
@@ -103,11 +131,23 @@ class Computer < ActiveRecord::Base
   
   # Returns, in words, the time since last run
   def time_since_last_run
-    unless last_run.nil?
+    if last_run.present?
       time_ago_in_words(last_run.created_at) + " ago"
     else
-      "Never"
+      "never"
     end
+  end
+  
+  def time_since_last_successful_run
+    if last_run.present?
+      time_ago_in_words(last_successful_run.created_at) + " ago"
+    else
+      "never"
+    end
+  end
+  
+  def last_successful_run
+    client_logs.successful.last
   end
   
   # Get most recent logs in reverse chronological order
@@ -128,5 +168,27 @@ class Computer < ActiveRecord::Base
   def last_managed_software_update_log
     logs = client_logs.last
     logs.managed_software_update_log unless logs.nil?
+  end
+  
+  # An error report for this computer is due based on various parameters
+  # => Last successful run was longer than 1 day ago
+  # => Last successful run was updated longer than 1 day ago
+  # => Error logs are present on the last run
+  def error_mailer_due?
+    last_successful_run.created_at < 1.days.ago and 
+    last_successful_run.updated_at < 1.days.ago and
+    last_run.errors_log.present?
+  end
+  
+  # Send error report for this computer.  Touches last successful run log
+  # to indicate when the last error report was sent
+  def error_mailer
+    last_successful_run.touch
+    AdminMailer.computer_error(self).deliver
+  end
+  
+  # Gets an array of users responsible for this computer
+  def admins
+    unit.members if unit.present?
   end
 end

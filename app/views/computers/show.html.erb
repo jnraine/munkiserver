@@ -18,7 +18,7 @@
 <% end -%>
 
 <h4>Logs</h4>
-<p>Last successful munki run: <strong><%= @computer.time_since_last_run %></strong></p>
+<p>Last successful munki run: <strong><%= @computer.time_since_last_successful_run.capitalize %></strong></p>
 <script type="text/javascript">
 	jQuery(document).ready(function() {
 		jQuery('.log-details').hide();

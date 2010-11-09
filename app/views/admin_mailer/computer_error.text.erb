@@ -1,0 +1,14 @@
+Errors occurred on <%= @computer %>.  This client successfully completed managed software update <%= @computer.time_since_last_successful_run %>.
+
+Error log:
+<%= @computer.last_run.errors_log %>
+
+<% if @computer.last_run.managed_software_update_log.present? %>
+Managed Software Update log:
+<%= @computer.last_run.managed_software_update_log %>
+<% end -%>
+
+<% if @computer.last_run.installs_log.present? %>
+Install log:
+<%= @computer.last_run.installs_log %>
+<% end -%>

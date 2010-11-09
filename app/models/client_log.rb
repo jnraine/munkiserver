@@ -1,6 +1,8 @@
 class ClientLog < ActiveRecord::Base
   belongs_to :computer
 
+  scope :successful, where(:errors_log => "")
+
   # Include helpers
   include ActionView::Helpers
   

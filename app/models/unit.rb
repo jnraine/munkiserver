@@ -94,5 +94,13 @@ class Unit < ActiveRecord::Base
     User.random_string(30)
   end
   
+  def self.dormant_computers_mailers
+    Unit.all.map(&:dormant_computers_mailer)
+  end
+  
+  def dormant_computers_mailer
+    AdminMailer.dormant_computers(self)
+  end
+  
   construct_acl_methods
 end

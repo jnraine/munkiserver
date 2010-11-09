@@ -1,0 +1,6 @@
+<%= pluralize @computers.count, "dormant computer" %> in <%= @unit.name %> unit
+<% @computers.each do |computer| %>
+<%= computer %> (<%= computer.computer_group %>)
+	- Last successful run: <%= computer.time_since_last_successful_run %>
+	- Last run: <%= computer.time_since_last_run %>
+<% end -%>
