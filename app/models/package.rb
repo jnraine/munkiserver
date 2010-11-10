@@ -676,12 +676,12 @@ class Package < ActiveRecord::Base
     begin
       pkginfo_hash = Plist.parse_xml(File.read(file))
     rescue RuntimeError => e
-      raise PackageError("Unable to parse pkginfo file -- Plist.parse_xml raised RuntimeError: #{e}")
+      raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml raised RuntimeError: #{e}")
     end
     
     # Make sure pkginfo_hash isn't nil
     if pkginfo_hash.nil?
-      raise PackageError("Unable to parse pkginfo file -- Plist.parse_xml returned nil")
+      raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml returned nil")
     end
     
     # Create a package from hash
