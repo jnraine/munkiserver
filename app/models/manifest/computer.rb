@@ -159,10 +159,10 @@ class Computer < ActiveRecord::Base
   
   # Check the client logs and determine if this item has been installed or not
   def installed?(package)
-    display_name = package.display_name
+    name = package.name
     version = package.version
     log = last_managed_software_update_log
-    log.present? and log.match(/#{Regexp.escape(display_name)} version (#{Regexp.escape(version)}) \(or newer\) is already installed/).present?
+    log.present? and log.match(/#{Regexp.escape(name)} version (#{Regexp.escape(version)}) \(or newer\) is already installed/).present?
   end
   
   # Gets the last managed software update log (nil if none)
