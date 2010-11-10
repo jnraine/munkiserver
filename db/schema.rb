@@ -82,13 +82,6 @@ ActiveRecord::Schema.define(:version => 20101005034423) do
     t.datetime "updated_at"
   end
 
-  create_table "event_records", :force => true do |t|
-    t.integer  "doer_id"
-    t.string   "doer_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "icons", :force => true do |t|
     t.string   "photo_file_name"
     t.string   "photo_content_type"

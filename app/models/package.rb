@@ -391,10 +391,11 @@ class Package < ActiveRecord::Base
     package_branch.packages_like_unit_member(self)
   end
 
+  # Moved to UnitMember
   # Determines what catalog this belongs to
-  def catalogs
-    ["#{unit.id}_#{environment}.plist"]
-  end
+  # def catalogs
+  #   ["#{unit.id}_#{environment}.plist"]
+  # end
   
   # Setter for the raw_tags attribute. Converts the plist string value to
   # a ruby object and assigns it to the attribute. Takes a raw plist string.

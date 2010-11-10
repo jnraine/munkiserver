@@ -71,13 +71,14 @@ class Computer < ActiveRecord::Base
     self.computer_group_id = ComputerGroup.default(self.unit).id if self.computer_group_id.nil?
   end
 
-  def catalogs
-    c = []
-    environments.each do |env|
-      c << "#{unit.id}-#{env.name}.plist"
-    end
-    c
-  end
+  # Moved this method to unit_member so it was only in one place (also present in Package class)
+  # def catalogs
+  #   c = []
+  #   environments.each do |env|
+  #     c << "#{unit.id}_#{env.name}.plist"
+  #   end
+  #   c
+  # end
 
   # Returns a hash representing the ManagedInstalls.plist
   # that should be placed in /Library/Preferences on this client
@@ -139,7 +140,7 @@ class Computer < ActiveRecord::Base
   end
   
   def time_since_last_successful_run
-    if last_run.present?
+    if last_successful_run.present?
       time_ago_in_words(last_successful_run.created_at) + " ago"
     else
       "never"
@@ -147,7 +148,7 @@ class Computer < ActiveRecord::Base
   end
   
   def last_successful_run
-    client_logs.successful.last
+    client_logs.successful.last if client_logs.successful.present?
   end
   
   # Get most recent logs in reverse chronological order

@@ -28,6 +28,11 @@ module UnitMember
         self.unit(unit_member.unit).environments([unit_member.environment])
       end
       
+      # Array of catalogs this unit member belongs to
+      def catalogs
+        ["#{unit.id}-#{environment}.plist"]
+      end
+      
       # ===================
       # = Code ends here! =
       # ===================
