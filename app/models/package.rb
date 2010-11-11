@@ -623,9 +623,9 @@ class Package < ActiveRecord::Base
 
     # Create a package
     if Munki::Application::MUNKI_TOOLS_AVAILABLE and pkginfo_file.nil?
-      package = self.process_package package_file, options[:makepkginfo_options]
+      package = self.process_package(package_file, options[:makepkginfo_options])
     elsif pkginfo_file.present?
-      package = self.process_pkginfo pkginfo_file
+      package = self.process_pkginfo(pkginfo_file)
     else
       raise PackageError.new("Package file and/or pkginfo file missing")
     end
@@ -649,16 +649,20 @@ class Package < ActiveRecord::Base
     # Run makepkginfo
     stdout_tmp_path = Pathname.new("/tmp/ms-#{File.basename(file)}-#{rand(100001)}.plist")
     stderr_tmp_path = Pathname.new("/tmp/ms-#{File.basename(file)}-#{rand(100001)}.plist")
-    `(#{Munki::Application::MAKEPKGINFO} #{cmd_line_options.join(" ")} "#{file.path}" 2>&1 1>&3 | tee "#{stdout_tmp_path}") 3>&1 1>&2 | tee "#{stderr_tmp_path}"`
-    exit_status = `echo $?`.chomp.to_i
-    pkginfo = File.new(stdout_tmp_path)
+    # `#{Munki::Application::MAKEPKGINFO} #{cmd_line_options.join(" ")} "#{file.path}" 2>&1 1>&3 | tee "#{stderr_tmp_path}") 3>&1 1>&2 | tee "#{stdout_tmp_path}"`
+    makepkginfo_succeeded = system("#{Munki::Application::MAKEPKGINFO} #{cmd_line_options.join(" ")} '#{file.path}' 1> '#{stdout_tmp_path}' 2>'#{stderr_tmp_path}'")
+    exit_status = $?.exitstatus
     
+    pkginfo = File.new(stdout_tmp_path)
+    debugger
     package = nil
     # Process pkginfo
     if exit_status == 0
       package = self.process_pkginfo(pkginfo)
     else
-      raise PackageError.new(stderr + "\n" + stdout)
+      # Remove package and 
+      FileUtils.rm(file.path)
+      raise PackageError.new("Munki tools were unable to process package file: " + File.read(stderr_tmp_path) + "\n" + File.read(stdout_tmp_path))
     end
     
     # Remove tmp files (no error checking)
@@ -668,20 +672,20 @@ class Package < ActiveRecord::Base
     package
   end
   
-  # Instantiate a package from a pkginfo file
+  # Instantiate a package from a pkginfo file (File instance)
   def self.process_pkginfo(file)
     pkginfo_hash = nil
     
     # Parse plist
     begin
-      pkginfo_hash = Plist.parse_xml(File.read(file))
+      pkginfo_hash = Plist.parse_xml(file.read)
     rescue RuntimeError => e
       raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml raised RuntimeError: #{e}")
     end
     
     # Make sure pkginfo_hash isn't nil
     if pkginfo_hash.nil?
-      raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml returned nil")
+      raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml returned nil: pkginfo file probably empty")
     end
     
     # Create a package from hash
