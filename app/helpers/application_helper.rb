@@ -139,30 +139,49 @@ module ApplicationHelper
     end
   end
   
-  # Checks if currently logged in user is a super user
-  def super_user?
-    current_user.super_user?
-  end
-
-  def logged_in?
-    current_user != nil
-  end
-
-  def current_user
-    # User.find_by_username(session[:username])
-    @current_user ||= User.find_by_username("jraine")
-  end
-  
-  def unit_set?
-    current_unit_id != nil
+  # Get current environment based on session[:environment_id] or value of 
+  # Environment.default_view.  Change environment by passing param[:eid] to 
+  def current_environment
+    # Change environment if necessary
+    session[:environment_id] = params[:eid] if params[:eid].present?    
+    @current_environment = Environment.where(:id => session[:environment_id]).first
+    @current_environment ||= Environment.default_view
   end
   
   def current_unit_id
     session[:unit_id]
   end
   
+  def super_user?
+    current_user.super_user?
+  end
+  
   def current_unit
-    @unit_id ||= Unit.find(current_unit_id)
+    begin
+      @current_unit ||= Unit.find(session[:unit_id])
+    rescue ActiveRecord::RecordNotFound
+      # If you can't find the unit with the session ID
+      session[:unit_id] = current_user.units.first.id
+      # Assign it again
+      @current_unit ||= Unit.find(session[:unit_id])
+    end
+  end
+  
+  def current_user
+    @current_user ||= User.find_by_username(session[:username])
+  end
+  
+  def logged_in?
+    current_user.present?
+  end
+    
+  # Get current environment based on session[:environment_id] or value of 
+  # Environment.default_view.  Change environment by passing param[:eid] to 
+  def current_environment
+    # Change environment if necessary
+    session[:environment_id] = params[:eid] if params[:eid].present?    
+    @current_environment = Environment.where(:id => session[:environment_id]).first
+    @current_environment ||= Environment.default_view
   end
   
   def mine?(object)

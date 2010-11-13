@@ -7,7 +7,7 @@
 <p id="environment_links">
 	|
 	<% Environment.all.each do |env| %>
-		<% if @env.id == env.id %>
+		<% if current_environment.id == env.id %>
 			<%= env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})" %>
 		<% else %>
 			<%= link_to env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})", packages_path(:eid => env.id) %>
@@ -16,10 +16,10 @@
 	<% end -%>
 </p>
 
-<h3><%= @env %></h3>
+<h3><%= current_environment %></h3>
 
 <% if @packages.length == 0 %>
-	<h5>There are no packages in the <%= @env.to_s.downcase %> environment</h5>
+	<h5>There are no packages in the <%= current_environment.to_s.downcase %> environment</h5>
 	<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
 <% else %>
 	<p><%= record_count(@packages) %></p>

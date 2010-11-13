@@ -1,19 +1,15 @@
 class PackagesController < ApplicationController
   def index
-    # Set environment
-    @env = Environment.find_by_id(params[:eid])
-    @env ||= Environment.default_view
     # TO-DO This query can be rethought because of the way the view uses this list of packages
     # it might be better to grab all the package branches from this environment and then iterate
     # through those grabbing all the different versions using the @packages@ method.
-    @packages = Package.latest_from_unit_and_environment(current_unit,@env)
+    @packages = Package.latest_from_unit_and_environment(current_unit,current_environment)
 
     respond_to do |format|
       format.html
     end
   end
 
-  # TO-DO clean up this a messy action
   def create 
     begin
       @package = Package.create_from_tmp_file(params[:package_file],params[:pkginfo_file], {:makepkginfo_options => params[:makepkginfo_options],

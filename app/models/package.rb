@@ -654,13 +654,13 @@ class Package < ActiveRecord::Base
     exit_status = $?.exitstatus
     
     pkginfo = File.new(stdout_tmp_path)
-    debugger
+    
     package = nil
     # Process pkginfo
     if exit_status == 0
       package = self.process_pkginfo(pkginfo)
     else
-      # Remove package and 
+      # Remove package and raise error
       FileUtils.rm(file.path)
       raise PackageError.new("Munki tools were unable to process package file: " + File.read(stderr_tmp_path) + "\n" + File.read(stdout_tmp_path))
     end

@@ -1,9 +1,7 @@
 class ComputersController < ApplicationController
   def index
     # Set environment at view layer
-    @env = Environment.find_by_id(params[:eid])
-    @env ||= Environment.default_view
-    @computers = ComputerService.collect(params,current_unit,@env)
+    @computers = ComputerService.collect(params,current_unit,current_environment)
     
     respond_to do |format|
       format.html # index.html

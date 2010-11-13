@@ -131,7 +131,7 @@ class PackageBranch < ActiveRecord::Base
   
   # Return boolean if @unit_id and @environment_id is set
   def scoped?
-    @environment_id != nil and @unit_id != nil
+    @environment_id.present? and @unit_id.present?
   end
   
   # Get the associated environment

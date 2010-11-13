@@ -4,28 +4,9 @@ class ApplicationController < ActionController::Base
   
   before_filter :require_login
   
-  def super_user?
-    current_user.super_user?
-  end
+  private
   
-  def current_unit
-    begin
-      @current_unit ||= Unit.find(session[:unit_id])
-    rescue ActiveRecord::RecordNotFound
-      # If you can't find the unit with the session ID
-      session[:unit_id] = current_user.units.first.id
-      # Assign it again
-      @current_unit ||= Unit.find(session[:unit_id])
-    end
-  end
-  
-  def current_user
-    @current_user ||= User.find_by_username(session[:username])
-  end
-  
-  def logged_in?
-    current_user != nil
-  end
+  include ApplicationHelper
   
   # Run a rake task in the background
   # TO-DO could improve performance if using a gem (rake loads environment every single time)
