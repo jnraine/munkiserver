@@ -4,6 +4,7 @@ class PackageBranch < ActiveRecord::Base
   # Validations
   validates_presence_of :name
   validates_uniqueness_of :name
+  validates_format_of :name, :with => /^[^ -]+$/, :message => "must not contain spaces or hyphens"
   
   attr_protected :id, :name
   

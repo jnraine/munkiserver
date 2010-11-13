@@ -1,13 +1,5 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
-  # Commented...if there is no one using this, it will be removed.
-  # Pass a plist file parse into hash.
-  # def self.parsePlist(plist)
-  #   require "plist"
-  #   xml_string = plist.read
-  #   plistHash = Plist.parse_xml(xml_string)
-  # end
-  
   # Makes from_yaml method available to views / helpers (markup generators)
   def from_yaml(string,return_type = "default")
     # Use method added to ActiveRecord by ActiveRecordHelpers plugin
