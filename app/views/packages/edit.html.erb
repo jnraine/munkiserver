@@ -28,33 +28,34 @@
 			<h4>Package Branch <%= helpful_info('Changes to these fields effect all packages in this branch') %></h4>
 		</td>
 	</tr>
-	<tr>
-		<td>
-			Display name
-		</td>
-		<td>
-			<%= f.text_field :display_name %>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Name (<%= field_lock_control("package_name") %>)
-		</td>
-		<td>
-			<%= f.text_field :name, :disabled => true %>
-			<%= helpful_info('The name field controls what stream of packages this belongs.  If you are updating older packages with this package, ensure the names match.') %>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Version Tracker Web ID
-		</td>
-		<td>
-			<%= f.text_field :version_tracker_web_id %>
-			<%= helpful_info("Enter version tracker ID to automatically track future versions of this application/package. Changes made to this field effect other packages in this branch.") %>
-		</td>
-	</tr>
-	<tr>
+	<%= fields_for @package.package_branch do |package_branch_form| %>
+		<tr>
+			<td>
+				Display name
+			</td>
+			<td>
+				<%= package_branch_form.text_field :display_name %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Name (<%= field_lock_control("package_branch_name") %>)
+			</td>
+			<td>
+				<%= package_branch_form.text_field :name, :disabled => true %>
+				<%= helpful_info('The name field controls what stream of packages this belongs.  If you are updating older packages with this package, ensure the names match.') %>
+			</td>
+		</tr>
+		<!-- <tr>
+			<td>
+				Version Tracker Web ID
+			</td>
+			<td>
+				<%= f.text_field :version_tracker_web_id %>
+				<%= helpful_info("Enter version tracker ID to automatically track future versions of this application/package. Changes made to this field effect other packages in this branch.") %>
+			</td>
+		</tr> -->
+	<% end %>	<tr>
 		<td colspan='2'>
 			<h4>Package <%= helpful_info('Changes to these fields effect only this package') %></h4>
 		</td>
