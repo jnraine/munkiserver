@@ -86,7 +86,7 @@ PLATFORMS
 
 DEPENDENCIES
   nokogiri
-  rails
+  rails (= 3.0.3)
   ruby-debug19
   sqlite3-ruby
   will_paginate (~> 3.0.beta)

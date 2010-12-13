@@ -16,6 +16,7 @@ class SharedPackagesController < ApplicationController
     @package.environment = Environment.start
     @package.update_for = []
     @package.requires = []
+    @package.icon = @shared_package.icon
     @package.shared = false
     
     respond_to do |format|
