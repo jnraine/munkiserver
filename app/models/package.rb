@@ -586,18 +586,18 @@ class Package < ActiveRecord::Base
   
   # Renames and moves temporary files to the appropriate package store. Returns
   # a File object for newly renamed/moved file
-  def self.init_tmp_file(tmp_file)
+  def self.init_tmp_file(uploaded_file)
     destination_path = nil
     
     # Get the absolute path for the package store
     begin
-      unique_name = self.uniquify_name(tmp_file.original_filename)
+      unique_name = self.uniquify_name(uploaded_file.original_filename)
       destination_path = Pathname.new(Munki::Application::PACKAGE_DIR + unique_name)
     end while File.exists?(destination_path)
     
     # Move tmp_file to the package store
     begin
-      FileUtils.mv tmp_file.path, destination_path
+      FileUtils.mv uploaded_file.tempfile.path, destination_path
     rescue Errno::EACCES => e
       raise PackageError.new("Unable to write to package store")
     end
@@ -631,7 +631,7 @@ class Package < ActiveRecord::Base
     end
     
     # Apply munkiserver attributes
-    package = self.apply_munki_server_attributes(package,options[:attributes])
+    package = self.apply_munki_server_attributes(package,options[:attributes][:unit_id],options[:attributes][:environment_id])
     
     # Apply attributes from existing version in the same unit
     package = self.apply_old_version_attributes(package)
@@ -649,7 +649,6 @@ class Package < ActiveRecord::Base
     # Run makepkginfo
     stdout_tmp_path = Pathname.new("/tmp/ms-#{File.basename(file)}-#{rand(100001)}.plist")
     stderr_tmp_path = Pathname.new("/tmp/ms-#{File.basename(file)}-#{rand(100001)}.plist")
-    # `#{Munki::Application::MAKEPKGINFO} #{cmd_line_options.join(" ")} "#{file.path}" 2>&1 1>&3 | tee "#{stderr_tmp_path}") 3>&1 1>&2 | tee "#{stdout_tmp_path}"`
     makepkginfo_succeeded = system("#{Munki::Application::MAKEPKGINFO} #{cmd_line_options.join(" ")} '#{file.path}' 1> '#{stdout_tmp_path}' 2>'#{stderr_tmp_path}'")
     exit_status = $?.exitstatus
     
