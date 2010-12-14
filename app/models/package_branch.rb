@@ -2,8 +2,8 @@
 # scoped to return only results from a specific unit or environment
 class PackageBranch < ActiveRecord::Base
   # Validations
-  validates_presence_of :name
-  validates_uniqueness_of :name
+  validates_presence_of :name, :display_name
+  validates_uniqueness_of :name, :display_name
   validates_format_of :name, :with => /^[^ -]+$/, :message => "must not contain spaces or hyphens"
   
   attr_protected :id, :name
@@ -23,7 +23,13 @@ class PackageBranch < ActiveRecord::Base
   
   before_save :require_display_name
   before_save :require_version_tracker
-  
+
+  # Conforms a string to the package branch name constraints
+  # => Replaces spaces or hyphens with underscores
+  def self.conform_to_name_constraints(value)
+    value.gsub(/[ -]+/,"_")
+  end
+
   # Returns the latest package (based on version)
   # in the package branch.  Results are scoped if scoped? returns true
   def latest(unit_member = nil)

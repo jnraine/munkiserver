@@ -3,6 +3,7 @@ class Package < ActiveRecord::Base
   
   # Dependancy relationships
   belongs_to :package_branch, :autosave => true
+  accepts_nested_attributes_for :package_branch
   belongs_to :package_category
   belongs_to :icon
   has_many :require_items, :as => :manifest
@@ -723,7 +724,8 @@ class Package < ActiveRecord::Base
     pkginfo_hash.delete('catalogs')
 
     # Find or create a package branch for this
-    package.name = pkginfo_hash['name']
+    pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'])
+    package.package_branch = PackageBranch.find_or_create_by_name(pb_name)
     pkginfo_hash.delete('name')
 
     # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
