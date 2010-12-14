@@ -34,12 +34,36 @@
 		</td>
 		<td>
 			<%= f.text_field :display_name %>
+			<%= hidden_field_tag :original_display_name, @package.display_name %>
 			<%= helpful_info('Displayed to the user in Managed Software Update.app') %>
 		</td>
 	</tr>
 	<tr>
 		<td>
 			Name (<%= field_lock_control("package_name") %>)
+			<script>
+				jQuery(document).ready(function() {				
+					jQuery("#package_name_control").click(function() {
+						var $display_name_field = jQuery("#package_display_name");
+						if($display_name_field.attr("disabled")) {
+							// Enable display name
+							$display_name_field.attr("disabled",false);
+							$display_name_field.css("color","#000");
+							$display_name_field.val(jQuery("#original_display_name").val());
+						} else {
+							// Disable display name and mirror
+							$display_name_field.attr("disabled",true);
+							$display_name_field.css("color","#666");
+							jQuery("#package_display_name").val(jQuery("#package_name").val());
+							// Mirror name to display name field
+							jQuery("#package_name").keyup(function() {
+								var $name_field = jQuery(this);
+								jQuery("#package_display_name").val($name_field.val());
+							});	
+						}
+					});	
+				});
+			</script>
 		</td>
 		<td>
 			<%= f.text_field :name, :disabled => true %>

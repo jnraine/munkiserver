@@ -163,6 +163,10 @@ input[type=text] {
 	padding:2px;
 }
 
+input:disabled {
+	color:#666;
+}
+
 label {
 	cursor:pointer;
 }

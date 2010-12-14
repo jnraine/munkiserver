@@ -21,7 +21,7 @@ class PackageBranch < ActiveRecord::Base
   has_many :all_packages, :order => 'version desc', :class_name => "Package"
   has_one :version_tracker, :dependent => :destroy, :autosave => true
   
-  before_save :require_display_name
+  before_validation :require_display_name
   before_save :require_version_tracker
 
   # Conforms a string to the package branch name constraints

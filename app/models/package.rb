@@ -64,6 +64,8 @@ class Package < ActiveRecord::Base
   def name=(value)
     if value != self.name
       # If the value is new, find or create the package branch and assign it
+      # and delete the old one if no other package references it
+      self.package_branch.destroy if Package.find_all_by_package_branch_id(self.package_branch_id).length == 1
       self.package_branch = PackageBranch.find_or_create_by_name(value)
     end
   end

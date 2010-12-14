@@ -99,7 +99,20 @@ jQuery(document).ready(function() {
 			return confirm(message);
 		}
 	});
-});
+
+	// Field lock control method
+	jQuery(".field-lock-control").click(function() {
+		$el = jQuery("#" + jQuery(this).attr("data-target-id"));
+		if($el.is(":disabled")) {
+			$el.attr("disabled",false).css("color","#000").focus();
+			jQuery("#" + $el.attr('id') + "_control").html("lock");
+		} else {
+			$el.attr("disabled",true).css("color","#666");
+			jQuery("#" + $el.attr('id') + "_control").html("unlock");
+		}
+		return false;
+	});
+}); // end document ready function
 
 // AJAX hostname search/filter
 jQuery("#filter_form").submit(function() {
@@ -205,20 +218,14 @@ jQuery(function() {
 });
 
 // Misc.
-function toggleDisabledTextField(id) {
-	var el = document.getElementById(id);
-	if(el.disabled == true) {
-		el.disabled = false;
-		el.style.color = '#000';
-		el.focus();
-		document.getElementById(id + '_control').innerHTML = 'lock';
+function toggleDisabledTextField($el) {
+	if($el.attr("disabled") == true) {
+		$el.attr("disabled",false).css("color","#000").focus();
+		jQuery("#" + id + "_control").html("lock");
+	} else {
+		$el.attr("disabled",true).css("color","#666");
+		jQuery("#" + id + "_control").html("unlock");
 	}
-	else {
-		el.disabled = true;
-		el.style.color = '#666';
-		document.getElementById(id + '_control').innerHTML = 'unlock';
-	}
-	return false;
 }
 
 function SetAllCheckBoxes(FormName, FieldName, CheckValue)

@@ -195,7 +195,7 @@ module ApplicationHelper
   end
   
   def field_lock_control(id)
-      link_to('unlock', '#', :onClick => "toggleDisabledTextField('#{id}');return false;", :id => "#{id}_control")
+    render :partial => 'shared/field_lock_control', :locals => {:id => id}
   end
   
   def current_link?(string)
