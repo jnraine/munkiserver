@@ -342,6 +342,10 @@ thead th a:hover,
 	list-style-type:none;
 }
 
+.inline-icon {
+	vertical-align: top;
+}
+
 /* ============== */
 /* = Login page = */
 /* ============== */
