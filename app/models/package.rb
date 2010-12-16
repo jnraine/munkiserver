@@ -185,6 +185,7 @@ class Package < ActiveRecord::Base
   # Setter for new_icon virtual attribute
   # Creates a new icon object and assigns to self.icon
   def new_icon=(value)
+    # Create new icon unless value.blank?
     unless value.blank?
       i = Icon.new({:photo => value})
       # If icon is saved, assign it to the record
@@ -582,14 +583,14 @@ class Package < ActiveRecord::Base
   
   # Creates a package instance from a temporary file, pkginfo file, and options.
   # Returns an unsaved instance of the Package class
-  def self.create_from_tmp_file(tmp_file,pkginfo_file = nil, options = {})
-    file = self.init_tmp_file(tmp_file)
+  def self.create_from_uploaded_file(uploaded_file,pkginfo_file = nil, options = {})
+    file = self.init_uploaded_file(uploaded_file)
     self.create(file,pkginfo_file,options)
   end
   
   # Renames and moves temporary files to the appropriate package store. Returns
   # a File object for newly renamed/moved file
-  def self.init_tmp_file(uploaded_file)
+  def self.init_uploaded_file(uploaded_file)
     destination_path = nil
     
     # Get the absolute path for the package store

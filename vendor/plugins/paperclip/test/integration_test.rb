@@ -1,4 +1,4 @@
-require 'test/helper'
+require './test/helper'
 
 class IntegrationTest < Test::Unit::TestCase
   context "Many models at once" do
@@ -363,7 +363,6 @@ class IntegrationTest < Test::Unit::TestCase
                                    :thumb => ["32x32#", :gif] },
                       :storage => :s3,
                       :whiny_thumbnails => true,
-                      # :s3_options => {:logger => Logger.new(StringIO.new)},
                       :s3_credentials => File.new(File.join(File.dirname(__FILE__), "s3.yml")),
                       :default_style => :medium,
                       :bucket => ENV['S3_TEST_BUCKET'],

@@ -1,18 +1,19 @@
-require 'test/helper'
+require './test/helper'
 
 class CommandLineTest < Test::Unit::TestCase
   def setup
     Paperclip::CommandLine.path = nil
+    File.stubs(:exist?).with("/dev/null").returns(true)
   end
 
   should "take a command and parameters and produce a shell command for bash" do
-    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png")
+    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png", :swallow_stderr => false)
     assert_equal "convert a.jpg b.png", cmd.command
   end
 
   should "be able to set a path and produce commands with that path" do
     Paperclip::CommandLine.path = "/opt/bin"
-    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png")
+    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png", :swallow_stderr => false)
     assert_equal "/opt/bin/convert a.jpg b.png", cmd.command
   end
 
@@ -20,16 +21,38 @@ class CommandLineTest < Test::Unit::TestCase
     cmd = Paperclip::CommandLine.new("convert",
                                      ":one :{two}",
                                      :one => "a.jpg",
-                                     :two => "b.png")
+                                     :two => "b.png",
+                                     :swallow_stderr => false)
     assert_equal "convert 'a.jpg' 'b.png'", cmd.command
+  end
+
+  should "quote command line options differently if we're on windows" do
+    File.stubs(:exist?).with("/dev/null").returns(false)
+    cmd = Paperclip::CommandLine.new("convert",
+                                     ":one :{two}",
+                                     :one => "a.jpg",
+                                     :two => "b.png",
+                                     :swallow_stderr => false)
+    assert_equal 'convert "a.jpg" "b.png"', cmd.command
   end
 
   should "be able to quote and interpolate dangerous variables" do
     cmd = Paperclip::CommandLine.new("convert",
                                      ":one :two",
                                      :one => "`rm -rf`.jpg",
-                                     :two => "ha'ha.png")
+                                     :two => "ha'ha.png",
+                                     :swallow_stderr => false)
     assert_equal "convert '`rm -rf`.jpg' 'ha'\\''ha.png'", cmd.command
+  end
+
+  should "be able to quote and interpolate dangerous variables even on windows" do
+    File.stubs(:exist?).with("/dev/null").returns(false)
+    cmd = Paperclip::CommandLine.new("convert",
+                                     ":one :two",
+                                     :one => "`rm -rf`.jpg",
+                                     :two => "ha'ha.png",
+                                     :swallow_stderr => false)
+    assert_equal %{convert "`rm -rf`.jpg" "ha'ha.png"}, cmd.command
   end
 
   should "add redirection to get rid of stderr in bash" do
@@ -61,7 +84,7 @@ class CommandLineTest < Test::Unit::TestCase
   end
 
   should "run the #command it's given and return the output" do
-    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png")
+    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png", :swallow_stderr => false)
     cmd.class.stubs(:"`").with("convert a.jpg b.png").returns(:correct_value)
     with_exitstatus_returning(0) do
       assert_equal :correct_value, cmd.run
@@ -69,7 +92,7 @@ class CommandLineTest < Test::Unit::TestCase
   end
 
   should "raise a PaperclipCommandLineError if the result code isn't expected" do
-    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png")
+    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png", :swallow_stderr => false)
     cmd.class.stubs(:"`").with("convert a.jpg b.png").returns(:correct_value)
     with_exitstatus_returning(1) do
       assert_raises(Paperclip::PaperclipCommandLineError) do
@@ -81,7 +104,8 @@ class CommandLineTest < Test::Unit::TestCase
   should "not raise a PaperclipCommandLineError if the result code is expected" do
     cmd = Paperclip::CommandLine.new("convert",
                                      "a.jpg b.png",
-                                     :expected_outcodes => [0, 1])
+                                     :expected_outcodes => [0, 1],
+                                     :swallow_stderr => false)
     cmd.class.stubs(:"`").with("convert a.jpg b.png").returns(:correct_value)
     with_exitstatus_returning(1) do
       assert_nothing_raised do
@@ -91,9 +115,19 @@ class CommandLineTest < Test::Unit::TestCase
   end
 
   should "log the command" do
-    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png")
+    cmd = Paperclip::CommandLine.new("convert", "a.jpg b.png", :swallow_stderr => false)
     cmd.class.stubs(:'`')
     Paperclip.expects(:log).with("convert a.jpg b.png")
     cmd.run
+  end
+
+  should "detect that the system is unix or windows based on presence of /dev/null" do
+    File.stubs(:exist?).returns(true)
+    assert Paperclip::CommandLine.unix?
+  end
+
+  should "detect that the system is not unix or windows based on absence of /dev/null" do
+    File.stubs(:exist?).returns(false)
+    assert ! Paperclip::CommandLine.unix?
   end
 end

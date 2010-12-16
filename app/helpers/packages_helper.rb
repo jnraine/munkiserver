@@ -31,7 +31,7 @@ module PackagesHelper
 	def package_header(package)
     render :partial => 'shared/record_header', :locals => {
                               														:title => package.display_name,
-                              														:img => package.icon.url,
+                              														:img => package.icon,
                               														:soft_info => package.name,
                               														:bold_info => package.version }
 	end

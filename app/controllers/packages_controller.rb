@@ -12,7 +12,7 @@ class PackagesController < ApplicationController
 
   def create 
     begin
-      @package = Package.create_from_tmp_file(params[:package_file],params[:pkginfo_file], {:makepkginfo_options => params[:makepkginfo_options],
+      @package = Package.create_from_uploaded_file(params[:package_file],params[:pkginfo_file], {:makepkginfo_options => params[:makepkginfo_options],
                                                                                             :attributes => {:unit_id => current_unit.id}})
     rescue PackageError => e
       @package = Package.new

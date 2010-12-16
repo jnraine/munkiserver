@@ -45,7 +45,7 @@ module Paperclip
     # that contains the new image.
     def make
       src = @file
-      dst = Tempfile.new([@basename, @format].compact.join("."))
+      dst = Tempfile.new([@basename, @format ? ".#{@format}" : ''])
       dst.binmode
 
       begin
@@ -71,8 +71,8 @@ module Paperclip
     def transformation_command
       scale, crop = @current_geometry.transformation_to(@target_geometry, crop?)
       trans = []
-      trans << "-resize" << "'#{scale}'" unless scale.nil? || scale.empty?
-      trans << "-crop" << "'#{crop}'" << "+repage" if crop
+      trans << "-resize" << %["#{scale}"] unless scale.nil? || scale.empty?
+      trans << "-crop" << %["#{crop}"] << "+repage" if crop
       trans
     end
   end
