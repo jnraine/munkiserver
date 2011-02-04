@@ -301,6 +301,7 @@ module Manifest
           name = match[3]
           record ||= self.where(:id => id, :name => name).first
         end
+        record ||= self.where(:name => s).first
         # Return results
         record
       end

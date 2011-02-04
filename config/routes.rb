@@ -25,6 +25,7 @@ Munki::Application.routes.draw do |map|
   match 'checkin/:id' => 'computers#checkin', :method => :post
 
   # Make munki-client-friendly URLs
+  match ':id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.:]+/
   map.catalog 'catalogs/:unit_id-:environment_name.plist', :action => 'show', :controller => 'catalogs', :format => 'plist'
   map.manifest ':controller/:id.plist', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.]+/
   map.download_package 'pkgs/:installer_item_location', :controller => 'packages', :action => 'download', :installer_item_location => /.+/
