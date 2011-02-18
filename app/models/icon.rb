@@ -20,6 +20,11 @@ class Icon < ActiveRecord::Base
     rescue NoMethodError
       nil
     end
+    if self.photo.url(type)
+      self.photo.url(type)
+    else
+      ""
+    end
   end
   
   def to_s(type = nil)

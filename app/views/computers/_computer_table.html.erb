@@ -36,7 +36,8 @@
 		<% if bulk_edit %>
 			<td><%= check_box_tag("selected_records[]",c.id) %></td>
 		<% end %>
-		<td><%= image_tag c.icon.url(:small) %>
+		
+		<td><%= image_tag c.icon.url(:small)  if c.icon %>
 	    <td><%= link_to c.hostname, c %></td>
 		<td><%= c.mac_address %></td>
 		<td><%= c.time_since_last_run %></td>

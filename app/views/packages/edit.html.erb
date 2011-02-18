@@ -178,6 +178,9 @@
 			
 			<%= check_box_tag 'package[supported_architectures][]', 'ppc', @package.ppc?, :id => 'package_supported_architectures_ppc'  %>
 			<%= label_tag 'package_supported_architectures_ppc', 'PPC' %>
+			
+			<%= check_box_tag 'package[supported_architectures][]', 'Power Macintosh', @package.power_macintosh?, :id => 'package_supported_architectures_power_macintosh'  %>
+			<%= label_tag 'package_supported_architectures_ppc', 'Power Macintosh' %>
 		</td>
 	</tr>
 	<tr>
@@ -221,7 +224,7 @@
 			Icon
 		</td>
 		<td>
-			<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") %>
+			<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") if @package.icon %>
 			<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
 		</td>
 	</tr>
