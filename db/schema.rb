@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101005034423) do
+ActiveRecord::Schema.define(:version => 20110218132953) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(:version => 20101005034423) do
     t.text     "raw_mode",             :default => "f"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "hostname",             :default => ""
   end
 
   create_table "environments", :force => true do |t|

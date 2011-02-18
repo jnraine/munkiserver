@@ -24,16 +24,6 @@ class Computer < ActiveRecord::Base
     7.days.ago
   end
   
-  # Getter for virtual attribute hostname
-  def hostname
-    name
-  end
-  
-  # Setting for virtual attribute hostname
-  def hostname=(value)
-    name = value
-  end
-  
   # Alias the computer_model icon to this computer
   def icon
     computer_model.icon

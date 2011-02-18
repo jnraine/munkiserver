@@ -75,7 +75,8 @@ class ComputerService
         # something isn't set (like computer model) that is set in the template
         # then the template setting is applied
         c = Computer.new({:mac_address => computer_info["hardwareAddress"],
-                          :name => computer_info["hostname"],
+                          :hostname => computer_info["hostname"],
+                          :name => computer_info["name"],
                           :unit_id => unit.id,
                           :environment_id => environment_id})
         c.computer_group = cg
