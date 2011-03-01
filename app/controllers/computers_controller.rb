@@ -32,11 +32,19 @@ class ComputersController < ApplicationController
   def show
     @computer = Computer.find_for_show(params[:id])
     
-    respond_to do |format|
-      format.html
-      format.manifest { render :text => @computer.to_plist}
-      format.plist { render :text => @computer.to_plist}
-      format.client_prefs { render :text => @computer.client_prefs.to_plist }
+    if @computer
+      respond_to do |format|
+        format.html
+        format.manifest { render :text => @computer.to_plist}
+        format.plist { render :text => @computer.to_plist}
+        format.client_prefs { render :text => @computer.client_prefs.to_plist }
+      end
+    else
+      #If the computer is not currently in the database, create a temp. computer with the correct mac address, and return a config
+      @computer = Computer.new(:mac_address => params[:id])
+      respond_to do |format|
+        format.client_prefs { render :text => @computer.client_prefs.to_plist }
+      end
     end
   end
 
