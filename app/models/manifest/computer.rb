@@ -84,6 +84,7 @@ class Computer < ActiveRecord::Base
       :ManagedInstallsDir => "/Library/Managed Installs",
       :ManifestURL => url,
       :SoftwareRepoURL => url,
+      :AppleSoftwareUpdatesOnly => (self.id == nil ? true : false),
       :UseClientCertificate => false }
   end
   

@@ -41,7 +41,7 @@ class ComputersController < ApplicationController
       end
     else
       #If the computer is not currently in the database, create a temp. computer with the correct mac address, and return a config
-      @computer = Computer.new(:mac_address => params[:id])
+      @computer = Computer.new(:mac_address => params[:id], :apple_updates_only => :true)
       respond_to do |format|
         format.client_prefs { render :text => @computer.client_prefs.to_plist }
       end
