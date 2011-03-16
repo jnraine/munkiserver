@@ -11,8 +11,12 @@
 	<%= f.error_messages %>
 	<table class="form">
 		<tr>
-			<td>Name / Hostname</td>
+			<td>Name</td>
 			<td><%= f.text_field :name, :size => 18 %></td>
+		</tr>
+		<tr>
+			<td>Hostname</td>
+			<td><%= f.text_field :hostname, :size => 18 %></td>
 		</tr>
 		<tr>
 			<td>MAC Address</td>
