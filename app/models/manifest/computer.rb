@@ -76,16 +76,23 @@ class Computer < ActiveRecord::Base
   def client_prefs
     port = ":3000" if Rails.env == "development"
     url = "http://" + `hostname`.chomp + port.to_s
-    { :ClientIdentifier => client_identifier,
-      :DaysBetweenNotifications => 1,
-      :InstallAppleSoftwareUpdates => true,
-      :LogFile => "/Library/Managed Installs/Logs/ManagedSoftwareUpdate.log",
-      :LoggingLevel => 1,
-      :ManagedInstallsDir => "/Library/Managed Installs",
-      :ManifestURL => url,
-      :SoftwareRepoURL => url,
-      :AppleSoftwareUpdatesOnly => (self.id == nil ? true : false),
-      :UseClientCertificate => false }
+    prefs = { :DaysBetweenNotifications => 1,
+              :InstallAppleSoftwareUpdates => true,
+              :LogFile => "/Library/Managed Installs/Logs/ManagedSoftwareUpdate.log",
+              :LoggingLevel => 1,
+              :UseClientCertificate => false }
+    if self.id == nil
+      #client computer doesn't exist in database currently
+      prefs.merge!({:AppleSoftwareUpdatesOnly => true})
+    else
+      #client does exist
+      prefs.merge!({:ClientIdentifier => client_identifier,
+                    :ManagedInstallsDir => "/Library/Managed Installs",
+                    :ManifestURL => url,
+                    :SoftwareRepoURL => url})
+    end
+
+    prefs
   end
   
   # Extend manifest by removing name attribute and adding the catalogs
