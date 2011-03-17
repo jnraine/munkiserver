@@ -91,7 +91,6 @@ class Computer < ActiveRecord::Base
                     :ManifestURL => url,
                     :SoftwareRepoURL => url})
     end
-
     prefs
   end
   
@@ -111,7 +110,7 @@ class Computer < ActiveRecord::Base
     # Return record
     record
   end
-  
+
   def client_identifier
     self.class.to_s.tableize + "/" + mac_address + ".plist"
   end
