@@ -9,7 +9,7 @@
 	</thead>
 	<% @users.each do |user| %>
 		<tr>
-			<td><%= link_to user.username  %></td>
+			<td><%= link_to user.username, edit_user_path(user) %></td>
 			<td><%= "&#10003;".html_safe if user.super_user?  %></td>
 			<td><%= user.email %></td>
 			<td>
