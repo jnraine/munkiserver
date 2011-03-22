@@ -295,8 +295,9 @@ module Manifest
         # Find by ID
         record = self.where(:id => s).first if s.match(/^\d$/)
         # Find by id-name
-        match = s.match(/(\d+)(-)(.+)(\.plist)/)
-        if record.nil? and match.class == Array
+        match = s.match(/^(\d+)([-_]{1})(.+)$/)
+        debugger
+        if record.nil? and match.class == MatchData
           id = match[1]
           name = match[3]
           record ||= self.where(:id => id, :name => name).first
