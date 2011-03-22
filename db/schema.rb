@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101005034423) do
+ActiveRecord::Schema.define(:version => 20110207072456) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -120,6 +120,14 @@ ActiveRecord::Schema.define(:version => 20101005034423) do
     t.boolean  "edit_package",           :default => true
     t.boolean  "destroy_package",        :default => true
     t.boolean  "edit_unit",              :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "missing_manifests", :force => true do |t|
+    t.string   "manifest_type"
+    t.string   "identifier"
+    t.string   "request_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

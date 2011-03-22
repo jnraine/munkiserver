@@ -33,10 +33,15 @@ class ComputersController < ApplicationController
     @computer = Computer.find_for_show(params[:id])
     
     respond_to do |format|
-      format.html
-      format.manifest { render :text => @computer.to_plist}
-      format.plist { render :text => @computer.to_plist}
-      format.client_prefs { render :text => @computer.client_prefs.to_plist }
+      if @computer.present?
+        format.html
+        format.manifest { render :text => @computer.to_plist}
+        format.plist { render :text => @computer.to_plist}
+        format.client_prefs { render :text => @computer.client_prefs.to_plist }
+      else
+        MissingManifest.new({:manifest_type => Computer.to_s, :identifier => params[:id], :request_ip => request.remote_ip}).save
+        render :nothing => true, :status => 404
+      end
     end
   end
 

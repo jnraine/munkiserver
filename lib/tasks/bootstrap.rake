@@ -32,11 +32,15 @@ namespace :bootstrap do
         f = File.new(h[:icon_path])
         i = Icon.new
         i.photo = f
-        i.save
+        unless i.save
+          puts "#{h[:name]} package category icon (#{h[:icon_path]}) failed to save: " + i.errors.inspect
+        end
         r.icon = i
         f.close
       end
-      r.save
+      unless r.save
+        puts "#{h[:name]} package category failed to save: " + r.errors.inspect
+      end
     end
   end
   
@@ -88,11 +92,15 @@ namespace :bootstrap do
         f = File.new(h[:icon_path])
         i = Icon.new
         i.photo = f
-        i.save
+        unless i.save
+          puts "#{h[:name]} computer model icon (#{h[:icon_path]}) failed to save: " + i.errors.inspect
+        end
         r.icon = i
         f.close
       end
-      r.save
+      unless r.save
+        puts "#{h[:name]} computer model failed to save: " + r.errors.inspect
+      end
     end
   end
   
