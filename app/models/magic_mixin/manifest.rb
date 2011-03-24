@@ -293,7 +293,7 @@ module Manifest
       # find the appropriate record for the show action
       def self.find_for_show(s)
         # Find by ID, if s is only digits
-        record = self.where(:id => s).first if s.match(/^\d$/)
+        record = self.where(:id => s).first if s.match(/^\d+$/)
         # Find by id-name
         match = s.match(/^(\d+)([-_]{1})(.+)$/)
         if record.nil? and match.class == MatchData
