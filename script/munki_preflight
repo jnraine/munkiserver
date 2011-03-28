@@ -18,7 +18,7 @@ import re
 from munkilib import updatecheck
 from munkilib import FoundationPlist
 
-RepoURL = ""
+RepoURL = "<%= repoURL %>"
 stream = os.popen("ifconfig en0 | awk '/ether/ {print $2}'")
 MACAddress = stream.read().strip()
 stream.close()
@@ -28,6 +28,5 @@ ConfigName = "ManagedInstalls.plist"
 ConfigDir = "/Library/Preferences"
 ConfigPath = os.path.join(ConfigDir, ConfigName)
 
-if (sys.argv[1] != "logoutinstall") and (sys.argv[1] != "installwithnologout"):
-	if updatecheck.curl(url=ClientPrefURL, destinationpath=ConfigPath)["http_result_code"] == "200":
-		print "Downloading client prefrences"
+if updatecheck.curl(url=ClientPrefURL, destinationpath=ConfigPath)["http_result_code"] == "200":
+	print "Downloading client prefrences"
