@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
   end
   
   def fake_login
-    session[:username] = "jraine"
+    session[:username] = "default"
   end
   
   protected

@@ -292,15 +292,16 @@ module Manifest
       # Attempts a couple different queries in order of importance to
       # find the appropriate record for the show action
       def self.find_for_show(s)
-        # Find by ID
-        record = self.where(:id => s).first
+        # Find by ID, if s is only digits
+        record = self.where(:id => s).first if s.match(/^\d+$/)
         # Find by id-name
-        match = s.match(/(\d+)(-)(.+)(\.plist)/)
-        if record.nil? and match.class == Array
+        match = s.match(/^(\d+)([-_]{1})(.+)$/)
+        if record.nil? and match.class == MatchData
           id = match[1]
           name = match[3]
           record ||= self.where(:id => id, :name => name).first
         end
+        # Find by name
         record ||= self.where(:name => s).first
         # Return results
         record
