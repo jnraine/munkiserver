@@ -173,7 +173,7 @@
 	<tr>
 		<td>Supported Architectures</td>
 		<td>
-			<%= hidden_field_tag "package[supported_architectures][]", ""%>
+			<%= hidden_field_tag "package[supported_architectures][]", "" %>
 			<% Package::FORM_OPTIONS[:supported_architectures].each do |name| %>
 				<%= render :partial => 'supported_architectures_checkbox', :locals => {:name => name} %>
 			<% end %>

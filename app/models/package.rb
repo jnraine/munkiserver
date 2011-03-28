@@ -447,8 +447,14 @@ class Package < ActiveRecord::Base
       end
       
       # Add append any special cases to the hash
-      h["supported_architectures"] = self.supported_architectures.delete_if {|e| e == ""}
+      
+      # Supported Architectures
+      sa = self.supported_architectures.delete_if {|e| e == ""}
+      h["supported_architectures"] = sa unless sa.empty?
+      # Requires
       h["requires"] = self.requires.map {|p| p.to_s(:version) } unless self.requires.empty?
+      
+      # Add any raw tags
       h = h.merge(raw_tags) if append_raw?
     end
     h
