@@ -6,6 +6,7 @@ $(document).ready(function() {
 
 	// Hide loading graphic on load
 	$('#loading_graphic').hide();
+	$('.loading').hide();
 	
 	// Hide raw text area if raw_mode_id is 0 container
 	if($('#package_raw_mode_id').val() == 0) {
@@ -57,6 +58,14 @@ $(document).ready(function() {
 		}
 		return false;
 	});
+	
+	// Load managed install report on change to drop down
+	$("select#managed_install_reports").change(function() {
+		$(".loading").show();
+		$.getScript("/managed_install_reports/" +$(this).val()+ ".js");
+	});
+	$("select#managed_install_reports").change();
+	
 }); // end document ready function
 
 // AJAX hostname search/filter

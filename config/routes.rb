@@ -13,6 +13,7 @@ Munki::Application.routes.draw do |map|
   map.resources :shared_packages, :member => {:import => :get}
   match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get
   match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :method => :get
+  match 'managed_install_reports/:id' => 'managed_install_reports#show', :method => :get
 
   # Session
   map.login 'login', :action => 'new', :controller => 'sessions'
@@ -25,9 +26,9 @@ Munki::Application.routes.draw do |map|
   match 'checkin/:id' => 'computers#checkin', :method => :post
 
   # Make munki-client-friendly URLs
-  match ':id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.:]+/
+  match ':id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
   map.catalog 'catalogs/:unit_id-:environment_name.plist', :action => 'show', :controller => 'catalogs', :format => 'plist'
-  map.manifest ':controller/:id.plist', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.]+/
+  map.manifest ':controller/:id.plist', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%]+/
   map.download_package 'pkgs/:installer_item_location', :controller => 'packages', :action => 'download', :installer_item_location => /.+/
 
   # Sample of regular route:

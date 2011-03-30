@@ -1,0 +1,62 @@
+<h4>Computer Overview</h4>
+<table class="form">
+	<tr>
+		<td><strong>Hostname</strong></td>
+		<td><%= report.get_machine_info "hostname" %></td>
+	</tr>
+	<tr>
+		<td><strong>IP</strong></td>
+		<td><%= report.ip %></td>
+	</tr>
+	<tr>
+		<td><strong>Architecture</strong></td>
+		<td><%= report.get_machine_info "arch" %></td>
+	</tr>
+	<tr>
+		<td><strong>OS Version</strong></td>
+		<td><%= report.get_machine_info "os_vers" %></td>
+	</tr>
+	<tr>
+		<td><strong>Available Disk Space</strong></td>
+		<td><%= humanize_kilobytes report.available_disk_space %></td>
+	</tr>
+	<tr>
+		<td><strong>Console User</strong></td>
+		<td><%= report.console_user %></td>
+	</tr>
+</table>
+
+<h4>munki Overview</h4>
+<table class="form">
+	<tr>
+		<td><strong>Run Type</strong></td>
+		<td><%= report.run_type %></td>
+	</tr>
+	<tr>
+		<td><strong>Manifest</strong></td>
+		<td><%= report.manifest_name %></td>
+	</tr>
+	<tr>
+		<td><strong>munki Version</strong></td>
+		<td><%= report.managed_install_version %></td>
+	</tr>
+	<tr>
+		<td><strong>Start Time</strong></td>
+		<td><%= report.start_time %></td>
+	</tr>
+	<tr>
+		<td><strong>End Time</strong></td>
+		<td><%= report.end_time %></td>
+	</tr>
+	<tr>
+		<td><strong>Duration</strong></td>
+		<td><%= time_ago_in_words(Time.now - (report.start_time - report.end_time)) if report.start_time.present? and report.end_time.present? %></td>
+	</tr>
+</table>
+
+<% ManagedInstallReport::LOG_ATTRIBUTES.each do |attribute_name| %>	
+	<%= render :partial => 'report_log', :locals => {:attribute_name => attribute_name,:report => report} if report.send(attribute_name).present? %>
+<% end %>
+<% ManagedInstallReport::TABLE_ATTRIBUTES.each do |attribute_name| %>
+	<%= render :partial => 'report_table', :locals => {:attribute_name => attribute_name,:report => report} if report.send(attribute_name).present? %>
+<% end %>
