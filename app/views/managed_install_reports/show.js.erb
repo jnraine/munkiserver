@@ -1,5 +1,3 @@
-<% sleep 1 %>
 (function($) {
 	$("#managed_install_report").html("<%= escape_javascript(render(:partial => 'report', :locals => {:report => @managed_install_report})) %>");
-	$(".loading").hide();
 })(jQuery);

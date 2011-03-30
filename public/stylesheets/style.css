@@ -410,5 +410,5 @@ thead th a:hover,
 }
 
 .report_log {
-	overflow:hidden;
+	overflow:auto;
 }

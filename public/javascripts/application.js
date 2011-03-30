@@ -62,10 +62,14 @@ $(document).ready(function() {
 	// Load managed install report on change to drop down
 	$("select#managed_install_reports").change(function() {
 		$(".loading").show();
-		$.getScript("/managed_install_reports/" +$(this).val()+ ".js");
+		$.ajax({
+		  url: "/managed_install_reports/" +$(this).val()+ ".js",
+		  complete: function(){
+		    $(".loading").hide();
+		  }
+		});
 	});
-	$("select#managed_install_reports").change();
-	
+	$("select#managed_install_reports").change();	
 }); // end document ready function
 
 // AJAX hostname search/filter
