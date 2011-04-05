@@ -17,13 +17,7 @@
 	<p><em>This computer is not a member of any computer group.</em></p>
 <% end -%>
 
-<h3>System Profile</h3>
-<% if @computer.system_profile.present? %>
-	<%= render :partial => 'system_profile', :locals => {:profile => @computer.system_profile} %>
-<% else %>
-	<p><em>No system profile available</em></p>
-<% end -%>	  
-
+<%= render :partial => "system_profile" %>
 
 <h3>Managed Install Reports</h3>
 <div>

@@ -37,40 +37,22 @@ module Munki
     FileUtils.mkdir_p(PACKAGE_DIR)
     # Command line utilities
     MAKEPKGINFO = Pathname.new("/usr/local/munki/makepkginfo")
-
-    # Only load the plugins named here, in the order given (default is alphabetical).
-    # :all can be used as a placeholder for all plugins not explicitly named
-    # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-
-    # Activate observers that should always be running
-    # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
-
-    # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
-    # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    # config.time_zone = 'Central Time (US & Canada)'
-
-    # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
-    # config.i18n.default_locale = :de
-
-    # Configure generators values. Many other options are available, be sure to check the documentation.
-    # config.generators do |g|
-    #   g.orm             :active_record
-    #   g.template_engine :erb
-    #   g.test_framework  :test_unit, :fixture => true
-    # end
     
     # A secret is required to generate an integrity hash for cookie session data
-    config.secret_token = "d24c49a98769afee486d236d82820f20fa0cd219581c024232d615c9f64eafa1e72dc07bd91f070cbb3c61ecb82e276d986ca42397d7cf08b98ef3139ca970c2"
+    # It is randomly generated each time the server starts up
+    config.secret_token = ActiveSupport::SecureRandom.hex(128)
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password
     
-    if settings.present?
+    # Setup action mailer settings
+    if settings.present? and settings[:action_mailer].present?
       config.action_mailer.delivery_method = settings[:action_mailer][:delivery_method]
       config.action_mailer.sendmail_settings = settings[:action_mailer][:sendmail_settings] if settings[:action_mailer][:delivery_method] == :sendmail
       config.action_mailer.smtp_settings = settings[:action_mailer][:smtp_settings] if settings[:action_mailer][:delivery_method] == :smtp
       config.action_mailer.raise_delivery_errors = true
+    else
+      config.action_mailer.delivery_method = :sendmail
     end
   end
 end

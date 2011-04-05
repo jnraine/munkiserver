@@ -113,6 +113,7 @@ namespace :bootstrap do
              {:name => "iMac4,1",:icon_path => "#{path}/com.apple.imac-iSight-20.png"},
              {:name => "iMac5,1",:icon_path => "#{path}/com.apple.imac-iSight-20.png"},
              {:name => "iMac6,1",:icon_path => "#{path}/com.apple.imac-iSight-24.png"},
+             {:name => "iMac10,1",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
              {:name => "iMac11,2",:icon_path => "#{path}/com.apple.imac-unibody-21.png"},
              {:name => "iMac11,1",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
              {:name => "iMac11,3",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
@@ -215,7 +216,7 @@ namespace :bootstrap do
     username = args.name
     username ||= "default"
     u = User.find_or_create_by_username(username)
-    u.email = "donotreply@gmail.com"
+    u.email = "noreply@example.com"
     u.password = "Password1"
     u.password_confirmation = "Password1"
     u.super_user = true

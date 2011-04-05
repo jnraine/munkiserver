@@ -73,7 +73,8 @@ class Computer < ActiveRecord::Base
 
   # Examines the client logs of a computer to determine if it has been dormant
   def dormant?
-    (self.last_successful_run.nil? and self.created_at < self.class.dormant_interval) or (self.last_successful_run.created_at < self.class.dormant_interval)
+    # (self.last_successful_run.nil? and self.created_at < self.class.dormant_interval) or (self.last_successful_run.created_at < self.class.dormant_interval)
+    false
   end
 
   # Make sure this computer is assigned a computer group
@@ -182,25 +183,23 @@ class Computer < ActiveRecord::Base
     package_installed
   end
   
-  # An error report for this computer is due based on various parameters
-  # => Last successful run was longer than 1 day ago
-  # => Last successful run was updated longer than 1 day ago
-  # => Error logs are present on the last run
-  def error_mailer_due?
-    last_error_free_report.created_at < 1.days.ago and 
-    last_error_free_report.updated_at < 1.days.ago and
-    last_report.munki_errors.present?
+  # True if an AdminMailer computer report is due
+  def report_due?
+    last_report.present? and last_report.issues?
   end
   
-  # Send error report for this computer.  Touches last error free 
-  # report to indicate when the last error email was sent
-  def error_mailer
-    last_error_free_report.touch
-    AdminMailer.computer_error(self).deliver
-  end
-  
-  # Gets an array of users responsible for this computer
-  def admins
-    unit.members if unit.present?
+  # Get the status of the computer based on the last report
+  # => Status Unknown
+  # => OK
+  # => Reported Errors
+  # => Reported Warnings
+  def status
+    status = "Status Unknown"
+    if last_report.present?
+      status = "OK" if last_report.ok?
+      status = "Reported Errors" if last_report.errors?
+      status = "Reported Warnings" if last_report.warnings?
+    end
+    status
   end
 end

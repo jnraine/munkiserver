@@ -84,4 +84,20 @@ class ManagedInstallReport < ActiveRecord::Base
       ""
     end
   end
+  
+  def errors?
+    munki_errors.present? or problem_installs.present?
+  end
+  
+  def warnings?
+    munki_warnings.present?
+  end
+  
+  def ok?
+    issues? == false
+  end
+  
+  def issues?
+    errors? or warnings?
+  end
 end

@@ -1,0 +1,6 @@
+<h2><%= @computer %> (<%= @computer.mac_address%>) - <%= @computer.status%></h2>
+
+<%= render :partial => "computers/system_profile" %>
+
+<h3>Managed Install Report</h3>
+<%= render(:partial => 'managed_install_reports/report', :locals => {:report => @computer.last_report}) %>
