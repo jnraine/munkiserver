@@ -1,0 +1,99 @@
+<h4>Hardware Overview</h4>
+<table class="form">
+	<tr>
+		<td><strong>CPU Type</strong></td>
+		<td><%= profile.cpu_type %></td>
+	</tr>
+	<tr>
+		<td><strong>Processor Speed</strong></td>
+		<td><%= profile.current_processor_speed %></td>
+	</tr>
+	<tr>
+		<td><strong>L2 Cache Core</strong></td>
+		<td><%= profile.l2_cache_core %></td>
+	</tr>
+	<tr>
+		<td><strong>L3 Cache</strong></td>
+		<td><%= profile.l3_cache %></td>
+	</tr>
+	<tr>
+		<td><strong>Machine Model</strong></td>
+		<td><%= profile.machine_model %></td>
+	</tr>
+	<tr>
+		<td><strong>Machine Name</strong></td>
+		<td><%= profile.machine_name %></td>
+	</tr>
+	<tr>
+		<td><strong>Number of Processors</strong></td>
+		<td><%= profile.number_processors %></td>
+	</tr>
+	<tr>
+		<td><strong>Physical Memory</strong></td>
+		<td><%= profile.physical_memory %></td>
+	</tr>
+	<tr>
+		<td><strong>Platform UUID</strong></td>
+		<td><%= profile.platform_uuid %></td>
+	</tr>
+	<tr>
+		<td><strong>Serial Number</strong></td>
+		<td><%= profile.serial_number %></td>
+	</tr>
+</table>
+
+<h4>Software Overview</h4>
+<table class="form">
+	<tr>
+		<td><strong>64-bit Kernels and Kexts</strong></td>
+		<td><%= profile.os_64bit_kernel_and_kexts.titleize if profile.os_64bit_kernel_and_kexts.present? %></td>
+	</tr>
+	<tr>
+		<td><strong>Boot Volume</strong></td>
+		<td><%= profile.boot_volume %></td>
+	</tr>
+	<tr>
+		<td><strong>Kernel Version</strong></td>
+		<td><%= profile.kernel_version %></td>
+	</tr>
+	<tr>
+		<td><strong>Local Hostname</strong></td>
+		<td><%= profile.local_host_name %></td>
+	</tr>
+	<tr>
+		<td><strong>OS Version</strong></td>
+		<td><%= profile.os_version %></td>
+	</tr>
+	<tr>
+		<td><strong>Uptime</strong></td>
+		<td><%= profile.uptime %></td>
+	</tr>
+	<tr>
+		<td><strong>User Name</strong></td>
+		<td><%= profile.user_name %></td>
+	</tr>
+</table>
+
+<h4>Printers</h4>
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>URI</th>
+			<th>PPD</th>
+			<th>Driver Version</th>
+			<th>Print Server</th>
+			<th>Default</th>
+		</tr>
+	</thead>
+	<% profile.sp_printers.each do |printer| %>
+		<tr>
+			<td><%= printer.name %></td>
+			<td><%= printer.uri %></td>
+			<td><%= printer.ppd %></td>
+			<td><%= printer.driverversion %></td>
+			<td><%= printer.printserver %></td>
+			<td><%= printer.default == "yes" ? "&#10003;".html_safe : "" %></td>
+		</tr>
+	<% end %>
+</table>

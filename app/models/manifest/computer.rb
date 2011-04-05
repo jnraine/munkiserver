@@ -4,6 +4,8 @@ class Computer < ActiveRecord::Base
   belongs_to :computer_model
   belongs_to :computer_group
   
+  has_one :system_profile
+  
   has_many :client_logs
   has_many :managed_install_reports
   
@@ -33,6 +35,14 @@ class Computer < ActiveRecord::Base
   # Setting for virtual attribute hostname
   def hostname=(value)
     name = value
+  end
+  
+  # Overwrite computer_model association method to return 
+  # computer model based on system_profile
+  def computer_model
+    model = ComputerModel.where(:name => system_profile.machine_model).first if system_profile.present?
+    model ||= ComputerModel.find(computer_model_id) if computer_model_id.present?
+    model ||= ComputerModel.default
   end
   
   # Alias the computer_model icon to this computer

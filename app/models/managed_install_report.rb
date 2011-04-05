@@ -44,9 +44,9 @@ class ManagedInstallReport < ActiveRecord::Base
     # Delete invalid keys
     valid_attributes = self.new.attributes.keys
     report_hash.delete_if do |k| 
-      if valid_attributes.include?(k)
+      if !valid_attributes.include?(k)
         logger.debug "Invalid key (#{k}) found while creating #{self.class.to_s} object from report hash"
-        false
+        true
       end
     end
     report_hash

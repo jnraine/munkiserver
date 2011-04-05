@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110329005907) do
+ActiveRecord::Schema.define(:version => 20110330225218) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -216,6 +216,50 @@ ActiveRecord::Schema.define(:version => 20110329005907) do
     t.integer  "package_id"
     t.integer  "manifest_id"
     t.string   "manifest_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sp_printers", :force => true do |t|
+    t.string   "name"
+    t.string   "cupsversion"
+    t.string   "default"
+    t.string   "driverversion"
+    t.string   "fax"
+    t.string   "ppd"
+    t.string   "ppdfileversion"
+    t.string   "printserver"
+    t.string   "psversion"
+    t.string   "scanner"
+    t.string   "scanner_uuid"
+    t.string   "scannerappbundlepath"
+    t.string   "scannerapppath"
+    t.string   "status"
+    t.string   "uri"
+    t.integer  "system_profile_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "system_profiles", :force => true do |t|
+    t.integer  "computer_id"
+    t.string   "cpu_type"
+    t.string   "current_processor_speed"
+    t.string   "l2_cache_core"
+    t.string   "l3_cache"
+    t.string   "machine_model"
+    t.string   "machine_name"
+    t.string   "number_processors"
+    t.string   "physical_memory"
+    t.string   "platform_uuid"
+    t.string   "serial_number"
+    t.string   "os_64bit_kernel_and_kexts"
+    t.string   "boot_volume"
+    t.string   "kernel_version"
+    t.string   "local_host_name"
+    t.string   "os_version"
+    t.string   "uptime"
+    t.string   "user_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
