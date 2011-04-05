@@ -19,7 +19,8 @@ class ManagedInstallReport < ActiveRecord::Base
   serialize :managed_updates_list, Array
 
   TABLE_ATTRIBUTES = ["items_to_install","items_to_remove","managed_installs"]
-  LOG_ATTRIBUTES = ["munki_errors","munki_warnings","install_results"]
+  LOG_ATTRIBUTES = ["munki_errors","munki_warnings","install_results", "removal_results"]
+  # Attributes not accounted for: installed_items, problem_installs, managed_installs_list, managed_uninstalls_list, managed_updates_list
 
   # Include helpers
   include ActionView::Helpers

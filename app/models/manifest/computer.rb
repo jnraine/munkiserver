@@ -197,8 +197,8 @@ class Computer < ActiveRecord::Base
     status = "Status Unknown"
     if last_report.present?
       status = "OK" if last_report.ok?
-      status = "Reported Errors" if last_report.errors?
       status = "Reported Warnings" if last_report.warnings?
+      status = "Reported Errors" if last_report.errors?
     end
     status
   end
