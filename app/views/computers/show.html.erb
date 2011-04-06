@@ -24,16 +24,11 @@
 	View Report
 	<select id="managed_install_reports" name="managed_install_reports">
 		<% @computer.managed_install_reports.reverse.each do |report| %>
-			<option value="<%= report.id %>">
-				<% if report.created_at > 1.day.ago %>
-					<%= time_ago_in_words(report.created_at) + " ago" %>
-				<% else %>
-					<%= report.created_at.getlocal.to_s(:readable_detail) %>
-				<% end %>
-			</option>
+			<option value="<%= report.id %>"><%= report.option_text %></option>
 		<% end -%>
 	</select>
 	<img class="loading" src="/images/ajax-loader.gif" />
+	<%= helpful_info "* denotes a report with issues"%>
 </div>
 <div id="managed_install_report">
 	<em>No managed install report available</em>

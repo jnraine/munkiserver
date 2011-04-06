@@ -101,4 +101,16 @@ class ManagedInstallReport < ActiveRecord::Base
   def issues?
     errors? or warnings?
   end
+  
+  # Text value of option tag text
+  def option_text
+    s = ""
+    if created_at > 12.hours.ago
+			s += time_ago_in_words(created_at) + " ago"
+		else
+		  s += created_at.getlocal.to_s(:readable_detail)
+		end
+		s += "*" if issues?
+		s
+  end
 end
