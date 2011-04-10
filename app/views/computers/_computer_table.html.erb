@@ -29,7 +29,7 @@
 				<th>
 					<%= link_to 'MAC Address', {:action => "index", :col => "mac_address", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
 				</th>
-				<th>Last Run</th>
+				<th>Last Report</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -44,7 +44,7 @@
 		<td><%= link_to c.name, c %></td>    
 	    <td><%= link_to c.hostname, c %></td>
 		<td><%= c.mac_address %></td>
-		<td><%= c.time_since_last_run %></td>
+		<td><%= c.time_since_last_report %></td>
 	    <td>
 			<%= link_to 'Edit', edit_computer_path(c) %> |
 			<%= link_to 'Destroy', c, :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %><br />

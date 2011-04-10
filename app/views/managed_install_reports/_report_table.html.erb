@@ -1,0 +1,19 @@
+<h4><%= attribute_name.titleize %></h4>
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Display Name</th>
+			<th>Version</th>
+			<th>installed</th>
+		</tr>
+	</thead>
+	<% report.send(attribute_name).each do |item| %>
+		<tr>
+			<td><%= item["name"] %></td>
+			<td><%= item["display_name"] %></td>
+			<td><%= item["version_to_install"].present? ? item["version_to_install"] : item["installed_version"] %></td>
+			<td><%= item["installed"] ? "&#10003;".html_safe : "" %></td>
+		</tr>
+	<% end %>
+</table>

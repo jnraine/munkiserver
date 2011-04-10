@@ -17,43 +17,16 @@
 	<p><em>This computer is not a member of any computer group.</em></p>
 <% end -%>
 
-<h4>Logs</h4>
-<p>Last successful munki run: <strong><%= @computer.time_since_last_successful_run.capitalize %></strong></p>
-<script type="text/javascript">
-	jQuery(document).ready(function() {
-		jQuery('.log-details').hide();
-		jQuery('.log-link').click(function() {
-			// TO-DO: Make this accordion style: only one log view open at a time
-			var logDetailClass = jQuery(this).attr('data-log-detail-class');
-			jQuery("." + logDetailClass).slideToggle();
-			return false;
-		});
-	});	
-</script>
-<ul>
-	<% @computer.recent_client_logs.each do |client_log| %>
-		<li>
-			<%= client_log.created_at.localtime.to_formatted_s(:long_ordinal) %> - 
-			<%= client_log.run_type %>
-
-			<% client_log.log_attributes.each do |log_name| %>
-				<% unless client_log.read_attribute(log_name).blank? %>
-					[<%= content_tag :a, log_name.titleize, {:class => "log-link", "data-log-detail-class" => "log-detail-#{client_log.id}-#{log_name}", :href => "#"} %>]
-				<% end -%>
-			<% end -%>
-
-			<em>- <%= client_log.time_since_created_at_in_words %></em>
-
-			<% client_log.log_attributes.each do |log_name| %>
-				<% unless client_log.read_attribute(log_name).blank? %>
-					<div class="log-details log-detail-<%= client_log.id %>-<%= log_name %>">
-						<pre><%= client_log.read_attribute(log_name) %></pre>
-					</div>
-				<% end -%>
-			<% end -%>
-		</li>
-	<% end -%>
-	<% if (@computer.client_logs.count - 15) > 0 %>
-		<p>...and <%= @computer.client_logs.count - 15 %> more</p>
-	<% end -%>
-</ul>
+<h3>Managed Install Reports</h3>
+<div>
+	View Report
+	<select id="managed_install_reports" name="managed_install_reports">
+		<% @computer.managed_install_reports.reverse.each do |report| %>
+			<option value="<%= report.id %>"><%= time_ago_in_words(report.created_at) + " ago" %></option>
+		<% end -%>
+	</select>
+	<img class="loading" src="/images/ajax-loader.gif" />
+</div>
+<div id="managed_install_report">
+	<em>No report</em>
+</div>

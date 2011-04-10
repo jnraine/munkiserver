@@ -10,8 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-
-ActiveRecord::Schema.define(:version => 20110218132953) do
+ActiveRecord::Schema.define(:version => 20110401213928) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -47,9 +46,10 @@ ActiveRecord::Schema.define(:version => 20110218132953) do
     t.integer  "unit_id"
     t.integer  "environment_id"
     t.text     "raw_tags"
-    t.text     "raw_mode",       :default => "f"
+    t.text     "raw_mode",         :default => "f"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "configuration_id"
   end
 
   create_table "computer_models", :force => true do |t|
@@ -74,6 +74,14 @@ ActiveRecord::Schema.define(:version => 20110218132953) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "hostname",             :default => ""
+    t.integer  "configuration_id"
+  end
+
+  create_table "configurations", :force => true do |t|
+    t.string   "configuration"
+    t.boolean  "inherit",       :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "environments", :force => true do |t|
@@ -98,6 +106,34 @@ ActiveRecord::Schema.define(:version => 20110218132953) do
     t.integer  "package_id"
     t.integer  "manifest_id"
     t.string   "manifest_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "managed_install_reports", :force => true do |t|
+    t.string   "ip"
+    t.string   "manifest_name"
+    t.string   "run_type"
+    t.string   "console_user"
+    t.string   "managed_install_version"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer  "available_disk_space"
+    t.integer  "computer_id"
+    t.text     "munki_errors"
+    t.text     "munki_warnings"
+    t.text     "install_results"
+    t.text     "installed_items"
+    t.text     "items_to_install"
+    t.text     "items_to_remove"
+    t.text     "machine_info"
+    t.text     "managed_installs"
+    t.text     "problem_installs"
+    t.text     "removal_results"
+    t.text     "removed_items"
+    t.text     "managed_installs_list"
+    t.text     "managed_uninstalls_list"
+    t.text     "managed_updates_list"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -223,6 +259,7 @@ ActiveRecord::Schema.define(:version => 20110218132953) do
     t.integer  "unit_member_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "configuration_id"
   end
 
   create_table "update_for_items", :force => true do |t|

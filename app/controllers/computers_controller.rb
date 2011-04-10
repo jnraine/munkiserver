@@ -1,4 +1,6 @@
 class ComputersController < ApplicationController
+  require 'cgi'
+
   def index
     # Set environment at view layer
     @computers = ComputerService.collect(params,current_unit,current_environment)
@@ -30,7 +32,7 @@ class ComputersController < ApplicationController
   end
 
   def show
-    @computer = Computer.find_for_show(params[:id])
+    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
     
     respond_to do |format|
       if @computer.present?
@@ -40,7 +42,7 @@ class ComputersController < ApplicationController
         format.client_prefs { render :text => @computer.client_prefs.to_plist }
       else
         MissingManifest.new({:manifest_type => Computer.to_s, :identifier => params[:id], :request_ip => request.remote_ip}).save
-        render :nothing => true, :status => 404
+        format.manifest { render :file => "public/404.html", :status => 404 }
       end
     end
   end
@@ -117,11 +119,9 @@ class ComputersController < ApplicationController
   # of the last successful munki run.  May be extended in the future.
   def checkin
     @computer = Computer.find_for_show(params[:id])
-    @computer.client_logs.build(:managed_software_update_log => params[:managed_software_update_log], 
-                                :errors_log => params[:errors_log], 
-                                :installs_log => params[:installs_log])
+    @computer.managed_install_reports.build(ManagedInstallReport.format_report_plist(params[:managed_install_report_plist]).merge({:ip => request.remote_ip}))
     @computer.save
-    @computer.error_mailer.deliver if @computer.error_mailer_due?
+    # @computer.error_mailer.deliver if @computer.error_mailer_due?
         
     render :text => ''
   end

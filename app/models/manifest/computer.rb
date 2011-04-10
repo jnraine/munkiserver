@@ -1,10 +1,12 @@
 class Computer < ActiveRecord::Base
   magic_mixin :manifest
+  magic_mixin :client_pref
   
   belongs_to :computer_model
   belongs_to :computer_group
   
   has_many :client_logs
+  has_many :managed_install_reports
   
   # Validations
   validate :computer_model
@@ -70,29 +72,6 @@ class Computer < ActiveRecord::Base
   #   end
   #   c
   # end
-
-  # Returns a hash representing the ManagedInstalls.plist
-  # that should be placed in /Library/Preferences on this client
-  def client_prefs
-    port = ":3000" if Rails.env == "development"
-    url = "http://" + `hostname`.chomp + port.to_s
-    prefs = { :DaysBetweenNotifications => 1,
-              :InstallAppleSoftwareUpdates => true,
-              :LogFile => "/Library/Managed Installs/Logs/ManagedSoftwareUpdate.log",
-              :LoggingLevel => 1,
-              :UseClientCertificate => false }
-    if self.id == nil
-      #client computer doesn't exist in database currently
-      prefs.merge!({:AppleSoftwareUpdatesOnly => true})
-    else
-      #client does exist
-      prefs.merge!({:ClientIdentifier => client_identifier,
-                    :ManagedInstallsDir => "/Library/Managed Installs",
-                    :ManifestURL => url,
-                    :SoftwareRepoURL => url})
-    end
-    prefs
-  end
   
   # Extend manifest by removing name attribute and adding the catalogs
   def serialize_for_plist
@@ -124,49 +103,48 @@ class Computer < ActiveRecord::Base
   end
   
   # Return the latest instance of ClientLog
-  def last_run
-    client_logs.last
+  def last_report
+    managed_install_reports.last
   end
   
   # Returns, in words, the time since last run
-  def time_since_last_run
-    if last_run.present?
-      time_ago_in_words(last_run.created_at) + " ago"
+  def time_since_last_report
+    if last_report.present?
+      time_ago_in_words(last_report.created_at) + " ago"
     else
       "never"
     end
   end
   
-  def time_since_last_successful_run
-    if last_successful_run.present?
-      time_ago_in_words(last_successful_run.created_at) + " ago"
+  def time_since_last_error_free_report
+    if last_error_free_report.present?
+      time_ago_in_words(last_error_free_report.created_at) + " ago"
     else
       "never"
     end
   end
   
-  def last_successful_run
-    client_logs.successful.last if client_logs.successful.present?
+  def last_error_free_report
+    managed_install_reports.error_free.last if managed_install_reports.error_free.present?
   end
   
-  # Get most recent logs in reverse chronological order
-  # Default to 15 logs
-  def recent_client_logs(num = 15)
-    ClientLog.where(:computer_id => id).limit(num).order("created_at desc")
+  def recent_reports(num = 15)
+    ManagedInstallReport.where(:computer_id => id).limit(num).order("created_at desc")
   end
   
-  # Check the client logs and determine if this item has been installed or not
-  def installed?(package)
-    name = package.name
-    version = package.version
-    log = last_managed_software_update_log
-    log.present? and log.match(/#{Regexp.escape(name)} version (#{Regexp.escape(version)}) \(or newer\) is already installed/).present?
-  end
-  
-  # Gets the last managed software update log (nil if none)
-  def last_managed_software_update_log
-    logs = client_logs.last
-    logs.managed_software_update_log unless logs.nil?
+  # Check the last managed install report and determine if 
+  # this item has been installed or not
+  def installed?(pkg)
+    package_installed = false
+    report = last_report
+    if report.present? and report.managed_installs.present?
+      report.managed_installs.each do |mi|
+        if mi["name"] == pkg.name and mi["installed_version"] == pkg.version and mi["installed"]
+          package_installed = true
+        end
+      end
+    end
+    package_installed
   end
   
   # An error report for this computer is due based on various parameters
@@ -174,15 +152,15 @@ class Computer < ActiveRecord::Base
   # => Last successful run was updated longer than 1 day ago
   # => Error logs are present on the last run
   def error_mailer_due?
-    last_successful_run.created_at < 1.days.ago and 
-    last_successful_run.updated_at < 1.days.ago and
-    last_run.errors_log.present?
+    last_error_free_report.created_at < 1.days.ago and 
+    last_error_free_report.updated_at < 1.days.ago and
+    last_report.munki_errors.present?
   end
   
-  # Send error report for this computer.  Touches last successful run log
-  # to indicate when the last error report was sent
+  # Send error report for this computer.  Touches last error free 
+  # report to indicate when the last error email was sent
   def error_mailer
-    last_successful_run.touch
+    last_error_free_report.touch
     AdminMailer.computer_error(self).deliver
   end
   

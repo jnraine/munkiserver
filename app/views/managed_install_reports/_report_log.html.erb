@@ -1,0 +1,4 @@
+<% if report.send(attribute_name).present? %>
+		<h4><%= attribute_name.titleize %></h4>
+		<pre class="report_log"><%= report.send(attribute_name).join("\n")%></pre>
+<% end %>

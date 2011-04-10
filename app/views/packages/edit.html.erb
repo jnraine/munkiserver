@@ -173,14 +173,12 @@
 	<tr>
 		<td>Supported Architectures</td>
 		<td>
-			<%= check_box_tag 'package[supported_architectures][]', 'i386', @package.intel?, :id => 'package_supported_architectures_i386' %>
-			<%= label_tag 'package_supported_architectures_i386', 'Intel' %>
-			
-			<%= check_box_tag 'package[supported_architectures][]', 'ppc', @package.ppc?, :id => 'package_supported_architectures_ppc'  %>
-			<%= label_tag 'package_supported_architectures_ppc', 'PPC' %>
-			
-			<%= check_box_tag 'package[supported_architectures][]', 'Power Macintosh', @package.power_macintosh?, :id => 'package_supported_architectures_power_macintosh'  %>
-			<%= label_tag 'package_supported_architectures_ppc', 'Power Macintosh' %>
+			<%= hidden_field_tag "package[supported_architectures][]", "" %>
+			<% Package::FORM_OPTIONS[:supported_architectures].each do |name| %>
+				<%= render :partial => 'supported_architectures_checkbox', :locals => {:name => name} %>
+			<% end %>
+			<%= helpful_info("Specifying a supported architecture will cause this package to only be installed on a computer with a matching architecture.  Only helpful if a package can not run on other architectures.") %>
+
 		</td>
 	</tr>
 	<tr>

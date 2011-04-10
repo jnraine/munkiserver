@@ -23,9 +23,10 @@ class Package < ActiveRecord::Base
   validates :receipts, :plist_array => true
   validates :installs, :plist_array => true
 
-  FORM_OPTIONS = {:restart_actions => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
-                  :os_versions => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
-                  :installer_types => [['Package',''],['Copy From DMG','copy_from_dmg'],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']]}
+  FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
+                  :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
+                  :installer_types         => [['Package',''],['Copy From DMG','copy_from_dmg'],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']],
+                  :supported_architectures => ['i386','x86_64','ppc','Power Macintosh']}
   
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
   # determined by comparing installer_item_location values.
@@ -439,14 +440,21 @@ class Package < ActiveRecord::Base
       keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
               :installer_item_location,:uninstall_method,:uninstaller_item_location,:uninstaller_item_size,:uninstallable,
-              :requires,:update_for,:catalogs,:supported_architectures,:version]
+              :requires,:update_for,:catalogs,:version]
        
       keys.each do |key|
         h[key.to_s] = self.send(key) if self.send(key).present?
       end
       
       # Add append any special cases to the hash
+      
+      # Supported Architectures
+      sa = self.supported_architectures.delete_if {|e| e == ""}
+      h["supported_architectures"] = sa unless sa.empty?
+      # Requires
       h["requires"] = self.requires.map {|p| p.to_s(:version) } unless self.requires.empty?
+      
+      # Add any raw tags
       h = h.merge(raw_tags) if append_raw?
     end
     h
@@ -488,20 +496,6 @@ class Package < ActiveRecord::Base
   # Converts serialized object into plist string
   def to_plist
     serialize_for_plist.to_plist
-  end
-  
-  # True if this package supportes intel computers
-  def intel?
-    supported_architectures.include?("i386")
-  end
-  
-  # True if this package supportes PPC computers
-  def ppc?
-    supported_architectures.include?("ppc")
-  end
-  
-  def power_macintosh?
-    supported_architectures.include?("Power Macintosh")
   end
   
   # If the package branch's version tracker "looks_good", returns true
@@ -816,7 +810,7 @@ class Package < ActiveRecord::Base
   # Returns a hash of default attributes that are used to intialize
   # a new package object.  Used in self.import.
   def self.default_attributes
-    {:supported_architectures => ['i386','ppc', 'Power Macintosh']}
+    {}
   end
   
   # Returns array of attributes that a package object knows how to deal with
