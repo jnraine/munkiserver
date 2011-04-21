@@ -55,8 +55,8 @@
 </table>
 
 <% ManagedInstallReport::LOG_ATTRIBUTES.each do |attribute_name| %>	
-	<%= render :partial => 'report_log', :locals => {:attribute_name => attribute_name,:report => report} if report.send(attribute_name).present? %>
+	<%= render :partial => 'managed_install_reports/report_log', :locals => {:attribute_name => attribute_name,:report => report} if report.send(attribute_name).present? %>
 <% end %>
 <% ManagedInstallReport::TABLE_ATTRIBUTES.each do |attribute_name| %>
-	<%= render :partial => 'report_table', :locals => {:attribute_name => attribute_name,:report => report} if report.send(attribute_name).present? %>
+	<%= render :partial => 'managed_install_reports/report_table', :locals => {:attribute_name => attribute_name,:report => report} if report.send(attribute_name).present? %>
 <% end %>

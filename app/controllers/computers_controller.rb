@@ -119,10 +119,19 @@ class ComputersController < ApplicationController
   # of the last successful munki run.  May be extended in the future.
   def checkin
     @computer = Computer.find_for_show(params[:id])
-    @computer.managed_install_reports.build(ManagedInstallReport.format_report_plist(params[:managed_install_report_plist]).merge({:ip => request.remote_ip}))
+    
+    if params[:managed_install_report_plist].present?
+      report_hash = ManagedInstallReport.format_report_plist(params[:managed_install_report_plist]).merge({:ip => request.remote_ip})
+      @computer.managed_install_reports.build(report_hash)
+    end
+    
+    if params[:system_profiler_plist].present?
+      system_profile_hash = SystemProfile.format_system_profiler_plist(params[:system_profiler_plist])
+      @computer.build_system_profile(system_profile_hash)
+    end
+    
     @computer.save
-    # @computer.error_mailer.deliver if @computer.error_mailer_due?
-        
+    AdminMailer.computer_report(@computer).deliver if @computer.report_due?
     render :text => ''
   end
 end

@@ -1,0 +1,104 @@
+<h3>System Profile</h3>
+<% if @computer.system_profile.present? %>
+	<h4>Hardware Overview</h4>
+	<table class="form">
+		<tr>
+			<td><strong>CPU Type</strong></td>
+			<td><%= @computer.system_profile.cpu_type %></td>
+		</tr>
+		<tr>
+			<td><strong>Processor Speed</strong></td>
+			<td><%= @computer.system_profile.current_processor_speed %></td>
+		</tr>
+		<tr>
+			<td><strong>L2 Cache Core</strong></td>
+			<td><%= @computer.system_profile.l2_cache_core %></td>
+		</tr>
+		<tr>
+			<td><strong>L3 Cache</strong></td>
+			<td><%= @computer.system_profile.l3_cache %></td>
+		</tr>
+		<tr>
+			<td><strong>Machine Model</strong></td>
+			<td><%= @computer.system_profile.machine_model %></td>
+		</tr>
+		<tr>
+			<td><strong>Machine Name</strong></td>
+			<td><%= @computer.system_profile.machine_name %></td>
+		</tr>
+		<tr>
+			<td><strong>Number of Processors</strong></td>
+			<td><%= @computer.system_profile.number_processors %></td>
+		</tr>
+		<tr>
+			<td><strong>Physical Memory</strong></td>
+			<td><%= @computer.system_profile.physical_memory %></td>
+		</tr>
+		<tr>
+			<td><strong>Platform UUID</strong></td>
+			<td><%= @computer.system_profile.platform_uuid %></td>
+		</tr>
+		<tr>
+			<td><strong>Serial Number</strong></td>
+			<td><%= @computer.system_profile.serial_number %></td>
+		</tr>
+	</table>
+
+	<h4>Software Overview</h4>
+	<table class="form">
+		<tr>
+			<td><strong>64-bit Kernels and Kexts</strong></td>
+			<td><%= @computer.system_profile.os_64bit_kernel_and_kexts.titleize if @computer.system_profile.os_64bit_kernel_and_kexts.present? %></td>
+		</tr>
+		<tr>
+			<td><strong>Boot Volume</strong></td>
+			<td><%= @computer.system_profile.boot_volume %></td>
+		</tr>
+		<tr>
+			<td><strong>Kernel Version</strong></td>
+			<td><%= @computer.system_profile.kernel_version %></td>
+		</tr>
+		<tr>
+			<td><strong>Local Hostname</strong></td>
+			<td><%= @computer.system_profile.local_host_name %></td>
+		</tr>
+		<tr>
+			<td><strong>OS Version</strong></td>
+			<td><%= @computer.system_profile.os_version %></td>
+		</tr>
+		<tr>
+			<td><strong>Uptime</strong></td>
+			<td><%= @computer.system_profile.uptime %></td>
+		</tr>
+		<tr>
+			<td><strong>User Name</strong></td>
+			<td><%= @computer.system_profile.user_name %></td>
+		</tr>
+	</table>
+
+	<h4>Printers</h4>
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>URI</th>
+				<th>PPD</th>
+				<th>Driver Version</th>
+				<th>Print Server</th>
+				<th>Default</th>
+			</tr>
+		</thead>
+		<% @computer.system_profile.sp_printers.each do |printer| %>
+			<tr>
+				<td><%= printer.name %></td>
+				<td><%= printer.uri %></td>
+				<td><%= printer.ppd %></td>
+				<td><%= printer.driverversion %></td>
+				<td><%= printer.printserver %></td>
+				<td><%= printer.default == "yes" ? "&#10003;".html_safe : "" %></td>
+			</tr>
+		<% end %>
+	</table>
+<% else %>
+	<p><em>No system profile available</em></p>
+<% end -%>

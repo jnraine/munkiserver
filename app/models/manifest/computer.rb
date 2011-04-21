@@ -5,6 +5,8 @@ class Computer < ActiveRecord::Base
   belongs_to :computer_model
   belongs_to :computer_group
   
+  has_one :system_profile
+  
   has_many :client_logs
   has_many :managed_install_reports
   
@@ -26,6 +28,24 @@ class Computer < ActiveRecord::Base
     7.days.ago
   end
   
+  # Getter for virtual attribute hostname
+  def hostname
+    name
+  end
+  
+  # Setting for virtual attribute hostname
+  def hostname=(value)
+    name = value
+  end
+  
+  # Overwrite computer_model association method to return 
+  # computer model based on system_profile
+  def computer_model
+    model = ComputerModel.where(:name => system_profile.machine_model).first if system_profile.present?
+    model ||= ComputerModel.find(computer_model_id) if computer_model_id.present?
+    model ||= ComputerModel.default
+  end
+
   # Alias the computer_model icon to this computer
   def icon
     computer_model.icon
@@ -54,7 +74,8 @@ class Computer < ActiveRecord::Base
 
   # Examines the client logs of a computer to determine if it has been dormant
   def dormant?
-    (self.last_successful_run.nil? and self.created_at < self.class.dormant_interval) or (self.last_successful_run.created_at < self.class.dormant_interval)
+    # (self.last_successful_run.nil? and self.created_at < self.class.dormant_interval) or (self.last_successful_run.created_at < self.class.dormant_interval)
+    false
   end
 
   # Make sure this computer is assigned a computer group
@@ -147,25 +168,23 @@ class Computer < ActiveRecord::Base
     package_installed
   end
   
-  # An error report for this computer is due based on various parameters
-  # => Last successful run was longer than 1 day ago
-  # => Last successful run was updated longer than 1 day ago
-  # => Error logs are present on the last run
-  def error_mailer_due?
-    last_error_free_report.created_at < 1.days.ago and 
-    last_error_free_report.updated_at < 1.days.ago and
-    last_report.munki_errors.present?
+  # True if an AdminMailer computer report is due
+  def report_due?
+    last_report.present? and last_report.issues?
   end
   
-  # Send error report for this computer.  Touches last error free 
-  # report to indicate when the last error email was sent
-  def error_mailer
-    last_error_free_report.touch
-    AdminMailer.computer_error(self).deliver
-  end
-  
-  # Gets an array of users responsible for this computer
-  def admins
-    unit.members if unit.present?
+  # Get the status of the computer based on the last report
+  # => Status Unknown
+  # => OK
+  # => Reported Errors
+  # => Reported Warnings
+  def status
+    status = "Status Unknown"
+    if last_report.present?
+      status = "OK" if last_report.ok?
+      status = "Reported Warnings" if last_report.warnings?
+      status = "Reported Errors" if last_report.errors?
+    end
+    status
   end
 end

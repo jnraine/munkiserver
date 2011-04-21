@@ -84,23 +84,98 @@ namespace :bootstrap do
          {:name => "PowerMac G4 Quicksilver",:icon_path => "#{path}/com.apple.powermac-g4-quicksilver.png"},
          {:name => "PowerMac G5",:icon_path => "#{path}/com.apple.powermac-g5.png"},
          {:name => "VMWare Fusion",:icon_path => "#{path}/vmware_fusion.png"}]
+    # Add machine model icons
+    a = a + [{:name => "PowerMac4,4",:icon_path => "#{path}/com.apple.emac.png"},
+             {:name => "PowerMac6,4",:icon_path => "#{path}/com.apple.emac.png"},
+             {:name => "PowerBook2,1",:icon_path => "#{path}/com.apple.ibook-g4-12.png"},
+             {:name => "PowerBook2,2",:icon_path => "#{path}/com.apple.ibook-g4-12.png"},
+             {:name => "PowerBook4,1",:icon_path => "#{path}/com.apple.ibook-g4-12.png"},
+             {:name => "PowerBook4,2",:icon_path => "#{path}/com.apple.ibook-g4-14.png"},
+             {:name => "PowerBook4,3",:icon_path => "#{path}/com.apple.ibook-g4-14.png"},
+             {:name => "PowerBook6,3",:icon_path => "#{path}/com.apple.ibook-g4-14.png"},
+             {:name => "PowerBook6,5",:icon_path => "#{path}/com.apple.ibook-g4-14.png"},
+             {:name => "PowerBook6,7",:icon_path => "#{path}/com.apple.ibook-g4-14.png"},
+             {:name => "iMac7,1",:icon_path => "#{path}/com.apple.imac-aluminum-24.png"},
+             {:name => "iMac8,1",:icon_path => "#{path}/com.apple.imac-aluminum-24.png"},
+             {:name => "iMac9,1",:icon_path => "#{path}/com.apple.imac-aluminum-24.png"},
+             {:name => "iMac,1",:icon_path => "#{path}/com.apple.imac-g4-15.png"},
+             {:name => "PowerMac2,1",:icon_path => "#{path}/com.apple.imac-g4-15.png"},
+             {:name => "PowerMac2,2",:icon_path => "#{path}/com.apple.imac-g4-15.png"},
+             {:name => "PowerMac4,1",:icon_path => "#{path}/com.apple.imac-g4-15.png"},
+             {:name => "PowerMac4,2",:icon_path => "#{path}/com.apple.imac-g4-15.png"},
+             {:name => "PowerMac4,5",:icon_path => "#{path}/com.apple.imac-g4-17.png"},
+             {:name => "PowerMac6,1",:icon_path => "#{path}/com.apple.imac-g4-17.png"},
+             {:name => "PowerMac6,3",:icon_path => "#{path}/com.apple.imac-g4-20.png"},
+             {:name => "PowerMac8,1",:icon_path => "#{path}/com.apple.imac-g5-17.png"},
+             {:name => "PowerMac8,2",:icon_path => "#{path}/com.apple.imac-g5-20.png"},
+             {:name => "PowerMac12,1",:icon_path => "#{path}/com.apple.imac-iSight-17.png"},
+             {:name => "iMac5,2",:icon_path => "#{path}/com.apple.imac-iSight-17.png"},
+             {:name => "iMac4,1",:icon_path => "#{path}/com.apple.imac-iSight-20.png"},
+             {:name => "iMac5,1",:icon_path => "#{path}/com.apple.imac-iSight-20.png"},
+             {:name => "iMac6,1",:icon_path => "#{path}/com.apple.imac-iSight-24.png"},
+             {:name => "iMac10,1",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
+             {:name => "iMac11,2",:icon_path => "#{path}/com.apple.imac-unibody-21.png"},
+             {:name => "iMac11,1",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
+             {:name => "iMac11,3",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
+             {:name => "MacBook1,1",:icon_path => "#{path}/com.apple.macbook-white.png"},
+             {:name => "MacBook2,1",:icon_path => "#{path}/com.apple.macbook-white.png"},
+             {:name => "MacBook3,1",:icon_path => "#{path}/com.apple.macbook-white.png"},
+             {:name => "MacBook4,1",:icon_path => "#{path}/com.apple.macbook-white.png"},
+             {:name => "MacBook5,2",:icon_path => "#{path}/com.apple.macbook-white.png"},
+             {:name => "MacBook6,1",:icon_path => "#{path}/com.apple.macbook-unibody-plastic.png"},
+             {:name => "MacBook7,1",:icon_path => "#{path}/com.apple.macbook-unibody-plastic.png"},
+             {:name => "MacBook5,1",:icon_path => "#{path}/com.apple.macbook-unibody.png"},
+             {:name => "MacBookAir1,1",:icon_path => "#{path}/com.apple.macbookair.png"},
+             {:name => "MacBookAir2,1",:icon_path => "#{path}/com.apple.macbookair.png"},
+             {:name => "MacBookAir3,1",:icon_path => "#{path}/com.apple.macbookair.png"},
+             {:name => "MacBookAir3,2",:icon_path => "#{path}/com.apple.macbookair.png"},
+             {:name => "MacBookPro5,5",:icon_path => "#{path}/com.apple.macbookpro-13-unibody.png"},
+             {:name => "MacBookPro7,1",:icon_path => "#{path}/com.apple.macbookpro-13-unibody.png"},
+             {:name => "MacBookPro8,1",:icon_path => "#{path}/com.apple.macbookpro-13-unibody.png"},
+             {:name => "MacBookPro5,1",:icon_path => "#{path}/com.apple.macbookpro-15-unibody.png"},
+             {:name => "MacBookPro5,3",:icon_path => "#{path}/com.apple.macbookpro-15-unibody.png"},
+             {:name => "MacBookPro5,4",:icon_path => "#{path}/com.apple.macbookpro-15-unibody.png"},
+             {:name => "MacBookPro6,2",:icon_path => "#{path}/com.apple.macbookpro-15-unibody.png"},
+             {:name => "MacBookPro8,2",:icon_path => "#{path}/com.apple.macbookpro-15-unibody.png"},
+             {:name => "MacBookPro5,2",:icon_path => "#{path}/com.apple.macbookpro-17-unibody.png"},
+             {:name => "MacBookPro6,1",:icon_path => "#{path}/com.apple.macbookpro-17-unibody.png"},
+             {:name => "MacBookPro8,3",:icon_path => "#{path}/com.apple.macbookpro-17-unibody.png"},
+             {:name => "MacBookPro1,1",:icon_path => "#{path}/com.apple.macbookpro-15.png"},
+             {:name => "MacBookPro2,2",:icon_path => "#{path}/com.apple.macbookpro-15.png"},
+             {:name => "MacBookPro3,1",:icon_path => "#{path}/com.apple.macbookpro-15.png"},
+             {:name => "MacBookPro4,1",:icon_path => "#{path}/com.apple.macbookpro-15.png"},
+             {:name => "MacBookPro1,2",:icon_path => "#{path}/com.apple.macbookpro-17.png"},
+             {:name => "MacBookPro2,1",:icon_path => "#{path}/com.apple.macbookpro-17.png"},
+             {:name => "Macmini4,1",:icon_path => "#{path}/com.apple.macmini-server.png"},
+             {:name => "PowerMac10,1",:icon_path => "#{path}/com.apple.macmini.png"},
+             {:name => "PowerMac10,2",:icon_path => "#{path}/com.apple.macmini.png"},
+             {:name => "Macmini1,1",:icon_path => "#{path}/com.apple.macmini.png"},
+             {:name => "Macmini2,2",:icon_path => "#{path}/com.apple.macmini.png"},
+             {:name => "Macmini3,1",:icon_path => "#{path}/com.apple.macmini.png"},
+             {:name => "MacPro1,1",:icon_path => "#{path}/com.apple.macpro.png"},
+             {:name => "MacPro2,1",:icon_path => "#{path}/com.apple.macpro.png"},
+             {:name => "MacPro3,1",:icon_path => "#{path}/com.apple.macpro.png"},
+             {:name => "MacPro4,1",:icon_path => "#{path}/com.apple.macpro.png"},
+             {:name => "MacPro5,1",:icon_path => "#{path}/com.apple.macpro.png"}]
     # Add the records
+    count = 0
     a.each do |h|
-      r = ComputerModel.find_or_create_by_name(h[:name])
-      # Add an icon if there isn't one already
-      if r.icon.nil?
+      r = ComputerModel.where(:name => h[:name]).first
+      r ||= ComputerModel.new(:name => h[:name])
+      # Replace the icon with the one specified
+      i = Icon.where(:photo_file_name => File.basename(h[:icon_path])).first
+      if i.nil?
         f = File.new(h[:icon_path])
         i = Icon.new
         i.photo = f
-        unless i.save
-          puts "#{h[:name]} computer model icon (#{h[:icon_path]}) failed to save: " + i.errors.inspect
-        end
-        r.icon = i
         f.close
+        puts "#{h[:name]} computer model icon (#{h[:icon_path]}) failed to save: " + i.errors.inspect unless i.save
       end
+      r.icon = i
       unless r.save
         puts "#{h[:name]} computer model failed to save: " + r.errors.inspect
       end
+      count += 1
     end
   end
   
@@ -142,6 +217,7 @@ namespace :bootstrap do
     Rake::Task["bootstrap:unit"].invoke unless Unit.count
     
     username = args.name
+
     unless username
       puts "Username:"
       username = STDIN.gets

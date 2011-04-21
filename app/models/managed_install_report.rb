@@ -19,7 +19,8 @@ class ManagedInstallReport < ActiveRecord::Base
   serialize :managed_updates_list, Array
 
   TABLE_ATTRIBUTES = ["items_to_install","items_to_remove","managed_installs"]
-  LOG_ATTRIBUTES = ["munki_errors","munki_warnings","install_results"]
+  LOG_ATTRIBUTES = ["munki_errors","munki_warnings","install_results", "removal_results"]
+  # Attributes not accounted for: installed_items, problem_installs, managed_installs_list, managed_uninstalls_list, managed_updates_list
 
   # Include helpers
   include ActionView::Helpers
@@ -44,9 +45,9 @@ class ManagedInstallReport < ActiveRecord::Base
     # Delete invalid keys
     valid_attributes = self.new.attributes.keys
     report_hash.delete_if do |k| 
-      if valid_attributes.include?(k)
+      if !valid_attributes.include?(k)
         logger.debug "Invalid key (#{k}) found while creating #{self.class.to_s} object from report hash"
-        false
+        true
       end
     end
     report_hash
@@ -83,5 +84,33 @@ class ManagedInstallReport < ActiveRecord::Base
     else
       ""
     end
+  end
+  
+  def errors?
+    munki_errors.present? or problem_installs.present?
+  end
+  
+  def warnings?
+    munki_warnings.present?
+  end
+  
+  def ok?
+    issues? == false
+  end
+  
+  def issues?
+    errors? or warnings?
+  end
+  
+  # Text value of option tag text
+  def option_text
+    s = ""
+    if created_at > 12.hours.ago
+			s += time_ago_in_words(created_at) + " ago"
+		else
+		  s += created_at.getlocal.to_s(:readable_detail)
+		end
+		s += "*" if issues?
+		s
   end
 end

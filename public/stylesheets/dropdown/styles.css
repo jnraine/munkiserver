@@ -66,10 +66,6 @@ ul.dropdown li:hover > ul {
  visibility: visible;
 }
 
-
-
-
-
 ul.dropdown li.rtl ul {
  top: 100%;
  right: 0;

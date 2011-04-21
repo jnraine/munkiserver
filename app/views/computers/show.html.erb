@@ -8,7 +8,7 @@
 </p>
 <h4>Computer (<%= link_to "edit", edit_computer_url(@computer) %>)</h4>
 <%= inventory(@computer,@computer) %>
-
+ 
 <% unless @computer.computer_group.nil? %>
 	<h4>Computer Group (<%= link_to "edit", edit_computer_group_url(@computer.computer_group) %>)</h4>
 	<%= inventory(@computer.computer_group,@computer) %>
@@ -17,16 +17,19 @@
 	<p><em>This computer is not a member of any computer group.</em></p>
 <% end -%>
 
+<%= render :partial => "system_profile" %>
+
 <h3>Managed Install Reports</h3>
 <div>
 	View Report
 	<select id="managed_install_reports" name="managed_install_reports">
 		<% @computer.managed_install_reports.reverse.each do |report| %>
-			<option value="<%= report.id %>"><%= time_ago_in_words(report.created_at) + " ago" %></option>
+			<option value="<%= report.id %>"><%= report.option_text %></option>
 		<% end -%>
 	</select>
 	<img class="loading" src="/images/ajax-loader.gif" />
+	<%= helpful_info "* denotes a report with issues"%>
 </div>
 <div id="managed_install_report">
-	<em>No report</em>
+	<em>No managed install report available</em>
 </div>
