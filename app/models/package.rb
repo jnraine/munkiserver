@@ -25,7 +25,15 @@ class Package < ActiveRecord::Base
   
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
-                  :installer_types         => [['Package',''],['Copy From DMG','copy_from_dmg'],['App DMG','appdmg'],['AdobeUberInstaller'],['AdobeAcrobatUpdater']],
+                  :installer_types         => [['Package',''],
+                                               ['Copy From DMG','copy_from_dmg'],
+                                               ['App DMG','appdmg'],
+                                               ['AdobeUberInstaller'],
+                                               ['AdobeAcrobatUpdater'],
+                                               ['AdobeCS5PatchInstaller'],
+                                               ['AdobeCS5Installer'],
+                                               ['AdobeCS5AAMEEPackage'],
+                                               ['AdobeSetup']],
                   :supported_architectures => ['i386','x86_64','ppc','Power Macintosh']}
   
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
