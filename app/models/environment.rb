@@ -53,3 +53,16 @@ end
 
 class EnvironmentNotFound < Exception
 end
+
+# == Schema Information
+#
+# Table name: environments
+#
+#  id              :integer         not null, primary key
+#  name            :string(255)
+#  description     :text
+#  environment_ids :text            default("--- []")
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+

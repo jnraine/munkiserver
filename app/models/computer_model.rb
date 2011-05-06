@@ -18,3 +18,16 @@ class ComputerModel < ActiveRecord::Base
   #   end
   # end
 end
+
+# == Schema Information
+#
+# Table name: computer_models
+#
+#  id         :integer         not null, primary key
+#  name       :string(255)
+#  identifier :string(255)
+#  icon_id    :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+

@@ -28,3 +28,17 @@ jraine:
   email: jraine@sfu.ca
   hashed_password: 77a0d943cdbace52716a9ef9fae12e45e2788d39 # test
   super_user: true
+# == Schema Information
+#
+# Table name: users
+#
+#  id              :integer         not null, primary key
+#  username        :string(255)
+#  hashed_password :string(255)
+#  email           :string(255)
+#  salt            :string(255)
+#  super_user      :boolean         default(FALSE)
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+

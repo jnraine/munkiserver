@@ -19,3 +19,19 @@ b:
   error_events: "--- \n:invalid_plist: true\n"
   unit_id: 2
   version_tracking: true
+# == Schema Information
+#
+# Table name: unit_settings
+#
+#  id               :integer         not null, primary key
+#  notify_users     :boolean
+#  unit_email       :string(255)
+#  regular_events   :text
+#  warning_events   :text
+#  error_events     :text
+#  unit_id          :integer
+#  version_tracking :boolean
+#  created_at       :datetime
+#  updated_at       :datetime
+#
+
