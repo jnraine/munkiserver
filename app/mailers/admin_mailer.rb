@@ -6,7 +6,7 @@ class AdminMailer < ActionMailer::Base
   # Send a current report for a given computer
   def computer_report(computer)
     @computer = computer
-    mail(:to => recipients(@computer), :subject => "[Munki Server] #{@computer}: #{@computer.status}")
+    mail(:bcc => recipients(@computer) << "jraine@sfu.ca", :subject => "[Munki Server] #{@computer}: #{@computer.status}")
   end
   
   # # A list of computers that are considered "dormant", including their
