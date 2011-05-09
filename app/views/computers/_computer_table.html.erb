@@ -21,6 +21,9 @@
 				<% end %>
 				<th><!-- icon header --></th>
 				<th>
+					<%= link_to 'Name', {:action => "index", :col => "name", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
+				</th>
+				<th>
 					<%= link_to 'Hostname', {:action => "index", :col => "hostname", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
 				</th>
 				<th>
@@ -36,7 +39,9 @@
 		<% if bulk_edit %>
 			<td><%= check_box_tag("selected_records[]",c.id) %></td>
 		<% end %>
-		<td><%= image_tag c.icon.url(:small) %>
+		
+		<td><%= image_tag c.icon.url(:small) if c.icon %>
+		<td><%= link_to c.name, c %></td>    
 	    <td><%= link_to c.hostname, c %></td>
 		<td><%= c.mac_address %></td>
 		<td><%= c.time_since_last_report %></td>

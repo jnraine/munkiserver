@@ -18,11 +18,11 @@ class Package < ActiveRecord::Base
   scope :shared, where(:shared => true)
   
   before_save :save_package_branch
-  before_save :require_icon
+  # before_save :require_icon
   
   validates :receipts, :plist_array => true
   validates :installs, :plist_array => true
-  
+
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
                   :installer_types         => [['Package',''],

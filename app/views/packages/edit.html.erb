@@ -178,6 +178,7 @@
 				<%= render :partial => 'supported_architectures_checkbox', :locals => {:name => name} %>
 			<% end %>
 			<%= helpful_info("Specifying a supported architecture will cause this package to only be installed on a computer with a matching architecture.  Only helpful if a package can not run on other architectures.") %>
+
 		</td>
 	</tr>
 	<tr>
@@ -221,7 +222,7 @@
 			Icon
 		</td>
 		<td>
-			<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") %>
+			<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") if @package.icon %>
 			<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
 		</td>
 	</tr>

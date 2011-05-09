@@ -1,5 +1,5 @@
 namespace :bootstrap do
-  desc "Call all the bootstrap tasks"
+  desc "Executing Munkiserver bootstrap tasks"
   task :all do
     tasks = tasks_in_namespace("bootstrap")
     tasks.each do |task|
@@ -211,17 +211,32 @@ namespace :bootstrap do
   
   desc "Load base user"
   task :user, :name, :needs => :environment do |t, args|
+    puts "Generating a new user"
+    
     # Make sure we have a unit to assign
-    Rake::Task["bootstrap:unit"].invoke if Unit.count == 0
+    Rake::Task["bootstrap:unit"].invoke unless Unit.count
+    
     username = args.name
-    username ||= "default"
-    u = User.find_or_create_by_username(username)
-    u.email = "noreply@example.com"
-    u.password = "Password1"
-    u.password_confirmation = "Password1"
+
+    unless username
+      puts "Username:"
+      username = STDIN.gets
+    end
+    
+    u = User.new(:username => username)
+    puts "Email:"
+    u.email = STDIN.gets 
+    
+    puts "Password:"
+    u.password = STDIN.gets
+
+    puts "Confirm password:"
+    u.password_confirmation = STDIN.gets
+    
     u.super_user = true
-    u.save
-    u.units = [Unit.first]
+
+    u.units << Unit.first
+    
     unless u.save
       puts "Default user failed to save: " + u.errors.inspect
     end
@@ -229,20 +244,30 @@ namespace :bootstrap do
   
   desc "Load base environments"
   task :environments do |t, args|
+    #Build the staging environment
     e = Environment.find_or_create_by_name("Staging")
     e.description = "Created by bootstrap"
     unless e.save
       puts "Staging environment failed to save: " + e.errors.inspect
     end
+    
+    #Build the production environment
     e = Environment.find_or_create_by_name("Production")
     e.description = "Created by bootstrap"
     unless e.save
       puts "Production environment failed to save: " + e.errors.inspect
     end
   end
+  
+  desc "Generate preflight script"
+  task :prelight_script do |t, args|
+    #Build a prefligh script dependant 
+    
+  end
 end
 
 private
+
 def tasks_in_namespace(ns)
   #grab all tasks in the supplied namespace
   tasks = Rake.application.tasks.select { |t| t.name =~ /^#{ns}:/ }
