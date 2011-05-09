@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110330225218) do
+ActiveRecord::Schema.define(:version => 20110401213928) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -46,9 +46,10 @@ ActiveRecord::Schema.define(:version => 20110330225218) do
     t.integer  "unit_id"
     t.integer  "environment_id"
     t.text     "raw_tags"
-    t.text     "raw_mode",       :default => "f"
+    t.text     "raw_mode",         :default => "f"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "configuration_id"
   end
 
   create_table "computer_models", :force => true do |t|
@@ -70,6 +71,15 @@ ActiveRecord::Schema.define(:version => 20110330225218) do
     t.integer  "environment_id"
     t.text     "raw_tags"
     t.text     "raw_mode",             :default => "f"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "hostname",             :default => ""
+    t.integer  "configuration_id"
+  end
+
+  create_table "configurations", :force => true do |t|
+    t.string   "configuration"
+    t.boolean  "inherit",       :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -293,6 +303,7 @@ ActiveRecord::Schema.define(:version => 20110330225218) do
     t.integer  "unit_member_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "configuration_id"
   end
 
   create_table "update_for_items", :force => true do |t|
