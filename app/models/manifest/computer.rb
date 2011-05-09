@@ -48,7 +48,7 @@ class Computer < ActiveRecord::Base
 
   # Alias the computer_model icon to this computer
   def icon
-    computer_model.icon if computer_model.icon
+    
   end
   
   # For will_paginate gem.  Sets the default number of records per page.
