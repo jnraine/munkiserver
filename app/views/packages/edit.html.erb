@@ -259,6 +259,33 @@
 			</td>
 		</tr>
 	<% end %>
+	
+	
+	
+	<!-- 
+		added preinstall_script
+	-->
+	
+	<tr>
+		<td colspan="2">
+			<h4>
+				Pre Install Script
+				<%= helpful_info("Enter the content of the script here to run before the installation") %>
+			</h4>
+			<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
+			# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
+			<div id="gui_receipts_container">
+				# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
+			</div>
+			-->
+			<div id="preinstall_script_container">
+				<%= f.text_area :preinstall_script, :size => "80x20" %>
+			</div>
+			<!-- <hr /> -->
+		</td>
+	</tr>
+	
+
 	<tr>
 		<td colspan="2">
 			<h4>
@@ -285,6 +312,29 @@
 			</td>
 		</tr>
 	<% end %>
+	
+	
+	<tr>
+		<td colspan="2">
+			<h4>
+				Post Install Script
+				<%= helpful_info("Enter the content of the script here to run after the installation") %>
+			</h4>
+			<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
+			# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
+			<div id="gui_receipts_container">
+				# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
+			</div>
+			-->
+			<div id="postinstall_script_container">
+				<%= f.text_area :postinstall_script, :size => "80x20" %>
+			</div>
+			<!-- <hr /> -->
+		</td>
+	</tr>
+	
+	
+	
 	<tr>
 		<td colspan="2">
 			<h4>

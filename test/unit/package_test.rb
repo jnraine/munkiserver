@@ -7,6 +7,9 @@ class PackageTest < ActiveSupport::TestCase
   end
 end
 
+
+
+
 # == Schema Information
 #
 # Table name: packages
@@ -30,6 +33,8 @@ end
 #  autoremove                :boolean         default(FALSE)
 #  shared                    :boolean         default(FALSE)
 #  version_tracker_version   :string(255)
+#  preinstall_script         :string(255)
+#  postinstall_script        :string(255)
 #  installer_type            :string(255)
 #  installed_size            :integer
 #  installer_item_size       :integer

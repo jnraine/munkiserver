@@ -97,6 +97,9 @@ Firefox4:
   requires: 
   update_for: 
   installer_item_checksum: 
+
+
+
 # == Schema Information
 #
 # Table name: packages
@@ -120,6 +123,8 @@ Firefox4:
 #  autoremove                :boolean         default(FALSE)
 #  shared                    :boolean         default(FALSE)
 #  version_tracker_version   :string(255)
+#  preinstall_script         :string(255)
+#  postinstall_script        :string(255)
 #  installer_type            :string(255)
 #  installed_size            :integer
 #  installer_item_size       :integer

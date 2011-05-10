@@ -448,6 +448,7 @@ class Package < ActiveRecord::Base
       keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
               :installer_item_location,:uninstall_method,:uninstaller_item_location,:uninstaller_item_size,:uninstallable,
+              :preinstall_script, :postinstall_script,
               :requires,:update_for,:catalogs,:version]
        
       keys.each do |key|
@@ -868,6 +869,9 @@ class Package < ActiveRecord::Base
     update_for.length > 0 or requires.length > 0
   end
 end
+
+
+
 # == Schema Information
 #
 # Table name: packages
@@ -891,6 +895,8 @@ end
 #  autoremove                :boolean         default(FALSE)
 #  shared                    :boolean         default(FALSE)
 #  version_tracker_version   :string(255)
+#  preinstall_script         :string(255)
+#  postinstall_script        :string(255)
 #  installer_type            :string(255)
 #  installed_size            :integer
 #  installer_item_size       :integer

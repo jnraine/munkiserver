@@ -70,6 +70,31 @@ $(document).ready(function() {
 		});
 	});
 	$("select#managed_install_reports").change();	
+	
+//add codemirror to highlight XML/plist/bash syntax in package list
+$("textarea").each(function () {
+	// $(this).addClass("cmirror");
+	console.log(this.id === "package_receipts_plist" || this.id === "package_installs_plist" || this.id === "package_raw_tags");
+	
+	if (this.id === "package_receipts_plist" || this.id === "package_installs_plist" || this.id === "package_raw_tags"){
+		var editor = CodeMirror.fromTextArea(this, {
+				mode: {
+					name: "xml", 
+					htmlMode: true},
+				lineNumbers: true,
+			    matchBrackets: true,
+				});
+	}
+	else if (this.id === "package_postinstall_script" || this.id ==="package_preinstall_script")
+		{
+			var editor = CodeMirror.fromTextArea(this, {
+			        lineNumbers: true,
+			        matchBrackets: true,
+			        mode: "text/x-csrc"
+			      });
+		}
+})
+
 }); // end document ready function
 
 // AJAX hostname search/filter
@@ -215,3 +240,4 @@ function submit_auto_package(jq_id) {
 	}
 	return false;
 }
+

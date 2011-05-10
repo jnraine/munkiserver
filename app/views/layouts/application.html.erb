@@ -13,9 +13,15 @@
 	<%= stylesheet_link_tag 'jquery.asmselect', 'jquery.autocomplete' %>
 	<%= stylesheet_link_tag 'dropdown/styles.css', 'dropdown/theme.css' %>
 	<%= stylesheet_link_tag 'style' %>
+	<%= stylesheet_link_tag 'codemirror/codemirror.css', 'codemirror/clike.css', 'codemirror/xml.css' %>
+
 	
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+
 	<%= javascript_include_tag "rails.jquery", "application","jquery.asmselect", "jquery.autocomplete.min" %>
+	<%= javascript_include_tag "codemirror/codemirror.js", "codemirror/clike.js", "codemirror/xml.js" %>
+	
+	
 	<%= csrf_meta_tag %>
 </head>
 <body>
@@ -25,7 +31,7 @@
 	<div class="container">
 		<div id="words_header" class="span-8 prepend-2 append-5">
 			<p id="site_motto">Manage your <span class="jump_text">macs</span></p>
-			<h1 id="site_title">Munki Server</h1>
+			<h1 id="site_title"><%= link_to "Munki Server", root_path %></h1>
 		</div>
 	
 		<div id="app-menu" class="span-6 last">
@@ -129,6 +135,11 @@
 		<p class="span-8 last prepend-8 append-8">munki server <%= Munki::Application::VERSION %></p>
 		<%= image_tag 'footer_graphic.png', :id => "footer_graphic" %>
 	</div>
+	<script type="text/javascript">
+
+	var x = document.getElementById("site_title");
+	console.log(x.innerHTML);
+	</script>
 </div>
 </body>
 </html>
