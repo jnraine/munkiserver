@@ -4,7 +4,9 @@
   line-height: 1em;
   font-family: monospace;
   font-size: 9pt;
+  width: 587px; /* added for textarea fix */ 
   _position: relative; /* IE6 hack */
+  
 }
 
 .CodeMirror-gutter {

@@ -253,7 +253,7 @@
 				</div>
 				-->
 				<div id="receipts_plist_container">
-					<%= f.text_area :receipts_plist, :size => "80x20" %>
+					<%= f.text_area :receipts_plist, :size => "80x20", "data-format" => 'xml' %>
 				</div>
 				<!-- <hr /> -->
 			</td>
@@ -279,7 +279,7 @@
 			</div>
 			-->
 			<div id="preinstall_script_container">
-				<%= f.text_area :preinstall_script, :size => "80x20" %>
+				<%= f.text_area :preinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
 			</div>
 			<!-- <hr /> -->
 		</td>
@@ -299,7 +299,7 @@
 			</div>
 			 -->
 			<div id="installs_plist_container">
-				<%= f.text_area :installs_plist, :size => "80x20" %>
+				<%= f.text_area :installs_plist, :size => "80x20", "data-format" => 'xml' %>
 			</div>
 			<!-- <hr /> -->
 		</td>
@@ -327,7 +327,7 @@
 			</div>
 			-->
 			<div id="postinstall_script_container">
-				<%= f.text_area :postinstall_script, :size => "80x20" %>
+				<%= f.text_area :postinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
 			</div>
 			<!-- <hr /> -->
 		</td>
@@ -343,7 +343,7 @@
 				<%= helpful_info("Raw tags allow the ability to add extra Plist tags to the manifest.  Must be formatted as a valid plist with a dictionary at the root. If you define a tag that is already defined above, the raw tag overwrites it.  In append mode, the tags are added to the info plist.  In exclusive mode, only the tags shown here are used.") %>
 			</h4>
 			<div>
-				<%= text_area_tag "package[raw_tags]", (@package.raw_tags.to_plist unless @package.raw_tags.nil?), :size => "80x15" %>
+				<%= text_area_tag "package[raw_tags]", (@package.raw_tags.to_plist unless @package.raw_tags.nil?), :size => "80x15", "data-format" => 'xml' %>
 			</div>
 		</td>
 	</tr>
