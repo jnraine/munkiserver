@@ -242,7 +242,7 @@
 	<% unless @package.installer_appdmg? %>
 		<tr>
 			<td colspan="2">
-				<h4>
+				<h4 class="trigger">
 					Receipts
 					<%= helpful_info("Must be a valid plist with an array as the root object") %>
 				</h4>
@@ -252,7 +252,7 @@
 					# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
 				</div>
 				-->
-				<div id="receipts_plist_container">
+				<div id="receipts_plist_container" class="toggle_container">
 					<%= f.text_area :receipts_plist, :size => "80x20", "data-format" => 'xml' %>
 				</div>
 				<!-- <hr /> -->
@@ -268,7 +268,8 @@
 	
 	<tr>
 		<td colspan="2">
-			<h4>
+			
+			<h4 class="trigger">
 				Pre Install Script
 				<%= helpful_info("Enter the content of the script here to run before the installation") %>
 			</h4>
@@ -278,7 +279,7 @@
 				# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
 			</div>
 			-->
-			<div id="preinstall_script_container">
+			<div id="preinstall_script_container" class="toggle_container">
 				<%= f.text_area :preinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
 			</div>
 			<!-- <hr /> -->
@@ -288,7 +289,7 @@
 
 	<tr>
 		<td colspan="2">
-			<h4>
+			<h4 class="trigger">
 				Installs
 				<%= helpful_info("Must be a valid plist with an array as the root object") %>
 			</h4>
@@ -298,7 +299,7 @@
 				render :partial => 'gui_installs', :locals => {:installs => @package.installs}
 			</div>
 			 -->
-			<div id="installs_plist_container">
+			<div id="installs_plist_container" class="toggle_container">
 				<%= f.text_area :installs_plist, :size => "80x20", "data-format" => 'xml' %>
 			</div>
 			<!-- <hr /> -->
@@ -316,7 +317,7 @@
 	
 	<tr>
 		<td colspan="2">
-			<h4>
+			<h4 class="trigger">
 				Post Install Script
 				<%= helpful_info("Enter the content of the script here to run after the installation") %>
 			</h4>
@@ -326,7 +327,7 @@
 				# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
 			</div>
 			-->
-			<div id="postinstall_script_container">
+			<div id="postinstall_script_container" class="toggle_container">
 				<%= f.text_area :postinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
 			</div>
 			<!-- <hr /> -->
@@ -337,12 +338,12 @@
 	
 	<tr>
 		<td colspan="2">
-			<h4>
+			<h4 class="trigger">
 				Raw tags 
-				<%= f.select :raw_mode_id, options_for_select([[Package.raw_mode(0),0],[Package.raw_mode(1),1],[Package.raw_mode(2),2]],@package.raw_mode_id) %>
+				<!-- <%= f.select :raw_mode_id, options_for_select([[Package.raw_mode(0),0],[Package.raw_mode(1),1],[Package.raw_mode(2),2]],@package.raw_mode_id) %> -->
 				<%= helpful_info("Raw tags allow the ability to add extra Plist tags to the manifest.  Must be formatted as a valid plist with a dictionary at the root. If you define a tag that is already defined above, the raw tag overwrites it.  In append mode, the tags are added to the info plist.  In exclusive mode, only the tags shown here are used.") %>
 			</h4>
-			<div>
+			<div id="raw_tags_container" class="toggle_container">
 				<%= text_area_tag "package[raw_tags]", (@package.raw_tags.to_plist unless @package.raw_tags.nil?), :size => "80x15", "data-format" => 'xml' %>
 			</div>
 		</td>

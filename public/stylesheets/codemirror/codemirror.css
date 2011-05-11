@@ -5,9 +5,11 @@
   font-family: monospace;
   font-size: 9pt;
   width: 587px; /* added for textarea fix */ 
+/*  overflow: hidden;*/
   _position: relative; /* IE6 hack */
   
 }
+.activeline {background: #f0fcff !important;} /*added for hilight the current line*/
 
 .CodeMirror-gutter {
   position: absolute; left: 0; top: 0;

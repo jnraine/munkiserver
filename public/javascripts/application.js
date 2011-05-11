@@ -9,17 +9,17 @@ $(document).ready(function() {
 	$('.loading').hide();
 	
 	// Hide raw text area if raw_mode_id is 0 container
-	if($('#package_raw_mode_id').val() == 0) {
-		$('#package_raw_tags').hide();
-	}
-	// Flip visibility of raw tag text area
-	$("#package_raw_mode_id").change(function() {
-		if(this.value == 0) {
-			$('#package_raw_tags').slideUp();
-		} else {
-			$('#package_raw_tags').slideDown();
-		}
-	});	
+	// if($('#package_raw_mode_id').val() == 0) {
+	// 	$('#package_raw_tags').hide();
+	// }
+	// // Flip visibility of raw tag text area
+	// $("#package_raw_mode_id").change(function() {
+	// 	if(this.value == 0) {
+	// 		$('#package_raw_tags').slideUp();
+	// 	} else {
+	// 		$('#package_raw_tags').slideDown();
+	// 	}
+	// });	
 	
 	// For USER views, enable/disable change password
 	if($('#change_password_checkbox').attr('checked') == false) {
@@ -71,20 +71,32 @@ $(document).ready(function() {
 	});
 	$("select#managed_install_reports").change();	
 	
-//add codemirror to highlight XML/plist/bash syntax in package list
-$("textarea[data-format]").each(function () {
-	// $(this).addClass("cmirror");
-	console.log(this);
-	var format = $(this).attr("data-format");
+	//add codemirror to highlight XML/plist/bash syntax in package list
+	$("textarea[data-format]").each(function () {
+		
+		var format = $(this).attr("data-format");
 
-	var editor = CodeMirror.fromTextArea(this, {
-	        lineNumbers: true,
-	        matchBrackets: true,
-	        mode: format
-	      });
-	
+		var editor = CodeMirror.fromTextArea(this, {
+		        lineNumbers: true,
+		        matchBrackets: true,
+		        mode: format,
+				onCursorActivity: function() {
+				    editor.setLineClass(hlLine, null);
+				    hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
+				  }
+		      });
+		var hlLine = editor.setLineClass(0, "activeline");
+	})
 
-})
+	//add jQuery expand and expand and collapse
+	console.log($(".toggle_container"));
+	$(".toggle_container").hide(); 
+
+	//Switch the "Open" and "Close" state per click then slide up/down (depending on open/close state)
+	$(".trigger").click(function(){
+		$(this).toggleClass("active").next().slideToggle("fast");
+		return false; //Prevent the browser jump to the link anchor
+	});
 
 }); // end document ready function
 
