@@ -69,14 +69,49 @@ $(document).ready(function() {
 		  }
 		});
 	});
-	$("select#managed_install_reports").change();	
+	$("select#managed_install_reports").change();
 	
-	//add codemirror to highlight XML/plist/bash syntax in package list
-	$("textarea[data-format]").each(function () {
+		
+	//expandable textarea
+	// $(".toggle_container textarea").focus(function (){
+	// 	$(this).animate({ height: "300px" }, 400);
+	// });
+	// $(".toggle_container textarea").blur(function (){
+	// 	$(this).animate({ height: "100px" }, 400);
+	// });
+	// 
+	// $(".CodeMirror CodeMirror-focused").focus(function (){
+	// 	$(this).animate({ height: "300px" }, 400);
+	// 	});
+	// $(".CodeMirror").blur(function (){
+	// 	$(this).animate({ height: "100px" }, 400);
+	// });
+	// 
+
+	
+	// add codemirror to highlight XML/plist/bash syntax in package list
+	$(".toggle_container textarea[data-format]").each(function () {
+		// var a = function(){
+		// 		$(this).animate({ height: "300px" }, 400);
+		// 		console.log("showing");
+		// 	};
+		// 	var h = function(){
+		// 		$(this).animate({ height: "100px" }, 400);
+		// 		console.log("hidding");
+		// 	};
 		
 		var format = $(this).attr("data-format");
-
+		var toRefresh = function(){
+			editor.refresh();
+		}
+	
 		var editor = CodeMirror.fromTextArea(this, {
+				onFocus: function(){						
+					$(editor.getWrapperElement()).animate({ height: "300px" }, 400, "swing", toRefresh);
+				},
+				onBlur: function(){
+					$(editor.getWrapperElement()).animate({ height: "100px" }, 400, "swing", toRefresh);
+				},
 		        lineNumbers: true,
 		        matchBrackets: true,
 		        mode: format,
@@ -86,17 +121,46 @@ $(document).ready(function() {
 				  }
 		      });
 		var hlLine = editor.setLineClass(0, "activeline");
-	})
-
-	//add jQuery expand and expand and collapse
-	console.log($(".toggle_container"));
-	$(".toggle_container").hide(); 
-
-	//Switch the "Open" and "Close" state per click then slide up/down (depending on open/close state)
-	$(".trigger").click(function(){
-		$(this).toggleClass("active").next().slideToggle("fast");
-		return false; //Prevent the browser jump to the link anchor
+	
 	});
+	
+
+
+	//console.log($('.CodeMirror')[0]);
+	
+
+
+		// 
+		// $('.CodeMirror')[0].addEventListener('DOMAttrModified', function(e){
+		// 	//console.log(e.attrName + " " + e.prevValue + " " + e.newValue);
+		// 	if (e.attrName === "class" && e.prevValue === "CodeMirror" && e.newValue ==="CodeMirror CodeMirror-focused"){
+		// 		console.log("found a class and it's new value is: " + e.newValue);
+		// 		$(this).animate({ height: "300px" }, 400);
+		// 	}
+  		// console.log("clicked");
+  		//$(this).animate({ height: "300px" }, 400);
+		
+	// }, false);
+	
+	
+
+	// $('.CodeMirror')[0].addEventListener('mouseout', function(e){
+	// 	
+	//   	console.log("mouseout");
+	// 	$(this).animate({ height: "100px" }, 400);
+	// 	
+	// }, false);
+	
+	//add jQuery expand and expand and collapse
+	// console.log($(".toggle_container"));
+	// $(".toggle_container").hide(); 
+	// 
+	// //Switch the "Open" and "Close" state per click then slide up/down (depending on open/close state)
+	// $(".trigger").click(function(){
+	// 	$(this).toggleClass("active").next().slideToggle("fast");
+	// 	return false; //Prevent the browser jump to the link anchor
+	// });
+	
 
 }); // end document ready function
 

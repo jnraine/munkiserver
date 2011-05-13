@@ -237,25 +237,12 @@ table.form {
 	width:auto;
 }
 
-.trigger{
-	display: hidden;
-}
-.trigger a{
-	text-decoration: none;
-	display:block;
-}
-.trigger a:hover{
-	text-decoration: none;
-}
-
-
-.toggle_container{
-	overflow:hidden;
-	clear: both;
+.toggle_container textarea{
+ 	height:100px;
 }
 
 .toggle_container .CodeMirror{
-	
+
 }
 /* Message / notice box */
 .message {

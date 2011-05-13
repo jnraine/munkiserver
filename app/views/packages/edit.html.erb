@@ -229,6 +229,7 @@
 		<td colspan="2">
 			<h4>Description</h4>
 			<%= f.text_area :description, :size => "80x4" %>
+			
 		</td>
 	</tr>
 	<tr>
@@ -242,7 +243,7 @@
 	<% unless @package.installer_appdmg? %>
 		<tr>
 			<td colspan="2">
-				<h4 class="trigger">
+				<h4>
 					Receipts
 					<%= helpful_info("Must be a valid plist with an array as the root object") %>
 				</h4>
@@ -269,7 +270,7 @@
 	<tr>
 		<td colspan="2">
 			
-			<h4 class="trigger">
+			<h4>
 				Pre Install Script
 				<%= helpful_info("Enter the content of the script here to run before the installation") %>
 			</h4>
@@ -289,7 +290,7 @@
 
 	<tr>
 		<td colspan="2">
-			<h4 class="trigger">
+			<h4>
 				Installs
 				<%= helpful_info("Must be a valid plist with an array as the root object") %>
 			</h4>
@@ -317,7 +318,7 @@
 	
 	<tr>
 		<td colspan="2">
-			<h4 class="trigger">
+			<h4>
 				Post Install Script
 				<%= helpful_info("Enter the content of the script here to run after the installation") %>
 			</h4>
@@ -338,7 +339,7 @@
 	
 	<tr>
 		<td colspan="2">
-			<h4 class="trigger">
+			<h4>
 				Raw tags 
 				<!-- <%= f.select :raw_mode_id, options_for_select([[Package.raw_mode(0),0],[Package.raw_mode(1),1],[Package.raw_mode(2),2]],@package.raw_mode_id) %> -->
 				<%= helpful_info("Raw tags allow the ability to add extra Plist tags to the manifest.  Must be formatted as a valid plist with a dictionary at the root. If you define a tag that is already defined above, the raw tag overwrites it.  In append mode, the tags are added to the info plist.  In exclusive mode, only the tags shown here are used.") %>
