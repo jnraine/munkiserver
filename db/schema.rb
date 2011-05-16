@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110509223120) do
+ActiveRecord::Schema.define(:version => 20110516222554) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -211,6 +211,7 @@ ActiveRecord::Schema.define(:version => 20110509223120) do
     t.datetime "updated_at"
     t.text     "preinstall_script"
     t.text     "postinstall_script"
+    t.text     "uninstall_script"
   end
 
   create_table "require_items", :force => true do |t|

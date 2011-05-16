@@ -450,7 +450,7 @@ class Package < ActiveRecord::Base
       keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
               :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method,
-              :preinstall_script, :postinstall_script,
+              :preinstall_script, :postinstall_script, :uninstall_script,
               :requires,:update_for,:catalogs,:version]
        
       keys.each do |key|
