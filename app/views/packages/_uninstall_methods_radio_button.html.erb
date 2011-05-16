@@ -1,0 +1,3 @@
+<%= radio_button_tag 'package[uninstall_method][]', name, @package.uninstall_method.include?(name), :id => 
+"package_uninstall_method_#{name.underscore.gsub(//,"_")}" %>
+<%= label_tag "package_uninstall_method_#{name.underscore.gsub(//,"_")}", name %><br />

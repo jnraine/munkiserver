@@ -1,15 +1,22 @@
 .CodeMirror {
   overflow: auto;
-  height: 100px;
+  height: 78px;
   line-height: 1em;
   font-family: monospace;
   font-size: 9pt;
   width: 587px; /* added for textarea fix */ 
 /*  overflow: hidden;*/
+  z-index: -1; /*fix for extra_info_box box to show top, move CodeMirror textarea back*/
   _position: relative; /* IE6 hack */
   
 }
-.activeline {background: #f0fcff !important;} /*added for hilight the current line*/
+.activeline {
+  background: #f0fcff !important;
+} /*added for hilight the current line*/
+
+.inactiveline{
+ background: #fff;
+}
 
 .CodeMirror-gutter {
   position: absolute; left: 0; top: 0;

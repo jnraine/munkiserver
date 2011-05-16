@@ -71,23 +71,6 @@ $(document).ready(function() {
 	});
 	$("select#managed_install_reports").change();
 	
-		
-	//expandable textarea
-	// $(".toggle_container textarea").focus(function (){
-	// 	$(this).animate({ height: "300px" }, 400);
-	// });
-	// $(".toggle_container textarea").blur(function (){
-	// 	$(this).animate({ height: "100px" }, 400);
-	// });
-	// 
-	// $(".CodeMirror CodeMirror-focused").focus(function (){
-	// 	$(this).animate({ height: "300px" }, 400);
-	// 	});
-	// $(".CodeMirror").blur(function (){
-	// 	$(this).animate({ height: "100px" }, 400);
-	// });
-	// 
-
 	
 	// add Codemirror with jQuery animation to highlight XML/plist/bash syntax in package list
 	$(".toggle_container textarea[data-format]").each(function () {
@@ -100,27 +83,25 @@ $(document).ready(function() {
 		var editor = CodeMirror.fromTextArea(this, {
 				onFocus: function(){		
 					//jQuery animation goes here				
-					$(editor.getWrapperElement()).animate({ height: "300px" }, 400, "swing", toRefresh);
+					$(editor.getWrapperElement()).animate({ height: "300px"}, 400, "swing", toRefresh);
+				
+					
 				},
 				onBlur: function(){
-					//jQuery animation goes here
-					$(editor.getWrapperElement()).animate({ height: "100px" }, 400, "swing", toRefresh);
+					$(editor.getWrapperElement()).animate({ height: "78px"}, 400, "swing", toRefresh);
+					
 				},
 		        lineNumbers: true,
 		        matchBrackets: true,
 		        mode: format,
 				onCursorActivity: function() {
-				    editor.setLineClass(hlLine, null);
-				    hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
-				  }
+											    editor.setLineClass(hlLine, null);
+											    hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
+											  }
 		      });
-		var hlLine = editor.setLineClass(0, "activeline");
-	
+		var hlLine = editor.setLineClass(0, "activeline");	
 	});
 	
-
-	
-
 }); // end document ready function
 
 // AJAX hostname search/filter

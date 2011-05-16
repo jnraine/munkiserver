@@ -244,13 +244,14 @@ table.form {
 .toggle_container .CodeMirror{
 
 }
+
 /* Message / notice box */
 .message {
 	padding:.8em;
 	margin-bottom:1em;
 	border-top:2px solid #ddd;
 	border-bottom:2px solid #ddd;
-	height:36px;
+	height:auto; /*fixing flash height constrain*/
 }
 
 .message {
@@ -346,6 +347,7 @@ thead th a:hover,
 	color:#fff;
 	border:2px solid rgb(69, 173, 168);
 	background-color:#594F4F;
+	z-index: 1; /* fix for overlay CodeMirror textarea, always show top*/
 }
 
 .clean_list {

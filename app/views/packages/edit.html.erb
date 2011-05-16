@@ -198,25 +198,34 @@
 			<%= f.check_box :shared %>
 		</td>
 	</tr>
+	
 	<tr>
+		<td>Uninstall Method</td>
 		<td>
-			Uninstall Method
-		</td>
-		<td>
-			<%= f.radio_button :uninstall_method, 'removepackages' %>
-			<%= label_tag 'package_uninstall_method_removepackages', 'Remove Packages' %><br />
-
-			<%= f.radio_button :uninstall_method, 'remove_app' %>
-			<%= label_tag 'package_uninstall_method_remove_app', 'Remove App' %><br />
-
-			<%= f.radio_button :uninstall_method, 'uninstaller' %>
-			<%= label_tag 'package_uninstall_method_uninstaller', ('Uninstaller' + f.text_field(:uninstaller_item_location)).html_safe %><br />
-
-			<%= f.radio_button :uninstall_method, 'AdobeUberUninstaller' %>
-			<%= label_tag 'package_uninstall_method_adobeuberuninstaller', 'AdobeUberUninstaller' %><br />
+				<% Package::FORM_OPTIONS[:uninstall_method].each do |name| %>
+					<%= render :partial => 'uninstall_method_radio_button', :locals => {:name => name} %>
+				<% end %>
 		</td>
 	</tr>
-	<tr>
+	<!-- <tr>
+				<td>
+					Uninstall Method
+				</td>
+				<td>
+					<%= f.radio_button :uninstall_method, 'removepackages' %>
+					<%= label_tag 'package_uninstall_method_removepackages', 'Remove Packages' %><br />
+
+					<%= f.radio_button :uninstall_method, 'remove_app' %>
+					<%= label_tag 'package_uninstall_method_remove_app', 'Remove App' %><br />
+
+					<%= f.radio_button :uninstall_method, 'uninstaller' %>
+					<%= label_tag 'package_uninstall_method_uninstaller', ('Uninstaller' + f.text_field(:uninstaller_item_location)).html_safe %><br />
+
+					<%= f.radio_button :uninstall_method, 'AdobeUberUninstaller' %>
+					<%= label_tag 'package_uninstall_method_adobeuberuninstaller', 'AdobeUberUninstaller' %><br />
+				</td>
+			</tr>
+		<tr> -->
 		<td>
 			Icon
 		</td>
@@ -341,7 +350,7 @@
 		<td colspan="2">
 			<h4>
 				Raw tags 
-				<!-- <%= f.select :raw_mode_id, options_for_select([[Package.raw_mode(0),0],[Package.raw_mode(1),1],[Package.raw_mode(2),2]],@package.raw_mode_id) %> -->
+				<%= f.select :raw_mode_id, options_for_select([[Package.raw_mode(0),0],[Package.raw_mode(1),1],[Package.raw_mode(2),2]],@package.raw_mode_id) %>
 				<%= helpful_info("Raw tags allow the ability to add extra Plist tags to the manifest.  Must be formatted as a valid plist with a dictionary at the root. If you define a tag that is already defined above, the raw tag overwrites it.  In append mode, the tags are added to the info plist.  In exclusive mode, only the tags shown here are used.") %>
 			</h4>
 			<div id="raw_tags_container" class="toggle_container">

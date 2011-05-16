@@ -35,7 +35,8 @@ class Package < ActiveRecord::Base
                                                ['AdobeCS5Installer'],
                                                ['AdobeCS5AAMEEPackage'],
                                                ['AdobeSetup']],
-                  :supported_architectures => ['i386','x86_64','ppc','Power Macintosh']}
+                  :supported_architectures => ['i386','x86_64','ppc','Power Macintosh'],
+                  :uninstall_method        => ['Remove Packages', 'Remove App', 'Uninstaller', 'Uninstall Script', 'AdobeUberUninstaller']}
   
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
   # determined by comparing installer_item_location values.
