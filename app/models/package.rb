@@ -449,7 +449,7 @@ class Package < ActiveRecord::Base
       # Take care of the straight forward mappings
       keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
-              :installer_item_location,:uninstall_method,:uninstaller_item_location,:uninstaller_item_size,:uninstallable,
+              :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method,
               :preinstall_script, :postinstall_script,
               :requires,:update_for,:catalogs,:version]
        

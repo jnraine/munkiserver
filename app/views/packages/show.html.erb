@@ -26,6 +26,10 @@
 		<td><%= @package.uninstallable ? "Yes" : "No" %></td>
 	</tr>
 	<tr>
+		<td><strong>Uninstall method</strong></td>
+		<td><%= @package.uninstall_method.titleize %></td>
+	</tr>
+	<tr>
 		<td><strong>Minimum OS</strong></td>
 		<td><%= @package.minimum_os_version %></td>
 	</tr>
