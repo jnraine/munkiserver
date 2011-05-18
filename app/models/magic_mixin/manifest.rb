@@ -27,7 +27,7 @@ module Manifest
       # User specified install and uninstall items
       has_many :user_install_items, :as => :manifest
       has_many :user_uninstall_items, :as => :manifest
-      
+        
       attr_is_hash :version_rollback
       
       magic_mixin :unit_member

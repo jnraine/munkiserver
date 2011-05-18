@@ -108,30 +108,34 @@ $(document).ready(function() {
 		var hlLine = editor.setLineClass(0, "activeline");	
 	});
 	
-	
-	//first hide textfield or textarea of uninstall method
-	function hideTextField(time) {
-		$("input#package_uninstall_method").parent().parent().hide(time);
-		$("input#package_uninstaller_item_location").parent().parent().hide(time);
-		$("#postinstall_script_container").parent().parent().hide(time);
+	function hideAllUninstallField(){
+		$("input#package_uninstaller_item_location").parent().parent().hide();
+		$("input#package_uninstall_script").parent().parent().hide();
+		$("#postinstall_script_container").parent().parent().hide();
 	}
-	hideTextField();
-	//show Uninstall script/item location when corresponding value is selected in the dropdown list	
-	$("#package_uninstall_method").change(function(){
-				hideTextField();
-				if (this.value === 'uninstaller_item_location'){
-					$("input#package_uninstaller_item_location").parent().parent().show(100);								
-				}
-				else if (this.value === ''){
-					$("input#package_uninstall_method").parent().parent().show(100);
-				}
-				else if (this.value === 'uninstall_script'){
-					$("#postinstall_script_container").parent().parent().show(100);
-				}
-				else 
-				hideTextField();				
-	});		
+	hideAllUninstallField();
 	
+	
+	// show Uninstall script/item location when corresponding value is selected in the dropdown list	
+	function hideUninstallField(val, vid){
+		$("#package_uninstall_method").change(function (){
+			
+			if (this.value === val){
+				$(vid).parent().parent().show();								
+			}
+			else{
+				$(vid).parent().parent().hide();
+				$(vid).val('');	
+			}
+			
+		});
+	}
+	
+	hideUninstallField("uninstaller_item_location", "input#package_uninstaller_item_location");
+	hideUninstallField("","input#package_uninstall_script");
+	hideUninstallField("uninstall_script","#postinstall_script_container");
+	$("#package_uninstall_method").change();	
+
 	
 }); // end document ready function
 
