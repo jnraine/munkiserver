@@ -27,7 +27,7 @@ class Package < ActiveRecord::Base
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
                   :installer_types         => [['Package',''],
-                                               ['Copy From DMG','copy_from_dmg'],
+                                               ['Copy From DMG', 'copy_from_dmg'],
                                                ['App DMG','appdmg'],
                                                ['AdobeUberInstaller'],
                                                ['AdobeAcrobatUpdater'],
@@ -36,7 +36,15 @@ class Package < ActiveRecord::Base
                                                ['AdobeCS5AAMEEPackage'],
                                                ['AdobeSetup']],
                   :supported_architectures => ['i386','x86_64','ppc','Power Macintosh'],
-                  :uninstall_method        => ['Remove Packages', 'Remove App', 'Uninstaller', 'Uninstall Script', 'AdobeUberUninstaller']}
+                  :uninstall_method        => [['Remove Copied Items','remove_copied_items'],
+                                               ['Remove Packages','removepackages'], 
+                                               ['Remove App', 'remove_app'], 
+                                               ['Uninstall Script', 'uninstall_script'],
+                                               ['Uninstaller Script Location', ''],
+                                               ['Uninstall Item Location', 'uninstaller_item_location'],                                                
+                                               ['AdobeUberUninstaller','AdobeUberUninstaller'],
+                                               ['AdobeSetup','AdobeSetup'],
+                                               ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']]}
   
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
   # determined by comparing installer_item_location values.
@@ -214,7 +222,7 @@ class Package < ActiveRecord::Base
   # Extend destroy method
   # TO-DO Delete package from hard drive if no other package is referring to it
   def destroy
-    delete_package_file_if_necessary_if_necessary
+    delete_package_file_if_necessary
     destroy_pb_if_necessary
     super
   end

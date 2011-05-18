@@ -198,34 +198,38 @@
 			<%= f.check_box :shared %>
 		</td>
 	</tr>
-	
 	<tr>
 		<td>Uninstall Method</td>
 		<td>
-				<% Package::FORM_OPTIONS[:uninstall_method].each do |name| %>
-					<%= render :partial => 'uninstall_method_radio_button', :locals => {:name => name} %>
-				<% end %>
+			<%= f.select :uninstall_method, options_for_select(Package::FORM_OPTIONS[:uninstall_method],@package.uninstall_method) %>
 		</td>
 	</tr>
-	<!-- <tr>
-				<td>
-					Uninstall Method
-				</td>
-				<td>
-					<%= f.radio_button :uninstall_method, 'removepackages' %>
-					<%= label_tag 'package_uninstall_method_removepackages', 'Remove Packages' %><br />
-
-					<%= f.radio_button :uninstall_method, 'remove_app' %>
-					<%= label_tag 'package_uninstall_method_remove_app', 'Remove App' %><br />
-
-					<%= f.radio_button :uninstall_method, 'uninstaller' %>
-					<%= label_tag 'package_uninstall_method_uninstaller', ('Uninstaller' + f.text_field(:uninstaller_item_location)).html_safe %><br />
-
-					<%= f.radio_button :uninstall_method, 'AdobeUberUninstaller' %>
-					<%= label_tag 'package_uninstall_method_adobeuberuninstaller', 'AdobeUberUninstaller' %><br />
-				</td>
-			</tr>
-		<tr> -->
+	<tr>
+		<td>Uninstall Script Location</td>
+		<td>
+			<%= f.text_field(:uninstall_method).html_safe %>
+		</td>
+	</tr>
+	<tr>
+		<td>Uninstall Item Location</td>
+		<td>
+			<%= f.text_field(:uninstaller_item_location).html_safe %>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<h4>
+				Uninstall Install Script
+				<%= helpful_info("Enter the content of the Uninstall script here") %>
+			</h4>
+	
+			<div id="postinstall_script_container" class="toggle_container">
+				<%= f.text_area :uninstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+			</div>
+			<!-- <hr /> -->
+		</td>
+	</tr>
+	<tr> 
 		<td>
 			Icon
 		</td>
@@ -315,14 +319,14 @@
 			<!-- <hr /> -->
 		</td>
 	</tr>
-	<% if @package.installer_package? %>
+	<!-- <% if @package.installer_package? %>
 		<tr>
 			<td colspan="2">
 				<h4><%= f.label :use_installer_choices, "Installer Choices" %></h4>
 				<p>Needs to be added.</p>
 			</td>
 		</tr>
-	<% end %>
+	<% end %> -->
 	
 	
 	<tr>
@@ -359,19 +363,7 @@
 		</td>
 	</tr>
 	
-	<tr>
-		<td colspan="2">
-			<h4>
-				Uninstall Install Script
-				<%= helpful_info("Enter the content of the Uninstall script here") %>
-			</h4>
-	
-			<div id="postinstall_script_container" class="toggle_container">
-				<%= f.text_area :uninstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
-			</div>
-			<!-- <hr /> -->
-		</td>
-	</tr>
+
 </table>
 <p><%= f.submit 'Update' %></p>
 <% end %>

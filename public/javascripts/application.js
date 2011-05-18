@@ -73,7 +73,7 @@ $(document).ready(function() {
 	
 	
 	// add Codemirror with jQuery animation to highlight XML/plist/bash syntax in package list
-	$(".toggle_container textarea[data-format]").each(function () {
+	$("textarea[data-format]").each(function () {
 		
 		var format = $(this).attr("data-format");
 		var toRefresh = function(){
@@ -81,26 +81,57 @@ $(document).ready(function() {
 		}
 	
 		var editor = CodeMirror.fromTextArea(this, {
-				onFocus: function(){		
-					//jQuery animation goes here				
-					$(editor.getWrapperElement()).animate({ height: "300px"}, 400, "swing", toRefresh);
-				
-					
-				},
-				onBlur: function(){
-					$(editor.getWrapperElement()).animate({ height: "78px"}, 400, "swing", toRefresh);
-					
-				},
-		        lineNumbers: true,
-		        matchBrackets: true,
-		        mode: format,
-				onCursorActivity: function() {
-											    editor.setLineClass(hlLine, null);
-											    hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
-											  }
+					onFocus: function() {
+					    //jQuery animation goes here				
+					    $(editor.getWrapperElement()).animate({
+					        height: "300px"
+					    },
+					    400, "swing", toRefresh);
+	
+	
+					},
+					onBlur: function() {
+					    $(editor.getWrapperElement()).animate({
+					        height: "78px"
+					    },
+					    400, "swing", toRefresh);
+	
+					},
+					lineNumbers: true,
+					matchBrackets: true,
+					mode: format,
+					onCursorActivity: function() {
+					    editor.setLineClass(hlLine, null);
+					    hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
+					}
 		      });
 		var hlLine = editor.setLineClass(0, "activeline");	
 	});
+	
+	
+	//first hide textfield or textarea of uninstall method
+	function hideTextField(time) {
+		$("input#package_uninstall_method").parent().parent().hide(time);
+		$("input#package_uninstaller_item_location").parent().parent().hide(time);
+		$("#postinstall_script_container").parent().parent().hide(time);
+	}
+	hideTextField();
+	//show Uninstall script/item location when corresponding value is selected in the dropdown list	
+	$("#package_uninstall_method").change(function(){
+				hideTextField();
+				if (this.value === 'uninstaller_item_location'){
+					$("input#package_uninstaller_item_location").parent().parent().show(100);								
+				}
+				else if (this.value === ''){
+					$("input#package_uninstall_method").parent().parent().show(100);
+				}
+				else if (this.value === 'uninstall_script'){
+					$("#postinstall_script_container").parent().parent().show(100);
+				}
+				else 
+				hideTextField();				
+	});		
+	
 	
 }); // end document ready function
 
