@@ -141,6 +141,15 @@
 			<%= f.text_field :package_path %>
 		</td>
 	</tr>
+	<tr> 
+		<td>
+			Icon
+		</td>
+		<td>
+			<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") %>
+			<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
+		</td>
+	</tr>
 	<tr>
 		<td>
 			Category
@@ -222,20 +231,10 @@
 				Uninstall Install Script
 				<%= helpful_info("Enter the content of the Uninstall script here") %>
 			</h4>
-	
 			<div id="postinstall_script_container" class="toggle_container">
 				<%= f.text_area :uninstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
 			</div>
 			<!-- <hr /> -->
-		</td>
-	</tr>
-	<tr> 
-		<td>
-			Icon
-		</td>
-		<td>
-			<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") %>
-			<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
 		</td>
 	</tr>
 	<tr>
