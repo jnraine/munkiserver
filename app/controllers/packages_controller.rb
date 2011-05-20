@@ -79,7 +79,12 @@ class PackagesController < ApplicationController
   
   # Used to download the actual package (typically a .dmg)
   def download
-    send_file Munki::Application::PACKAGE_DIR + params[:installer_item_location]
+    @package = Package.find(params[:id])
+    if @package.present?
+      send_file Munki::Application::PACKAGE_DIR + @package.installer_item_location, :filename => @package.to_s(:version) + @package.extension
+    else
+      render :template => "404.html", :status => :not_found
+    end
   end
   
   # Used to check for available updates across all units

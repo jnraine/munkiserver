@@ -45,6 +45,9 @@ module Munki
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password
     
+    # puts "X-Sendfile header is: " + config.action_dispatch.x_sendfile_header
+    # config.action_dispatch.x_sendfile_header = "X-Sendfile"
+    
     # Setup action mailer settings
     if settings.present? and settings[:action_mailer].present?
       config.action_mailer.delivery_method = settings[:action_mailer][:delivery_method]

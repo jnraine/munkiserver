@@ -461,6 +461,7 @@ class Package < ActiveRecord::Base
       h["supported_architectures"] = sa unless sa.empty?
       # Requires
       h["requires"] = self.requires.map {|p| p.to_s(:version) } unless self.requires.empty?
+      h["installer_item_location"] = id.to_s
       
       # Add any raw tags
       h = h.merge(raw_tags) if append_raw?
@@ -866,5 +867,13 @@ class Package < ActiveRecord::Base
   # True if update_for or requires have items
   def has_dependencies?
     update_for.length > 0 or requires.length > 0
+  end
+  
+  def extension
+    if installer_item_location.match(/(\.\w+)\z/)
+      $1
+    else
+      ""
+    end
   end
 end
