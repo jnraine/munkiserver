@@ -39,8 +39,7 @@ module Munki
     MAKEPKGINFO = Pathname.new("/usr/local/munki/makepkginfo")
     
     # A secret is required to generate an integrity hash for cookie session data
-    # It is randomly generated each time the server starts up
-    config.secret_token = ActiveSupport::SecureRandom.hex(128)
+    config.secret_token = "changemenow"
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password
