@@ -1,11 +1,11 @@
 <script type="text/javascript">
-	jQuery("#<%= dom_id %>").after("<div class='extra_info_box' id='extra_info_for_<%= dom_id %>'><%= escape_javascript content %></div>");
-	jQuery("#extra_info_for_<%= dom_id %>").hide();
-	jQuery("#<%= dom_id %>").<%= jq_event %>(function(e) {
-		jQuery("#extra_info_for_<%= dom_id %>").css({"position":"absolute","top":e.pageY,"left":e.pageX,"max-width":"250px"});
-		jQuery("#extra_info_for_<%= dom_id %>").fadeIn("fast");
+	$("#<%= dom_id %>").after("<div class='extra_info_box' id='extra_info_for_<%= dom_id %>'><%= escape_javascript content %></div>");
+	$("#extra_info_for_<%= dom_id %>").hide();
+	$("#<%= dom_id %>").<%= jq_event %>(function(e) {
+		$("#extra_info_for_<%= dom_id %>").css({"position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px"});
+		$("#extra_info_for_<%= dom_id %>").fadeIn("fast");
 	});
-	jQuery("#<%= dom_id %>").mouseout(function() {
-		jQuery("#extra_info_for_<%= dom_id %>").fadeOut("fast");
+	$("#<%= dom_id %>").mouseout(function() {
+		$("#extra_info_for_<%= dom_id %>").fadeOut("fast");
 	});
 </script>
