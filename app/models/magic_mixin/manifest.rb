@@ -359,6 +359,9 @@ module Manifest
         r ||= self.unit(unit).first
       end
       
+      # def to_param
+      #        name
+      #      end
       # ===================
       # = Code ends here! =
       # ===================

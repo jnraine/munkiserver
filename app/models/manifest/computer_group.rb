@@ -26,6 +26,10 @@ class ComputerGroup < ActiveRecord::Base
     end
     super(value)
   end
+  
+  def to_param
+    name
+  end
 end
 
 class ComputerGroupException < Exception

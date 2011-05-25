@@ -1,7 +1,6 @@
 class Bundle < ActiveRecord::Base
   magic_mixin :manifest
 end
-
 # == Schema Information
 #
 # Table name: bundles

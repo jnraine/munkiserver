@@ -134,10 +134,13 @@ $(document).ready(function() {
 	hideUninstallField("uninstaller_item_location", "input#package_uninstaller_item_location");
 	hideUninstallField("","input#package_uninstall_script");
 	hideUninstallField("uninstall_script","#postinstall_script_container");
-	$("#package_uninstall_method").change();	
-
-	
+	$("#package_uninstall_method").change();
+		
+	// jQuery for tabs in package edit
+	$("#tabs").tabs();
 }); // end document ready function
+
+
 
 // AJAX hostname search/filter
 $("#filter_form").submit(function() {

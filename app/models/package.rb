@@ -458,7 +458,7 @@ class Package < ActiveRecord::Base
       keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
               :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method,
-              :preinstall_script, :postinstall_script, :uninstall_script,
+              :preinstall_script, :postinstall_script, :uninstall_script, :preuninstall_script, :postuninstall_script,
               :requires,:update_for,:catalogs,:version]
        
       keys.each do |key|
@@ -878,6 +878,16 @@ class Package < ActiveRecord::Base
   def has_dependencies?
     update_for.length > 0 or requires.length > 0
   end
+  
+  def find_by_name (param)
+    p = Package.new
+    param = p.package_branch.name
+  end
+  
+  
+  # def to_param
+  #     name
+  # end
 end
 
 

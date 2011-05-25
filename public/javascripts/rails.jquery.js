@@ -149,12 +149,14 @@ jQuery(function ($) {
                  .val(input.data('enable-with'));
         });
     });
-
-    var jqueryVersion = $().jquery;
-
-	if (!( (jqueryVersion === '1.4.3') || (jqueryVersion === '1.4.4'))){
-		alert('This rails.js does not support the jQuery version you are using. Please read documentation.');
-	}
+	
+	
+	// disable jQuery version check hack to enable jQuery tabs in package edit
+  	//   var jqueryVersion = $().jquery;
+  	// 
+  	// if (!( (jqueryVersion === '1.4.3') || (jqueryVersion === '1.4.4'))){
+  	// 	alert('This rails.js does not support the jQuery version you are using. Please read documentation.');
+  	// }
 
 
 });
