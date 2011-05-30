@@ -10,6 +10,8 @@ class Unit < ActiveRecord::Base
   
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
   
+  validates_uniqueness_of :name, :case_sensitive => true
+  validates_presence_of :name, :description
   # A list of ACL attribute names
   # This list of names get turned into methods that check
   # if a given user has permission to complete a given action
@@ -101,6 +103,10 @@ class Unit < ActiveRecord::Base
   def dormant_computers_mailer
     AdminMailer.dormant_computers(self)
   end
+  
+  # def to_param
+  #   name
+  # end
   
   construct_acl_methods
 end
