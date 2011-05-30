@@ -75,7 +75,7 @@ class ComputerService
         # something isn't set (like computer model) that is set in the template
         # then the template setting is applied
         c = Computer.new({:mac_address => computer_info["hardwareAddress"],
-                          :name => computer_info["hostname"],
+                          :name => computer_info["name"],
                           :unit_id => unit.id,
                           :environment_id => environment_id})
         c.computer_group = cg
@@ -101,7 +101,7 @@ class ComputerService
       # against injection attacks or errors)
       case params[:col]
         when "mac_address" then col = "mac_address"
-        else col = "hostname"
+        else col = "name"
       end
       computers = computers.order(col + " " + params[:order])
     end
