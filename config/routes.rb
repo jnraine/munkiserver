@@ -8,8 +8,6 @@ Munki::Application.routes.draw do
   end
   
   resources :units
- 
-  # resources :units
   resources :unit_settings, :user_settings, :computer_groups, :bundles, :users
   resources :packages do
     collection do
@@ -21,7 +19,7 @@ Munki::Application.routes.draw do
     get :import, :on => :member
   end
   
-  match 'test/info' => 'test#info'
+  # match 'test/info' => 'test#info'
   match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get
   match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :method => :get
   match 'managed_install_reports/:id' => 'managed_install_reports#show', :method => :get
