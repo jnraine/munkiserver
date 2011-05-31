@@ -1,0 +1,16 @@
+<h2>Unit settings</h2>
+<h3><%= @unit_setting.unit %></h3>
+
+
+	<h3>Notifications</h3>
+	<p>
+		<%= hash_checkboxes(@unit_setting.regular_events,:title => "Regular Events", :name => "unit_setting[regular_events]") %>
+	</p>
+	<p>
+		<%= hash_checkboxes(@unit_setting.warning_events,:title => "Warning Events", :name => "unit_setting[warning_events]") %>
+	</p>
+	<p>
+		<%= hash_checkboxes(@unit_setting.regular_events,:title => "Error Events", :name => "unit_setting[error_events]") %>
+	</p>
+
+<%= link_to 'Edit', edit_unit_setting_path(@unit_setting) %>

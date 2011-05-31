@@ -48,7 +48,8 @@ class ComputersController < ApplicationController
   end
 
   def edit
-    @computer = Computer.unit(current_unit).find_for_show(CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
+    # @computer = Computer.unit(Unit.where(:name => params[:unit_id]).first).find_for_show(CGI::unescape(params[:id]))
   end
 
   def update

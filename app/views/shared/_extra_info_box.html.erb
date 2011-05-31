@@ -2,7 +2,7 @@
 	$("#<%= dom_id %>").after("<div class='extra_info_box' id='extra_info_for_<%= dom_id %>'><%= escape_javascript content %></div>");
 	$("#extra_info_for_<%= dom_id %>").hide();
 	$("#<%= dom_id %>").<%= jq_event %>(function(e) {
-		$("#extra_info_for_<%= dom_id %>").css({"position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px"});
+		$("#extra_info_for_<%= dom_id %>").css({"position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px","margin":"0 0 0 50px"});
 		$("#extra_info_for_<%= dom_id %>").fadeIn("fast");
 	});
 	$("#<%= dom_id %>").mouseout(function() {

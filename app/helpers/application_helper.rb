@@ -60,7 +60,6 @@ module ApplicationHelper
     if parameters.class.superclass == ActiveRecord::Base
       parameters = parameters.tas_params
     end
-    
     # Let us know if we're passing blank parameters (we shouldn't be)
     # parameters.each do |section|
     #       section.each do |key, val|
@@ -69,38 +68,12 @@ module ApplicationHelper
     #         end
     #       end
     #     end
-    
     htmlcode = "<table class='#{table_class}'>\n"
-    
-    # table header
-    if header_enabled
-      htmlcode += "\t<thead>\n"
-      htmlcode += "\t\t<tr>\n"
-      parameters.each do |section|
-        htmlcode += "\t\t\t<th>#{section[:title]} "
-        htmlcode += helpful_info(section[:helpful_string]) unless section[:helpful_string].blank?
-        htmlcode +="</th>\n"
-      end
-      htmlcode += "\t\t</tr>\n"
-      htmlcode += "\t</thead>\n"
-    end
-    
-    htmlcode += "\t<tr>\n"
-    
-    parameters.each do |section|
-      htmlcode += "\t\t<td>\n"
-      htmlcode += hidden_field_tag("#{section[:model_name]}[#{section[:attribute_name]}][]",'')
-      htmlcode += select_tag("#{section[:model_name]}[#{section[:attribute_name]}]", options_for_select(section[:options],section[:selected_options]), :multiple => true, :title => section[:select_title])
-      #htmlcode += text_field_with_auto_complete(:quickly, section['title'].to_sym, { :size => 20, :class => "quickly_complete_field" }, { :url => formatted_pkgsinfo_index_path(:js), :method => :get, :with => "'search=' + element.value" })
-      htmlcode += autocomplete_asmselect(section[:title],section[:options].collect { |el| el[0] },"type a name...")
-      htmlcode += "\t\t</td>\n"
-    end
-    htmlcode += "\t</tr>\n"
+    htmlcode += render :partial => "shared/table_multi_select", :locals => {:parameters => parameters, :table_class => table_class, :header_enabled => header_enabled} 
     htmlcode += "</table>\n"
     htmlcode.html_safe
   end
 
-  
   def display_package_version(pkgsinfo)
     unless Pkgsinfo.latest?(pkgsinfo)
       "(#{pkgsinfo.version})"

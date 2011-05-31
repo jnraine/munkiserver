@@ -34,5 +34,7 @@ function hello1(){
 	<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
 <% else %>
 	<p><%= record_count(@packages) %></p>
-	<%= package_table(@packages) %>
+	
+	<%= package_table(@packages) %> 
+	
 <% end %>

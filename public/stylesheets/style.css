@@ -1,4 +1,4 @@
-zbody {
+body {
 	background-image:url("../images/bg.png");
 	background-repeat:repeat-x;
 	background-position:top;
@@ -351,7 +351,6 @@ thead th a:hover,
 	border:2px solid rgb(69, 173, 168);
 	background-color:#594F4F;
 	z-index: 1; /* fix for overlay CodeMirror textarea, always show top*/
-	position: inherit;
 }
 
 .clean_list {

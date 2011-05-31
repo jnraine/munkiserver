@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110524163234) do
+ActiveRecord::Schema.define(:version => 20110530200924) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -160,6 +160,15 @@ ActiveRecord::Schema.define(:version => 20110524163234) do
     t.datetime "updated_at"
   end
 
+  create_table "optional_installs", :force => true do |t|
+    t.integer  "package_branch_id"
+    t.integer  "package_id"
+    t.integer  "manifest_id"
+    t.string   "manifest_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "package_branches", :force => true do |t|
     t.string   "name"
     t.string   "display_name"
@@ -265,6 +274,24 @@ ActiveRecord::Schema.define(:version => 20110524163234) do
     t.string   "os_version"
     t.string   "uptime"
     t.string   "user_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unattended_install", :force => true do |t|
+    t.integer  "package_branch_id"
+    t.integer  "package_id"
+    t.integer  "manifest_id"
+    t.string   "manifest_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unattended_uninstall", :force => true do |t|
+    t.integer  "package_branch_id"
+    t.integer  "package_id"
+    t.integer  "manifest_id"
+    t.string   "manifest_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

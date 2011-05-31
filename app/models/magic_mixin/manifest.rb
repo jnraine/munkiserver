@@ -27,6 +27,13 @@ module Manifest
       # User specified install and uninstall items
       has_many :user_install_items, :as => :manifest
       has_many :user_uninstall_items, :as => :manifest
+      
+      # Optional Install items
+      has_many :optional_installs, :as => :manifest
+      
+      # Unattended Install/Uninstall items
+      has_many :unattended_install, :as => :manifest
+      has_many :unattended_uninstall, :as => :manifest
         
       attr_is_hash :version_rollback
       
@@ -323,7 +330,7 @@ module Manifest
         # Get all the package branches associated with this unit and environment
         pkg_branch_options = PackageBranch.unit_member(model_obj).collect { |e| [e.name,e.id] }
         if model_obj.class == Bundle
-          bundle_options = Bundle.where('unit_id <> ?',model_obj.id).unit_member(model_obj).collect { |e| [e.name,e.id] }
+          bundle_options = Bundle.where('id <> ?',model_obj.id).unit_member(model_obj).collect { |e| [e.name,e.id] }
         else
           bundle_options = Bundle.unit_member(model_obj).collect { |e| [e.name,e.id] }
         end
@@ -348,6 +355,24 @@ module Manifest
           :attribute_name => "uninstalls",
           :select_title => "Select a package branch",
           :options => pkg_branch_options,
+          :selected_options => model_obj.uninstalls_package_branch_ids },
+          {:title => "Optional Install",
+          :model_name => model_name,
+          :attribute_name => "optional_install",
+          :select_title => "Select Optional Intalls",
+          :options => pkg_branch_options,
+          :selected_options => model_obj.bundle_ids },
+         {:title => "Unattended Install",
+          :model_name => model_name,
+          :attribute_name => "unattended_install",
+          :select_title => "Select Unattended Install",
+          :options => pkg_branch_options,
+          :selected_options => model_obj.installs_package_branch_ids },
+         {:title => "Unattended Uninstall",
+          :model_name => model_name ,
+          :attribute_name => "unattended_uninstall",
+          :select_title => "Select Unattended Uninstall",
+          :options => pkg_branch_options,
           :selected_options => model_obj.uninstalls_package_branch_ids }]
       end
       
@@ -359,9 +384,9 @@ module Manifest
         r ||= self.unit(unit).first
       end
       
-      # def to_param
-      #        name
-      #      end
+      def to_param
+        name
+      end
       # ===================
       # = Code ends here! =
       # ===================
