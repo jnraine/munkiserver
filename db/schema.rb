@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110530200924) do
+ActiveRecord::Schema.define(:version => 20110602215341) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(:version => 20110530200924) do
     t.datetime "updated_at"
   end
 
-  create_table "optional_installs", :force => true do |t|
+  create_table "optional_install_items", :force => true do |t|
     t.integer  "package_branch_id"
     t.integer  "package_id"
     t.integer  "manifest_id"
@@ -278,7 +278,7 @@ ActiveRecord::Schema.define(:version => 20110530200924) do
     t.datetime "updated_at"
   end
 
-  create_table "unattended_install", :force => true do |t|
+  create_table "unattended_install_items", :force => true do |t|
     t.integer  "package_branch_id"
     t.integer  "package_id"
     t.integer  "manifest_id"
@@ -287,7 +287,7 @@ ActiveRecord::Schema.define(:version => 20110530200924) do
     t.datetime "updated_at"
   end
 
-  create_table "unattended_uninstall", :force => true do |t|
+  create_table "unattended_uninstall_items", :force => true do |t|
     t.integer  "package_branch_id"
     t.integer  "package_id"
     t.integer  "manifest_id"

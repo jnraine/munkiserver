@@ -10,7 +10,7 @@ class Unit < ActiveRecord::Base
   
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
   
-  validates_uniqueness_of :name, :case_sensitive => true
+  validates_uniqueness_of :name
   validates_presence_of :name, :description
   # A list of ACL attribute names
   # This list of names get turned into methods that check

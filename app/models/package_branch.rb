@@ -13,6 +13,9 @@ class PackageBranch < ActiveRecord::Base
   # Relationships
   has_many :install_items, :dependent => :destroy
   has_many :uninstall_items, :dependent => :destroy
+  has_many :optional_install_items, :dependent => :destroy
+  has_many :unattended_install_items, :dependent => :destroy
+  has_many :unattended_uninstall_items, :dependent => :destroy
   has_many :user_install_items, :dependent => :destroy
   has_many :user_uninstall_items, :dependent => :destroy
   has_many :user_allowed_items, :dependent => :destroy

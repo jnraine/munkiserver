@@ -53,7 +53,7 @@ class ComputersController < ApplicationController
   end
 
   def update
-    @computer = Computer.unit(current_unit).find_for_show(CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
     @computer_service = ComputerService.new(@computer,params[:computer])
     respond_to do |format|
       if @computer_service.save

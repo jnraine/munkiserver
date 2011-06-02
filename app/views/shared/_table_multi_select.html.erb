@@ -1,45 +1,32 @@
 <table class="<%= table_class %>">
-	<% p = parameters %>
-	<%= "Parameters: " + p.count.to_s + " Class: " + parameters.class.to_s %>
-	
-	<% count = p.size %>
-	<% p.reverse! %><br /><br />
-	<% c = 0 %>
-	<% while c < count do %>
-		
-		<%= p.pop %><br /><br />
-		
-			<%= c%3 %>
-			<% if c%3 == 0  %>
-			<hr />
-			<% end %>
-		<% c += 1 %>
-	<% end %>		
-	<% p.each_with_index do |section, i| %>
-	<br />
-	
-	<% if header_enabled %> 
-		 	<% if i%3 == 0 %>
-			  	 	<thead>
-				 	  <tr>
-						<%  p.pop do |section| %> 
-					     <th><%= section[:title] %> <%= i.to_s %>
-					     <%= helpful_info(section[:helpful_string]) unless section[:helpful_string].blank? %>
-						</th>
-		   	 			<% end %>
-					  </tr>
-				   </thead>
-			<% end %>
-	
+	<% parameters.each_with_index do |section,i| %>
+		<% if i%3 == 0 %>
+			<thead>
+				<!-- Table header name starts here -->
+				<% offset = 0 %>
+				<% 3.times do %>
+					<% if parameters[i+offset] == nil %>
+						<% break %>
+					<% end %>
+					<th><%= parameters[i+offset][:title] %><%= helpful_info(parameters[i+offset][:helpful_string]) unless parameters[i+offset][:helpful_string].blank? %></th>
+					<% offset += 1 %>
+				<% end %>
+			</thead>
+			<tr>
+				<% offset = 0 %>
+				<% 3.times do %>
+					<!-- Select option starts here -->
+					<% if parameters[i+offset] == nil %>
+						<% break %>
+					<% end %>
+					<td>
+					<% p = parameters[i+offset] %>		
+					<%= hidden_field_tag("#{p[:model_name]}[#{p[:attribute_name]}][]",'') %>
+	 				<%= select_tag("#{p[:model_name]}[#{p[:attribute_name]}]", options_for_select(p[:options],p[:selected_options]), :multiple => true, :title => p[:select_title]) %>
+	  				<%= autocomplete_asmselect(p[:title],p[:options].collect { |el| el[0] },"type a name...") %></td>
+					<% offset += 1 %>
+				<% end %>
+			</tr>
+		<% end %>
 	<% end %>
-	<tr>
-
-			<td>
-  				<%= hidden_field_tag("#{section[:model_name]}[#{section[:attribute_name]}][]",'') %>
-  				<%= select_tag("#{section[:model_name]}[#{section[:attribute_name]}]", options_for_select(section[:options],section[:selected_options]), :multiple => true, :title => section[:select_title]) %>
-   				<%= autocomplete_asmselect(section[:title],section[:options].collect { |el| el[0] },"type a name...") %>
-  			</td>
-	
-	</tr>
-<% end %>
 </table>

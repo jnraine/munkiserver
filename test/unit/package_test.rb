@@ -10,6 +10,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: packages
@@ -33,8 +34,6 @@ end
 #  autoremove                :boolean         default(FALSE)
 #  shared                    :boolean         default(FALSE)
 #  version_tracker_version   :string(255)
-#  preinstall_script         :string(255)
-#  postinstall_script        :string(255)
 #  installer_type            :string(255)
 #  installed_size            :integer
 #  installer_item_size       :integer
@@ -50,5 +49,10 @@ end
 #  raw_mode_id               :integer         default(0)
 #  created_at                :datetime
 #  updated_at                :datetime
+#  preinstall_script         :text
+#  postinstall_script        :text
+#  uninstall_script          :text
+#  preuninstall_script       :text
+#  postuninstall_script      :text
 #
 
