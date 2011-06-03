@@ -1,21 +1,18 @@
 Munki::Application.routes.draw do  
-  controller :units do
-    scope '/:units', do
-      resources :computers do
-        get :import, :on => :new
-        collection do
-          post :create_import
-        end
-      end
-      resources :packages do
-        collection do
-          get :check_for_updated
-          put :check_for_updated
-        end
-      end
-    
+ 
+  resources :computers do
+    get :import, :on => :new
+    collection do
+      post :create_import
     end
   end
+  resources :packages do
+    collection do
+      get :check_for_updated
+      put :check_for_updated
+    end
+  end
+
   resources :shared_packages do
     get :import, :on => :member
   end
