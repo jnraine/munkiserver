@@ -286,12 +286,12 @@ module Manifest
       end
       
       
-     # Gets the packages that belong to this manifests installs virtual attribute
+     # Gets the packages that belong to this manifests optional_installs virtual attribute
       def optional_installs
         optional_install_items.collect(&:package)
       end
 
-      # Pass a list of Package or PackageBranch records and install_item associations will be built
+      # Pass a list of Package or PackageBranch records and optional_install_items associations will be built
       def optional_installs=(list)
         build_package_association_assignment(:optional_install_items,list)
       end
@@ -300,12 +300,12 @@ module Manifest
         optional_install_items.collect(&:package_branch).uniq.collect(&:id)
       end      
       
-     # Gets the packages that belong to this manifests installs virtual attribute
+     # Gets the packages that belong to this manifests unattended_installs virtual attribute
       def unattended_install
         unattended_install_items.collect(&:package)
       end
 
-      # Pass a list of Package or PackageBranch records and install_item associations will be built
+      # Pass a list of Package or PackageBranch records and unattended_install_items associations will be built
       def unattended_install=(list)
         build_package_association_assignment(:unattended_install_items,list)
       end
@@ -315,12 +315,12 @@ module Manifest
       end
 
         
-    # Gets the packages that belong to this manifests installs virtual attribute
+      # Gets the packages that belong to this manifests unattended_uninstalls virtual attribute
       def unattended_uninstall
         unattended_uninstall_items.collect(&:package)
       end
 
-      # Pass a list of Package or PackageBranch records and install_item associations will be built
+      # Pass a list of Package or PackageBranch records and unattended_uninstall_items associations will be built
       def unattended_uninstall=(list)
         build_package_association_assignment(:unattended_uninstall_items,list)
       end
