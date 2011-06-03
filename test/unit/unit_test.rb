@@ -172,17 +172,3 @@ class UnitTest < ActiveSupport::TestCase
   end
 end
 
-# == Schema Information
-#
-# Table name: units
-#
-#  id               :integer         not null, primary key
-#  name             :string(255)
-#  description      :text
-#  key              :string(255)
-#  unit_member_id   :integer
-#  unit_member_type :integer
-#  created_at       :datetime
-#  updated_at       :datetime
-#
-

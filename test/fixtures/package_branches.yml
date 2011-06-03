@@ -55,14 +55,3 @@ Dreamweaver:
   id: 11
   name: Dreamweaver
   display_name: Dreamweaver
-# == Schema Information
-#
-# Table name: package_branches
-#
-#  id           :integer         not null, primary key
-#  name         :string(255)
-#  display_name :string(255)
-#  created_at   :datetime
-#  updated_at   :datetime
-#
-

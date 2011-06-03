@@ -67,16 +67,3 @@ class VersionTracker < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: version_trackers
-#
-#  id                :integer         not null, primary key
-#  package_branch_id :integer
-#  web_id            :integer
-#  version           :string(255)
-#  download_url      :string(255)
-#  created_at        :datetime
-#  updated_at        :datetime
-#
-

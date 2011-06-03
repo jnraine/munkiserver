@@ -1,25 +1,35 @@
 Munki::Application.routes.draw do  
-
-  scope :units do
-    resources :computers do
-      get :import, :on => :new
-      collection do
-        post :create_import
+  controller :units do
+    scope '/:units', do
+      resources :computers do
+        get :import, :on => :new
+        collection do
+          post :create_import
+        end
       end
-    end
-  end
-  
-  resources :units
-  resources :unit_settings, :user_settings, :computer_groups, :bundles, :users
-  resources :packages do
-    collection do
-      get :check_for_updated
-      put :check_for_updated
+      resources :packages do
+        collection do
+          get :check_for_updated
+          put :check_for_updated
+        end
+      end
+    
     end
   end
   resources :shared_packages do
     get :import, :on => :member
   end
+  resources :units
+  resources :unit_settings, :user_settings, :computer_groups, :bundles, :users
+  # resources :packages do
+  #   collection do
+  #     get :check_for_updated
+  #     put :check_for_updated
+  #   end
+  # end
+  # resources :shared_packages do
+  #   get :import, :on => :member
+  # end
   
   # match 'test/info' => 'test#info'
   match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get

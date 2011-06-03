@@ -603,8 +603,12 @@ class Package < ActiveRecord::Base
   # Creates a package instance from a temporary file, pkginfo file, and options.
   # Returns an unsaved instance of the Package class
   def self.create_from_uploaded_file(uploaded_file,pkginfo_file = nil, options = {})
-    file = self.init_uploaded_file(uploaded_file)
-    self.create(file,pkginfo_file,options)
+    if uploaded_file == nil 
+      raise PackgeError.new("Please upload a package file")
+    else
+      file = self.init_uploaded_file(uploaded_file)
+      self.create(file,pkginfo_file,options)
+    end
   end
   
   # Renames and moves temporary files to the appropriate package store. Returns
@@ -895,51 +899,4 @@ end
 
 
 
-
-# == Schema Information
-#
-# Table name: packages
-#
-#  id                        :integer         not null, primary key
-#  version                   :string(255)
-#  package_branch_id         :integer
-#  unit_id                   :integer
-#  environment_id            :integer
-#  package_category_id       :integer
-#  receipts                  :text            default("--- []")
-#  description               :text
-#  icon_id                   :integer
-#  filename                  :string(255)
-#  supported_architectures   :text            default("--- []")
-#  minimum_os_version        :text
-#  maximum_os_version        :text
-#  installs                  :text            default("--- []")
-#  RestartAction             :string(255)
-#  package_path              :string(255)
-#  autoremove                :boolean         default(FALSE)
-#  shared                    :boolean         default(FALSE)
-#  version_tracker_version   :string(255)
-#  installer_type            :string(255)
-#  installed_size            :integer
-#  installer_item_size       :integer
-#  installer_item_location   :string(255)
-#  installer_choices_xml     :text
-#  use_installer_choices     :boolean         default(FALSE)
-#  uninstall_method          :string(255)
-#  uninstaller_item_location :string(255)
-#  uninstaller_item_size     :integer
-#  uninstallable             :boolean         default(TRUE)
-#  installer_item_checksum   :string(255)
-#  raw_tags                  :text            default("--- {}")
-#  raw_mode_id               :integer         default(0)
-#  created_at                :datetime
-#  updated_at                :datetime
-#  preinstall_script         :text
-#  postinstall_script        :text
-#  uninstall_script          :text
-#  preuninstall_script       :text
-#  postuninstall_script      :text
-#  unattended_install        :boolean         default(FALSE)
-#  unattended_uninstall      :boolean         default(FALSE)
-#
 
