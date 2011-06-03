@@ -11,6 +11,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: packages
@@ -54,5 +55,7 @@ end
 #  uninstall_script          :text
 #  preuninstall_script       :text
 #  postuninstall_script      :text
+#  unattended_install        :boolean         default(FALSE)
+#  unattended_uninstall      :boolean         default(FALSE)
 #
 

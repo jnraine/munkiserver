@@ -1,9 +1,11 @@
 Munki::Application.routes.draw do  
-  
-  resources :computers do
-    get :import, :on => :new
-    collection do
-      post :create_import
+
+  scope :units do
+    resources :computers do
+      get :import, :on => :new
+      collection do
+        post :create_import
+      end
     end
   end
   

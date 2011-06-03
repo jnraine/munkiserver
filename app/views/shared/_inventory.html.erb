@@ -16,5 +16,15 @@
 		</td>
 		<td><%= pkg_list(model_obj.uninstall_items) %></td>
 	</tr>
+	
+	
+	<thead>
+		<tr>
+			<th>Optional Install</th>
+		</tr>
+	</thead>
+	<tr>
+		<td><%= pkg_list(model_obj.optional_install_items) %></td>
+	</tr>
 </table>
 <p class="quiet"><span>✓</span> denotes item is installed</p>

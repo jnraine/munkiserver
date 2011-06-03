@@ -193,6 +193,19 @@
 				</td>
 			</tr>
 			<tr>
+				<td>Unattended Install</td>
+				<td>
+					<%= f.check_box :unattended_install %>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>Unattended Uninstall</td>
+				<td>
+					<%= f.check_box :unattended_uninstall %>
+				</td>
+			</tr>
+			<tr>
 				<td>Uninstall Method</td>
 				<td>
 					<%= f.select :uninstall_method, options_for_select(Package::FORM_OPTIONS[:uninstall_method],@package.uninstall_method) %>

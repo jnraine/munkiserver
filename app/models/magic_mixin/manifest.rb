@@ -30,11 +30,7 @@ module Manifest
       
       # Optional Install items
       has_many :optional_install_items, :as => :manifest
-      
-      # Unattended Install/Uninstall items
-      has_many :unattended_install_items, :as => :manifest
-      has_many :unattended_uninstall_items, :as => :manifest
-        
+              
       attr_is_hash :version_rollback
       
       magic_mixin :unit_member
@@ -99,35 +95,6 @@ module Manifest
         end
         oi
       end      
-      
-      # Same as managed_installs and managed_uninstalls
-      # Unattended_install 
-      def unattended_install
-        ui = []
-        unattended_install_items.each do |unattended_install_item|
-          if unattended_install_item.package_id.blank?
-            ui << unattended_install_item.package.to_s
-          else
-            ui << unattended_install_item.package.to_s(:version)
-          end
-        end
-        ui
-      end      
-      
-       # Same as managed_installs and managed_uninstalls
-        # Unattended_uninstall 
-        def unattended_uninstall
-          uu = []
-          unattended_uninstall_items.each do |unattended_uninstall_item|
-            if unattended_uninstall_item.package_id.blank?
-              uu << unattended_uninstall_item.package.to_s
-            else
-              uu << unattended_uninstall_item.package.to_s(:version)
-            end
-          end
-          uu
-        end
-      
       
       # Pass a package object or package ID to append the package to this record
       # If the package's package branch, or another version of the package is specified
@@ -300,37 +267,6 @@ module Manifest
         optional_install_items.collect(&:package_branch).uniq.collect(&:id)
       end      
       
-     # Gets the packages that belong to this manifests unattended_installs virtual attribute
-      def unattended_install
-        unattended_install_items.collect(&:package)
-      end
-
-      # Pass a list of Package or PackageBranch records and unattended_install_items associations will be built
-      def unattended_install=(list)
-        build_package_association_assignment(:unattended_install_items,list)
-      end
-
-      def unattended_install_package_branch_ids
-        unattended_install_items.collect(&:package_branch).uniq.collect(&:id)
-      end
-
-        
-      # Gets the packages that belong to this manifests unattended_uninstalls virtual attribute
-      def unattended_uninstall
-        unattended_uninstall_items.collect(&:package)
-      end
-
-      # Pass a list of Package or PackageBranch records and unattended_uninstall_items associations will be built
-      def unattended_uninstall=(list)
-        build_package_association_assignment(:unattended_uninstall_items,list)
-      end
-
-      def unattended_uninstall_package_branch_ids
-        unattended_uninstall_items.collect(&:package_branch).uniq.collect(&:id)
-      end
-
-
-
       # Returns all package_branches that belongs to the unit and the environment
       def assignable_package_branches
         # Grab all package branches referenced by packages of this unit and environment
@@ -369,8 +305,6 @@ module Manifest
         h[:managed_installs] = managed_installs
         h[:managed_uninstalls] = managed_uninstalls
         h[:optional_installs] = optional_installs
-        h[:unattended_install] = unattended_install
-        h[:unattended_uninstall] = unattended_uninstall
         h
       end
       
@@ -454,19 +388,7 @@ module Manifest
           :attribute_name => "optional_installs",
           :select_title => "Select Optional Intalls",
           :options => pkg_branch_options,
-          :selected_options => model_obj.optional_installs_package_branch_ids },
-         {:title => "Unattended Install",
-          :model_name => model_name,
-          :attribute_name => "unattended_install",
-          :select_title => "Select Unattended Install",
-          :options => pkg_branch_options,
-          :selected_options => model_obj.unattended_install_package_branch_ids },
-         {:title => "Unattended Uninstall",
-          :model_name => model_name ,
-          :attribute_name => "unattended_uninstall",
-          :select_title => "Select Unattended Uninstall",
-          :options => pkg_branch_options,
-          :selected_options => model_obj.unattended_uninstall_package_branch_ids }]
+          :selected_options => model_obj.optional_installs_package_branch_ids }]
       end
       
       # Return the default record

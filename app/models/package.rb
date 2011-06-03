@@ -457,7 +457,7 @@ class Package < ActiveRecord::Base
       # Take care of the straight forward mappings
       keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
-              :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method,
+              :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method, :unattended_install, :unattended_uninstall,
               :preinstall_script, :postinstall_script, :uninstall_script, :preuninstall_script, :postuninstall_script,
               :requires,:update_for,:catalogs,:version]
        
@@ -475,6 +475,8 @@ class Package < ActiveRecord::Base
       
       # Add any raw tags
       h = h.merge(raw_tags) if append_raw?
+      
+      h.delete("RestartAction") if h["RestartAction"] == "None"
     end
     h
   end
@@ -893,6 +895,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: packages
@@ -936,5 +939,7 @@ end
 #  uninstall_script          :text
 #  preuninstall_script       :text
 #  postuninstall_script      :text
+#  unattended_install        :boolean         default(FALSE)
+#  unattended_uninstall      :boolean         default(FALSE)
 #
 
