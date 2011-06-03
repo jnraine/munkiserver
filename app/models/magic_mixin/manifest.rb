@@ -477,6 +477,8 @@ module Manifest
         r ||= self.unit(unit).first
       end
       
+      
+      # overwrite default to_param for friendly bundle URLs
       def to_param
         name
       end
