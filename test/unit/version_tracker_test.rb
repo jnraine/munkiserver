@@ -6,3 +6,4 @@ class VersionTrackerTest < ActiveSupport::TestCase
     assert true
   end
 end
+

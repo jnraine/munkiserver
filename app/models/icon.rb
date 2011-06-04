@@ -26,3 +26,4 @@ class Icon < ActiveRecord::Base
     self.url(type)
   end
 end
+

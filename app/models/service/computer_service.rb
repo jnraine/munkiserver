@@ -17,6 +17,7 @@ class ComputerService
     @attr[:uninstalls] = PackageBranch.where(:id => @attr[:uninstalls]).to_a if @attr[:uninstalls] != nil
     @attr[:user_installs] = PackageBranch.where(:id => @attr[:user_installs]).to_a if @attr[:user_installs] != nil
     @attr[:user_uninstalls] = PackageBranch.where(:id => @attr[:user_uninstalls]).to_a if @attr[:user_uninstalls] != nil
+    @attr[:optional_installs] = PackageBranch.where(:id => @attr[:optional_installs]).to_a if @attr[:optional_installs] != nil
     # Retrieve bundle records in the exact way as done with the *installs
     @attr[:bundles] = Bundle.where(:id => @attr[:bundles]).to_a if @attr[:bundles] != nil
   end
@@ -75,7 +76,7 @@ class ComputerService
         # something isn't set (like computer model) that is set in the template
         # then the template setting is applied
         c = Computer.new({:mac_address => computer_info["hardwareAddress"],
-                          :name => computer_info["hostname"],
+                          :name => computer_info["name"],
                           :unit_id => unit.id,
                           :environment_id => environment_id})
         c.computer_group = cg
@@ -101,7 +102,7 @@ class ComputerService
       # against injection attacks or errors)
       case params[:col]
         when "mac_address" then col = "mac_address"
-        else col = "hostname"
+        else col = "name"
       end
       computers = computers.order(col + " " + params[:order])
     end

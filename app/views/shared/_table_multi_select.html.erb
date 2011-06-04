@@ -1,0 +1,32 @@
+<table class="<%= table_class %>">
+	<% parameters.each_with_index do |section,i| %>
+		<% if i%3 == 0 %>
+			<thead>
+				<!-- Table header name starts here -->
+				<% offset = 0 %>
+				<% 3.times do %>
+					<% if parameters[i+offset] == nil %>
+						<% break %>
+					<% end %>
+					<th><%= parameters[i+offset][:title] %><%= helpful_info(parameters[i+offset][:helpful_string]) unless parameters[i+offset][:helpful_string].blank? %></th>
+					<% offset += 1 %>
+				<% end %>
+			</thead>
+			<tr>
+				<% offset = 0 %>
+				<% 3.times do %>
+					<!-- Select option starts here -->
+					<% if parameters[i+offset] == nil %>
+						<% break %>
+					<% end %>
+					<td>
+					<% p = parameters[i+offset] %>		
+					<%= hidden_field_tag("#{p[:model_name]}[#{p[:attribute_name]}][]",'') %>
+	 				<%= select_tag("#{p[:model_name]}[#{p[:attribute_name]}]", options_for_select(p[:options],p[:selected_options]), :multiple => true, :title => p[:select_title]) %>
+	  				<%= autocomplete_asmselect(p[:title],p[:options].collect { |el| el[0] },"type a name...") %></td>
+					<% offset += 1 %>
+				<% end %>
+			</tr>
+		<% end %>
+	<% end %>
+</table>

@@ -20,3 +20,4 @@ class PackageCategory < ActiveRecord::Base
     name
   end
 end
+

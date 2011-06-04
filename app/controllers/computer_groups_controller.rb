@@ -23,7 +23,7 @@ class ComputerGroupsController < ApplicationController
   end
 
   def destroy
-    @computer_group = ComputerGroup.find(params[:id])
+    @computer_group = ComputerGroup.find_for_show(CGI::unescape(params[:id]))
     
     begin
       if @computer_group.destroy
@@ -41,11 +41,11 @@ class ComputerGroupsController < ApplicationController
   end
 
   def edit
-    @computer_group = ComputerGroup.find(params[:id])
+    @computer_group = ComputerGroup.find_for_show(params[:id])
   end
 
   def update
-    @computer_group = ComputerGroup.unit(current_unit).find(params[:id])
+    @computer_group = ComputerGroup.unit(current_unit).find_for_show(CGI::unescape(params[:id]))
     @manifest_service = ManifestService.new(@computer_group,params[:computer_group])
     
     respond_to do |format|

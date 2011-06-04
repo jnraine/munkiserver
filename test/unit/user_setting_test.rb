@@ -6,3 +6,4 @@ class UserSettingTest < ActiveSupport::TestCase
     assert true
   end
 end
+

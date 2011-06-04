@@ -23,7 +23,7 @@ class BundlesController < ApplicationController
   end
 
   def destroy
-    @bundle = Bundle.find(params[:id])
+    @bundle = Bundle.find_by_name(params[:id])
     
     if @bundle.destroy
       flash[:notice] = "Bundle was destroyed successfully"
@@ -35,11 +35,11 @@ class BundlesController < ApplicationController
   end
 
   def edit
-    @bundle = Bundle.find(params[:id])
+    @bundle = Bundle.find_by_name(params[:id])
   end
 
   def update
-    @bundle = Bundle.unit(current_unit).find(params[:id])
+    @bundle = Bundle.unit(current_unit).find_by_name(params[:id])
     @manifest_service = ManifestService.new(@bundle,params[:bundle])
     
     respond_to do |format|

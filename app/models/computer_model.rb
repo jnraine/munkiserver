@@ -18,3 +18,4 @@ class ComputerModel < ActiveRecord::Base
   #   end
   # end
 end
+

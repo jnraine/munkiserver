@@ -6,3 +6,4 @@ class ComputerTest < ActiveSupport::TestCase
     assert true
   end
 end
+

@@ -6,3 +6,4 @@ class SpPrintersTest < ActiveSupport::TestCase
     assert true
   end
 end
+

@@ -22,11 +22,12 @@ class Package < ActiveRecord::Base
   
   validates :receipts, :plist_array => true
   validates :installs, :plist_array => true
+
   
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
                   :installer_types         => [['Package',''],
-                                               ['Copy From DMG','copy_from_dmg'],
+                                               ['Copy From DMG', 'copy_from_dmg'],
                                                ['App DMG','appdmg'],
                                                ['AdobeUberInstaller'],
                                                ['AdobeAcrobatUpdater'],
@@ -34,7 +35,16 @@ class Package < ActiveRecord::Base
                                                ['AdobeCS5Installer'],
                                                ['AdobeCS5AAMEEPackage'],
                                                ['AdobeSetup']],
-                  :supported_architectures => ['i386','x86_64','ppc','Power Macintosh']}
+                  :supported_architectures => ['i386','x86_64','ppc','Power Macintosh'],
+                  :uninstall_method        => [['Remove Copied Items','remove_copied_items'],
+                                               ['Remove Packages','removepackages'], 
+                                               ['Remove App', 'remove_app'], 
+                                               ['Uninstall Script', 'uninstall_script'],
+                                               ['Uninstaller Script Location', ''],
+                                               ['Uninstall Item Location', 'uninstaller_item_location'],                                                
+                                               ['AdobeUberUninstaller','AdobeUberUninstaller'],
+                                               ['AdobeSetup','AdobeSetup'],
+                                               ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']]}
   
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
   # determined by comparing installer_item_location values.
@@ -447,7 +457,8 @@ class Package < ActiveRecord::Base
       # Take care of the straight forward mappings
       keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
-              :installer_item_location,:uninstall_method,:uninstaller_item_location,:uninstaller_item_size,:uninstallable,
+              :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method, :unattended_install, :unattended_uninstall,
+              :preinstall_script, :postinstall_script, :uninstall_script, :preuninstall_script, :postuninstall_script,
               :requires,:update_for,:catalogs,:version]
        
       keys.each do |key|
@@ -465,6 +476,8 @@ class Package < ActiveRecord::Base
       
       # Add any raw tags
       h = h.merge(raw_tags) if append_raw?
+      
+      h.delete("RestartAction") if h["RestartAction"] == "None"
     end
     h
   end
@@ -591,8 +604,12 @@ class Package < ActiveRecord::Base
   # Creates a package instance from a temporary file, pkginfo file, and options.
   # Returns an unsaved instance of the Package class
   def self.create_from_uploaded_file(uploaded_file,pkginfo_file = nil, options = {})
-    file = self.init_uploaded_file(uploaded_file)
-    self.create(file,pkginfo_file,options)
+    if uploaded_file == nil 
+      raise PackageError.new("Please select a file")
+    else
+      file = self.init_uploaded_file(uploaded_file)
+      self.create(file,pkginfo_file,options)
+    end
   end
   
   # Renames and moves temporary files to the appropriate package store. Returns
@@ -875,5 +892,10 @@ class Package < ActiveRecord::Base
     else
       ""
     end
+  end
+  
+  def find_by_name (param)
+    p = Package.new
+    param = p.package_branch.name
   end
 end

@@ -3,6 +3,17 @@
 	<%= available_updates %>
 <% end -%>
 
+<script>
+
+function hello1(){
+  var d = new Date();
+	var str = "Hello World - One.\n\nIt is ";
+	alert( str + d.toString() );
+}
+
+
+</script>
+
 <h2>Listing packages</h2>
 <p id="environment_links">
 	|
@@ -23,5 +34,7 @@
 	<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
 <% else %>
 	<p><%= record_count(@packages) %></p>
-	<%= package_table(@packages) %>
+	
+	<%= package_table(@packages) %> 
+	
 <% end %>

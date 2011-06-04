@@ -6,3 +6,4 @@ class BundleItemTest < ActiveSupport::TestCase
     assert true
   end
 end
+

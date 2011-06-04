@@ -6,3 +6,4 @@ class UnitSettingTest < ActiveSupport::TestCase
     assert true
   end
 end
+

@@ -7,3 +7,4 @@ one:
 two:
   type: MyString
   identifier: MyString
+

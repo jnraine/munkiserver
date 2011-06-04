@@ -21,3 +21,4 @@ class UnitSetting < ActiveRecord::Base
     end
   end
 end
+

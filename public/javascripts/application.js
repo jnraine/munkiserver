@@ -9,17 +9,17 @@ $(document).ready(function() {
 	$('.loading').hide();
 	
 	// Hide raw text area if raw_mode_id is 0 container
-	if($('#package_raw_mode_id').val() == 0) {
-		$('#package_raw_tags').hide();
-	}
-	// Flip visibility of raw tag text area
-	$("#package_raw_mode_id").change(function() {
-		if(this.value == 0) {
-			$('#package_raw_tags').slideUp();
-		} else {
-			$('#package_raw_tags').slideDown();
-		}
-	});	
+	// if($('#package_raw_mode_id').val() == 0) {
+	// 	$('#package_raw_tags').hide();
+	// }
+	// // Flip visibility of raw tag text area
+	// $("#package_raw_mode_id").change(function() {
+	// 	if(this.value == 0) {
+	// 		$('#package_raw_tags').slideUp();
+	// 	} else {
+	// 		$('#package_raw_tags').slideDown();
+	// 	}
+	// });	
 	
 	// For USER views, enable/disable change password
 	if($('#change_password_checkbox').attr('checked') == false) {
@@ -69,8 +69,78 @@ $(document).ready(function() {
 		  }
 		});
 	});
-	$("select#managed_install_reports").change();	
+	$("select#managed_install_reports").change();
+	
+	
+	// add Codemirror with jQuery animation to highlight XML/plist/bash syntax in package list
+	$("textarea[data-format]").each(function () {
+		
+		var format = $(this).attr("data-format");
+		var toRefresh = function(){
+			editor.refresh();
+		}
+	
+		var editor = CodeMirror.fromTextArea(this, {
+					onFocus: function() {
+					    //jQuery animation goes here				
+					    $(editor.getWrapperElement()).animate({
+					        height: "300px"
+					    },
+					    400, "swing", toRefresh);
+	
+	
+					},
+					onBlur: function() {
+					    $(editor.getWrapperElement()).animate({
+					        height: "78px"
+					    },
+					    400, "swing", toRefresh);
+	
+					},
+					lineNumbers: true,
+					matchBrackets: true,
+					mode: format,
+					onCursorActivity: function() {
+					    editor.setLineClass(hlLine, null);
+					    hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
+					}
+		      });
+		var hlLine = editor.setLineClass(0, "activeline");	
+	});
+	
+	function hideAllUninstallField(){
+		$("input#package_uninstaller_item_location").parent().parent().hide();
+		$("input#package_uninstall_script").parent().parent().hide();
+		$("#postinstall_script_container").parent().parent().hide();
+	}
+	hideAllUninstallField();
+	
+	
+	// show Uninstall script/item location when corresponding value is selected in the dropdown list	
+	function hideUninstallField(val, vid){
+		$("#package_uninstall_method").change(function (){
+			
+			if (this.value === val){
+				$(vid).parent().parent().show();								
+			}
+			else{
+				$(vid).parent().parent().hide();
+				$(vid).val('');	
+			}
+			
+		});
+	}
+	
+	hideUninstallField("uninstaller_item_location", "input#package_uninstaller_item_location");
+	hideUninstallField("","input#package_uninstall_script");
+	hideUninstallField("uninstall_script","#postinstall_script_container");
+	$("#package_uninstall_method").change();
+		
+	// jQuery for tabs in package edit
+	$("#tabs").tabs();
 }); // end document ready function
+
+
 
 // AJAX hostname search/filter
 $("#filter_form").submit(function() {
@@ -215,3 +285,4 @@ function submit_auto_package(jq_id) {
 	}
 	return false;
 }
+

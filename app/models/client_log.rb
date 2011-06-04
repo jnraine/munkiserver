@@ -25,3 +25,4 @@ class ClientLog < ActiveRecord::Base
     time_ago_in_words(self.created_at) + " ago"
   end
 end
+

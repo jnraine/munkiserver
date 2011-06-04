@@ -6,3 +6,4 @@ class IconTest < ActiveSupport::TestCase
     assert true
   end
 end
+

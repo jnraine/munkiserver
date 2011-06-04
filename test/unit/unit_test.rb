@@ -171,3 +171,4 @@ class UnitTest < ActiveSupport::TestCase
     assert_equal "verybadbob", u.username
   end
 end
+

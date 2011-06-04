@@ -6,3 +6,4 @@ class MissingManifestTest < ActiveSupport::TestCase
     assert true
   end
 end
+

@@ -28,6 +28,7 @@ GEM
       activemodel (= 3.0.3)
       activesupport (= 3.0.3)
     activesupport (3.0.3)
+    annotate (2.4.0)
     archive-tar-minitar (0.5.2)
     arel (2.0.4)
     builder (2.1.2)
@@ -90,6 +91,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate
   nokogiri
   rails (= 3.0.3)
   rails-erd

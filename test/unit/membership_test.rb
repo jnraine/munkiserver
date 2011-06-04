@@ -6,3 +6,4 @@ class MembershipTest < ActiveSupport::TestCase
     assert true
   end
 end
+

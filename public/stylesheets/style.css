@@ -177,7 +177,7 @@ label {
 
 textarea {
 	height:auto;
-	width:auto;
+	width:587px; /*temporty fix in firefox, by giving a fixed value for the width*/
 }
 
 /* Record header */
@@ -218,6 +218,9 @@ textarea {
 	padding-left:10px;
 }
 
+/* Tabs in Package Edit */
+
+
 /* GUI view table*/
 
 table.gui {
@@ -237,6 +240,13 @@ table.form {
 	width:auto;
 }
 
+.toggle_container textarea{
+ 	height:100px;
+}
+
+.toggle_container .CodeMirror{
+
+}
 
 /* Message / notice box */
 .message {
@@ -244,7 +254,7 @@ table.form {
 	margin-bottom:1em;
 	border-top:2px solid #ddd;
 	border-bottom:2px solid #ddd;
-	height:36px;
+	height:auto; /*fixing flash height constrain*/
 }
 
 .message {
@@ -340,6 +350,7 @@ thead th a:hover,
 	color:#fff;
 	border:2px solid rgb(69, 173, 168);
 	background-color:#594F4F;
+	z-index: 1; /* fix for overlay CodeMirror textarea, always show top*/
 }
 
 .clean_list {
@@ -360,7 +371,7 @@ thead th a:hover,
 	margin-right:auto;
 	border:3px solid #aaa;
 	width:300px;
-	height:300px;
+	height:auto;
 	background-color:#fff;
 }
 

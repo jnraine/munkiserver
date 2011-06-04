@@ -18,3 +18,4 @@ class Membership < ActiveRecord::Base
     h
   end
 end
+

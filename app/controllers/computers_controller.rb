@@ -48,11 +48,12 @@ class ComputersController < ApplicationController
   end
 
   def edit
-    @computer = Computer.unit(current_unit).find(params[:id])
+    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
+    # @computer = Computer.unit(Unit.where(:name => params[:unit_id]).first).find_for_show(CGI::unescape(params[:id]))
   end
 
   def update
-    @computer = Computer.unit(current_unit).find(params[:id])
+    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
     @computer_service = ComputerService.new(@computer,params[:computer])
     respond_to do |format|
       if @computer_service.save
@@ -68,7 +69,7 @@ class ComputersController < ApplicationController
   end
 
   def destroy
-    @computer = Computer.find(params[:id])
+    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
     
     if @computer.destroy
       flash[:notice] = "Computer was destroyed successfully"

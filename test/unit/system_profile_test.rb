@@ -6,3 +6,4 @@ class SystemProfileTest < ActiveSupport::TestCase
     assert true
   end
 end
+

@@ -18,4 +18,11 @@ class UnitSettingsController < ApplicationController
       end
     end
   end
+  
+  def show
+    @unit_setting = UnitSetting.find(params[:id])
+    respond_to do |format|
+      format.html
+    end
+  end
 end

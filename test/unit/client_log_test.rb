@@ -6,3 +6,4 @@ class ClientLogTest < ActiveSupport::TestCase
     assert true
   end
 end
+

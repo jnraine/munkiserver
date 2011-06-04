@@ -6,3 +6,4 @@ class ManagedInstallReportTest < ActiveSupport::TestCase
     assert true
   end
 end
+

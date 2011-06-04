@@ -114,3 +114,4 @@ class ManagedInstallReport < ActiveRecord::Base
 		s
   end
 end
+

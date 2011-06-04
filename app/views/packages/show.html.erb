@@ -18,8 +18,16 @@
 		</td>
 	</tr>
 	<tr>
+		<td><strong>Installer type</strong></td>
+		<td><%= @package.installer_type.titleize %></td>
+	</tr>
+	<tr>
 		<td><strong>Uninstallable?</strong></td>
 		<td><%= @package.uninstallable ? "Yes" : "No" %></td>
+	</tr>
+	<tr>
+		<td><strong>Uninstall method</strong></td>
+		<td><%= @package.uninstall_method.titleize %></td>
 	</tr>
 	<tr>
 		<td><strong>Minimum OS</strong></td>
@@ -29,10 +37,15 @@
 		<td><strong>Package size</strong></td>
 		<td><%= humanize_kilobytes(@package.installer_item_size) %></td>
 	</tr>
-	<tr>
-		<td><strong>Installed size</strong> </td>
-		<td><%= humanize_kilobytes(@package.installed_size) %></td>
-	</tr>
+	
+	<% if !@package.installer_item_size == 0 or @package.installer_item_size < 0 %>
+		<tr>
+			<td><strong>Installed size</strong> </td>
+			<td><%= humanize_kilobytes(@package.installed_size) %></td>
+		</tr>
+	<% end -%>
+	
+	
 	<% if @package.update_for.length > 0 %>
 		<tr>
 			<td><strong>Update for</strong></td>
@@ -43,6 +56,8 @@
 			</td>
 		</tr>
 	<% end -%>
+	
+	<% %>
 	<tr>
 		<td><strong>Dependancies</strong></td>
 		<td>

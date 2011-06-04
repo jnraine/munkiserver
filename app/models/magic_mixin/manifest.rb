@@ -28,6 +28,9 @@ module Manifest
       has_many :user_install_items, :as => :manifest
       has_many :user_uninstall_items, :as => :manifest
       
+      # Optional Install items
+      has_many :optional_install_items, :as => :manifest
+              
       attr_is_hash :version_rollback
       
       magic_mixin :unit_member
@@ -78,6 +81,20 @@ module Manifest
         end
         mui
       end
+      
+      # Same as managed_installs and managed_uninstalls
+      # optional_installs virtual attribute let user to choose a list of items to install
+      def optional_installs
+        oi = []
+        optional_install_items.each do |optional_install_item|
+          if optional_install_item.package_id.blank?
+            oi << optional_install_item.package.to_s
+          else
+            oi << optional_install_item.package.to_s(:version)
+          end
+        end
+        oi
+      end      
       
       # Pass a package object or package ID to append the package to this record
       # If the package's package branch, or another version of the package is specified
@@ -234,7 +251,22 @@ module Manifest
       def user_uninstalls_package_branch_ids
         user_uninstall_items.collect(&:package_branch).uniq.collect(&:id)
       end
+      
+      
+     # Gets the packages that belong to this manifests optional_installs virtual attribute
+      def optional_installs
+        optional_install_items.collect(&:package)
+      end
 
+      # Pass a list of Package or PackageBranch records and optional_install_items associations will be built
+      def optional_installs=(list)
+        build_package_association_assignment(:optional_install_items,list)
+      end
+
+      def optional_installs_package_branch_ids
+        optional_install_items.collect(&:package_branch).uniq.collect(&:id)
+      end      
+      
       # Returns all package_branches that belongs to the unit and the environment
       def assignable_package_branches
         # Grab all package branches referenced by packages of this unit and environment
@@ -272,8 +304,10 @@ module Manifest
         h[:included_manifests] = included_manifests
         h[:managed_installs] = managed_installs
         h[:managed_uninstalls] = managed_uninstalls
+        h[:optional_installs] = optional_installs
         h
       end
+      
       alias :serialize_for_plist_super :serialize_for_plist
 
       # Converts serialized object into plist string
@@ -323,7 +357,7 @@ module Manifest
         # Get all the package branches associated with this unit and environment
         pkg_branch_options = PackageBranch.unit_member(model_obj).collect { |e| [e.name,e.id] }
         if model_obj.class == Bundle
-          bundle_options = Bundle.where('unit_id <> ?',model_obj.id).unit_member(model_obj).collect { |e| [e.name,e.id] }
+          bundle_options = Bundle.where('id <> ?',model_obj.id).unit_member(model_obj).collect { |e| [e.name,e.id] }
         else
           bundle_options = Bundle.unit_member(model_obj).collect { |e| [e.name,e.id] }
         end
@@ -348,7 +382,13 @@ module Manifest
           :attribute_name => "uninstalls",
           :select_title => "Select a package branch",
           :options => pkg_branch_options,
-          :selected_options => model_obj.uninstalls_package_branch_ids }]
+          :selected_options => model_obj.uninstalls_package_branch_ids },
+          {:title => "Optional Install",
+          :model_name => model_name,
+          :attribute_name => "optional_installs",
+          :select_title => "Select Optional Intalls",
+          :options => pkg_branch_options,
+          :selected_options => model_obj.optional_installs_package_branch_ids }]
       end
       
       # Return the default record
@@ -359,6 +399,11 @@ module Manifest
         r ||= self.unit(unit).first
       end
       
+      
+      # overwrite default to_param for friendly bundle URLs
+      def to_param
+        name
+      end
       # ===================
       # = Code ends here! =
       # ===================

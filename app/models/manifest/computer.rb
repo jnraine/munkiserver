@@ -202,4 +202,9 @@ class Computer < ActiveRecord::Base
     end
     status
   end
+  
+  def to_param
+    mac_address
+  end
 end
+

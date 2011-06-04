@@ -11,3 +11,4 @@ class UserSetting < ActiveRecord::Base
     end
   end
 end
+

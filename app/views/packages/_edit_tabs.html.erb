@@ -1,0 +1,403 @@
+<div id="tabs">	
+	<ul>
+		<li><a href="#basics"><span>Basics</span></a></li>
+		<li><a href="#plists"><span>Plists</span></a></li>
+		<li><a href="#scripts"><span>Scripts</span></a></li>
+	</ul>
+	
+	<!-- First tab starts here -->
+	<div id="basics">
+		<table class="form">
+			<tr>
+				<td colspan='2'>
+					<h4>Package Branch <%= helpful_info('Changes to these fields effect all packages in this branch') %></h4>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Display name
+				</td>
+				<td>
+					<%= f.text_field :display_name %>
+					<%= hidden_field_tag :original_display_name, @package.display_name %>
+					<%= helpful_info('Displayed to the user in Managed Software Update.app') %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Name (<%= field_lock_control("package_name") %>)
+					<script>
+						jQuery(document).ready(function() {				
+							jQuery("#package_name_control").click(function() {
+								var $display_name_field = jQuery("#package_display_name");
+								if($display_name_field.attr("disabled")) {
+									// Enable display name
+									$display_name_field.attr("disabled",false);
+									$display_name_field.css("color","#000");
+									$display_name_field.val(jQuery("#original_display_name").val());
+								} else {
+									// Disable display name and mirror
+									$display_name_field.attr("disabled",true);
+									$display_name_field.css("color","#666");
+									jQuery("#package_display_name").val(jQuery("#package_name").val());
+									// Mirror name to display name field
+									jQuery("#package_name").keyup(function() {
+										var $name_field = jQuery(this);
+										jQuery("#package_display_name").val($name_field.val());
+									});	
+								}
+							});	
+						});
+					</script>
+				</td>
+				<td>
+					<%= f.text_field :name, :disabled => true %>
+					<%= helpful_info('Identifies the package branch in manifest plists') %>
+				</td>
+			</tr>
+			<!-- <tr>
+				<td>
+					Version Tracker Web ID
+				</td>
+				<td>
+					<%= f.text_field :version_tracker_web_id %>
+					<%= helpful_info("Enter version tracker ID to automatically track future versions of this application/package. Changes made to this field effect other packages in this branch.") %>
+				</td>
+			</tr> -->
+			<tr>
+				<td colspan='2'>
+					<h4>Package <%= helpful_info('Changes to these fields effect only this package') %></h4>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Version
+				</td>
+				<td>
+					<%= f.text_field :version %>
+				</td>
+			</tr>
+			<!-- <tr>
+				<td>
+					Version Tracker Version
+				</td>
+				<td>
+					<%= f.text_field :version_tracker_version %>
+					<%= helpful_info("Optionally, specify a version string used when comparing this package to the latest on versiontracker.com") %>
+				</td>
+			</tr> -->
+			<tr>
+				<td>
+					Installer (<%= field_lock_control("package_installer_item_location") %>)
+				</td>
+				<td>
+					<%= f.text_field :installer_item_location, :disabled => true %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Installer Size (<%= field_lock_control("package_installer_item_size") %>)
+				</td>
+				<td>
+					<%= f.text_field :installer_item_size, :disabled => true %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Installed Size (<%= field_lock_control("package_installed_size") %>)
+				</td>
+				<td>
+					<%= f.text_field :installed_size, :disabled => true %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Installer Type
+				</td>
+				<td>
+					<%= f.select :installer_type, options_for_select(Package::FORM_OPTIONS[:installer_types],@package.installer_type) %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Custom Package Path (<%= field_lock_control("package_package_path") %>)
+				</td>
+				<td>
+					<%= f.text_field :package_path %>
+				</td>
+			</tr>
+			<tr> 
+				<td>
+					Icon
+				</td>
+				<td>
+					<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") %>
+					<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Category
+				</td>
+				<td>
+					<%= f.collection_select :package_category_id, PackageCategory.all, :id, :name %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Restart Action
+				</td>
+				<td>
+					<%= f.select :RestartAction, options_for_select(Package::FORM_OPTIONS[:restart_actions],@package.RestartAction) %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					OS
+				</td>
+				<td>			
+					<%= select_tag "#{@package.class.to_s.downcase}[minimum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],@package.minimum_os_version) %> to
+					<%= select_tag "#{@package.class.to_s.downcase}[maximum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],@package.maximum_os_version) %>
+				</td>
+			</tr>
+			<tr>
+				<td>Environment</td>
+				<td><%= f.collection_select :environment_id, Environment.all, :id, :name %></td>
+			</tr>
+			<tr>
+				<td>Supported Architectures</td>
+				<td>
+					<%= hidden_field_tag "package[supported_architectures][]", "" %>
+					<% Package::FORM_OPTIONS[:supported_architectures].each do |name| %>
+						<%= render :partial => 'supported_architectures_checkbox', :locals => {:name => name} %>
+					<% end %>
+					<%= helpful_info("Specifying a supported architecture will cause this package to only be installed on a computer with a matching architecture.  Only helpful if a package can not run on other architectures.") %>
+				</td>
+			</tr>
+			<tr>
+				<td>Autoremove</td>
+				<td>
+					<%= f.check_box :autoremove %>
+				</td>
+			</tr>
+			<tr>
+				<td>Uninstallable</td>
+				<td>
+					<%= f.check_box :uninstallable %>
+				</td>
+			</tr>
+			<tr>
+				<td>Share with other units</td>
+				<td>
+					<%= f.check_box :shared %>
+				</td>
+			</tr>
+			<tr>
+				<td>Unattended Install</td>
+				<td>
+					<%= f.check_box :unattended_install %>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>Unattended Uninstall</td>
+				<td>
+					<%= f.check_box :unattended_uninstall %>
+				</td>
+			</tr>
+			<tr>
+				<td>Uninstall Method</td>
+				<td>
+					<%= f.select :uninstall_method, options_for_select(Package::FORM_OPTIONS[:uninstall_method],@package.uninstall_method) %>
+				</td>
+			</tr>
+			<tr>
+				<td>Uninstall Script Location</td>
+				<td>
+					<%= f.text_field(:uninstall_script).html_safe %>
+				</td>
+			</tr>
+			<tr>
+				<td>Uninstall Item Location</td>
+				<td>
+					<%= f.text_field(:uninstaller_item_location).html_safe %>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<h4>
+						Uninstall Install Script
+						<%= helpful_info("Enter the content of the Uninstall script here") %>
+					</h4>
+					<div id="postinstall_script_container" class="toggle_container">
+						<%= f.text_area :uninstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+					</div>
+					<!-- <hr /> -->
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<h4>Description</h4>
+					<%= f.text_area :description, :size => "80x4" %>
+
+				</td>
+			</tr>
+			
+				<tr>
+					<td colspan="2">
+						<%= tabled_asm_select(@package) %>
+					</td>	
+				</tr>
+				<% unless @package.installer_appdmg? %>
+				
+		</table>		
+	</div>
+	
+	<!-- Second tab starts here -->
+	<div id="plists">
+			<table class="form">
+				
+					<tr>
+						<td colspan="2">
+							<h4>
+								Receipts
+								<%= helpful_info("Must be a valid plist with an array as the root object") %>
+							</h4>
+							<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
+							# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
+							<div id="gui_receipts_container">
+								# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
+							</div>
+							-->
+							<div id="receipts_plist_container" class="toggle_container">
+								<%= f.text_area :receipts_plist, :size => "80x20", "data-format" => 'xml' %>
+							</div>
+							<!-- <hr /> -->
+						</td>
+					</tr>
+				<% end %>
+				<tr>
+					<td colspan="2">
+						<h4>
+							Installs
+							<%= helpful_info("Must be a valid plist with an array as the root object") %>
+						</h4>
+						 <!-- #radio_button_tag 'installs_mode', 'gui', checked = true # label_tag 'installs_mode_gui', 'GUI'
+						 #radio_button_tag 'installs_mode', 'text' # label_tag 'installs_mode_text', 'Text'<br />
+						<div id="gui_installs_container">
+							render :partial => 'gui_installs', :locals => {:installs => @package.installs}
+						</div>
+						 -->
+						<div id="installs_plist_container" class="toggle_container">
+							<%= f.text_area :installs_plist, :size => "80x20", "data-format" => 'xml' %>
+						</div>
+						<!-- <hr /> -->
+					</td>
+				</tr>
+				<!-- <% if @package.installer_package? %>
+					<tr>
+						<td colspan="2">
+							<h4><%= f.label :use_installer_choices, "Installer Choices" %></h4>
+							<p>Needs to be added.</p>
+						</td>
+					</tr>
+				<% end %> -->
+				<tr>
+					<td colspan="2">
+						<h4>
+							Raw tags 
+							<%= f.select :raw_mode_id, options_for_select([[Package.raw_mode(0),0],[Package.raw_mode(1),1],[Package.raw_mode(2),2]],@package.raw_mode_id) %>
+							<%= helpful_info("Raw tags allow the ability to add extra Plist tags to the manifest.  Must be formatted as a valid plist with a dictionary at the root. If you define a tag that is already defined above, the raw tag overwrites it.  In append mode, the tags are added to the info plist.  In exclusive mode, only the tags shown here are used.") %>
+						</h4>
+						<div id="raw_tags_container" class="toggle_container">
+							<%= text_area_tag "package[raw_tags]", (@package.raw_tags.to_plist unless @package.raw_tags.nil?), :size => "80x15", "data-format" => 'xml' %>
+						</div>
+					</td>
+				</tr>
+			</table>
+	</div>
+	
+	<!-- Third tab starts here -->
+	<div id="scripts">
+			<table class="form">
+
+				<tr>
+					<td colspan="2">
+
+						<h4>
+							Pre Install Script
+							<%= helpful_info("Enter the content of the script here to run before the installation") %>
+						</h4>
+						<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
+						# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
+						<div id="gui_receipts_container">
+							# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
+						</div>
+						-->
+						<div id="preinstall_script_container" class="toggle_container">
+							<%= f.text_area :preinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+						</div>
+						<!-- <hr /> -->
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<h4>
+							Post Install Script
+							<%= helpful_info("Enter the content of the script here to run after the installation") %>
+						</h4>
+						<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
+						# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
+						<div id="gui_receipts_container">
+							# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
+						</div>
+						-->
+						<div id="postinstall_script_container" class="toggle_container">
+							<%= f.text_area :postinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+						</div>
+						<!-- <hr /> -->
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<h4>
+							Pre Uninstall Script
+							<%= helpful_info("Enter the content of the script here to run after the installation") %>
+						</h4>
+						<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
+						# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
+						<div id="gui_receipts_container">
+							# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
+						</div>
+						-->
+						<div id="preuninstall_script_container" class="toggle_container">
+							<%= f.text_area :preuninstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+						</div>
+						<!-- <hr /> -->
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<h4>
+							Post Uninstall Script
+							<%= helpful_info("Enter the content of the script here to run after the installation") %>
+						</h4>
+						<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
+						# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
+						<div id="gui_receipts_container">
+							# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
+						</div>
+						-->
+						<div id="postuninstall_script_container" class="toggle_container">
+							<%= f.text_area :postuninstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+						</div>
+						<!-- <hr /> -->
+					</td>
+				</tr>
+
+			</table>
+	</div>
+</div>

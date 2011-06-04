@@ -6,3 +6,4 @@ class PackageBranchTest < ActiveSupport::TestCase
     assert true
   end
 end
+

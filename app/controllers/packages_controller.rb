@@ -69,6 +69,7 @@ class PackagesController < ApplicationController
   end
 
   def show
+    # @package = PackageBranch.find_by_name(params[:id])
     @package = Package.find(params[:id])
     
     respond_to do |format|

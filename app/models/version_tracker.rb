@@ -66,3 +66,4 @@ class VersionTracker < ActiveRecord::Base
     AutoPackage.from_url(download_url)
   end
 end
+
