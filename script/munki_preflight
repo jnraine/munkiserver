@@ -1,0 +1,32 @@
+#!/usr/bin/python
+
+#
+#WPKG-like Dynamic Manifest based on Hostname Preflight Script by John Rozewicki
+#2010-12-08
+#
+#Developed by Ricky Chilcott 
+#2011-03-02
+#
+#Pulls the hosts plist config from MunkiServer based on the clients MAC address.  MunkiServer
+#is configured so even if the machine isn't found, it will return a usable ManagedInstalls.plist
+#
+
+import sys
+import os
+import socket
+import re
+from munkilib import updatecheck
+from munkilib import FoundationPlist
+
+RepoURL = "<%= repoURL %>"
+stream = os.popen("ifconfig en0 | awk '/ether/ {print $2}'")
+MACAddress = stream.read().strip()
+stream.close()
+
+ClientPrefURL = "%s/configuration/%s.plist" % (RepoURL, MACAddress)
+ConfigName = "ManagedInstalls.plist"
+ConfigDir = "/Library/Preferences"
+ConfigPath = os.path.join(ConfigDir, ConfigName)
+
+if updatecheck.curl(url=ClientPrefURL, destinationpath=ConfigPath)["http_result_code"] == "200":
+	print "Downloading client prefrences"

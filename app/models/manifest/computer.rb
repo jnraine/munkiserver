@@ -1,5 +1,6 @@
 class Computer < ActiveRecord::Base
   magic_mixin :manifest
+  magic_mixin :client_pref
   
   belongs_to :computer_model
   belongs_to :computer_group
@@ -44,10 +45,10 @@ class Computer < ActiveRecord::Base
     model ||= ComputerModel.find(computer_model_id) if computer_model_id.present?
     model ||= ComputerModel.default
   end
-  
+
   # Alias the computer_model icon to this computer
   def icon
-    computer_model.icon
+    
   end
   
   # For will_paginate gem.  Sets the default number of records per page.
@@ -92,22 +93,6 @@ class Computer < ActiveRecord::Base
   #   end
   #   c
   # end
-
-  # Returns a hash representing the ManagedInstalls.plist
-  # that should be placed in /Library/Preferences on this client
-  def client_prefs
-    port = ":3000" if Rails.env == "development"
-    url = "http://" + `hostname`.chomp + port.to_s
-    { :ClientIdentifier => client_identifier,
-      :DaysBetweenNotifications => 1,
-      :InstallAppleSoftwareUpdates => true,
-      :LogFile => "/Library/Managed Installs/Logs/ManagedSoftwareUpdate.log",
-      :LoggingLevel => 1,
-      :ManagedInstallsDir => "/Library/Managed Installs",
-      :ManifestURL => url,
-      :SoftwareRepoURL => url,
-      :UseClientCertificate => false }
-  end
   
   # Extend manifest by removing name attribute and adding the catalogs
   def serialize_for_plist
@@ -125,7 +110,7 @@ class Computer < ActiveRecord::Base
     # Return record
     record
   end
-  
+
   def client_identifier
     self.class.to_s.tableize + "/" + mac_address + ".plist"
   end

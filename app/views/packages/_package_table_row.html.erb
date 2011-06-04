@@ -2,7 +2,7 @@
 	<!-- <td>
 		<input type="checkbox" />
 	</td> -->
-	<td><%= image_tag(package.icon.url(:small)) %></td>
+	<td><%= image_tag(package.icon.url(:small)) if package.icon %></td>
 	<td>
 		<%= package.display_name %><br />
 		<em><%= package.name %></em>

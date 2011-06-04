@@ -1,6 +1,6 @@
 <% item_list.each do |item| %>
 	<div class="packageListItem">
-		<%= image_tag item.package.icon.url(:tiny) %>
+		<%= image_tag item.package.icon.url(:tiny) if item.package.icon %>
 		<% if item.package_id.blank? %>
 			<span><%= link_to item.package, package_path(item.package) %></span>
 		<% else %>

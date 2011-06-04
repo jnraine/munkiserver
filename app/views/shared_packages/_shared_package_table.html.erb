@@ -24,7 +24,7 @@
 				<!-- <td>
 					<input type="checkbox" />
 				</td> -->
-				<td><%= image_tag package.icon.url(:tiny) %></td>
+				<td><%= image_tag package.icon.url(:tiny) if package.icon %></td>
 				<td><%= package.name %></td>
 				<td><%= package.display_name %></td>
 				<td><%= package.version %></td>

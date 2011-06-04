@@ -22,10 +22,7 @@
 
 <%= form_for(@package, :html => {:multipart => true} ) do |f| %>
 	<%= f.error_messages %>
-	
 	<%= render :partial => "edit_tabs", :locals => {:f => f} %>
-
-<br />
-<p style="float:right;"><%= f.submit 'Update' %></p>
+	<p style="float:right;"><%= f.submit 'Update' %></p>
 <% end %>
 <%= link_to 'Show', @package %>

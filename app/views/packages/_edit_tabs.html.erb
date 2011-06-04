@@ -131,7 +131,7 @@
 					Icon
 				</td>
 				<td>
-					<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") %>
+					<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") if @package.icon %>
 					<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
 				</td>
 			</tr>
