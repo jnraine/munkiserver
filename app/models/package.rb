@@ -604,7 +604,7 @@ class Package < ActiveRecord::Base
   # Returns an unsaved instance of the Package class
   def self.create_from_uploaded_file(uploaded_file,pkginfo_file = nil, options = {})
     if uploaded_file == nil 
-      raise PackgeError.new("Please upload a package file")
+      raise PackageError.new("Please select a file")
     else
       file = self.init_uploaded_file(uploaded_file)
       self.create(file,pkginfo_file,options)
