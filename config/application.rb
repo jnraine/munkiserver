@@ -39,7 +39,7 @@ module Munki
     MAKEPKGINFO = Pathname.new("/usr/local/munki/makepkginfo")
     
     # A secret is required to generate an integrity hash for cookie session data
-    config.secret_token = "changemenow"
+    config.secret_token = "407738ccc1518e5a71714d7dc16365c424732e543d791c22bffca1d6d8ac6949e08688836cc69635dc29a8d48b607bd73cb26bcad384c1fbecee44f552f8070c"
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password

@@ -12,22 +12,20 @@ class User < ActiveRecord::Base
   validates_length_of :password, :in => 5..24, :if => :password_changed?,
     :message => @@password_constraints[:pass_len]
   # ensure password contains at least one number
-  validates_format_of :password, :with => /[0-9]/, :if => :password_changed?,
-    :message => @@password_constraints[:pass_nums]
+  # validates_format_of :password, :with => /[0-9]/, :if => :password_changed?,
+  #   :message => @@password_constraints[:pass_nums]
   # ensure password contains at least one upper case  
-  validates_format_of :password, :with => /[A-Z]/, :if => :password_changed?,
-    :message => @@password_constraints[:pass_upper]
+  # validates_format_of :password, :with => /[A-Z]/, :if => :password_changed?,
+  #   :message => @@password_constraints[:pass_upper]
   # ensure password contains at least one lower case  
-  validates_format_of :password, :with => /[a-z]/, :if => :password_changed?,
-    :message => @@password_constraints[:pass_lower]
+  # validates_format_of :password, :with => /[a-z]/, :if => :password_changed?,
+  #   :message => @@password_constraints[:pass_lower]
   validates_presence_of :username, :email
-  validates_presence_of :salt,
-    :message => "is missing. New users require a password."
+  validates_presence_of :salt, :message => "is missing. New users require a password."
   validates_presence_of :password, :password_confirmation, :if => :password_changed?
   validates_uniqueness_of :username, :email
   validates_confirmation_of :password, :if => :password_changed?
-  validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, 
-    :message => "address doesn't look valid"
+  validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :message => "address doesn't look valid"
   
   attr_protected :id, :salt
   attr_accessor :password

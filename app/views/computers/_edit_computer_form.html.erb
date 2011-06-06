@@ -12,7 +12,7 @@
 		</tr>
 		<tr>
 			<td>MAC Address (<%= field_lock_control("computer_mac_address") %>)</td>
-			<td><%= f.text_field :mac_address, :disabled => true, :size => 18 %></td>
+			<td><%= f.text_field :mac_address, :disabled => true, :maxlength => 17, :size => 18 %></td>
 		</tr>
 		<tr>
 			<td>Computer Group</td>

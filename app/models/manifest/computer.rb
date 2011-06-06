@@ -12,6 +12,7 @@ class Computer < ActiveRecord::Base
   
   # Validations
   validate :computer_model
+  validates_presence_of :name
   # mac_address attribute must look something like ff:12:ff:34:ff:56
   validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/
   validates_uniqueness_of :mac_address,:name
@@ -28,16 +29,6 @@ class Computer < ActiveRecord::Base
     7.days.ago
   end
   
-  # Getter for virtual attribute hostname
-  def hostname
-    name
-  end
-  
-  # Setting for virtual attribute hostname
-  def hostname=(value)
-    name = value
-  end
-  
   # Overwrite computer_model association method to return 
   # computer model based on system_profile
   def computer_model
@@ -48,7 +39,7 @@ class Computer < ActiveRecord::Base
 
   # Alias the computer_model icon to this computer
   def icon
-    
+    computer_model.icon
   end
   
   # For will_paginate gem.  Sets the default number of records per page.
@@ -188,8 +179,25 @@ class Computer < ActiveRecord::Base
     status
   end
   
+  # Do some reformatting before writing to attribute
+  def mac_address=(value)
+    # Remove non-alphanumeric
+    value = value.gsub(/[^a-zA-Z0-9]/,'')
+    # Lower case
+    value = value.downcase
+    # Replace hyphens with colons
+    i = 0
+    formatted = []
+    while(i < 12 and i < value.length) do
+      formatted << value[i]
+      formatted << ":" if i.odd? and i != 11
+      i += 1
+    end
+    write_attribute(:mac_address,formatted.join(""))
+  end
+  
   def to_param
-    mac_address
+    name
   end
 end
 
