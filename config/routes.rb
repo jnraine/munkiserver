@@ -1,6 +1,6 @@
 Munki::Application.routes.draw do  
  
-  resources :computers do
+  resources :computers, :id => /[A-Za-z0-9_\-\.%]+/ do
     get :import, :on => :new
     collection do
       post :create_import
@@ -18,6 +18,8 @@ Munki::Application.routes.draw do
   end
   resources :units
   resources :unit_settings, :user_settings, :computer_groups, :bundles, :users
+  
+
   
   # match 'test/info' => 'test#info'
   match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get
