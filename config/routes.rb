@@ -1,8 +1,4 @@
 Munki::Application.routes.draw do  
- 
-  get "search/index"
-
-  get "search/show"
 
   resources :computers do
     get :import, :on => :new
