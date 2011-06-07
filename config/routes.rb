@@ -1,6 +1,10 @@
 Munki::Application.routes.draw do  
  
-  resources :computers, :id => /[A-Za-z0-9_\-\.%]+/ do
+  get "search/index"
+
+  get "search/show"
+
+  resources :computers do
     get :import, :on => :new
     collection do
       post :create_import

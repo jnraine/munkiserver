@@ -3,4 +3,8 @@
 <%= render :partial => 'edit_computer_form', :locals => {:submit_button_string => "Update"} %>
 
 
-<%= link_to 'Show', @computer %>
+<% if @computer.errors.empty? %>
+	<%= link_to 'Show', @computer %>
+<% else %>
+	<%= link_to 'Show', computer_path(@computer.id) %>
+<% end %>
