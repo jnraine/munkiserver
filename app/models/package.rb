@@ -405,6 +405,7 @@ class Package < ActiveRecord::Base
     when :pretty then display_name
     when :pretty_with_version then "#{self.to_s(:pretty)} (#{version})"
     when :plist_path then "pkginfo/#{self.to_s(:unique)}.plist"
+    when :download_filename then "#{name}-#{version}#{extension}"
     else name
     end
   end
@@ -471,7 +472,7 @@ class Package < ActiveRecord::Base
       h["supported_architectures"] = sa unless sa.empty?
       # Requires
       h["requires"] = self.requires.map {|p| p.to_s(:version) } unless self.requires.empty?
-      h["installer_item_location"] = id.to_s
+      h["installer_item_location"] = download_name
       
       # Add any raw tags
       h = h.merge(raw_tags) if append_raw?
@@ -896,5 +897,9 @@ class Package < ActiveRecord::Base
   def find_by_name (param)
     p = Package.new
     param = p.package_branch.name
+  end
+  
+  def download_name
+    "#{id}-#{to_s(:download_filename)}"
   end
 end

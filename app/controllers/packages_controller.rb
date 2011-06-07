@@ -82,7 +82,7 @@ class PackagesController < ApplicationController
   def download
     @package = Package.find(params[:id])
     if @package.present?
-      send_file Munki::Application::PACKAGE_DIR + @package.installer_item_location, :filename => @package.to_s(:version) + @package.extension
+      send_file Munki::Application::PACKAGE_DIR + @package.installer_item_location, :filename => @package.to_s(:download_filename)
     else
       render :template => "404.html", :status => :not_found
     end

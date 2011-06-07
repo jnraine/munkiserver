@@ -37,7 +37,7 @@ Munki::Application.routes.draw do
   match ':id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
   match 'catalogs/:unit_id-:environment_name.plist' => 'catalogs#show', :format => 'plist'
   match ':unit_name/:controller/:id.plist', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%]+/, :as => 'manifest'
-  match 'pkgs/:id' => 'packages#download', :as => 'download_package'
+  match 'pkgs/:id' => 'packages#download', :as => 'download_package', :id => /[A-Za-z0-9_\-\.%]+/
   match '/configuration/:id.plist', :controller => 'computers', :action => 'show', :format => 'client_prefs', :id => /[A-Za-z0-9_\-\.:]+/
 
   root :to => "computers#index"
