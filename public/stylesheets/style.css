@@ -269,6 +269,12 @@ table.form {
 	border-left:none;
 	border-right:none;
 }
+
+.field_with_errors{
+	display:inline;
+	
+}
+
 .warning {
 	background-image:url("../images/warning_icon.png");
 	background-repeat:no-repeat;
