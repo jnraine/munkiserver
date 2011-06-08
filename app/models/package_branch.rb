@@ -26,9 +26,9 @@ class PackageBranch < ActiveRecord::Base
   before_save :require_version_tracker
 
   # Conforms a string to the package branch name constraints
-  # => Replaces spaces or hyphens with underscores
+  # => Replaces anything that are not alpheranumrical to underscores
   def self.conform_to_name_constraints(value)
-    value.gsub(/[ -]+/,"_")
+    value.gsub(/[^A-Za-z0-9_\.]+/,"_")
   end
 
   # Returns the latest package (based on version)

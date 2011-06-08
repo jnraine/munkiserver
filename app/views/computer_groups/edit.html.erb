@@ -1,6 +1,6 @@
 <h2>Editing <%= @computer_group %></h2>
 
-<%= form_for(@computer_group) do |f| %>
+<%= form_for(@computer_group, :validate => true) do |f| %>
 	<%= f.error_messages %>
 	
 	<p><%= f.text_field :name %></p>

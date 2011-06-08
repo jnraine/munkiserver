@@ -3,6 +3,7 @@ class ComputerGroup < ActiveRecord::Base
   magic_mixin :client_pref
   
   has_many :computers
+  
 
   # Tabled ASM select hash for adding computers to the group
   def computers_tas
