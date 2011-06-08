@@ -754,7 +754,6 @@ class Package < ActiveRecord::Base
     pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'])
     package.package_branch = PackageBranch.find_or_create_by_name(pb_name)
     pkginfo_hash.delete('name')
-
     # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
     pkginfo_hash.each do |k,v|
       unless known_attributes.include?(k)

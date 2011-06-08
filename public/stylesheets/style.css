@@ -271,13 +271,15 @@ table.form {
 	display:inline;
 }
 
+/* over writing the flash warning message for client side validations */
 .field_with_errors .message {
 	color: #8A1F11;
 	border-top:0px;
 	border-bottom:0px;
 	padding:0px;
 	padding-left:5px;
-	margin-bottom:0px;	
+	margin-bottom:0px;
+	line-height:16px;	
 }
 
 .warning {
