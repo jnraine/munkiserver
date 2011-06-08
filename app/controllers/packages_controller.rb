@@ -10,13 +10,14 @@ class PackagesController < ApplicationController
     end
   end
 
-  def create 
+  def create
+    exceptionMessage = nil
     begin
       @package = Package.create_from_uploaded_file(params[:package_file],params[:pkginfo_file], {:makepkginfo_options => params[:makepkginfo_options],
                                                                                             :attributes => {:unit_id => current_unit.id}})
     rescue PackageError => e
       @package = Package.new
-      flash[:error] = e.to_s
+      exceptionMessage = e.to_s
     end
     
     respond_to do |format|
@@ -26,7 +27,9 @@ class PackagesController < ApplicationController
         format.html { redirect_to edit_package_path(@package) }
       else
         # Failure
-        flash[:error] = "Failed to add package: " + flash[:error]
+        flash[:error] = "Failed to add package"
+        flash[:error] = flash[:error] + ": " + exceptionMessage if exceptionMessage.present?
+        
         format.html { redirect_to :back }
       end
     end
