@@ -138,8 +138,17 @@ $(document).ready(function() {
 		
 	// jQuery for tabs in package edit
 	$("#tabs").tabs();
+	
+	// client side validation jQuery animation
+	clientSideValidations.callbacks.element.fail = function(element, message, callback) {
+	  callback();
+	  if (element.data('valid') !== false) {
+		e = element.parent().find('.message');
+		e.hide().show('slide', {direction: "left", easing: "easeOutBounce"}, 500);
+	  }
+	}
+	
 }); // end document ready function
-
 
 
 // AJAX hostname search/filter

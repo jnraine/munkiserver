@@ -1,8 +1,8 @@
 <h2>Editing unit</h2>
 
-<%= form_for(@unit) do |f| %>
+<%= form_for(@unit, :validate => true) do |f| %>
   <%= f.error_messages %>
-	<p><%= f.text_field :name %> Name</p>
+	<p><%= f.text_field :name %></p>
 	<p><%= f.text_area :description, :size => "30x3" %></p>
 	<div id="members">
 		<%= tabled_asm_select(@unit) %>
