@@ -110,6 +110,11 @@ a:hover {
 	top:38px;
 }
 
+/* Computer Table */
+#bulk_edit{
+	float: right;
+	display:inline;
+}
 /* Sticky footer */
 
 * {

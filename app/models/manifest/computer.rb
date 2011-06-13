@@ -196,6 +196,12 @@ class Computer < ActiveRecord::Base
     end
     write_attribute(:mac_address,formatted.join(""))
   end
+  # bulk update 
+  def self.bulk_update_attributes(computers)
+    computers.each do |c|
+      c.update_attributes(params[:selected_records].reject {|k,v| v.blank?})
+    end
+  end
   
   # overwirte to_param so the name of the commputer can be displayed in the URL
   def to_param
@@ -203,4 +209,3 @@ class Computer < ActiveRecord::Base
   end
   
 end
-

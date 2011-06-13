@@ -6,9 +6,9 @@
 				<%= env.to_s + " (#{Computer.where(:environment_id => env.id, :unit_id => current_unit.id).count})" %>
 			<% else %>
 				<%= link_to env.to_s + " (#{Computer.where(:environment_id => env.id, :unit_id => current_unit.id).count})", computers_path(:eid => env.id) %>
-			<% end -%>
+			<% end %>
 			|
-		<% end -%>
+		<% end %>
 	</div>
 	<% # computer_group_header(@computer_group_id) %>
 	<div class="span-16 last" style="text-align:right;">
@@ -16,30 +16,9 @@
 		<%= hidden_field_tag "eid", params['eid'] %>
 		<%= text_field_tag "name", params['name'] %>
 		<%= submit_tag "Filter" %>
-	<% end -%>
+	<% end %>
 	</div>
-	<%= form_tag "...", :name => "bulk_edit", :id => "bulk_edit_form" do %>
-		<div class="span-16 last" style="text-align:right;">
-				<a href="javascript:void();" onClick="SetAllCheckBoxes('bulk_edit','selected_records[]',true)">all</a>, 
-				<a href="javascript:void();"onClick="SetAllCheckBoxes('bulk_edit','selected_records[]',false)">none</a>
-				<%= submit_tag "Remove",:confirm => "Are you sure you want to remove all selected records?" %>
-		</div>
-		<div class="span-16 last" style="text-align:right;">
-			<%= select_tag :computer_group_id, computer_group_options, {:default => 'Choose a group'} %>
-			<%= submit_tag "Move" %>
-		</div>
-	<script type="text/javascript">
-		// To stop any bulk edit queries from being made (it hasn't been implemented yet)
-		jQuery('#bulk_edit_form').submit(function () {
-			alert("Sorry! Bulk edit has not been implemented yet.");
-			return false
-		});
-	</script>
-	
-		<% unless params[:hostname].blank? %>
-			<p>Showing computers with hostnames containing "<%= params[:hostname] %>"</p>
-		<% end -%>
-
+	<%= form_tag multiple_edit_computers_path, :id => "bulk_edit_form" do %>
 		<%= computer_table(@computers) %>
-	<% end -%>
+	<% end %>
 </div>

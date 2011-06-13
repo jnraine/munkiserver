@@ -29,7 +29,6 @@ class PackagesController < ApplicationController
         # Failure
         flash[:error] = "Failed to add package"
         flash[:error] = flash[:error] + ": " + exceptionMessage if exceptionMessage.present?
-        
         format.html { redirect_to :back }
       end
     end

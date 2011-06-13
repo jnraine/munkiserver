@@ -144,12 +144,74 @@ $(document).ready(function() {
 	  callback();
 	  if (element.data('valid') !== false) {
 		e = element.parent().find('.message');
+		// e.css({"display":"block"});
 		e.hide().show('slide', {direction: "left", easing: "easeOutBounce"}, 500);
 	  }
 	}
 	
-}); // end document ready function
+	// show bulk edit button when 2 or more checkbox is selected
+	$("#bulk_edit").css({"visibility":"hidden"});
+	
+	// bulk checkbox toggle for bulk edit
+	// $("#select_all").change(function() {
+	// 	if ($("#select_all").attr("checked") === true) {
+	// 		$(":checkbox").not("#select_all").attr("checked", true);
+	// 		// firefox fix
+	// 		// $("#bulk_edit").css({"visibility":"visible"});
+	// 	}
+	// 	else {
+	// 		$(":checkbox").not("#select_all").attr("checked", false);
+	// 		// firefox fix
+	// 		// $("#bulk_edit").css({"visibility":"hidden"});
+	// 	}
+	// });
+	
+	// for package categories
+	// $(":checkbox").change(function(){
+	// 	currentNodeId = this.getAttribute("id")
+	// 	currentNodeClass = this.getAttribute("class")
+	// 	console.log("Current Node: " + currentNodeName);
+	// 	
+	// 	if (this.parentNode.parentNode.parentNode.nodeName === "THEAD" && $("#"+currentNodeId).attr("checked") === true){
+	// 		selector = "'input[name=" + "\"" + currentNodeName + "[]" + "\"" + "]'"
+	// 		console.log("selector: " + selector);
+	// 		$(selector).attr("checked", true);
+	// 	}else{
+	// 		$(selector).attr("checked", false);
+	// 	}
+	// });
+	
+	$(".select_all").change(function() {
+		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
+	});
+	
+	// count how many checkbox user has selected
+	function countChecked() {
+	  var n = $(":checked").not(".select_all").length;
+		console.log(n);
+		if (n > 1) {
+			$("#bulk_edit").css({"visibility":"visible"});
+		}
+		else{
+			$("#bulk_edit").css({"visibility":"hidden"});
+		}
+	}
+	countChecked();
+	$(":checkbox").change(countChecked);
+	
+	// AJAX for pagination and submit
+	// $("#filter_form").submit(function(){
+	// 		$.get(this.action, $(this).serialize(), null, "script");
+	// 		return false;
+	// 	});
+	// 	$("#computer_table .pagination a").live("click", function() {
+	// 	    $.getScript(this.href);
+	// 	    return false;
+	// 	  });
+	
 
+	
+}); // end document ready function
 
 // AJAX hostname search/filter
 $("#filter_form").submit(function() {

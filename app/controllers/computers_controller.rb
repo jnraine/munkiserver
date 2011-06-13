@@ -30,7 +30,7 @@ class ComputersController < ApplicationController
       end
     end
   end
-
+  
   def show
     @computer = Computer.find_for_show(CGI::unescape(params[:id]))
     
@@ -134,5 +134,27 @@ class ComputersController < ApplicationController
     @computer.save
     AdminMailer.computer_report(@computer).deliver if @computer.report_due?
     render :text => ''
+  end
+  
+  
+  # Allows multiple edits
+  def multiple_edit
+    @computers = Computer.find(params[:selected_records])
+  end
+  
+  def multiple_update
+    @computers = Computer.find(params[:selected_records])
+    @computers.each do |c|
+        c.update_attributes(params[:selected_records].reject {|k,v| v.blank?})
+      end
+    results = Computer.bulk_update_attributes(@computers)
+    
+    respond_to do |format|
+        if results.include?(false) && results.include?(true)
+            flash[:warning] = "#{results.delete_if {|e| e}.length} of #{results.length} computer objects updated"
+            format.html { redirect_to(:action => "index") }
+        end
+    end
+
   end
 end

@@ -4,8 +4,11 @@ Munki::Application.routes.draw do
     get :import, :on => :new
     collection do
       post :create_import
+      post :multiple_edit
+      put :multiple_update
     end
   end
+  
   resources :packages do
     collection do
       get :check_for_updated
@@ -19,7 +22,6 @@ Munki::Application.routes.draw do
   resources :units
   resources :unit_settings, :user_settings, :computer_groups, :bundles, :users
   
-
   
   # match 'test/info' => 'test#info'
   match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get

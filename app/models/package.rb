@@ -413,6 +413,11 @@ class Package < ActiveRecord::Base
   def versions
     package_branch.packages_like_unit_member(self)
   end
+  
+  # return how many versions associated with this perticular package for rowspan
+  def rowspan
+    self.versions.count
+  end
 
   # Moved to UnitMember
   # Determines what catalog this belongs to
@@ -901,4 +906,5 @@ class Package < ActiveRecord::Base
   def download_name
     "#{id}-#{to_s(:download_filename)}"
   end
+  
 end

@@ -1,18 +1,7 @@
 <% content_for :sidebar do %>
 	<%= recent_packages %>
 	<%= available_updates %>
-<% end -%>
-
-<script>
-
-function hello1(){
-  var d = new Date();
-	var str = "Hello World - One.\n\nIt is ";
-	alert( str + d.toString() );
-}
-
-
-</script>
+<% end %>
 
 <h2>Listing packages</h2>
 <p id="environment_links">
@@ -22,9 +11,9 @@ function hello1(){
 			<%= env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})" %>
 		<% else %>
 			<%= link_to env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})", packages_path(:eid => env.id) %>
-		<% end -%>
+		<% end %>
 		|
-	<% end -%>
+	<% end %>
 </p>
 
 <h3><%= current_environment %></h3>
@@ -33,7 +22,7 @@ function hello1(){
 	<h5>There are no packages in the <%= current_environment.to_s.downcase %> environment</h5>
 	<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
 <% else %>
-	<p><%= record_count(@packages) %></p>
+	<p><%= record_count(@packages) %><%= submit_tag "Multiple Edit", :id => "bulk_edit" %></p>
 	
 	<%= package_table(@packages) %> 
 	
