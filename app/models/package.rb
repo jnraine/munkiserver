@@ -907,4 +907,10 @@ class Package < ActiveRecord::Base
     "#{id}-#{to_s(:download_filename)}"
   end
   
+  def self.bulk_update_attributes(packages,params)
+    packages.each do |p|
+      p.update_attributes(params.reject {|k,v| v.blank?})
+    end
+  end
+  
 end

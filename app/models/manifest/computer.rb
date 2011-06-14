@@ -197,9 +197,10 @@ class Computer < ActiveRecord::Base
     write_attribute(:mac_address,formatted.join(""))
   end
   # bulk update 
-  def self.bulk_update_attributes(computers)
+  def self.bulk_update_attributes(computers,p)
     computers.each do |c|
-      c.update_attributes(params[:selected_records].reject {|k,v| v.blank?})
+      c.update_attributes(p.reject {|k,v| v.blank?})
+      # debugger
     end
   end
   

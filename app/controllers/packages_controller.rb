@@ -80,6 +80,31 @@ class PackagesController < ApplicationController
     end
   end
   
+  # Allows multiple edits
+  def multiple_edit
+    @packages = Package.find(params[:selected_records])
+  end
+  
+  def multiple_update
+    @packages = Package.find(params[:selected_records])
+    p = params[:package]
+    results = Package.bulk_update_attributes(@packages, p)
+    
+    respond_to do |format|
+        if !results.include?(false)
+           flash[:notice] = "All #{results.length} packages were successfully updated."
+           format.html { redirect_to(:action => "index") } 
+        elsif results.include?(false) && results.include?(true)
+          flash[:warning] = "#{results.delete_if {|e| e}.length} of #{results.length} packages updated."
+          format.html { redirect_to(:action => "index") }
+        elsif !results.include?(true)
+          flash[:error] = "None of the #{results.length} packages were updated !"
+          format.html { redirect_to(:action => "index") }
+        end
+    end
+  end
+  
+  
   # Used to download the actual package (typically a .dmg)
   def download
     @package = Package.find(params[:id])

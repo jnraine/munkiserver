@@ -3,7 +3,7 @@ Munki::Application.routes.draw do
   resources :computers do
     get :import, :on => :new
     collection do
-      post :create_import
+      post :create_import 
       post :multiple_edit
       put :multiple_update
     end
@@ -11,8 +11,10 @@ Munki::Application.routes.draw do
   
   resources :packages do
     collection do
+      post :multiple_edit
       get :check_for_updated
       put :check_for_updated
+      put :multiple_update
     end
   end
 

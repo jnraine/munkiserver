@@ -127,7 +127,6 @@ $(document).ready(function() {
 				$(vid).parent().parent().hide();
 				$(vid).val('');	
 			}
-			
 		});
 	}
 	

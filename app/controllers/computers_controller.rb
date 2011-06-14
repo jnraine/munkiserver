@@ -42,7 +42,8 @@ class ComputersController < ApplicationController
         format.client_prefs { render :text => @computer.client_prefs.to_plist }
       else
         MissingManifest.new({:manifest_type => Computer.to_s, :identifier => params[:id], :request_ip => request.remote_ip}).save
-        format.manifest { render :file => "public/404.html", :status => 404 }
+        format.manifest { render :file => "public/404.html", :status => 404, :layout => false}
+        format.html { render :file => "public/404.html", :status => 404, :layout => false }
       end
     end
   end
@@ -144,17 +145,20 @@ class ComputersController < ApplicationController
   
   def multiple_update
     @computers = Computer.find(params[:selected_records])
-    @computers.each do |c|
-        c.update_attributes(params[:selected_records].reject {|k,v| v.blank?})
-      end
-    results = Computer.bulk_update_attributes(@computers)
+    p = params[:computer]
+    results = Computer.bulk_update_attributes(@computers, p)
     
     respond_to do |format|
-        if results.include?(false) && results.include?(true)
-            flash[:warning] = "#{results.delete_if {|e| e}.length} of #{results.length} computer objects updated"
-            format.html { redirect_to(:action => "index") }
+        if !results.include?(false)
+           flash[:notice] = "All #{results.length} computer objects were successfully updated."
+           format.html { redirect_to(:action => "index") } 
+        elsif results.include?(false) && results.include?(true)
+          flash[:warning] = "#{results.delete_if {|e| e}.length} of #{results.length} computer objects updated."
+          format.html { redirect_to(:action => "index") }
+        elsif !results.include?(true)
+          flash[:error] = "None of the #{results.length} computer objects were updated !"
+          format.html { redirect_to(:action => "index") }
         end
     end
-
   end
 end
