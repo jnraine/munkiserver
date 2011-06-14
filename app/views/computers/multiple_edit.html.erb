@@ -1,0 +1,31 @@
+<h2>Bulk Edit Computers</h2>
+<% form_for(@computers, :url => multiple_update_computers_path, :html => {:method => :put })  do |f| %>
+	<%= f.error_messages %>
+	<% for c in @computers %>
+
+		<%= hidden_field_tag "selected_records[]", c.id %>
+	
+	<% end %>
+	<p><em>Editing <%= @computers.count %> computers</em></p>
+	<table>
+
+	
+	<tr>
+		<td>
+		<%= f.label :computer_group_id %>
+		</td>
+		<td>
+		<%= select_tag :computer_group_id, computer_group_options, {:default => 'Choose a group'} %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<%= f.label :environment_id %>
+		</td>
+		<td>
+		<%= f.collection_select :environment_id, Environment.all, :id, :name %>
+		</td>
+	</tr>
+	</table>
+	<p><%= link_to "Cancel", root_path %> <%= f.submit "Update" %></p>
+<% end %>
