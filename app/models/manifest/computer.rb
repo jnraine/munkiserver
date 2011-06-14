@@ -200,7 +200,6 @@ class Computer < ActiveRecord::Base
   def self.bulk_update_attributes(computers,p)
     computers.each do |c|
       c.update_attributes(p.reject {|k,v| v.blank?})
-      # debugger
     end
   end
   
