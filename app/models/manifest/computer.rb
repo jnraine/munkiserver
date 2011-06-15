@@ -203,6 +203,10 @@ class Computer < ActiveRecord::Base
     end
   end
   
+  def self.multiple_edit
+    render :multiple_edit
+  end 
+  
   # overwirte to_param so the name of the commputer can be displayed in the URL
   def to_param
     name

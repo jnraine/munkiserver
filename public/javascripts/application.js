@@ -148,47 +148,56 @@ $(document).ready(function() {
 	  }
 	}
 	
-	// show bulk edit button when 2 or more checkbox is selected
+	initializeBulkEdit();
+	bulkEditCheckbox();
+}); // end document ready function
+
+function initalizeLightBoxMe(){
+	$('#lightbox_target').lightbox_me({
+	        centered: true, 
+			// re-initialize bulk upon closing
+	        onClose: function() { 
+				initializeBulkEdit();
+	            }
+	        });
+}
+// close lightbox_me
+function closeLightBoxMe(){
+	$(".cancel").click(function(){
+		$('#lightbox_target').trigger('close');
+	})
+}
+// uncheck all the checkbox and hide the submit button
+function initializeBulkEdit() {
+	$(":checkbox").attr("checked", false);
 	$("#bulk_edit").css({"visibility":"hidden"});
-	
-	// bulk checkbox toggle for bulk edit
+}
+// bulk checkbox toggle for bulk edit
+function bulkEditCheckbox(){
 	$(".select_all").change(function() {
 		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
 	});
-	
-	// count how many checkbox user has selected
-	function countChecked() {
-	  var n = $(":checked").not(".select_all").length;
+	// show bulk edit button when 2 or more checkbox is selected
+	$(":checkbox").change(function(){
+	  var n = $(".bulk_edit_checkbox:checked").length;
 		if (n > 1) {
 			$("#bulk_edit").css({"visibility":"visible"});
-		}
-		else{
+		} else{
 			$("#bulk_edit").css({"visibility":"hidden"});
 		}
-	}
-	countChecked();
-	$(":checkbox").change(countChecked);
-	
-	// AJAX for pagination and submit
-	// $("#filter_form").submit(function(){
-	// 		$.get(this.action, $(this).serialize(), null, "script");
-	// 		return false;
-	// 	});
-	// 	$("#computer_table .pagination a").live("click", function() {
-	// 	    $.getScript(this.href);
-	// 	    return false;
-	// 	  });
-}); // end document ready function
+	});
+	$(":checkbox").change();
+}
 
 // AJAX hostname search/filter
-$("#filter_form").submit(function() {
-	// Show the loading graphic while request is made
-	$("#loading_graphic").show();
-	// Grab the script and execute it
-	$.getScript(this.action + "?hostname=" + $("[name=hostname]").val());
-	// Return false so the form isn't submitted
-	return false;
-});
+// $("#filter_form").submit(function() {
+// 	// Show the loading graphic while request is made
+// 	$("#loading_graphic").show();
+// 	// Grab the script and execute it
+// 	$.getScript(this.action + "?hostname=" + $("[name=hostname]").val());
+// 	// Return false so the form isn't submitted
+// 	return false;
+// });
 
 // Text field default message
 $.fn.extend({

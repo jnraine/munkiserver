@@ -1,0 +1,7 @@
+if ($("#bulk_edit_packages").length == 0){
+	$("#lightbox_target").append("<%= escape_javascript(render(:file => "app/views/packages/multiple_edit.html.erb")) %>");
+	initalizeLightBoxMe();
+}else{
+	initalizeLightBoxMe();
+}
+closeLightBoxMe();

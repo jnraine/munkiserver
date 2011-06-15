@@ -1,3 +1,4 @@
+<div id="bulk_edit_packages">
 <h2>Bulk Edit Packages</h2>
 <% form_for(@packages, :url => multiple_update_packages_path, :html => {:method => :put })  do |f| %>
 	<%= f.error_messages %>
@@ -61,6 +62,13 @@
 				<%= f.check_box :shared %>
 			</td>
 		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<%= f.submit "Update" %>
+				<a href="#" class="cancel">Cancel</a>
+			</td>
+		</tr>
 	</table>
-	<p><%= link_to "Cancel", packages_path %> <%= f.submit "Update" %></p>
 <% end %>
+</div>

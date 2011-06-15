@@ -1,4 +1,5 @@
 <div id="computer_table">
+	<div id="lightbox_target"></div>
 	<% if paginate %>
 		<p>
 			view
@@ -41,7 +42,7 @@
 		<% computers.each do |c| %>
 		  <tr>
 			<% if bulk_edit %>
-				<td><%= check_box_tag("selected_records[]",c.id) %></td>
+				<td><%= check_box_tag("selected_records[]",c.id, false, :class => "bulk_edit_checkbox") %></td>
 			<% end %>
 		
 			<td><%= image_tag c.icon.url(:small) if c.icon %>
