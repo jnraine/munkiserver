@@ -160,6 +160,7 @@ function initalizeLightBoxMe(){
 				initializeBulkEdit();
 	            }
 	        });
+	// $('#lightbox_target').trigger('reposition');	
 }
 // close lightbox_me
 function closeLightBoxMe(){
