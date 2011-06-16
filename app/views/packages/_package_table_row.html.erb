@@ -1,24 +1,20 @@
 <tr>
-	<!-- <td>
-		<input type="checkbox" />
-	</td> -->
-	<td><%= image_tag(package.icon.url(:small)) if package.icon %></td>
-	<td>
+	<td rowspan="<%= package.versions.count %>"><%= image_tag(package.icon.url(:small)) if package.icon %></td>
+	<td rowspan="<%= package.versions.count %>">
 		<%= package.display_name %><br />
 		<em><%= package.name %></em>
 	</td>
-	<td>
-		<% package.versions.each do |pkg| %>
-			<%= link_to "#{pkg.version}", package_path(pkg), :title => "Show" %>
-			<%= link_to image_tag("edit.png", :class => "inline-icon", :title => "Edit"), edit_package_path(pkg) %>
-			<%= link_to image_tag("download.png", :class => "inline-icon", :title => "Download"), download_package_path(pkg.download_name) %>
-			<% if super_user? %>
-				<%= link_to(image_tag("delete.png", :class => "inline-icon", :title => "Remove"), pkg, :confirm => "Are you sure you want to destroy #{pkg.to_s(:version)}?", :method => :delete, :title => "Remove") %>
-			<% end -%>
-			<br />
-		<% end -%>
-	</td>
-	<td>
+	
+		<%= render :partial => 'package_version_column', :locals => {:pkg => package.versions.first} %>
+	
+	<td rowspan="<%= package.versions.count %>">
 		<%= "&#10003;".html_safe if package.package_branch.new_version_shared?(package.unit) %>
 	</td>
 </tr>
+<% package.versions.each_with_index do |pkg,i| %>
+	<% unless i == 0 %>
+		<tr>
+				<%= render :partial => 'package_version_column', :locals => {:pkg => pkg} %>
+		</tr>
+	<% end %>
+<% end %>

@@ -127,7 +127,6 @@ $(document).ready(function() {
 				$(vid).parent().parent().hide();
 				$(vid).val('');	
 			}
-			
 		});
 	}
 	
@@ -144,22 +143,70 @@ $(document).ready(function() {
 	  callback();
 	  if (element.data('valid') !== false) {
 		e = element.parent().find('.message');
+		// e.css({"display":"block"});
 		e.hide().show('slide', {direction: "left", easing: "easeOutBounce"}, 500);
 	  }
 	}
 	
+	initializeBulkEdit();
 }); // end document ready function
 
+// disable input and select field onload, click to enable the field
+function selectToEdit(){
+	$(".accept").parents("tr").find("input, select").not($(".accept:checkbox")).attr("disabled", true);
+	
+	$(".accept").change(function(){
+		$(this).parents("tr").find("input, select").not(this).attr("disabled", !$(this).attr("checked"));
+	})
+}
+
+// trigger lightbox popup
+function initalizeLightBoxMe(){
+	$('#lightbox_target').lightbox_me({
+	        centered: true, 
+			closeSelector: ".cancel",
+			destroyOnClose: true,
+			onLoad: selectToEdit() });	
+}
+// uncheck all the checkbox and hide the submit button
+function initializeBulkEdit() {
+	
+	$("#bulk_edit").css({"visibility":"hidden"});
+	
+	$(".select_all").change(function() {
+		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
+	});
+	
+	var totalCheckboxes = $(".bulk_edit_checkbox").length;
+	// uncheck the .select_all checkbox when one or more checkbox is not selected
+	$(".bulk_edit_checkbox").change(function(){
+		var n = $(".bulk_edit_checkbox:checked").length;
+		if (n != totalCheckboxes) {
+			$(".select_all").attr("checked", false);
+		}
+	});
+	
+	// show bulk edit button when 2 or more checkbox is selected
+	$(":checkbox").change(function(){
+		var n = $(".bulk_edit_checkbox:checked").length;
+		if (n > 1) {
+			$("#bulk_edit").css({"visibility":"visible"});
+		} else{
+			$("#bulk_edit").css({"visibility":"hidden"});
+		}
+	});
+	$(":checkbox").change();
+}
 
 // AJAX hostname search/filter
-$("#filter_form").submit(function() {
-	// Show the loading graphic while request is made
-	$("#loading_graphic").show();
-	// Grab the script and execute it
-	$.getScript(this.action + "?hostname=" + $("[name=hostname]").val());
-	// Return false so the form isn't submitted
-	return false;
-});
+// $("#filter_form").submit(function() {
+// 	// Show the loading graphic while request is made
+// 	$("#loading_graphic").show();
+// 	// Grab the script and execute it
+// 	$.getScript(this.action + "?hostname=" + $("[name=hostname]").val());
+// 	// Return false so the form isn't submitted
+// 	return false;
+// });
 
 // Text field default message
 $.fn.extend({

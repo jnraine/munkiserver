@@ -3,7 +3,7 @@
 	<div class="box">
 		<%= computer_group_links %>
 		<hr />
-		<%= link_to "View All", computers_path(@computers) %><br />
+		<%= link_to "View All", computer_groups_url %><br />
 	</div>
 	<h4>Filter</h4>
 	<div class="box">
@@ -12,6 +12,7 @@
 <% end -%>
 
 <h2>Listing computers</h2>
+
 <%= render :partial => 'computer_listing' %>
 
 <p><%= link_to 'Add computer', new_computer_path %></p>
