@@ -110,6 +110,11 @@ a:hover {
 	top:38px;
 }
 
+/* Computer Table */
+#bulk_edit{
+	float: right;
+	display:inline;
+}
 /* Sticky footer */
 
 * {
@@ -435,4 +440,18 @@ thead th a:hover,
 
 .report_log {
 	overflow:auto;
+}
+
+#lightbox_target{
+	text-align: center;
+	-moz-border-radius: 6px;
+    background: #eef2f7;
+    -webkit-border-radius: 6px;
+    border: 1px solid #536376;
+    -webkit-box-shadow: rgba(0,0,0,.6) 0px 2px 12px;
+    -moz-box-shadow:  rgba(0,0,0,.6) 0px 2px 12px;;
+    padding: 14px 22px;
+    width: 450px;
+    position: relative;
+    display: none;
 }

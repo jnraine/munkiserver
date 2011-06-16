@@ -413,6 +413,11 @@ class Package < ActiveRecord::Base
   def versions
     package_branch.packages_like_unit_member(self)
   end
+  
+  # return how many versions associated with this perticular package for rowspan
+  def rowspan
+    self.versions.count
+  end
 
   # Moved to UnitMember
   # Determines what catalog this belongs to
@@ -901,4 +906,16 @@ class Package < ActiveRecord::Base
   def download_name
     "#{id}-#{to_s(:download_filename)}"
   end
+  
+  # update multiple attributes
+  def self.bulk_update_attributes(packages,params)
+    if (params == nil || packages == nil)
+      raise PackageError.new ("Nothing to update")
+    else
+      packages.each do |p|
+        p.update_attributes(params.reject {|k,v| v.blank?})
+      end
+    end
+  end
+  
 end

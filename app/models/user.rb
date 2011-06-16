@@ -109,4 +109,9 @@ class User < ActiveRecord::Base
   def role_symbols
     [:admin,:developer,:support_person]
   end
+  
+  # over write default to_param use name in the routing instead of id
+  def to_param
+    username
+  end
 end
