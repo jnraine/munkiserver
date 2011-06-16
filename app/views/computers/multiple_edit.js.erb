@@ -1,7 +1,2 @@
-if ($("#bulk_edit_computers").length == 0){
-	$("#lightbox_target").append("<%= escape_javascript(render(:file => "app/views/computers/multiple_edit.html.erb")) %>");
-	initalizeLightBoxMe();
-}else{
-	initalizeLightBoxMe();
-}
-closeLightBoxMe();
+$('<div id="lightbox_target"></div>').appendTo("body").html("<%= escape_javascript(render(:file => "app/views/computers/multiple_edit.html.erb")) %>");
+initalizeLightBoxMe();

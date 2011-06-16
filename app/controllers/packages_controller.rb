@@ -88,12 +88,21 @@ class PackagesController < ApplicationController
   def multiple_update
     @packages = Package.find(params[:selected_records])
     p = params[:package]
-    results = Package.bulk_update_attributes(@packages, p)
+    results = []
+    exceptionMessage = nil
+    begin
+      results = Package.bulk_update_attributes(@packages, p)
+    rescue PackageError => e
+      exceptionMessage = e.to_s
+    end
     
     respond_to do |format|
-        if !results.include?(false)
-           flash[:notice] = "All #{results.length} packages were successfully updated."
-           format.html { redirect_to(:action => "index") } 
+        if results.empty?
+          flash[:error] = exceptionMessage
+          format.html { redirect_to(:action => "index") }
+        elsif !results.include?(false)
+          flash[:notice] = "All #{results.length} packages were successfully updated."
+          format.html { redirect_to(:action => "index") } 
         elsif results.include?(false) && results.include?(true)
           flash[:warning] = "#{results.delete_if {|e| e}.length} of #{results.length} packages updated."
           format.html { redirect_to(:action => "index") }

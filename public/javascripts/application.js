@@ -149,38 +149,46 @@ $(document).ready(function() {
 	}
 	
 	initializeBulkEdit();
-	bulkEditCheckbox();
 }); // end document ready function
 
+// disable input and select field onload, click to enable the field
+function selectToEdit(){
+	$(".accept").parents("tr").find("input, select").not($(".accept:checkbox")).attr("disabled", true);
+	
+	$(".accept").change(function(){
+		$(this).parents("tr").find("input, select").not(this).attr("disabled", !$(this).attr("checked"));
+	})
+}
+
+// trigger lightbox popup
 function initalizeLightBoxMe(){
 	$('#lightbox_target').lightbox_me({
 	        centered: true, 
-			// re-initialize bulk upon closing
-	        onClose: function() { 
-				initializeBulkEdit();
-	            }
-	        });
-	// $('#lightbox_target').trigger('reposition');	
-}
-// close lightbox_me
-function closeLightBoxMe(){
-	$(".cancel").click(function(){
-		$('#lightbox_target').trigger('close');
-	})
+			closeSelector: ".cancel",
+			destroyOnClose: true,
+			onLoad: selectToEdit() });	
 }
 // uncheck all the checkbox and hide the submit button
 function initializeBulkEdit() {
-	$(":checkbox").attr("checked", false);
+	
 	$("#bulk_edit").css({"visibility":"hidden"});
-}
-// bulk checkbox toggle for bulk edit
-function bulkEditCheckbox(){
+	
 	$(".select_all").change(function() {
 		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
 	});
+	
+	var totalCheckboxes = $(".bulk_edit_checkbox").length;
+	// uncheck the .select_all checkbox when one or more checkbox is not selected
+	$(".bulk_edit_checkbox").change(function(){
+		var n = $(".bulk_edit_checkbox:checked").length;
+		if (n != totalCheckboxes) {
+			$(".select_all").attr("checked", false);
+		}
+	});
+	
 	// show bulk edit button when 2 or more checkbox is selected
 	$(":checkbox").change(function(){
-	  var n = $(".bulk_edit_checkbox:checked").length;
+		var n = $(".bulk_edit_checkbox:checked").length;
 		if (n > 1) {
 			$("#bulk_edit").css({"visibility":"visible"});
 		} else{

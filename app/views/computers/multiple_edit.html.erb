@@ -11,6 +11,9 @@
 		<table>
 		<tr>
 			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>
 			<%= f.label :computer_group_id %>
 			</td>
 			<td>
@@ -18,6 +21,9 @@
 			</td>
 		</tr>
 		<tr>
+			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
 			<td>
 			<%= f.label :environment_id %>
 			</td>
@@ -28,6 +34,9 @@
 		<tr>
 			<td>
 			
+			</td>
+			<td>
+				
 			</td>
 			<td>
 				<%= f.submit "Update" %>

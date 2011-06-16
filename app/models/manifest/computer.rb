@@ -198,15 +198,14 @@ class Computer < ActiveRecord::Base
   end
   # bulk update 
   def self.bulk_update_attributes(computers,p)
-    computers.each do |c|
-      c.update_attributes(p.reject {|k,v| v.blank?})
+    if (computers == nil || p == nil)
+      raise ComputerError.new ("Nothing to update")
+    else
+      computers.each do |c|
+        c.update_attributes(p.reject {|k,v| v.blank?})
+      end
     end
   end
-  
-  def self.multiple_edit
-    render :multiple_edit
-  end 
-  
   # overwirte to_param so the name of the commputer can be displayed in the URL
   def to_param
     name

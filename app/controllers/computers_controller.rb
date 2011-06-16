@@ -146,12 +146,21 @@ class ComputersController < ApplicationController
   def multiple_update
     @computers = Computer.find(params[:selected_records])
     p = params[:computer]
-    results = Computer.bulk_update_attributes(@computers, p)
-    
+    results = []
+    exceptionMessage = nil
+    begin
+      results = Computer.bulk_update_attributes(@computers, p)
+    rescue ComputerError => e
+      exceptionMessage = e.to_s
+    end
+
     respond_to do |format|
-        if !results.include?(false)
-           flash[:notice] = "All #{results.length} computer objects were successfully updated."
-           format.html { redirect_to(:action => "index") }
+        if results.empty?
+          flash[:error] = exceptionMessage
+          format.html { redirect_to(:action => "index") }
+        elsif !results.include?(false)
+          flash[:notice] = "All #{results.length} computer objects were successfully updated."
+          format.html { redirect_to(:action => "index") }
         elsif results.include?(false) && results.include?(true)
           flash[:warning] = "#{results.delete_if {|e| e}.length} of #{results.length} computer objects updated."
           format.html { redirect_to(:action => "index") }
