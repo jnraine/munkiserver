@@ -149,6 +149,17 @@ $(document).ready(function() {
 	}
 	
 	initializeBulkEdit();
+	// uncheck the .select_all checkbox when one or more checkbox is not selected
+	$(".bulk_edit_checkbox").change(function(){
+	var totalCheckboxes = $(this).parents("table").find(".bulk_edit_checkbox").length;
+	var totalChecked = $(this).parents("table").find(".bulk_edit_checkbox:checked").length;
+	selectAll = $(this).parents("table").find(".select_all");
+		if (totalCheckboxes != totalChecked) {
+			selectAll.attr("checked", false);
+		}else{
+			selectAll.attr("checked", true);
+		}
+	});
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field
@@ -177,19 +188,10 @@ function initializeBulkEdit() {
 		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
 	});
 	
-	var totalCheckboxes = $(".bulk_edit_checkbox").length;
-	// uncheck the .select_all checkbox when one or more checkbox is not selected
-	$(".bulk_edit_checkbox").change(function(){
-		var n = $(".bulk_edit_checkbox:checked").length;
-		if (n != totalCheckboxes) {
-			$(".select_all").attr("checked", false);
-		}
-	});
 	
 	// show bulk edit button when 2 or more checkbox is selected
 	$(":checkbox").change(function(){
-		var n = $(".bulk_edit_checkbox:checked").length;
-		if (n > 1) {
+		if ($(".bulk_edit_checkbox:checked").length > 1) {
 			$("#bulk_edit").css({"visibility":"visible"});
 		} else{
 			$("#bulk_edit").css({"visibility":"hidden"});
