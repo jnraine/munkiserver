@@ -195,7 +195,8 @@ class Package < ActiveRecord::Base
     begin
       i = Icon.find(icon_id)
     rescue ActiveRecord::RecordNotFound
-      i = package_category.icon if package_category.respond_to?(:icon)
+      i = package_branch.version_tracker.icon
+      i ||= package_category.icon if package_category.respond_to?(:icon)
     end
     i
   end
@@ -300,13 +301,14 @@ class Package < ActiveRecord::Base
 
   # Getter for virtual attribute
   def version_tracker_web_id
-    package_branch.version_tracker_web_id
+    package_branch.version_tracker.web_id unless package_branch.version_tracker.nil?
   end
   
   # Setter for virtual attribute
   def version_tracker_web_id=(value)
-    package_branch.version_tracker_web_id = value
+    package_branch.version_tracker.web_id = value.to_s.match('[0-9]+')[0].to_i unless package_branch.version_tracker.nil?
   end
+  
   
   # Require icon
   def require_icon
@@ -412,11 +414,6 @@ class Package < ActiveRecord::Base
   
   def versions
     package_branch.packages_like_unit_member(self)
-  end
-  
-  # return how many versions associated with this perticular package for rowspan
-  def rowspan
-    self.versions.count
   end
 
   # Moved to UnitMember

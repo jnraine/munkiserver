@@ -8,6 +8,28 @@ $(document).ready(function() {
 	$('#loading_graphic').hide();
 	$('.loading').hide();
 	
+	
+	// lock name attributes in package edit
+	$("#package_name_control").click(function() {
+		var display_name_field = $("#package_display_name");
+		if(display_name_field.attr("disabled")) {
+			// Enable display name
+			display_name_field.attr("disabled",false);
+			display_name_field.css("color","#000");
+			display_name_field.val($("#original_display_name").val());
+		} else {
+			// Disable display name and mirror
+			display_name_field.attr("disabled",true);
+			display_name_field.css("color","#666");
+			$("#package_display_name").val($("#package_name").val());
+			// Mirror name to display name field
+			$("#package_name").keyup(function() {
+				var name_field = $(this);
+				$("#package_display_name").val(name_field.val());
+			});	
+		}
+	});
+	
 	// Hide raw text area if raw_mode_id is 0 container
 	// if($('#package_raw_mode_id').val() == 0) {
 	// 	$('#package_raw_tags').hide();
@@ -187,7 +209,6 @@ function initializeBulkEdit() {
 	$(".select_all").change(function() {
 		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
 	});
-	
 	
 	// show bulk edit button when 2 or more checkbox is selected
 	$(":checkbox").change(function(){

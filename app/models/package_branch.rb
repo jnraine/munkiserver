@@ -19,6 +19,7 @@ class PackageBranch < ActiveRecord::Base
   has_many :user_allowed_items, :dependent => :destroy
   has_many :require_items, :dependent => :destroy
   has_many :update_for_items, :dependent => :destroy
+  # has many Packages
   has_many :all_packages, :order => 'version desc', :class_name => "Package"
   has_one :version_tracker, :dependent => :destroy, :autosave => true
   
@@ -72,12 +73,21 @@ class PackageBranch < ActiveRecord::Base
   
   # Virtual attribute that retrieves the web ID from the version tracker
   # record associated to this package branch
-  def version_tracker_web_id
-    version_tracker.web_id unless version_tracker.nil?
+  # def version_tracker_web_id
+  #     version_tracker.web_id = version_tracker.web_id unless version_tracker.nil?
+  #   end
+  #   
+  #   def version_tracker_web_id=(value)
+  #     version_tracker.web_id = value unless version_tracker.nil?
+  #   end
+  
+  # Virtual attributes that retrieves the web URL from the version tracker
+  def version_tracker_web_url
+    version_tracker.download_url unless version_tracker.nil?
   end
   
-  def version_tracker_web_id=(value)
-    version_tracker.web_id = value unless version_tracker.nil?
+  def version_tracker_web_url=(url)
+    version_tracker.download_url = url unless version_tracker.nil?
   end
   
   # True if a newer version is available in this branch

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110603183039) do
+ActiveRecord::Schema.define(:version => 20110617230218) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -382,6 +382,7 @@ ActiveRecord::Schema.define(:version => 20110603183039) do
     t.string   "download_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "icon_id"
   end
 
 end

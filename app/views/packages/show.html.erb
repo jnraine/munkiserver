@@ -68,6 +68,15 @@
 			<% end%>
 		</td>
 	</tr>
+	
+	<tr>
+		<td><strong>MacUpdate Web ID</strong></td>
+		<td><%= @package.package_branch.version_tracker.web_id %></td>
+	</tr>
+	<tr>
+		<td><strong>Version Tracker Web URL</strong></td>
+		<td><%= @package.package_branch.version_tracker.download_url %></td>
+	</tr>
 </table>
 
 <%= link_to 'Edit', edit_package_path(@package) %> | <%= link_to 'Download', download_package_path(@package.download_name) %>
