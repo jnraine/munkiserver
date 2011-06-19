@@ -73,14 +73,14 @@ class PackageBranch < ActiveRecord::Base
   
   # Virtual attribute that retrieves the web ID from the version tracker
   # record associated to this package branch
-  # def version_tracker_web_id
-  #     version_tracker.web_id = version_tracker.web_id unless version_tracker.nil?
-  #   end
-  #   
-  #   def version_tracker_web_id=(value)
-  #     version_tracker.web_id = value unless version_tracker.nil?
-  #   end
+  def version_tracker_web_id
+    version_tracker.web_id = version_tracker.web_id unless version_tracker.nil?
+  end
   
+  def version_tracker_web_id=(value)
+    version_tracker.web_id = value unless version_tracker.nil?
+  end
+
   # Virtual attributes that retrieves the web URL from the version tracker
   def version_tracker_web_url
     version_tracker.download_url unless version_tracker.nil?

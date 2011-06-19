@@ -63,6 +63,10 @@ class VersionTracker < ActiveRecord::Base
       self.download_url = response['location']
       # Return results
       {'latest_version' => self.version, 'download_url' => self.download_url}
+      self.save
+      # if (self.version != nil || self.download_url != nil)
+      #         @VersionTracker.save
+      #       end
     end
   end
   
