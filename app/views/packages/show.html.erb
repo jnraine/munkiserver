@@ -1,10 +1,12 @@
 <%= package_header(@package) %>
 
-<% unless @package.description.blank? %>
+<% if !@package.description.blank? %>
 	<p><%= @package.description %></p>
+<% elsif !@package.package_branch.version_tracker.description.blank? %>
+	<p><%= @package.package_branch.version_tracker.description %></p>
 <% else %>
 	<p><em>No description</em></p>
-<% end -%>
+<% end %>
 
 <table class="form">
 	<tr>

@@ -44,6 +44,8 @@ class VersionTracker < ActiveRecord::Base
         icon_url = info_doc.at_css("#appiconinfo")[:src]
         # Grab download redirect url
         download_redirect_url = info_doc.at_css("#downloadlink")[:href]
+        # Grab the description of the package
+        description = info_doc.at_css("#desc").text
       rescue NoMethodError => e
         raise VersionTrackerError.new("Malformed version tracker website at #{info_url}: #{e}")
       end
@@ -54,6 +56,7 @@ class VersionTracker < ActiveRecord::Base
         response = http.head(download_redirect_url)
       }
       
+      # if package doesn't have an icon then scrape the icon from macupdate.com
       if self.icon.nil?
         scrape_icon(icon_url)
       end
@@ -61,9 +64,12 @@ class VersionTracker < ActiveRecord::Base
       # Update record with latest information
       self.version = latest_version
       self.download_url = response['location']
-      # Return results
-      {'latest_version' => self.version, 'download_url' => self.download_url}
+      # strip down any white speace before and after the description string
+      self.description = description.lstrip.rstrip
       self.save
+      # Return results
+      {'latest_version' => self.version, 'download_url' => self.download_url, 'description' => self.description}
+      
       # if (self.version != nil || self.download_url != nil)
       #         @VersionTracker.save
       #       end
