@@ -70,9 +70,6 @@ class VersionTracker < ActiveRecord::Base
       # Return results
       {'latest_version' => self.version, 'download_url' => self.download_url, 'description' => self.description}
       
-      # if (self.version != nil || self.download_url != nil)
-      #         @VersionTracker.save
-      #       end
     end
   end
   
@@ -101,6 +98,11 @@ class VersionTracker < ActiveRecord::Base
     self.scrape_latest_version
     AutoPackage.from_url(download_url)
   end
+  
+  def web_id=(value)
+    super(value)
+  end 
+  
   
 end
 

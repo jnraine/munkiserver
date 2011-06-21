@@ -51,10 +51,10 @@ $(document).ready(function() {
 			return false;
 		}
 	});
-	// add check id or macupdate url
+	// check if the user input is match with macupdate url or macupdate.com web id
 	$("#new_version_tracker_package_form").submit(function() {
 		var vt_id = $('#version_tracker_web_id').val();
-		if (vt_id.match(/^http:\/\/www.macupdate.com\/app\/mac\/[0-9]+.+$/) !== null) {
+		if (vt_id.match(/^http:\/\/www.macupdate.com\/app\/mac\/[0-9]+.+$|[0-9]+/) !== null) {
 			$("#new_package_form_container").slideUp("fast");
 			$("#progress_container .title").html("Grabbing");
 			$("#progress_container").slideDown("slow");

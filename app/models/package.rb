@@ -308,7 +308,7 @@ class Package < ActiveRecord::Base
   def version_tracker_web_id=(value)
     if package_branch.version_tracker.nil?
       raise PackageError.new("No version tracker record found")
-    elsif value == nil
+    elsif value.blank?
       package_branch.version_tracker.web_id = nil
     elsif value.to_s.match('[0-9]+')[0].to_i.present?
       package_branch.version_tracker.web_id = value.to_s.match('[0-9]+')[0].to_i    

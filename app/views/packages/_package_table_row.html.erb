@@ -8,7 +8,7 @@
 		<%= render :partial => 'package_version_column', :locals => {:pkg => package.versions.first} %>
 	
 	<td rowspan="<%= package.versions.count %>">
-		<%= "&#10003;".html_safe if package.package_branch.new_version_shared?(package.unit) %>
+		<%= "&#10003;".html_safe if (package.package_branch.new_version_shared?(package.unit) or package.package_branch.new_version?) %>
 	</td>
 </tr>
 <% package.versions.each_with_index do |pkg,i| %>
