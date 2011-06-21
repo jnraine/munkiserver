@@ -177,6 +177,22 @@ class PackageBranch < ActiveRecord::Base
     end
   end
   
+  # Gets packages that have available updates.  If no unit is 
+  # specified, all units are inspected.
+  def self.available_updates(unit = nil)
+    packages_with_updates = []
+    if unit.present?
+      p = Package.latest_from_unit(unit)
+      packages_with_updates = p.delete_if {|p| !p.new_version? }      
+    else
+      Unit.all.each do |unit|
+        p = Package.latest_from_unit(unit)
+        packages_with_updates = packages_with_updates + p.delete_if {|p| !p.new_version? }
+      end
+    end
+    packages_with_updates
+  end
+  
   # Return the package branches available to a given unit member
   # Doesn't return an ActiveRecord::Relation (search cannot be 
   # done using only SQL)

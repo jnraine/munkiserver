@@ -9,10 +9,9 @@ class AdminMailer < ActionMailer::Base
     mail(:bcc => recipients(@computer), :subject => "[Munki Server] #{@computer}: #{@computer.status}")
   end
   
-  # If an update available send email notification to admin
-  def available_package_update(package)
+  def package_update_available(package)
     @package = package
-    # mail(:bcc => recipients())
+    mail(:bcc => recipients(@package), :subject => "[Munki Server] #{@package.name.capitalize} has an update! ")
   end
   
   # # A list of computers that are considered "dormant", including their

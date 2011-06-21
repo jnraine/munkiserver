@@ -259,6 +259,12 @@ namespace :bootstrap do
     #Build a prefligh script dependant 
     
   end
+  
+  desc "Generate crontab jobs passing rails current environment"
+  task :crontab do
+    `whenever --update-crontab --set environment=RAILS_ENV`
+  end
+  
 end
 
 private

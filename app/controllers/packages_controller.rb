@@ -127,8 +127,13 @@ class PackagesController < ApplicationController
   
   # Used to check for available updates across all units
   def check_for_updated
+   
     call_rake("packages:check_for_updates")
     flash[:notice] = "Checking for updates now"
-    redirect_to :back
+    # for each package that has updates available send an email to the admin
+    PackageBranch.available_updates(current_unit).each do |package|
+      AdminMailer.package_update_available(package).deliver
+    end
+    redirect_to(:action => "index")
   end
 end

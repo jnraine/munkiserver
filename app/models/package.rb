@@ -306,9 +306,19 @@ class Package < ActiveRecord::Base
   
   # Setter for virtual attribute
   def version_tracker_web_id=(value)
-    package_branch.version_tracker.web_id = value.to_s.match('[0-9]+')[0].to_i unless package_branch.version_tracker.nil?
+    if package_branch.version_tracker.nil?
+      raise PackageError.new("No version tracker record found")
+    elsif value == nil
+      package_branch.version_tracker.web_id = nil
+    elsif value.to_s.match('[0-9]+')[0].to_i.present?
+      package_branch.version_tracker.web_id = value.to_s.match('[0-9]+')[0].to_i    
+    end
   end
   
+  # if package's description is nil, get scraped description from version tracker
+  # def get_descirption_from_version_tracker(package)
+  #  
+  # end
   
   # Require icon
   def require_icon
@@ -321,6 +331,12 @@ class Package < ActiveRecord::Base
   # Get the latest package from a specific unit and environment
   def self.latest_from_unit_and_environment(u,e)
     pbs = PackageBranch.unit_and_environment(u,e)
+    pbs.map(&:latest)
+  end
+
+  # Get the latest packages from a specific unit
+  def self.latest_from_unit(unit)
+    pbs = PackageBranch.unit(unit)
     pbs.map(&:latest)
   end
   
@@ -446,6 +462,11 @@ class Package < ActiveRecord::Base
     vtv = version_tracker_version
     vtv = version if vtv.blank?
     vtv
+  end
+  
+  # calls package_branch new version check method
+  def new_version?
+    package_branch.new_version?
   end
   
   # Create a hash intended for plist output
@@ -829,6 +850,17 @@ class Package < ActiveRecord::Base
     hash
   end
   
+  # over write the default get description, check if nil then get the description from version_trackers
+  def description
+    value = super
+    if value.blank? and self.package_branch.version_tracker.present?
+      self.package_branch.version_tracker.description
+    else
+      value
+    end
+  end
+
+  
   # A list of attributes that are inherited by new packages, if a previous version exists
   def self.inherited_attributes
     [:description, :icon, :package_category_id]
@@ -886,7 +918,7 @@ class Package < ActiveRecord::Base
   def has_dependencies?
     update_for.length > 0 or requires.length > 0
   end
-  
+
   def extension
     if installer_item_location.match(/(\.\w+)\z/)
       $1

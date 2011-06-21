@@ -2,8 +2,6 @@
 
 <% if !@package.description.blank? %>
 	<p><%= @package.description %></p>
-<% elsif !@package.package_branch.version_tracker.description.blank? %>
-	<p><%= @package.package_branch.version_tracker.description %></p>
 <% else %>
 	<p><em>No description</em></p>
 <% end %>
@@ -76,8 +74,8 @@
 		<td><%= @package.package_branch.version_tracker.web_id %></td>
 	</tr>
 	<tr>
-		<td><strong>Version Tracker Web URL</strong></td>
-		<td><%= @package.package_branch.version_tracker.download_url %></td>
+		<td><strong>Web Download URL</strong></td>
+		<td><%= link_to @package.package_branch.version_tracker.download_url, @package.package_branch.version_tracker.download_url %></td>
 	</tr>
 </table>
 

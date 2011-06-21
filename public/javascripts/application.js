@@ -30,6 +30,40 @@ $(document).ready(function() {
 		}
 	});
 	
+	
+	// packages/new page hide optional uploads
+	$("#options").hide();
+	$("#options-link").click(function() {
+		$("#options").slideToggle();
+		return false;
+	});
+	$("#progress_container").hide();
+	$("#new_upload_package_form").submit(function() {
+		var filename = $("#data").val();
+		dots = filename.split(".");
+		extension = "." + dots[dots.length-1];
+		if (extension == ".dmg") {
+			$("#new_package_form_container").slideUp("slow");
+			$("#progress_container .title").html("Uploading");
+			$("#progress_container").slideDown("slow");
+		} else {
+			alert("Please choose a .dmg");
+			return false;
+		}
+	});
+	// add check id or macupdate url
+	$("#new_version_tracker_package_form").submit(function() {
+		var vt_id = $('#version_tracker_web_id').val();
+		if (vt_id.match(/^http:\/\/www.macupdate.com\/app\/mac\/[0-9]+.+$/) !== null) {
+			$("#new_package_form_container").slideUp("fast");
+			$("#progress_container .title").html("Grabbing");
+			$("#progress_container").slideDown("slow");
+		} else {
+			alert("Please input full macupdate.com package url or macupdate.com package ID");
+			return false;
+		}
+	});
+	
 	// Hide raw text area if raw_mode_id is 0 container
 	// if($('#package_raw_mode_id').val() == 0) {
 	// 	$('#package_raw_tags').hide();
@@ -94,7 +128,7 @@ $(document).ready(function() {
 	$("select#managed_install_reports").change();
 	
 	
-	// add Codemirror with jQuery animation to highlight XML/plist/bash syntax in package list
+	// add Codemirror with $ animation to highlight XML/plist/bash syntax in package list
 	$("textarea[data-format]").each(function () {
 		
 		var format = $(this).attr("data-format");
@@ -104,7 +138,7 @@ $(document).ready(function() {
 	
 		var editor = CodeMirror.fromTextArea(this, {
 					onFocus: function() {
-					    //jQuery animation goes here				
+					    //$ animation goes here				
 					    $(editor.getWrapperElement()).animate({
 					        height: "300px"
 					    },
@@ -157,10 +191,10 @@ $(document).ready(function() {
 	hideUninstallField("uninstall_script","#postinstall_script_container");
 	$("#package_uninstall_method").change();
 		
-	// jQuery for tabs in package edit
+	// $ for tabs in package edit
 	$("#tabs").tabs();
 	
-	// client side validation jQuery animation
+	// client side validation $ animation
 	clientSideValidations.callbacks.element.fail = function(element, message, callback) {
 	  callback();
 	  if (element.data('valid') !== false) {
