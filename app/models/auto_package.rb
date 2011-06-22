@@ -18,7 +18,7 @@ module AutoPackage
   # Downloads file from a URL and turns it into a Package record
   def self.from_url(url)
     # For special cases, reformat the URL
-    url = reformat_url(url)
+    # url = reformat_url(url)
     # Derive original filename
     begin
       original_filename = url.match(/(\/)([^\/]+)$/)[2]
