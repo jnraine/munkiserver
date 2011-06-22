@@ -261,10 +261,9 @@ namespace :bootstrap do
   end
   
   desc "Generate crontab jobs passing rails current environment"
-  task :crontab do
-    `whenever --update-crontab --set environment=RAILS_ENV`
+  task :crontab => :environment do
+    `whenever --update-crontab --set environment=#{Rails.env}`
   end
-  
 end
 
 private

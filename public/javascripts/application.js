@@ -51,17 +51,19 @@ $(document).ready(function() {
 			return false;
 		}
 	});
-	// check if the user input is match with macupdate url or macupdate.com web id
-	$("#new_version_tracker_package_form").submit(function() {
-		var vt_id = $('#version_tracker_web_id').val();
-		if (vt_id.match(/^http:\/\/www.macupdate.com\/app\/mac\/[0-9]+.+$|[0-9]+/) !== null) {
-			$("#new_package_form_container").slideUp("fast");
-			$("#progress_container .title").html("Grabbing");
-			$("#progress_container").slideDown("slow");
-		} else {
-			alert("Please input full macupdate.com package url or macupdate.com package ID");
-			return false;
+	
+	// in package edit check if the user input is match with macupdate url or macupdate.com web id
+	$(".edit_package").submit(function() {
+		var vt_id = $('#package_version_tracker_web_id').val();
+		if (vt_id.length !== 0){
+			if (vt_id.match(/^http:\/\/www.macupdate.com\/app\/mac\/[0-9]+.+$|[0-9]+/) !== null) {
+				// do nothing
+			} else {
+				alert("Please input full macupdate.com package url or macupdate.com package ID");
+				return false;
+			}	
 		}
+		
 	});
 	
 	// Hide raw text area if raw_mode_id is 0 container

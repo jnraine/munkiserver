@@ -52,7 +52,6 @@ class PackagesController < ApplicationController
 
   def update
     @package = Package.unit(current_unit).find(params[:id])
-    version_tracker = @package.package_branch.version_tracker.scrape_latest_version
     
     respond_to do |format|
       if @package.update_attributes(params[:package])
@@ -72,7 +71,6 @@ class PackagesController < ApplicationController
   end
 
   def show
-    # @package = PackageBranch.find_by_name(params[:id])
     @package = Package.find(params[:id])
     
     respond_to do |format|

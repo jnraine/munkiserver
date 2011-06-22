@@ -23,7 +23,22 @@ class VersionTracker < ActiveRecord::Base
   # Returns true if the record "looks" like it points to a valid version tracker source
   def looks_good?
     # Web ID is only digits
-    web_id.to_s.match(/^\d+$/) != nil
+    web_id.to_s.match(/^\d+$/) != nil and url_exists?
+  end
+  
+  # Return true if the macupdate.com url exists
+  def url_exists?
+    response = nil
+    Net::HTTP.start(MAC_UPDATE_SITE_URL, 80) {|http|
+      response = http.head(MAC_UPDATE_PACKAGE_URL+web_id.to_s)
+    }
+    location = response['location']
+    # if redirect to main page then the web_id is invalided return false, else return true
+    if location == "http://#{MAC_UPDATE_SITE_URL}/"
+      return false
+    else 
+      return true
+    end
   end
   
   # URL to version tracker page
@@ -32,7 +47,7 @@ class VersionTracker < ActiveRecord::Base
   end
   
   # Scrapes latest version from macupdate.com and updates record with that info
-  def scrape_latest_version
+  def scrape_latest_version(new_web_id = false)
     if looks_good?
       # Load informational page from version tracker
       info_doc = Nokogiri::HTML(open(info_url))
@@ -57,7 +72,7 @@ class VersionTracker < ActiveRecord::Base
       }
       
       # if package doesn't have an icon then scrape the icon from macupdate.com
-      if self.icon.nil?
+      if self.icon.nil? or new_web_id
         scrape_icon(icon_url)
       end
       
@@ -69,6 +84,15 @@ class VersionTracker < ActiveRecord::Base
       self.save
       # Return results
       {'latest_version' => self.version, 'download_url' => self.download_url, 'description' => self.description}
+    
+    else
+      # reset the values associated to the version tracker to nil if the value is blank
+      self.version = nil
+      self.download_url = nil
+      self.description = nil
+      self.icon.destroy
+      self.icon_id = nil
+      self.save
       
     end
   end
@@ -100,9 +124,12 @@ class VersionTracker < ActiveRecord::Base
   end
   
   def web_id=(value)
-    super(value)
-  end 
-  
-  
+    if value != web_id
+      super(value)
+      scrape_latest_version(true)
+    else
+      super(value)
+    end
+  end
 end
 

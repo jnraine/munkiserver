@@ -62,14 +62,14 @@
 				<% end -%>
 				<% if logged_in? %>					
 					<li><%= link_to("Logout", logout_path) %> (<%= current_user.username %>)</li>
-				<% end -%>
+				<% end %>
 			</ul>
-			<% if logged_in? %>
-				<div id="search">
-					<%= text_field_tag "search_field" %>
-					<%= submit_tag "Search" %>
-				</div>
-			<% end -%>
+			<!-- <% if logged_in? %>
+						<div id="search">
+							<%= text_field_tag "search_field" %>
+							<%= submit_tag "Search" %>
+						</div>
+					<% end %> -->
 		</div>
 	
 		<div id="units_menu" class="span-24 last">
