@@ -63,7 +63,6 @@ $(document).ready(function() {
 				return false;
 			}	
 		}
-		
 	});
 	
 	// Hide raw text area if raw_mode_id is 0 container

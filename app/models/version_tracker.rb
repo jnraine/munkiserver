@@ -53,12 +53,17 @@ class VersionTracker < ActiveRecord::Base
       info_doc = Nokogiri::HTML(open(info_url))
       # In case our web site is malformed, let's catch the errors
       begin
-        # Grab app version
-        latest_version = info_doc.at_css("#appversinfo").text
         # Grab the icon image
         icon_url = info_doc.at_css("#appiconinfo")[:src]
-        # Grab download redirect url
-        download_redirect_url = info_doc.at_css("#downloadlink")[:href]
+        # if there are two download link then get the later stable download url and stable version
+        if info_doc.css("#downloadlink").count == 2
+          download_redirect_url = info_doc.css("#downloadlink")[1][:href]
+          latest_version = info_doc.css("#downloadlink")[1].text.delete("Download").lstrip
+        else
+          download_redirect_url = info_doc.css("#downloadlink")[0][:href]
+          # Grab app version
+          latest_version = info_doc.at_css("#appversinfo").text
+        end
         # Grab the description of the package
         description = info_doc.at_css("#desc").text
       rescue NoMethodError => e

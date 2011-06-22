@@ -92,8 +92,13 @@ class PackageBranch < ActiveRecord::Base
   
   # True if a newer version is available in this branch
   def new_version?
+    compare_versions(vtv,version_tracker.version)
+  end
+  
+  # need to add version comparsion between different lengh of the versios
+  def compare_versions(current,latest)
     begin
-      vtv < version_tracker.version
+      current < latest
     rescue ArgumentError
       false
     end
