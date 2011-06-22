@@ -63,6 +63,7 @@ class VersionTracker < ActiveRecord::Base
           download_redirect_url = info_doc.css("#downloadlink")[0][:href]
           # Grab app version
           latest_version = info_doc.at_css("#appversinfo").text
+        end
         # Grab the description of the package
         description = info_doc.at_css("#desc").text
       rescue NoMethodError => e
