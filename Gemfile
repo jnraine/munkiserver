@@ -8,6 +8,7 @@ gem "will_paginate", "~>3.0.beta" # version added for rails 3 compatibility
 gem "nokogiri"
 gem "paperclip"
 gem "client_side_validations"
+gem 'whenever'
 
 group :development do
   gem "ruby-debug19" , :require => "ruby-debug"

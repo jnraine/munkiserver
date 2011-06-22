@@ -8,6 +8,64 @@ $(document).ready(function() {
 	$('#loading_graphic').hide();
 	$('.loading').hide();
 	
+	
+	// lock name attributes in package edit
+	$("#package_name_control").click(function() {
+		var display_name_field = $("#package_display_name");
+		if(display_name_field.attr("disabled")) {
+			// Enable display name
+			display_name_field.attr("disabled",false);
+			display_name_field.css("color","#000");
+			display_name_field.val($("#original_display_name").val());
+		} else {
+			// Disable display name and mirror
+			display_name_field.attr("disabled",true);
+			display_name_field.css("color","#666");
+			$("#package_display_name").val($("#package_name").val());
+			// Mirror name to display name field
+			$("#package_name").keyup(function() {
+				var name_field = $(this);
+				$("#package_display_name").val(name_field.val());
+			});	
+		}
+	});
+	
+	
+	// packages/new page hide optional uploads
+	$("#options").hide();
+	$("#options-link").click(function() {
+		$("#options").slideToggle();
+		return false;
+	});
+	$("#progress_container").hide();
+	$("#new_upload_package_form").submit(function() {
+		var filename = $("#data").val();
+		dots = filename.split(".");
+		extension = "." + dots[dots.length-1];
+		if (extension == ".dmg") {
+			$("#new_package_form_container").slideUp("slow");
+			$("#progress_container .title").html("Uploading");
+			$("#progress_container").slideDown("slow");
+		} else {
+			alert("Please choose a .dmg");
+			return false;
+		}
+	});
+	
+	// in package edit check if the user input is match with macupdate url or macupdate.com web id
+	$(".edit_package").submit(function() {
+		var vt_id = $('#package_version_tracker_web_id').val();
+		if (vt_id.length !== 0){
+			if (vt_id.match(/^http:\/\/www.macupdate.com\/app\/mac\/[0-9]+.+$|[0-9]+/) !== null) {
+				// do nothing
+			} else {
+				alert("Please input full macupdate.com package url or macupdate.com package ID");
+				return false;
+			}	
+		}
+		
+	});
+	
 	// Hide raw text area if raw_mode_id is 0 container
 	// if($('#package_raw_mode_id').val() == 0) {
 	// 	$('#package_raw_tags').hide();
@@ -72,7 +130,7 @@ $(document).ready(function() {
 	$("select#managed_install_reports").change();
 	
 	
-	// add Codemirror with jQuery animation to highlight XML/plist/bash syntax in package list
+	// add Codemirror with $ animation to highlight XML/plist/bash syntax in package list
 	$("textarea[data-format]").each(function () {
 		
 		var format = $(this).attr("data-format");
@@ -82,7 +140,7 @@ $(document).ready(function() {
 	
 		var editor = CodeMirror.fromTextArea(this, {
 					onFocus: function() {
-					    //jQuery animation goes here				
+					    //$ animation goes here				
 					    $(editor.getWrapperElement()).animate({
 					        height: "300px"
 					    },
@@ -135,10 +193,10 @@ $(document).ready(function() {
 	hideUninstallField("uninstall_script","#postinstall_script_container");
 	$("#package_uninstall_method").change();
 		
-	// jQuery for tabs in package edit
+	// $ for tabs in package edit
 	$("#tabs").tabs();
 	
-	// client side validation jQuery animation
+	// client side validation $ animation
 	clientSideValidations.callbacks.element.fail = function(element, message, callback) {
 	  callback();
 	  if (element.data('valid') !== false) {
@@ -149,6 +207,17 @@ $(document).ready(function() {
 	}
 	
 	initializeBulkEdit();
+	// uncheck the .select_all checkbox when one or more checkbox is not selected
+	$(".bulk_edit_checkbox").change(function(){
+	var totalCheckboxes = $(this).parents("table").find(".bulk_edit_checkbox").length;
+	var totalChecked = $(this).parents("table").find(".bulk_edit_checkbox:checked").length;
+	selectAll = $(this).parents("table").find(".select_all");
+		if (totalCheckboxes != totalChecked) {
+			selectAll.attr("checked", false);
+		}else{
+			selectAll.attr("checked", true);
+		}
+	});
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field
@@ -177,19 +246,9 @@ function initializeBulkEdit() {
 		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
 	});
 	
-	var totalCheckboxes = $(".bulk_edit_checkbox").length;
-	// uncheck the .select_all checkbox when one or more checkbox is not selected
-	$(".bulk_edit_checkbox").change(function(){
-		var n = $(".bulk_edit_checkbox:checked").length;
-		if (n != totalCheckboxes) {
-			$(".select_all").attr("checked", false);
-		}
-	});
-	
 	// show bulk edit button when 2 or more checkbox is selected
 	$(":checkbox").change(function(){
-		var n = $(".bulk_edit_checkbox:checked").length;
-		if (n > 1) {
+		if ($(".bulk_edit_checkbox:checked").length > 1) {
 			$("#bulk_edit").css({"visibility":"visible"});
 		} else{
 			$("#bulk_edit").css({"visibility":"hidden"});

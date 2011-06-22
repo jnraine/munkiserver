@@ -1,10 +1,10 @@
 <%= package_header(@package) %>
 
-<% unless @package.description.blank? %>
+<% if !@package.description.blank? %>
 	<p><%= @package.description %></p>
 <% else %>
 	<p><em>No description</em></p>
-<% end -%>
+<% end %>
 
 <table class="form">
 	<tr>
@@ -67,6 +67,19 @@
 				<%= @package.requires.collect { |p| link_to p.to_s(:pretty_with_version), p }.join("<br />").html_safe %>
 			<% end%>
 		</td>
+	</tr>
+	
+	<tr>
+		<td><strong>MacUpdate Web ID</strong></td>
+		<td><% if @package.package_branch.version_tracker.web_id.present? %>
+				<%= @package.package_branch.version_tracker.web_id %> 
+				<%= link_to "[Download]", @package.package_branch.version_tracker.download_url %>
+				<%= link_to "[Info]", @package.package_branch. version_tracker.info_url %>
+			<% else %>
+				None
+			<% end %>
+		</td>
+	
 	</tr>
 </table>
 
