@@ -1,6 +1,6 @@
 <h2>New package</h2>
 <div id="new_package_form_container">
-	<%= form_for(@package, :html => {:multipart => true, :id => "new_upload_package_form"}) do |f| %>
+	<%= form_for(@package, :html => {:class => "upload" , :multipart => true, :id => "new_upload_package_form"}) do |f| %>
 		<div>
 			<h3>Upload</h3>
 			<p>
@@ -8,6 +8,8 @@
 				<%= helpful_info("You cannot upload packages, applications, or Adobe installers without wrapping them in a disk image first!") %>
 			</p>
 			<p><%= file_field_tag :package_file %></p>
+			<table class="upload_files"></table>
+			<table class="download_files"></table>
 			<% unless Munki::Application::MUNKI_TOOLS_AVAILABLE %>
 				<p>
 					Choose a pkginfo plist
@@ -51,7 +53,7 @@
 				                  is more than one application at the root of the dmg") %>
 			</p>
 		</div>
-		<p><%= submit_tag 'Upload', :class => "upload_new" %></p>
+		<p><%= submit_tag 'Upload' %></p>
 	<% end %>
 	<!-- versiontracker.com was dismantled, the following code will not work -->
 		<!-- <h3>Grab</h3>

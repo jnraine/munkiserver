@@ -114,7 +114,7 @@ module AutoPackage
     # Create a file object
     f = File.new(path)
     # Upload to server
-    Package.upload(f)
+    Package.upload(f, nil)
   end
   
   # Auto package a zip file at path

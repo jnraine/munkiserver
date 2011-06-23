@@ -14,12 +14,15 @@
 	<%= stylesheet_link_tag 'dropdown/styles.css', 'dropdown/theme.css' %>
 	<%= stylesheet_link_tag 'style' %>
 	<%= stylesheet_link_tag 'codemirror/codemirror.css', 'codemirror/clike.css', 'codemirror/xml.css' %>
+	<%= stylesheet_link_tag('jquery.fileupload-ui') %>
 
  
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
 	<%= javascript_include_tag "rails.jquery", "application","jquery.asmselect", "jquery.autocomplete.min", "rails.validations", "jquery.lightbox_me" %>
+	<%= javascript_include_tag 'jquery.fileupload', 'jquery.fileupload-ui' %>
 	<%= javascript_include_tag "codemirror/codemirror.js", "codemirror/clike.js", "codemirror/xml.js" %>
+	
 	
 	<%= csrf_meta_tag %>
 </head>

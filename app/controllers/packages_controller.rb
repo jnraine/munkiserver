@@ -25,11 +25,13 @@ class PackagesController < ApplicationController
         # Success
         flash[:notice] = "Package successfully saved"
         format.html { redirect_to edit_package_path(@package) }
+        render :json => {:name => @package.package_branch.name }, :content_type => 'text/html'
       else
         # Failure
         flash[:error] = "Failed to add package"
         flash[:error] = flash[:error] + ": " + exceptionMessage if exceptionMessage.present?
         format.html { redirect_to :back }
+        render :json => { :result => 'error'}, :content_type => 'text/html'
       end
     end
   end
