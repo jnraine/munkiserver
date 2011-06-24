@@ -56,11 +56,11 @@ class VersionTracker < ActiveRecord::Base
         # Grab the icon image
         icon_url = info_doc.at_css("#appiconinfo")[:src]
         # if there are two download link then get the later stable download url and stable version
-        if info_doc.css("#downloadlink").count == 2
-          download_redirect_url = info_doc.css("#downloadlink")[1][:href]
-          # latest_version = info_doc.css("#downloadlink")[1].text.delete("Download").lstrip
-        elsif info_doc.css("#downloadlink").count == 1
+        if info_doc.css("#downloadlink").count == 1
           download_redirect_url = info_doc.css("#downloadlink")[0][:href]
+          # latest_version = info_doc.css("#downloadlink")[1].text.delete("Download").lstrip
+        elsif info_doc.css("#downloadlink").count == 2
+          download_redirect_url = info_doc.css("#downloadlink")[1][:href]
         else
           # if no download link found assgine to empty string
           download_redirect_url = ""
@@ -110,7 +110,6 @@ class VersionTracker < ActiveRecord::Base
       
     end
   end
-  
   
   # get the package icon download url and download the icon
   def scrape_icon(icon_url)

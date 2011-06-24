@@ -33,7 +33,7 @@ class ManagedInstallReport < ActiveRecord::Base
   
   def self.format_report_plist(report_plist_file)
     xml_string = report_plist_file.read if report_plist_file.present?
-    self.format_report_hash(Plist.parse_xml(xml_string)) if xml_string.present?
+    self.format_report_hash(Plist.parse_xml(xml_string.to_utf8)) if xml_string.present?
   end
   
   def self.format_report_hash(report_hash)

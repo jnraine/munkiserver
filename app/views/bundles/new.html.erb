@@ -3,12 +3,11 @@
 <%= form_for(@bundle, :validate => true) do |f| %>
 	<%= f.error_messages %>
 	<p>
-		<%= f.text_field :name %>
-		<%= subtle_value(@bundle,:name) %>
+		<%= f.text_field :name, "data-subtle-value" => "Name" %>
 	</p>
 	<p>
-		<%= f.text_area :description, :size => "30x6" %>
-		<%= subtle_value(@bundle, :description) %>
+		<%= f.text_area :description, :size => "30x6", "data-subtle-value" => "Description" %>
+		<!-- 		<%= subtle_value(@bundle, :description) %> -->
 	</p>
 	<p>Environment <%= f.collection_select :environment_id, Environment.all, :id, :name %></p>
 	<p>
