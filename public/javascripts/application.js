@@ -218,16 +218,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	
-	//jQuery drag and drop upload 
-	$('.upload').fileUploadUI({
-	        uploadTable: $('.upload_files'),
-	        downloadTable: $('.download_files'),
-	        buildUploadRow: function (files, index) {
-	            var file = files[index];
-	            return $('<tr><td>' + file.name + '<\/td>');
-	        }
-	    });
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field

@@ -43,7 +43,7 @@
 			<td><strong>Installed size</strong> </td>
 			<td><%= humanize_kilobytes(@package.installed_size) %></td>
 		</tr>
-	<% end -%>
+	<% end %>
 	
 	
 	<% if @package.update_for.length > 0 %>
@@ -52,7 +52,7 @@
 			<td>
 				<% @package.update_for.each do |p| %>
 					<%= p.to_s(:unique) %><br />
-				<% end -%>
+				<% end %>
 			</td>
 		</tr>
 	<% end -%>
@@ -65,7 +65,7 @@
 				None
 			<% else %>
 				<%= @package.requires.collect { |p| link_to p.to_s(:pretty_with_version), p }.join("<br />").html_safe %>
-			<% end%>
+			<% end %>
 		</td>
 	</tr>
 	
@@ -76,9 +76,11 @@
 	<tr>
 		<td><strong>MacUpdate Web ID</strong></td>
 		<td><% if @package.package_branch.version_tracker.web_id.present? %>
-				<%= @package.package_branch.version_tracker.web_id %> 
-				<%= link_to "[Download]", @package.package_branch.version_tracker.download_url %>
-				<%= link_to "[Info]", @package.package_branch. version_tracker.info_url %>
+				<%= @package.package_branch.version_tracker.web_id %>
+				<% if !@package.package_branch.version_tracker.download_url.empty? %> 
+				<%= link_to "[Download]", @package.package_branch.version_tracker.download_url, :target => "_blank" %>
+				<% end %>
+				<%= link_to "[Info]", @package.package_branch. version_tracker.info_url, :target => "_blank" %>
 			<% else %>
 				None
 			<% end %>

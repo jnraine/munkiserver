@@ -58,12 +58,15 @@ class VersionTracker < ActiveRecord::Base
         # if there are two download link then get the later stable download url and stable version
         if info_doc.css("#downloadlink").count == 2
           download_redirect_url = info_doc.css("#downloadlink")[1][:href]
-          latest_version = info_doc.css("#downloadlink")[1].text.delete("Download").lstrip
-        else
+          # latest_version = info_doc.css("#downloadlink")[1].text.delete("Download").lstrip
+        elsif info_doc.css("#downloadlink").count == 1
           download_redirect_url = info_doc.css("#downloadlink")[0][:href]
-          # Grab app version
-          latest_version = info_doc.at_css("#appversinfo").text
+        else
+          # if no download link found assgine to empty string
+          download_redirect_url = ""
         end
+        # Grab app version
+        latest_version = info_doc.at_css("#appversinfo").text
         # Grab the description of the package
         description = info_doc.at_css("#desc").text
       rescue NoMethodError => e
@@ -72,9 +75,11 @@ class VersionTracker < ActiveRecord::Base
       
       # read the HTTP header extract the value in "location" to the actual download url
       response = nil
-      Net::HTTP.start(MAC_UPDATE_SITE_URL, 80) {|http|
-        response = http.head(download_redirect_url)
-      }
+      if !download_redirect_url.empty?
+        Net::HTTP.start(MAC_UPDATE_SITE_URL, 80) {|http|
+          response = http.head(download_redirect_url)
+        }
+      end
       
       # if package doesn't have an icon then scrape the icon from macupdate.com
       if self.icon.nil? or new_web_id
@@ -83,7 +88,11 @@ class VersionTracker < ActiveRecord::Base
       
       # Update record with latest information
       self.version = latest_version
-      self.download_url = response['location']
+      if !response.nil?
+        self.download_url = response['location']
+      else
+        self.download_url = ""
+      end
       # strip down any white speace before and after the description string
       self.description = description.lstrip.rstrip
       self.save
