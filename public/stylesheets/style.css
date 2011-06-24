@@ -314,7 +314,7 @@ body {
 	color:#000;
 }
 
-a {
+a, .ui-widget-content a {
 	/* Link color */
 	color:#45ADA8;
 }

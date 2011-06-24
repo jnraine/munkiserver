@@ -192,8 +192,8 @@ $(document).ready(function() {
 	hideUninstallField("uninstall_script","#postinstall_script_container");
 	$("#package_uninstall_method").change();
 		
-	// $ for tabs in package edit
-	$("#tabs").tabs();
+	// Initialize tabs
+    $("#tabs").tabs();
 	
 	// client side validation $ animation
 	clientSideValidations.callbacks.element.fail = function(element, message, callback) {
@@ -216,6 +216,41 @@ $(document).ready(function() {
 		}else{
 			selectAll.attr("checked", true);
 		}
+	});
+	
+	function addSubtleValue() {
+	    $input = $(this);
+	    if($input.val() == "") {
+	        $input.css({'color':'#666'});
+	        $input.val($input.attr('data-subtle-value'));
+	    }
+	}
+	
+	function removeSubtleValue(inputEl) {
+	    $input = null;
+	    if(inputEl.nodeName == "INPUT" || inputEl.nodeName == "TEXTAREA") {
+	        $input = $(inputEl);
+	    } else {
+	        $input = $(this)
+	    }
+	    if($input.val() == $input.attr('data-subtle-value')) {
+	        $input.css({'color':'#000'});
+	        $input.val('');
+	    }
+	}
+	
+	// Replace empty fields with subtle value
+	$("[data-subtle-value]").each(addSubtleValue);
+	// Remove subtle value on focus
+	$("[data-subtle-value]").focus(removeSubtleValue);
+	// Add subtle value back on blur
+	$("[data-subtle-value]").blur(addSubtleValue);
+	// Remove subtle values upon form submission
+	$("[data-subtle-value]").parents("form").first().submit(function() {
+	    $form = $(this);
+	    $form.find("[data-subtle-value]").each(function() {
+	        removeSubtleValue(this);
+	    });
 	});
 }); // end document ready function
 
