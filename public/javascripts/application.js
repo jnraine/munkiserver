@@ -218,8 +218,6 @@ $(document).ready(function() {
 		}
 	});
 	
-<<<<<<< HEAD
-=======
 	function addSubtleValue() {
 	    $input = $(this);
 	    if($input.val() == "") {
@@ -254,7 +252,6 @@ $(document).ready(function() {
 	        removeSubtleValue(this);
 	    });
 	});
->>>>>>> 354d51c8bfd8b113d3cf6cc2a7763617524c5a02
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field
