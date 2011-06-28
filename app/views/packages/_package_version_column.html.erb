@@ -8,6 +8,6 @@
 	<%= link_to image_tag("edit.png", :class => "inline-icon", :title => "Edit"), edit_package_path(pkg.unit, pkg) %>
 	<%= link_to image_tag("download.png", :class => "inline-icon", :title => "Download"), download_package_path(pkg.download_name) %>
 	<% if super_user? %>
-		<%= link_to(image_tag("delete.png", :class => "inline-icon", :title => "Remove"), pkg.unit, :confirm => "Are you sure you want to destroy #{pkg.to_s(:version)}?", :method => :delete, :title => "Remove") %>
+		<%= link_to(image_tag("delete.png", :class => "inline-icon", :title => "Remove"), package_path(pkg.unit, pkg), :confirm => "Are you sure you want to destroy #{pkg.to_s(:version)}?", :method => :delete, :title => "Remove") %>
 	<% end -%> 
 </td>

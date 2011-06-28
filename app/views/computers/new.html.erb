@@ -34,6 +34,6 @@
 			<td colspan="3"><%= f.text_area :description, :size => "40x3" %></td>
 		</tr>
 	</table>
-	<%= hidden_field_tag "[computer][unit_id]", current_unit_id %>
+	<%= hidden_field_tag "[computer][unit_id]", current_unit.id %>
 	<p><%= f.submit 'Create' %></p>
 <% end %>

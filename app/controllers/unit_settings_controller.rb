@@ -1,6 +1,6 @@
 class UnitSettingsController < ApplicationController
   def edit
-    @unit_setting = UnitSetting.find(params[:id])
+    @unit_setting = UnitSetting.where(:name => params[:id])
   end
   
   def update
@@ -20,7 +20,7 @@ class UnitSettingsController < ApplicationController
   end
   
   def show
-    @unit_setting = UnitSetting.find(params[:id])
+    @unit_setting = UnitSetting.where(:name => params[:id])
     respond_to do |format|
       format.html
     end

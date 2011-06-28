@@ -1,4 +1,5 @@
 class ComputersController < ApplicationController
+  before_filter :require_valid_unit
   require 'cgi'
 
   def index
@@ -77,7 +78,7 @@ class ComputersController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to computers_path(@computer.unit) }
+      format.html { redirect_to computers_path(current_unit) }
     end
   end
 

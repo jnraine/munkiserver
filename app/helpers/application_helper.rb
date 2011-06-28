@@ -132,26 +132,14 @@ module ApplicationHelper
     @current_environment ||= Environment.default_view
   end
   
-  def current_unit_id
-    session[:unit_id]
-  end
-  
   def super_user?
     current_user.super_user?
   end
   
   def current_unit
-    begin
-      if params[:units] != nil
-        @current_unit ||= Unit.find_by_name(params[:units].capitalize)
-      end
-    rescue ActiveRecord::RecordNotFound
-      # If you can't find the unit with the session ID
-      session[:unit_id] = current_user.units.first.id
-      # Assign it again
-      @current_unit ||= Unit.find(session[:unit_id])
-    end
-    
+    @current_unit ||= Unit.where(:name => params[:units]).first
+    raise Exception.new("Unit doesn't exists") if @current_unit.nil?
+    @current_unit
   end
   
   def current_user
@@ -177,10 +165,8 @@ module ApplicationHelper
   
   # Build units menu for currently logged in user
   def units_menu
-    unless current_unit.nil?
-      units = current_user.units
-      render :partial => "shared/units_menu", :locals => {:units => units, :current_unit => current_unit}
-    end
+    units = current_user.units
+    render :partial => "shared/units_menu", :locals => {:units => units, :current_unit => current_unit}
   end
   
   # Creates auto-complete text field for ASM select
@@ -280,5 +266,9 @@ module ApplicationHelper
     render "shared/hash_checkboxes", :locals => {:options => options, :h => h}
   end
   
- 
+  def unit_link(unit, controller)
+    included_controllers = ["computers","packages","computer_groups","bundles","shared_packages","install_items"]
+    controller = "computers" unless included_controllers.include?(controller)
+    {:controller => controller, :action => :index, :units => unit.to_param}
+  end
 end

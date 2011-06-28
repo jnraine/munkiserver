@@ -1,4 +1,5 @@
 class PackagesController < ApplicationController
+  before_filter :require_valid_unit
   def index
     # TO-DO This query can be rethought because of the way the view uses this list of packages
     # it might be better to grab all the package branches from this environment and then iterate
@@ -44,7 +45,7 @@ class PackagesController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to packages_path(@package.unit, @package) }
+      format.html { redirect_to packages_path(current_unit) }
     end
   end
 

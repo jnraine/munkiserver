@@ -1,5 +1,5 @@
 class BundlesController < ApplicationController
-  include ApplicationHelper
+  before_filter :require_valid_unit
   
   def index
     @bundles = Bundle.unit(current_unit)

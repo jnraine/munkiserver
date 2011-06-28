@@ -48,15 +48,14 @@
 						<%= link_to("Units", units_url)%>
 						<ul>
 							<li><%= link_to "List units", units_path %></li>
-							<li><%= link_to "Edit unit settings", edit_unit_setting_path(current_unit) %></li>
+							
 							<li><%= link_to "Add unit", new_unit_path %></li>
 						</ul>
 					</li>
 					<!-- ><li class="dir">
 						<%= link_to "Settings", "..." %>
 						<ul>
-							<li><%= link_to "Edit unit settings", edit_unit_setting_path(current_unit.settings) %></li>
-							<li><%= link_to "Edit user settings", edit_user_setting_path(current_user.settings) %></li>
+
 						</ul>
 					</li> -->
 				<% end -%>
@@ -79,8 +78,8 @@
 		</div>
 	
 		<div id="units_submenu" class="span-23 prepend-1 last">
-			<ul class="dropdown dropdown-horizontal">
-				<% if current_unit.present? %>
+			<% if current_unit.present? %>
+				<ul class="dropdown dropdown-horizontal">
 					<li class="dir<%= " current" if current_link?("Computers") %>">
 						<%= link_to "Computers", computers_url(current_unit) %>
 						<ul>
@@ -113,7 +112,7 @@
 						</ul>
 					</li>
 				</ul>
-			<% end -%>
+			<% end %>
 		</div>
 		<div class="span-16 prepend-1 append-bottom append-1">
 			<% flash.each do |key, msg| %>

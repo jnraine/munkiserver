@@ -51,7 +51,7 @@
 			<td><%= c.time_since_last_report %></td>
 		    <td>
 				<%= link_to 'Edit', edit_computer_path(c.unit, c) %> |
-				<%= link_to 'Destroy', c.unit, :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %><br />
+				<%= link_to 'Destroy', computer_path(c.unit, c) , :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %><br />
 				<%= link_to 'Manifest', computer_path(c.unit, c, :format => :manifest) %> |
 				<%= link_to 'Client Prefs', computer_path(c.unit, c, :format => :client_prefs) %>
 			</td>

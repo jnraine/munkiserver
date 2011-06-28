@@ -3,6 +3,7 @@ Munki::Application.routes.draw do
   scope "/:units" do
     resources :computers do
       get :import, :on => :new
+      get 'managed_install_reports/:id' => 'managed_install_reports#show', :on => :collection, :as => "managed_install_reports"
       collection do
         post :create_import, :multiple_edit, :force_redirect
         put :multiple_update
@@ -26,21 +27,16 @@ Munki::Application.routes.draw do
     match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get
     match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :method => :get
     
-    match 'managed_install_reports/:id' => 'managed_install_reports#show', :method => :get
     
   end
-  
+
+  # Non-unit specific resources
   resources :units, :users, :user_settings, :unit_settings
-  
-  
-  # match 'test/info' => 'test#info'
-  
  
   # Session
   match '/login' => "sessions#new"
   match 'create_session' => 'sessions#create'
   match '/logout' => 'sessions#destroy'
-  match '/:units/:c(/:a)' => 'sessions#update', :as => 'change_unit'
   
   # Computer checkin URL
   match 'checkin/:id' => 'computers#checkin', :method => :post
@@ -52,5 +48,5 @@ Munki::Application.routes.draw do
   match 'pkgs/:id' => 'packages#download', :as => 'download_package', :id => /[A-Za-z0-9_\-\.%]+/
   match '/configuration/:id.plist', :controller => 'computers', :action => 'show', :format => 'client_prefs', :id => /[A-Za-z0-9_\-\.:]+/
 
-  root :to => "computers#index"
+  root :to => redirect("/login")
 end

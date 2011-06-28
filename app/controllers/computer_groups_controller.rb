@@ -1,5 +1,6 @@
 class ComputerGroupsController < ApplicationController
-  include ApplicationHelper
+  before_filter :require_valid_unit
+  
   def index
     @computer_groups = ComputerGroup.unit(current_unit)
     

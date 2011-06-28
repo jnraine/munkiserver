@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   skip_before_filter :require_login, :only => ['new','create','destroy']
   
   def new
-    redirect_to root_path if logged_in?
+    redirect_to computers_path(current_user.units.first) if logged_in?
   end
   
   # Creates a new user session
@@ -17,20 +17,6 @@ class SessionsController < ApplicationController
       params[:units] = Unit.find(u.unit_ids.first)
       redirect_to computers_path(params[:units])
     end
-  end
-  
-  # Switches the unit_id session var if the current user is a member of that unit
-  def update
-    new_unit = Unit.find_by_name(params[:units])
-    if current_user.member_of(new_unit)
-      session[:unit_id] = new_unit.id
-    end
-    # Don't redirect to show or edit actions
-    excluded_actions = ["show", "edit"]
-    if excluded_actions.include?(params[:a])
-      params[:a] = "index"
-    end
-    redirect_to :action => params[:a], :controller => params[:c]
   end
   
   # Logs the user out of the current session
