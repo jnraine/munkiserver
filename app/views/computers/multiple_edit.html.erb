@@ -1,6 +1,6 @@
 <div id="bulk_edit_computers">
 	<h2>Bulk Edit Computers</h2>
-	<%= form_for(@computers, :url => multiple_update_computers_path,:html => {:method => :put, :id => "multiple_update_computers_form"})  do |f| %>
+	<%= form_for(@computers, :url => multiple_update_computers_path(current_unit),:html => {:method => :put, :id => "multiple_update_computers_form"})  do |f| %>
 		<%= f.error_messages %>
 		<% for c in @computers %>
 

@@ -106,9 +106,9 @@ class Unit < ActiveRecord::Base
     AdminMailer.dormant_computers(self)
   end
   
-  # def to_param
-  #   name
-  # end
+  def to_param
+    name
+  end
   
   construct_acl_methods
 end

@@ -142,13 +142,16 @@ module ApplicationHelper
   
   def current_unit
     begin
-      @current_unit ||= Unit.find(session[:unit_id])
+      if params[:units] != nil
+        @current_unit ||= Unit.find_by_name(params[:units].capitalize)
+      end
     rescue ActiveRecord::RecordNotFound
       # If you can't find the unit with the session ID
       session[:unit_id] = current_user.units.first.id
       # Assign it again
       @current_unit ||= Unit.find(session[:unit_id])
     end
+    
   end
   
   def current_user
@@ -276,4 +279,6 @@ module ApplicationHelper
     
     render "shared/hash_checkboxes", :locals => {:options => options, :h => h}
   end
+  
+ 
 end

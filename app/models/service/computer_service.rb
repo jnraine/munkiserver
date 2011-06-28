@@ -93,6 +93,7 @@ class ComputerService
   def self.collect(params, unit, env)
     # Grab the computers belonging to a specific unit
     # Set environment
+    
     computers = Computer.unit_and_environment(unit,env)
     
     # Modify the query for sorting

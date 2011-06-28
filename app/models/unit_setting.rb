@@ -20,5 +20,9 @@ class UnitSetting < ActiveRecord::Base
       self.update_attributes(DEFAULTS)
     end
   end
+  
+  def to_params
+    name
+  end
 end
 

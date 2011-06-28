@@ -1,38 +1,46 @@
 Munki::Application.routes.draw do  
 
-  resources :computers do
-    get :import, :on => :new
-    collection do
-      post :create_import, :multiple_edit
-      put :multiple_update
+  scope "/:units" do
+    resources :computers do
+      get :import, :on => :new
+      collection do
+        post :create_import, :multiple_edit, :force_redirect
+        put :multiple_update
+      end
     end
+  
+    resources :packages do
+      collection do
+        post :multiple_edit
+        get :check_for_updated
+        put :check_for_updated, :multiple_update
+      end
+    end
+    
+    resources :shared_packages do
+      get :import, :on => :member
+    end
+    
+    resources :computer_groups, :bundles
+    
+    match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get
+    match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :method => :get
+    
+    match 'managed_install_reports/:id' => 'managed_install_reports#show', :method => :get
+    
   end
   
-  resources :packages do
-    collection do
-      post :multiple_edit
-      get :check_for_updated
-      put :check_for_updated, :multiple_update
-    end
-  end
-
-  resources :shared_packages do
-    get :import, :on => :member
-  end
-  resources :units
-  resources :unit_settings, :user_settings, :computer_groups, :bundles, :users
+  resources :units, :users, :user_settings, :unit_settings
   
   
   # match 'test/info' => 'test#info'
-  match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get
-  match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :method => :get
-  match 'managed_install_reports/:id' => 'managed_install_reports#show', :method => :get
-
+  
+ 
   # Session
   match '/login' => "sessions#new"
   match 'create_session' => 'sessions#create'
   match '/logout' => 'sessions#destroy'
-  match 'unit/:unit_id/:c/:a' => 'sessions#update', :as => 'change_unit'
+  match '/:units/:c(/:a)' => 'sessions#update', :as => 'change_unit'
   
   # Computer checkin URL
   match 'checkin/:id' => 'computers#checkin', :method => :post

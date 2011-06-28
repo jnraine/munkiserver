@@ -24,7 +24,7 @@ class PackagesController < ApplicationController
       if @package.save
         # Success
         flash[:notice] = "Package successfully saved"
-        format.html { redirect_to edit_package_path(@package) }
+        format.html { redirect_to edit_package_path(@package.unit, @package) }
         render :json => {:name => @package.package_branch.name }, :content_type => 'text/html'
       else
         # Failure
@@ -44,7 +44,7 @@ class PackagesController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to packages_path }
+      format.html { redirect_to packages_path(@package.unit, @package) }
     end
   end
 
@@ -58,7 +58,7 @@ class PackagesController < ApplicationController
     respond_to do |format|
       if @package.update_attributes(params[:package])
         flash[:notice] = "Package was successfully updated."
-        format.html { redirect_to package_path(@package) }
+        format.html { redirect_to package_path(@package.unit, @package) }
         format.xml { head :ok }
       else
         flash[:error] = "Could not update package!"

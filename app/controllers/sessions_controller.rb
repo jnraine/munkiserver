@@ -14,15 +14,16 @@ class SessionsController < ApplicationController
     else
       session[:username] = u.username
       session[:unit_id] = u.unit_ids.first
-      redirect_to root_path
+      params[:units] = Unit.find(u.unit_ids.first)
+      redirect_to computers_path(params[:units])
     end
   end
   
   # Switches the unit_id session var if the current user is a member of that unit
   def update
-    new_unit = Unit.find(params[:unit_id])
+    new_unit = Unit.find_by_name(params[:units])
     if current_user.member_of(new_unit)
-      session[:unit_id] = params[:unit_id]
+      session[:unit_id] = new_unit.id
     end
     # Don't redirect to show or edit actions
     excluded_actions = ["show", "edit"]

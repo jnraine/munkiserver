@@ -3,16 +3,16 @@
 	<div class="box">
 		<%= computer_group_links %>
 		<hr />
-		<%= link_to "View All", computer_groups_url %><br />
+		<%= link_to "View All", computer_groups_url(current_unit) %><br />
 	</div>
 	<h4>Filter</h4>
 	<div class="box">
 		Quickly find the computer you are looking for by filtering the hostname.
 	</div>
-<% end -%>
+<% end %>
 
 <h2>Listing computers</h2>
 
 <%= render :partial => 'computer_listing' %>
 
-<p><%= link_to 'Add computer', new_computer_path %></p>
+<p><%= link_to 'Add computer', new_computer_path(current_unit) %></p>

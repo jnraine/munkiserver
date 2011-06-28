@@ -1,6 +1,6 @@
 <h2>Editing bundle</h2>
 
-<%= form_for(@bundle, :validate => true) do |f| %>
+<%= form_for(@bundle, :validate => true, :url => bundles_path(@bundle.unit)) do |f| %>
 	<%= f.error_messages %>
 	<table class="form">
 		<tr>
@@ -21,4 +21,4 @@
 	</p>
 <% end %>
 
-<%= link_to 'Show', @bundle %>
+<%= link_to 'Show', bundle_path(@bundle.unit, @bundle) %>

@@ -6,5 +6,5 @@
 <% if @computer.errors.empty? %>
 	<%= link_to 'Show', @computer %>
 <% else %>
-	<%= link_to 'Show', computer_path(@computer.id) %>
+	<%= link_to 'Show', computer_path(@computer.unit, @computer.id) %>
 <% end %>

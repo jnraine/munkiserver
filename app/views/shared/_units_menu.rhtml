@@ -3,7 +3,7 @@
 		<li class="current"><%= unit.name %></li>		
 	<% else %>
 		<li>
-			<%= link_to "#{unit.name}", change_unit_path(unit.id,params[:controller],params[:action]) %>
+			<%= link_to "#{unit.name}", change_unit_path(unit.name,params[:controller]) %>
 		</li>
-	<% end -%>
-<% end -%>
+	<% end %>
+<% end %>

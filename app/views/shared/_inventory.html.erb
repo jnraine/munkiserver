@@ -11,7 +11,7 @@
 		<td id="installs_view_content">
 			<%= pkg_list(model_obj.install_items, target) %>
 			<% if model_obj.class == Computer %>
-				<p><%= link_to "specify version", edit_multiple_install_items_path(model_obj.id, :format => "js"), :remote => "true" %></p>
+				<p><%= link_to "specify version", edit_multiple_install_items_path(current_unit, model_obj.id, :format => "js"), :remote => "true" %></p>
 			<% end -%>
 		</td>
 		<td><%= pkg_list(model_obj.uninstall_items) %></td>
