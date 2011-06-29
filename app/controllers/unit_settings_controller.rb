@@ -1,10 +1,10 @@
 class UnitSettingsController < ApplicationController
   def edit
-    @unit_setting = UnitSetting.where(:name => params[:id])
+    @unit_setting = UnitSetting.find_by_unit_id(Unit.find_by_name(params[:id]).id)
   end
   
   def update
-    @unit_setting = UnitSetting.find(params[:id])
+    @unit_setting = UnitSetting.find_by_unit_id(Unit.find_by_name(params[:id]).id)
     
     respond_to do |format|
       if @unit_setting.update_attributes(params[:unit_setting])
@@ -20,7 +20,7 @@ class UnitSettingsController < ApplicationController
   end
   
   def show
-    @unit_setting = UnitSetting.where(:name => params[:id])
+    @unit_setting = UnitSetting.find_by_unit_id(Unit.find_by_name(params[:id]).id)
     respond_to do |format|
       format.html
     end

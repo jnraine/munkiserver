@@ -21,8 +21,8 @@ class UnitSetting < ActiveRecord::Base
     end
   end
   
-  def to_params
-    name
-  end
+  # def to_params
+  #   name
+  # end
 end
 

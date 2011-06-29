@@ -138,8 +138,7 @@ module ApplicationHelper
   
   def current_unit
     @current_unit ||= Unit.where(:name => params[:units]).first
-    raise Exception.new("Unit doesn't exists") if @current_unit.nil?
-    @current_unit
+    @current_unit ||= Unit.find(current_user.units.first.id)
   end
   
   def current_user

@@ -11,6 +11,9 @@ class SessionsController < ApplicationController
     if u.nil?
       flash[:error] = "Incorrect username or password"
       redirect_to login_path
+    elsif u.unit_ids.empty?
+      flash[:warning] = "You are not permitted to any units!"
+      render :file => "#{Rails.root}/public/generic_error.html", :layout => false
     else
       session[:username] = u.username
       session[:unit_id] = u.unit_ids.first
