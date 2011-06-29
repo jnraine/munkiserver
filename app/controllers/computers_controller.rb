@@ -171,10 +171,4 @@ class ComputersController < ApplicationController
         end
     end
   end
-  
-  
-  # force root url end with /:units/computers
-  def force_redirect
-    redirect_to "/default/computers"
-  end
 end

@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
     begin 
       current_unit
     rescue Exception => e
-      flash[:warning] = "The unit you requested (#{params[:units]}) does not exist!"
+      flash[:warning] = "The unit you requested (#{params[:unit]}) does not exist!"
       render :file => "#{Rails.root}/public/generic_error.html", :layout => false
     end
   end

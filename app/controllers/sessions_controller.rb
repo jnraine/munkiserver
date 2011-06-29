@@ -17,8 +17,8 @@ class SessionsController < ApplicationController
     else
       session[:username] = u.username
       session[:unit_id] = u.unit_ids.first
-      params[:units] = Unit.find(u.unit_ids.first)
-      redirect_to computers_path(params[:units])
+      params[:unit] = Unit.find(u.unit_ids.first)
+      redirect_to computers_path(params[:unit])
     end
   end
   
