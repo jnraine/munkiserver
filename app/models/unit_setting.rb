@@ -1,6 +1,6 @@
 class UnitSetting < ActiveRecord::Base
   belongs_to :unit
-  
+  attr_accessible :regular_events, :warning_events, :error_events
   # Unit setting defaults
   # New records initialized with the following values
   DEFAULTS = {:notify_users => true,

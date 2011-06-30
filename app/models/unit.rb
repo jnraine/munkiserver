@@ -11,6 +11,7 @@ class Unit < ActiveRecord::Base
   has_many :users, :through => :memberships
   
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
+  accepts_nested_attributes_for :settings, :allow_destroy => true
   
   validates_uniqueness_of :name
   validates_presence_of :name, :description

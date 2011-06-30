@@ -1,7 +1,7 @@
 <h2>Edit unit settings</h2>
 <h3><%= @unit_setting.unit %></h3>
 
-<%= form_for(@unit_setting) do |f| %>
+<%= form_for(@unit_setting.unit) do |f| %>
 	<%= f.error_messages %>
 	<h3>Notifications</h3>
 	<p>
@@ -11,7 +11,7 @@
 		<%= hash_checkboxes(@unit_setting.warning_events,:title => "Warning Events", :name => "unit_setting[warning_events]") %>
 	</p>
 	<p>
-		<%= hash_checkboxes(@unit_setting.regular_events,:title => "Error Events", :name => "unit_setting[error_events]") %>
+		<%= hash_checkboxes(@unit_setting.error_events,:title => "Error Events", :name => "unit_setting[error_events]") %>
 	</p>
 	<p><%= f.submit 'Update' %></p>
 <% end %>

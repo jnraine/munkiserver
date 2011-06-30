@@ -7,6 +7,20 @@
 	<div id="members">
 		<%= tabled_asm_select(@unit) %>
 	</div>
+	
+	<%= f.fields_for @unit.settings do |s| %>
+		<%= s.error_messages %>
+		<h3>Notifications</h3>
+		<p>
+			<%= hash_checkboxes(@unit.settings.regular_events,:title => "Regular Events", :name => "unit_setting[regular_events]") %>
+		</p>
+		<p>
+			<%= hash_checkboxes(@unit.settings.warning_events,:title => "Warning Events", :name => "unit_setting[warning_events]") %>
+		</p>
+		<p>
+			<%= hash_checkboxes(@unit.settings.error_events,:title => "Error Events", :name => "unit_setting[error_events]") %>
+		</p>
+	<% end %>
 	<p><%= f.submit 'Update' %></p>
 <% end %>
-<%= link_to 'Show', @unit %> | <%= link_to 'Edit Unit Settings', edit_unit_setting_path(@unit) %>
+<%= link_to 'Show', @unit %>

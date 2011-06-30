@@ -1,15 +1,20 @@
 Munki::Application.routes.draw do  
-
+  match 'units/:unit/settings' => 'unit_settings#show', :as => 'unit_setting', :via => :get
+  match 'units/:unit/settings/edit' => 'unit_settings#edit', :as => 'edit_unit_setting', :via => :get
+  match 'units/:unit/settings' => 'unit_settings#update', :via => :put
+  
+  match 'users/:id/settings/edit' => 'user_settings#edit', :as => 'edit_user_setting', :via => :get
+  match 'users/:id/settings' => 'user_settings#update', :via => :put
   # Non-unit specific resources
-  resources :units, :users, :user_settings, :unit_settings
- 
+  resources :units, :users 
+  
   # Session
   match '/login' => "sessions#new"
   match 'create_session' => 'sessions#create'
   match '/logout' => 'sessions#destroy'
   
   # Computer checkin URL
-  match 'checkin/:id' => 'computers#checkin', :method => :post
+  match 'checkin/:id' => 'computers#checkin', :via => :post
 
   # Make munki-client-friendly URLs
   match ':id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
@@ -43,8 +48,8 @@ Munki::Application.routes.draw do
     
     resources :computer_groups, :bundles
     
-    match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :method => :get
-    match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :method => :get
+    match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :via => :get
+    match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :via => :get
   end
   
   root :to => redirect("/login")

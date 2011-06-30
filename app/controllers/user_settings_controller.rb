@@ -5,11 +5,10 @@ class UserSettingsController < ApplicationController
   
   def update
     @user_setting = UserSetting.find(params[:id])
-    
     respond_to do |format|
       if @user_setting.update_attributes(params[:user_setting])
         flash[:notice] = "Settings successfully updated."
-        format.html { redirect_to(@user_setting.user) }
+        format.html { redirect_to root_path }
         format.xml  { head :ok }
       else
         flash[:error] = 'Could not update settings!'

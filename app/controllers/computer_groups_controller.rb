@@ -49,7 +49,6 @@ class ComputerGroupsController < ApplicationController
   def update
     @computer_group = ComputerGroup.unit(current_unit).find_for_show(CGI::unescape(params[:id]))
     @manifest_service = ManifestService.new(@computer_group,params[:computer_group])
-    
     respond_to do |format|
       if @manifest_service.save
         flash[:notice] = "Computer group was successfully updated."
