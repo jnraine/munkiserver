@@ -138,7 +138,6 @@ module ApplicationHelper
   
   def current_unit
     @current_unit ||= Unit.where(:name => params[:unit]).first
-    @current_unit ||= Unit.find(current_user.units.first.id)
   end
   
   def current_user

@@ -40,7 +40,7 @@
 						<%= link_to("Users", users_path)%>
 						<ul>
 							<li><%= link_to "List users", users_path %></li>
-							<li><%= link_to "Edit user settings", edit_user_setting_path(current_user.settings) %></li>
+							<li><%= link_to "Edit user settings", settings_edit_user_path(current_user.settings) %></li>
 							<li><%= link_to "Create user", new_user_path %></li>
 						</ul>
 					</li>
@@ -48,7 +48,6 @@
 						<%= link_to("Units", units_url)%>
 						<ul>
 							<li><%= link_to "List units", units_path %></li>
-							
 							<li><%= link_to "Add unit", new_unit_path %></li>
 						</ul>
 					</li>

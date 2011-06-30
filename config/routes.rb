@@ -1,12 +1,17 @@
 Munki::Application.routes.draw do  
-  match 'units/:unit/settings' => 'unit_settings#show', :as => 'unit_setting', :via => :get
-  match 'units/:unit/settings/edit' => 'unit_settings#edit', :as => 'edit_unit_setting', :via => :get
-  match 'units/:unit/settings' => 'unit_settings#update', :via => :put
+  resources :units do
+    member do
+      get 'settings/edit' => 'unit_settings#edit'
+      put 'settings' => 'unit_settings#update'
+    end
+  end
   
-  match 'users/:id/settings/edit' => 'user_settings#edit', :as => 'edit_user_setting', :via => :get
-  match 'users/:id/settings' => 'user_settings#update', :via => :put
-  # Non-unit specific resources
-  resources :units, :users 
+  resources :users do
+    member do
+      get 'settings/edit' => 'user_settings#edit'
+      put 'settings' => 'user_settings#update'
+    end
+  end
   
   # Session
   match '/login' => "sessions#new"
