@@ -14,17 +14,6 @@
 				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
 			</td>
 			<td>
-			<%= f.label :computer_group_id %>
-			</td>
-			<td>
-			<%= f.collection_select :computer_group_id, ComputerGroup.unit_member(c), :id, :name %>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
-			</td>
-			<td>
 			<%= f.label :environment_id %>
 			</td>
 			<td>
@@ -33,10 +22,22 @@
 		</tr>
 		<tr>
 			<td>
-			
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
 			</td>
 			<td>
-				
+			<%= f.label :computer_group_id %>
+			</td>
+			<td>
+			<%= f.collection_select :computer_group_id, ComputerGroup.unit_member(c), :id, :name %>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<!-- Intend to be empty -->
+			</td>
+			<td>
+				<!-- Intend to be empty -->
 			</td>
 			<td>
 				<%= f.submit "Update" %>
