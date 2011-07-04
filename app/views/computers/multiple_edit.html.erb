@@ -17,7 +17,7 @@
 			<%= f.label :computer_group_id %>
 			</td>
 			<td>
-			<%= select_tag :computer_group_id, computer_group_options, {:default => 'Choose a group'} %>
+			<%= f.collection_select :computer_group_id, ComputerGroup.unit_member(c), :id, :name %>
 			</td>
 		</tr>
 		<tr>
