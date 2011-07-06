@@ -3,14 +3,19 @@ class VersionTracker < ActiveRecord::Base
   require 'open-uri'
   require 'net/http'
 
-  # MAC_UPDATE_SEARCH_URL = "http://www.macupdate.com/find/mac/" #append search package name in the end of URL
+  MAC_UPDATE_SEARCH_URL = "http://www.macupdate.com/find/mac/" #append search package name in the end of URL
   MAC_UPDATE_PACKAGE_URL = "http://www.macupdate.com/app/mac/" #append web_id in the end of URL
   MAC_UPDATE_SITE_URL = "www.macupdate.com" #for Net HTTP response
+  
+  # validates_presence_of :package_branch_id
   
   has_many :download_links, :dependent => :destroy, :autosave => true
   
   belongs_to :package_branch
   belongs_to :icon
+  
+  before_save :scrape_latest_version_if_web_id_changed
+  before_create :retrieve_web_id, :scrape_latest_version
   
   def self.update_all
     # Get all trackable packages branches
@@ -89,22 +94,20 @@ class VersionTracker < ActiveRecord::Base
       
       # if package doesn't have an icon then scrape the icon from macupdate.com
       if self.icon.nil? or new_web_id
-        scrape_icon(icon_url)
+        self.icon = scrape_icon(icon_url)
       end
       # strip down any white speace before and after the description string
       self.description = description.lstrip.rstrip
       self.version = latest_version
-      self.save
       # Return results
       {'latest_version' => self.version, 'description' => self.description}
-    
     else
       # reset the values associated to the version tracker to nil if the value is blank
       self.version = nil
       self.description = nil
       self.icon.destroy unless self.icon.nil?
       self.icon_id = nil
-      self.save
+      self.download_links = []
     end
   end
   
@@ -121,10 +124,16 @@ class VersionTracker < ActiveRecord::Base
     f.close
     # Open new file handle
     f = File.open(tmp_path)
-    self.icon = Icon.new({:photo => f})
-    self.save
+    icon = Icon.new({:photo => f})
+    icon.save
+    icon
   end
   
+  # Used as a before_save filter to ensure new info is pulled 
+  # when the web_id is changed.
+  def scrape_latest_version_if_web_id_changed
+    scrape_latest_version(true) if web_id_changed?
+  end
   
   # Turns the version tracker instance into a package object by way of magic. Package record is unsaved and needs a unit before saving!
   # Scrapes the latest version of the package before packaging
@@ -132,14 +141,13 @@ class VersionTracker < ActiveRecord::Base
     self.scrape_latest_version
     AutoPackage.from_url(download_url)
   end
-  
-  def web_id=(value)
-    if value != web_id
-      super(value)
-      scrape_latest_version(true)
-    else
-      super(value)
-    end
+
+  # Retrieves and assigns the first web ID from a macupdate search
+  def retrieve_web_id
+    info_doc = Nokogiri::HTML(open(MAC_UPDATE_SEARCH_URL + self.package_branch.name))
+    # if macupdate return a search page
+    href_match = info_doc.css(".titlelink").first[:href].match(/([0-9]{4,})/) if info_doc.css(".titlelink").first.present?
+    self.web_id = href_match[1] if href_match.present?
   end
 end
 

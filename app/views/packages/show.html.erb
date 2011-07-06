@@ -78,12 +78,13 @@
 		<td>
 			<% if @package.package_branch.version_tracker.web_id.present? %>
 				<%= @package.package_branch.version_tracker.web_id %>
+				- <%= link_to "Package Info", @package.package_branch.version_tracker.info_url, :target => "_blank" %>
 			<% else %>
 				None
 			<% end %>
-			- <%= link_to "Package Info", @package.package_branch.version_tracker.info_url, :target => "_blank" %>
 		</td>
 	</tr>
+	<% if @package.package_branch.version_tracker.download_links.present? %>
 	<tr>
 		<td><strong>Download Links</strong></td>
 		<td>
@@ -92,6 +93,7 @@
 			<% end %>
 		</td>
 	</tr>
+	<% end %>
 </table>
 
 <%= link_to 'Edit', edit_package_path(@package.unit, @package) %> | <%= link_to 'Download', download_package_path(@package.download_name) %>

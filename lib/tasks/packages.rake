@@ -22,17 +22,10 @@ namespace :packages do
   
   desc "Autotmaically scan each package and assgin a Macupdate Web ID"
   task :scan => :environment do
-    packages = Package.all
-    packages.each do |package|
-      info_doc = Nokogiri::HTML(open(MAC_UPDATE_SEARCH_URL + package.name))
-      # if macupdate return a search page
-      if info_doc.css("span:nth-child(1)").text.include?("Search")
-        href_match = info_doc.css(".titlelink").first[:href].match(/([0-9]{4,})/) if info_doc.css(".titlelink").first[:href].present?
-        if href_match.present?
-           package.version_tracker_web_id = href_match[1]
-           package.save
-        end
-      end
+    version_trackers = VersionTracker.where(:web_id => nil)
+    version_trackers.each do |version_tracker|
+      version_tracker.retrieve_web_id
+      version_tracker.save
     end
     VersionTracker.update_all
   end
