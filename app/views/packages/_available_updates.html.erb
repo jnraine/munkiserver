@@ -8,7 +8,7 @@
 				<!-- [<a href="#" onclick="submit_auto_package('#auto_package_<%= pb.version_tracker_web_id %>');">add</a>] -->
 				<ul>
 				<% pb.version_tracker.download_links.each do |download_link| %>
-					<li><%= link_to download_link.text, download_link.url %></li>
+					<li><%= link_to download_link.text, download_link.url %> - <%= download_link.caption %></li>
 				<% end %>
 				</ul>
 			<% end %>

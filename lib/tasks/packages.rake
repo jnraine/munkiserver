@@ -27,7 +27,11 @@ namespace :packages do
       info_doc = Nokogiri::HTML(open(MAC_UPDATE_SEARCH_URL + package.name))
       # if macupdate return a search page
       if info_doc.css("span:nth-child(1)").text.include?("Search")
-        package.version_tracker_web_id = info_doc.css(".titlelink").first[:href].match(/[0-9]+/) if info_doc.css(".titlelink").first[:href].nil?
+        href_match = info_doc.css(".titlelink").first[:href].match(/([0-9]{4,})/) if info_doc.css(".titlelink").first[:href].present?
+        if href_match.present?
+           package.version_tracker_web_id = href_match[1]
+           package.save
+        end
       end
     end
     VersionTracker.update_all
