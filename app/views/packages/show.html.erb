@@ -88,9 +88,8 @@
 		<td><strong>Download Links</strong></td>
 		<td>
 			<% @package.package_branch.version_tracker.download_links.each do |download_link| %>
-				<%= link_to "#{download_link.text}", download_link.url  , :target => "_blank" %> - <%= download_link.caption %>
+				<%= link_to "#{download_link.text}", download_link.url  , :target => "_blank" %> - <%= download_link.caption %><% unless download_link == @package.package_branch.version_tracker.download_links.last %> | <% end %>
 			<% end %>
-			
 		</td>
 	</tr>
 </table>
