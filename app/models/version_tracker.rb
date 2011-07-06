@@ -146,8 +146,15 @@ class VersionTracker < ActiveRecord::Base
   def retrieve_web_id
     info_doc = Nokogiri::HTML(open(MAC_UPDATE_SEARCH_URL + self.package_branch.name))
     # if macupdate return a search page
-    href_match = info_doc.css(".titlelink").first[:href].match(/([0-9]{4,})/) if info_doc.css(".titlelink").first.present?
-    self.web_id = href_match[1] if href_match.present?
+    if info_doc.css(".titlelink").present?
+      href_match = info_doc.css(".titlelink").first[:href].match(/([0-9]{4,})/) if info_doc.css(".titlelink").first.present?
+      self.web_id = href_match[1] if href_match.present?
+      # if macupdate redirect to the single page
+    elsif info_doc.css("#listingarea script").text.include?("document.location")
+      self.web_id = info_doc.css("#listingarea script").text.match(/([0-9]+{4,})/)[0].to_i unless info_doc.css("#listingarea script").text.match(/([0-9]+{4,})/).nil?
+    else
+      # do nothing
+    end
   end
 end
 
