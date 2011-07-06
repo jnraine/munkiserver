@@ -18,7 +18,9 @@ namespace :packages do
   task :scan => :environment do
     version_trackers = VersionTracker.where(:web_id => nil)
     version_trackers.each do |version_tracker|
+      print "Searching for #{version_tracker.package_branch} web ID..."
       version_tracker.retrieve_web_id
+      puts version_tracker.web_id
       version_tracker.save
     end
     VersionTracker.update_all
