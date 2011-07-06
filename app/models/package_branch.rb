@@ -92,7 +92,11 @@ class PackageBranch < ActiveRecord::Base
   
   # True if a newer version is available in this branch
   def new_version?
+    if version_tracker.version.nil?
+      return false
+    else
     vtv.version_string_comparison(version_tracker.version) == -1
+    end
   end
   
   # Returns latest package or package with

@@ -45,15 +45,15 @@
 			<% end %>
 		
 			<td><%= image_tag c.icon.url(:small) if c.icon %>
-			<td><%= link_to c.name, c %></td>    
-		    <td><%= link_to c.hostname, c %></td>
+			<td><%= link_to c.name, computer_url(c.unit, c) %></td>    
+		    <td><%= link_to c.hostname, computer_url(c.unit, c) %></td>
 			<td><%= c.mac_address %></td>
 			<td><%= c.time_since_last_report %></td>
 		    <td>
-				<%= link_to 'Edit', edit_computer_path(c) %> |
-				<%= link_to 'Destroy', c, :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %><br />
-				<%= link_to 'Manifest', computer_path(c, :format => :manifest) %> |
-				<%= link_to 'Client Prefs', computer_path(c, :format => :client_prefs) %>
+				<%= link_to 'Edit', edit_computer_path(c.unit, c) %> |
+				<%= link_to 'Destroy', computer_path(c.unit, c) , :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %><br />
+				<%= link_to 'Manifest', computer_path(c.unit, c, :format => :manifest) %> |
+				<%= link_to 'Client Prefs', computer_path(c.unit, c, :format => :client_prefs) %>
 			</td>
 		  </tr>
 		<% end %>
@@ -62,7 +62,7 @@
 				<br /><br />
 	<% else %>
 		<h5>There are no computers here!</h5>
-		<p>Why don't you add <%= link_to "one", new_computer_path %> or <%= link_to "a few", import_new_computer_path %>?</p>
+		<p>Why don't you add <%= link_to "one", new_computer_path(current_unit) %> or <%= link_to "a few", import_new_computer_path(current_unit) %>?</p>
 	<% end %>
 	<%= will_paginate computers if paginate %>
 </div>

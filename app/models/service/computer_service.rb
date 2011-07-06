@@ -92,7 +92,7 @@ class ComputerService
   # Intended to encapsulate the typical query done for the index action.
   def self.collect(params, unit, env)
     # Grab the computers belonging to a specific unit
-    # Set environment
+    # Set environment    
     computers = Computer.unit_and_environment(unit,env)
     
     # Modify the query for sorting

@@ -1,6 +1,6 @@
 class UnitSetting < ActiveRecord::Base
   belongs_to :unit
-  
+  attr_accessible :regular_events, :warning_events, :error_events
   # Unit setting defaults
   # New records initialized with the following values
   DEFAULTS = {:notify_users => true,
@@ -19,6 +19,10 @@ class UnitSetting < ActiveRecord::Base
     if new_record?
       self.update_attributes(DEFAULTS)
     end
+  end
+  
+  def to_params
+    name
   end
 end
 

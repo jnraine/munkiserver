@@ -30,6 +30,15 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def require_valid_unit
+    begin 
+      current_unit
+    rescue Exception => e
+      flash[:warning] = "The unit you requested (#{params[:unit]}) does not exist!"
+      render :file => "#{Rails.root}/public/generic_error.html", :layout => false
+    end
+  end
+  
   # Checks to see if the requested page is excluded from login requirements
   # hashes like this: action => [formats, as, array]
   def action_and_format_excluded?

@@ -25,11 +25,11 @@ class UnitsController < ApplicationController
   end
 
   def show
-    @unit = Unit.find(params[:id])
+    @unit = Unit.find_by_name(params[:id])
   end
 
   def edit
-    @unit = Unit.find(params[:id])
+    @unit = Unit.find_by_name(params[:id])
   end
 
   def update
@@ -49,7 +49,7 @@ class UnitsController < ApplicationController
   end
 
   def destroy
-    @unit = Unit.find(params[:id])
+    @unit = Unit.find_by_name(params[:id])
     unit_name = @unit.name
     unit_id = @unit.id
     

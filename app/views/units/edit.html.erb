@@ -9,5 +9,4 @@
 	</div>
 	<p><%= f.submit 'Update' %></p>
 <% end %>
-
-<%= link_to 'Show', @unit %>
+<%= link_to 'Show', @unit %> | <%= link_to "Edit unit settings", settings_edit_unit_path(@unit) %>

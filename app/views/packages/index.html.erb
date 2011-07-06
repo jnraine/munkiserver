@@ -10,7 +10,7 @@
 		<% if current_environment.id == env.id %>
 			<%= env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})" %>
 		<% else %>
-			<%= link_to env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})", packages_path(:eid => env.id) %>
+			<%= link_to env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})", packages_path(current_unit, :eid => env.id) %>
 		<% end %>
 		|
 	<% end %>

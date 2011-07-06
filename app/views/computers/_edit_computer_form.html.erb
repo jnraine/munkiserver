@@ -1,4 +1,4 @@
-<%= form_for(@computer, :validate => true, :html => {:name => "edit_computer"}, :url => computer_path(@computer.id)) do |f| %>
+<%= form_for(@computer, :validate => true, :url => computer_path(@computer.unit, @computer), :html => {:name => "edit_computer"}) do |f| %>
 	<%= f.error_messages %>
 
 	<table class="form">

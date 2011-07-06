@@ -1,4 +1,5 @@
 class PackagesController < ApplicationController
+  before_filter :require_valid_unit
   def index
     # TO-DO This query can be rethought because of the way the view uses this list of packages
     # it might be better to grab all the package branches from this environment and then iterate
@@ -24,7 +25,7 @@ class PackagesController < ApplicationController
       if @package.save
         # Success
         flash[:notice] = "Package successfully saved"
-        format.html { redirect_to edit_package_path(@package) }
+        format.html { redirect_to edit_package_path(@package.unit, @package) }
       else
         # Failure
         flash[:error] = "Failed to add package"
@@ -42,7 +43,7 @@ class PackagesController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to packages_path }
+      format.html { redirect_to packages_path(current_unit) }
     end
   end
 
@@ -56,7 +57,7 @@ class PackagesController < ApplicationController
     respond_to do |format|
       if @package.update_attributes(params[:package])
         flash[:notice] = "Package was successfully updated."
-        format.html { redirect_to package_path(@package) }
+        format.html { redirect_to package_path(@package.unit, @package) }
         format.xml { head :ok }
       else
         flash[:error] = "Could not update package!"

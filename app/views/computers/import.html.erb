@@ -6,7 +6,7 @@
 <p>Select an ARD export plist file and a destination computer group.</p>
 
 <div>
-<%= form_tag(create_import_computers_path, :multipart => true) do %>
+<%= form_tag(create_import_computers_path(current_unit), :multipart => true) do %>
 	<p>
 		Computer group 
 		<%= select_tag "computer[computer_group_id]", options_for_select([["(Automatic)", 0]] + ComputerGroup.unit(current_unit).collect {|e| [e.name,e.id]}) %>

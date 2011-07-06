@@ -287,10 +287,11 @@ module Manifest
         uniq_pbs
       end
       
+      # add the path to the plist, called by included_manifests
       def to_s(format = nil)
         case format
           when :unique then "#{id}_#{name}"
-          when :path then "#{self.class.to_s.pluralize.tableize}/#{self.to_s(:unique)}"
+          when :path then "#{Unit.where(:id => self.unit_id).first.name}/#{self.class.to_s.pluralize.tableize}/#{self.to_s(:unique)}"
           else name
         end
       end
@@ -309,12 +310,12 @@ module Manifest
       end
       
       alias :serialize_for_plist_super :serialize_for_plist
-
+      
       # Converts serialized object into plist string
       def to_plist
         serialize_for_plist.to_plist
       end
-
+      
       def included_manifests
         a = bundles.collect {|e| "#{e.to_s(:path)}.plist"}
         if self.respond_to?(:computer_group)

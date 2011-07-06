@@ -1,6 +1,6 @@
 <h2>Editing <%= @computer_group %></h2>
 
-<%= form_for(@computer_group, :validate => true) do |f| %>
+<%= form_for(@computer_group, :validate => true, :url => computer_group_path(@computer_group.unit, @computer_group)) do |f| %>
 	<%= f.error_messages %>
 	
 	<p><%= f.text_field :name %></p>
@@ -11,5 +11,4 @@
 	<p><%= f.submit 'Update' %></p>
 <% end %>
 
-<%= link_to 'Show', @computer_group %> |
-<%= link_to 'Back', computer_groups_path %>
+<%= link_to 'Show', computer_group_path(@computer_group.unit, @computer_group) %>

@@ -2,7 +2,7 @@ class UnitService
   attr_accessor :unit, :unit_params
 
   def initialize(params)
-    @unit = Unit.find(params[:id])
+    @unit = Unit.find_by_name(params[:id])
     @unit_params = params[:unit]
   end
   

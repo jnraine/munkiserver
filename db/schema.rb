@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110619085511) do
+ActiveRecord::Schema.define(:version => 20110705185845) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -80,6 +80,15 @@ ActiveRecord::Schema.define(:version => 20110619085511) do
   create_table "configurations", :force => true do |t|
     t.string   "configuration"
     t.boolean  "inherit",       :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "download_links", :force => true do |t|
+    t.string   "text"
+    t.string   "url"
+    t.string   "caption"
+    t.integer  "version_tracker_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
