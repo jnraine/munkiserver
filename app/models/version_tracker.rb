@@ -113,8 +113,13 @@ class VersionTracker < ActiveRecord::Base
   
   # get the package icon download url and download the icon
   def scrape_icon(icon_url)
-    f = open(icon_url)
     original_filename = icon_url.match(/(\/)([^\/]+)$/)[2]
+    f = open(icon_url)
+    if f.instance_of?(StringIO)
+      image_data = f
+      f = Tempfile.new(original_filename)
+      f.write(image_data.string.force_encoding("UTF-8"))
+    end
     # Temp stuff
     tmp_dir = Pathname.new(File.dirname(f.path))
     tmp_path = tmp_dir + original_filename
