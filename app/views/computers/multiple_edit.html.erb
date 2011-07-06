@@ -17,7 +17,7 @@
 			<%= f.label :environment_id %>
 			</td>
 			<td>
-			<%= f.collection_select :environment_id, Environment.all, :id, :name, :onchange => "alert('test');" %>
+			<%= f.collection_select :environment_id, Environment.all, :id, :name %>
 			</td>
 		</tr>
 		<tr>
