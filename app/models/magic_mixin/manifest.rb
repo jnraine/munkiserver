@@ -291,7 +291,7 @@ module Manifest
       def to_s(format = nil)
         case format
           when :unique then "#{id}_#{name}"
-          when :path then "#{Unit.find(self.unit_id).name}/#{self.class.to_s.pluralize.tableize}/#{self.to_s(:unique)}"
+          when :path then "#{Unit.where(:id => self.unit_id).first.name}/#{self.class.to_s.pluralize.tableize}/#{self.to_s(:unique)}"
           else name
         end
       end

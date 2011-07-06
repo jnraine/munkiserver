@@ -75,17 +75,23 @@
 	</tr>
 	<tr>
 		<td><strong>MacUpdate Web ID</strong></td>
-		<td><% if @package.package_branch.version_tracker.web_id.present? %>
+		<td>
+			<% if @package.package_branch.version_tracker.web_id.present? %>
 				<%= @package.package_branch.version_tracker.web_id %>
-				<% if !@package.package_branch.version_tracker.download_url.empty? %> 
-				<%= link_to "[Download]", @package.package_branch.version_tracker.download_url, :target => "_blank" %>
-				<% end %>
-				<%= link_to "[Info]", @package.package_branch. version_tracker.info_url, :target => "_blank" %>
 			<% else %>
 				None
 			<% end %>
+			- <%= link_to "Package Info", @package.package_branch.version_tracker.info_url, :target => "_blank" %>
 		</td>
-	
+	</tr>
+	<tr>
+		<td><strong>Download Links</strong></td>
+		<td>
+			<% @package.package_branch.version_tracker.download_links.each do |download_link| %>
+				<%= link_to "#{download_link.text}", download_link.url  , :target => "_blank" %> - <%= download_link.caption %>
+			<% end %>
+			
+		</td>
 	</tr>
 </table>
 

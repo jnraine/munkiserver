@@ -7,10 +7,11 @@ class VersionTracker < ActiveRecord::Base
   MAC_UPDATE_PACKAGE_URL = "http://www.macupdate.com/app/mac/" #append web_id in the end of URL
   MAC_UPDATE_SITE_URL = "www.macupdate.com" #for Net HTTP response
   
+  has_many :download_links, :dependent => :destroy, :autosave => true
   
   belongs_to :package_branch
   belongs_to :icon
-
+  
   def self.update_all
     # Get all trackable packages branches
     pbs = PackageBranch.all
@@ -46,6 +47,27 @@ class VersionTracker < ActiveRecord::Base
     MAC_UPDATE_PACKAGE_URL + "#{web_id}"
   end
   
+  # Get all the download link and it's attributes
+  def get_download_links(info_doc)
+    self.download_links = []
+    if info_doc.css("#downloadlink").count != 0
+      info_doc.css("#downloadlink").each do |download_link|
+        text = download_link.text
+        download_redirect_url = download_link[:href]
+        # read the HTTP header extract the value in "location" to the actual download url
+        response = nil
+          if !download_redirect_url.empty?
+            Net::HTTP.start(MAC_UPDATE_SITE_URL, 80) do |http|
+              response = http.head(download_redirect_url)
+            end
+          end
+        url = response['location']
+        caption = download_link.parent().css(".info").text.lstrip.rstrip
+        self.download_links << self.download_links.build({:text => text, :url => url, :caption => caption})
+      end
+    end
+  end
+  
   # Scrapes latest version from macupdate.com and updates record with that info
   def scrape_latest_version(new_web_id = false)
     if looks_good?
@@ -55,17 +77,9 @@ class VersionTracker < ActiveRecord::Base
       begin
         # Grab the icon image
         icon_url = info_doc.at_css("#appiconinfo")[:src]
-        # if there are two download link then get the later stable download url and stable version
-        if info_doc.css("#downloadlink").count == 1
-          download_redirect_url = info_doc.css("#downloadlink")[0][:href]
-          # latest_version = info_doc.css("#downloadlink")[1].text.delete("Download").lstrip
-        elsif info_doc.css("#downloadlink").count == 2
-          download_redirect_url = info_doc.css("#downloadlink")[1][:href]
-        else
-          # if no download link found assgine to empty string
-          download_redirect_url = ""
-        end
-        # Grab app version
+        # Grab all the download links available
+        get_download_links(info_doc)
+        
         latest_version = info_doc.at_css("#appversinfo").text
         # Grab the description of the package
         description = info_doc.at_css("#desc").text
@@ -73,41 +87,23 @@ class VersionTracker < ActiveRecord::Base
         raise VersionTrackerError.new("Malformed version tracker website at #{info_url}: #{e}")
       end
       
-      # read the HTTP header extract the value in "location" to the actual download url
-      response = nil
-      if !download_redirect_url.empty?
-        Net::HTTP.start(MAC_UPDATE_SITE_URL, 80) {|http|
-          response = http.head(download_redirect_url)
-        }
-      end
-      
       # if package doesn't have an icon then scrape the icon from macupdate.com
       if self.icon.nil? or new_web_id
         scrape_icon(icon_url)
-      end
-      
-      # Update record with latest information
-      self.version = latest_version
-      if !response.nil?
-        self.download_url = response['location']
-      else
-        self.download_url = ""
       end
       # strip down any white speace before and after the description string
       self.description = description.lstrip.rstrip
       self.save
       # Return results
-      {'latest_version' => self.version, 'download_url' => self.download_url, 'description' => self.description}
+      {'latest_version' => self.version, 'description' => self.description}
     
     else
       # reset the values associated to the version tracker to nil if the value is blank
       self.version = nil
-      self.download_url = nil
       self.description = nil
-      self.icon.destroy
+      self.icon.destroy unless self.icon.nil?
       self.icon_id = nil
       self.save
-      
     end
   end
   
