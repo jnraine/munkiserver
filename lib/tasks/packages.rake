@@ -23,7 +23,6 @@ namespace :packages do
       puts version_tracker.web_id
       version_tracker.save
     end
-    VersionTracker.update_all
   end
   
   desc "Conform package branch name to contraints" 
