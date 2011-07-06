@@ -3,12 +3,14 @@ module ActiveRecordClassMethods
   # Converts YAML stored in DB as hash, if nil or blank, returns empty hash
   def attr_is_hash(attribute)
     # Getter for objects
+    h = {}
     define_method attribute.to_s do
-      value = read_attribute(attribute).from_yaml
-      if value.nil? or value.blank?
-        {}
+      value = read_attribute(attribute)
+      if !value.nil?
+        h = YAML::load(value)
+        return h
       else
-        value
+        {}
       end
   	end
   end
@@ -23,7 +25,7 @@ module ActiveRecordClassMethods
       else
         value
       end
-  	end
+    end
   end
   
   # Takes a module and calls the extend_class method, passing in 

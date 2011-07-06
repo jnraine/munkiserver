@@ -1,4 +1,6 @@
 class ComputerGroupsController < ApplicationController
+  before_filter :require_valid_unit
+  
   def index
     @computer_groups = ComputerGroup.unit(current_unit)
     
@@ -14,10 +16,10 @@ class ComputerGroupsController < ApplicationController
     respond_to do |format|
       if @computer_group.save
         flash[:notice] = "Computer group successfully saved"
-        format.html { redirect_to computer_groups_path }
+        format.html { redirect_to computer_groups_path(@computer_group.unit) }
       else
         flash[:error] = "Computer group failed to save!"
-        format.html { render new_computer_group_path }
+        format.html { render new_computer_group_path(@computer_group.unit) }
       end
     end
   end
@@ -36,7 +38,7 @@ class ComputerGroupsController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to computer_groups_path }
+      format.html { redirect_to computer_groups_path(@computer_group.unit) }
     end
   end
 
@@ -47,15 +49,14 @@ class ComputerGroupsController < ApplicationController
   def update
     @computer_group = ComputerGroup.unit(current_unit).find_for_show(CGI::unescape(params[:id]))
     @manifest_service = ManifestService.new(@computer_group,params[:computer_group])
-    
     respond_to do |format|
       if @manifest_service.save
         flash[:notice] = "Computer group was successfully updated."
-        format.html { redirect_to computer_group_path(@computer_group) }
+        format.html { redirect_to computer_group_path(@computer_group.unit, @computer_group) }
         format.xml { head :ok }
       else
         flash[:error] = "Could not update computer group!"
-        format.html { redirect_to edit_computer_group(@computer_group) }
+        format.html { redirect_to edit_computer_group(@computer_group.unit, @computer_group) }
         format.xml { render :xml => @computer_group.errors, :status => :unprocessable_entity }
       end
     end

@@ -2,8 +2,8 @@
 <div class="groupListItem">
 	<span>
 		<%= bundle %> 
-		<%= link_to "view", bundle_path(bundle) %> 
-		<%= link_to "edit", edit_bundle_path(bundle) %>
+		<%= link_to "view", bundle_path(bundle.unit, bundle) %> 
+		<%= link_to "edit", edit_bundle_path(bundle.unit, bundle) %>
 	</span>
 	
 	<% unless bundle.installs.empty? %>

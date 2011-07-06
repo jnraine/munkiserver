@@ -43,7 +43,7 @@
 			<td><strong>Installed size</strong> </td>
 			<td><%= humanize_kilobytes(@package.installed_size) %></td>
 		</tr>
-	<% end -%>
+	<% end %>
 	
 	
 	<% if @package.update_for.length > 0 %>
@@ -52,7 +52,7 @@
 			<td>
 				<% @package.update_for.each do |p| %>
 					<%= p.to_s(:unique) %><br />
-				<% end -%>
+				<% end %>
 			</td>
 		</tr>
 	<% end -%>
@@ -65,22 +65,33 @@
 				None
 			<% else %>
 				<%= @package.requires.collect { |p| link_to p.to_s(:pretty_with_version), p }.join("<br />").html_safe %>
-			<% end%>
+			<% end %>
 		</td>
 	</tr>
 	
 	<tr>
+		<td><strong>Update Available?</strong></td>
+		<td><%= @package.new_version? ? "Yes #{@package.package_branch.version_tracker.version} is available to download"  : "No" %></td>
+	</tr>
+	<tr>
 		<td><strong>MacUpdate Web ID</strong></td>
-		<td><% if @package.package_branch.version_tracker.web_id.present? %>
-				<%= @package.package_branch.version_tracker.web_id %> 
-				<%= link_to "[Download]", @package.package_branch.version_tracker.download_url %>
-				<%= link_to "[Info]", @package.package_branch. version_tracker.info_url %>
+		<td>
+			<% if @package.package_branch.version_tracker.web_id.present? %>
+				<%= @package.package_branch.version_tracker.web_id %>
 			<% else %>
 				None
 			<% end %>
+			- <%= link_to "Package Info", @package.package_branch.version_tracker.info_url, :target => "_blank" %>
 		</td>
-	
+	</tr>
+	<tr>
+		<td><strong>Download Links</strong></td>
+		<td>
+			<% @package.package_branch.version_tracker.download_links.each do |download_link| %>
+				<%= link_to "#{download_link.text}", download_link.url  , :target => "_blank" %> - <%= download_link.caption %><% unless download_link == @package.package_branch.version_tracker.download_links.last %> | <% end %>
+			<% end %>
+		</td>
 	</tr>
 </table>
 
-<%= link_to 'Edit', edit_package_path(@package) %> | <%= link_to 'Download', download_package_path(@package.download_name) %>
+<%= link_to 'Edit', edit_package_path(@package.unit, @package) %> | <%= link_to 'Download', download_package_path(@package.download_name) %>

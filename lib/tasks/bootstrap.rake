@@ -239,6 +239,27 @@ namespace :bootstrap do
     end
   end
   
+  desc "create a new settings.yaml file optional arguments rake setup:create[hostname] default localhost:3000"
+  task :settings, :hostname, :needs => :environment do |t, args|
+    if File.exists?("config/settings.yaml")
+      puts "settings.yaml file is already exists"
+    else
+      #if settings.yaml file doesn't exists
+      hostname = args.hostame
+      puts "Grenerating settings.yaml file, if blank default to \"localhost:3000\""
+      print "Hostname: "
+      hostname = STDIN.gets.chomp
+      if hostname.empty?
+        hostname = "localhost:3000"
+      end
+       h = {}
+        File.open( "config/settings.yaml", "w" ) do |file|
+         h[:action_mailer] = {:host => "#{hostname}" }
+         file.write(h.to_yaml)
+        end
+    end
+  end
+  
   desc "Load base environments"
   task :environments do |t, args|
     #Build the staging environment

@@ -1,6 +1,6 @@
 <div id="bulk_edit_computers">
 	<h2>Bulk Edit Computers</h2>
-	<%= form_for(@computers, :url => multiple_update_computers_path,:html => {:method => :put, :id => "multiple_update_computers_form"})  do |f| %>
+	<%= form_for(@computers, :url => multiple_update_computers_path(current_unit),:html => {:method => :put, :id => "multiple_update_computers_form"})  do |f| %>
 		<%= f.error_messages %>
 		<% for c in @computers %>
 
@@ -14,17 +14,6 @@
 				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
 			</td>
 			<td>
-			<%= f.label :computer_group_id %>
-			</td>
-			<td>
-			<%= select_tag :computer_group_id, computer_group_options, {:default => 'Choose a group'} %>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
-			</td>
-			<td>
 			<%= f.label :environment_id %>
 			</td>
 			<td>
@@ -33,10 +22,22 @@
 		</tr>
 		<tr>
 			<td>
-			
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
 			</td>
 			<td>
-				
+			<%= f.label :computer_group_id %>
+			</td>
+			<td>
+			<%= f.collection_select :computer_group_id, ComputerGroup.unit_member(c), :id, :name %>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<!-- Intend to be empty -->
+			</td>
+			<td>
+				<!-- Intend to be empty -->
 			</td>
 			<td>
 				<%= f.submit "Update" %>

@@ -115,20 +115,18 @@ $(document).ready(function() {
 		}
 		return false;
 	});
-	
+	// Load managed install report on change to drop down
 	// Load managed install report on change to drop down
 	$("select#managed_install_reports").change(function() {
-		$(".loading").show();
-		$.ajax({
-		  url: "/managed_install_reports/" +$(this).val()+ ".js",
-		  complete: function(){
-		    $(".loading").hide();
-		  }
+			$(".loading").show();
+			$.ajax({
+			  url: "managed_install_reports/" +$(this).val()+ ".js",
+			  complete: function(){
+			    $(".loading").hide();
+			  }
+			});
 		});
-	});
 	$("select#managed_install_reports").change();
-	
-	
 	// add Codemirror with $ animation to highlight XML/plist/bash syntax in package list
 	$("textarea[data-format]").each(function () {
 		

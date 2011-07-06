@@ -1,4 +1,5 @@
 class ComputersController < ApplicationController
+  before_filter :require_valid_unit
   require 'cgi'
 
   def index
@@ -17,12 +18,12 @@ class ComputersController < ApplicationController
 
   def create
     @computer = Computer.new(params[:computer])
-    @computer.unit = current_unit
+    # @computer.unit = current_unit
     
     respond_to do |format|
       if @computer.save
         flash[:notice] = "#{@computer} was successfully created."
-        format.html { redirect_to(@computer) }
+        format.html { redirect_to computer_path(@computer.unit, @computer) }
         format.xml { render :xml => @computer, :status => :created }
       else
         flash[:error] = "Failed to create #{@computer} computer object!"
@@ -59,7 +60,7 @@ class ComputersController < ApplicationController
     respond_to do |format|
       if @computer_service.save
         flash[:notice] = "#{@computer.name} was successfully updated."
-        format.html { redirect_to(@computer) }
+        format.html { redirect_to computer_path(@computer.unit, @computer) }
         format.xml  { head :ok }
       else
         flash[:error] = 'Could not update computer!'
@@ -77,7 +78,7 @@ class ComputersController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to computers_path }
+      format.html { redirect_to computers_path(current_unit) }
     end
   end
 
@@ -106,13 +107,13 @@ class ComputersController < ApplicationController
     respond_to do |format|
       if @computers.nil?
         flash[:error] = "There was a problem while parsing the plist: #{e}"
-        format.html { redirect_to import_new_computer_path }
+        format.html { redirect_to import_new_computer_path(current_unit) }
       elsif @computers.count > 0
         flash[:notice] = "#{@computers.count} of #{@total} computers imported into #{@computers.first.computer_group}"
-        format.html { redirect_to computers_path }
+        format.html { redirect_to computers_path(current_unit) }
       else
         flash[:warning] = "Zero computers were imported.  Did the ARD list have any members?"
-        format.html { redirect_to computers_path }
+        format.html { redirect_to computers_path(current_unit) }
       end
     end
   end

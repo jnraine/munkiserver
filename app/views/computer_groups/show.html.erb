@@ -6,12 +6,12 @@
 		<em>No description</em>
 	<% else %>
 		<%= @computer_group.description %>
-	<% end -%>
+	<% end %>
 </p>
 
-<%= inventory(@computer_group,true) %>
+		<%= inventory(@computer_group,true) %>
 
-<h4>Members</h4>
-<%= computer_table(@computer_group.computers,false,false) %>
-<%= link_to 'Edit', edit_computer_group_path(@computer_group) %> |
-<%= link_to 'List', computer_groups_path %>
+		<%= computer_table(@computer_group.computers,false,false) %>
+
+<%= link_to 'Edit', edit_computer_group_path(@computer_group.unit, @computer_group) %> |
+<%= link_to 'List', computer_groups_path(@computer_group.unit) %>

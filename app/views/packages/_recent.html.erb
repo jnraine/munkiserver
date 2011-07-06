@@ -3,7 +3,7 @@
 		<div class="box">
 			<% pkgs.each do |pkg| %>
 				<%= pkg.to_s(:pretty_with_version) %>
-				[<%= link_to "show", pkg %>] [<%= link_to "edit", edit_package_path(pkg) %>]<br />
+				[<%= link_to "show", pkg.unit %>] [<%= link_to "edit", edit_package_path(pkg.unit, pkg) %>]<br />
 			<% end -%>
 			
 			<% shared_pkgs.each do |pkg| %>

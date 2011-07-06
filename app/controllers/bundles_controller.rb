@@ -1,4 +1,6 @@
 class BundlesController < ApplicationController
+  before_filter :require_valid_unit
+  
   def index
     @bundles = Bundle.unit(current_unit)
     
@@ -45,11 +47,11 @@ class BundlesController < ApplicationController
     respond_to do |format|
       if @manifest_service.save
         flash[:notice] = "Bundle was successfully updated."
-        format.html { redirect_to bundle_path(@bundle) }
+        format.html { redirect_to bundle_path(@bundle.unit, @bundle) }
         format.xml { head :ok }
       else
         flash[:error] = "Could not update bundle!"
-        format.html { redirect_to edit_bundle(@bundle) }
+        format.html { redirect_to edit_bundle(@bundle.unit, @bundle) }
         format.xml { render :xml => @bundle.errors, :status => :unprocessable_entity }
       end
     end
