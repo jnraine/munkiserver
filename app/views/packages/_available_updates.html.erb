@@ -5,8 +5,12 @@
 			<%= form_for(Package.new, :html => {:id => "auto_package_#{pb.version_tracker_web_id}"}) do |f| %>
 				<%= link_to "#{pb.to_s(:pretty)} (#{pb.version_tracker.version})", pb.version_tracker.info_url, :target => "_blank"  %>
 				<%= hidden_field_tag :version_tracker_web_id, pb.version_tracker_web_id %>
-				[<a href="#" onclick="submit_auto_package('#auto_package_<%= pb.version_tracker_web_id %>');">add</a>]
-				[<%= link_to :download, pb.version_tracker.download_url %>]
+				<!-- [<a href="#" onclick="submit_auto_package('#auto_package_<%= pb.version_tracker_web_id %>');">add</a>] -->
+				<ul>
+				<% pb.version_tracker.download_links.each do |download_link| %>
+					<li><%= link_to download_link.text, download_link.url %></li>
+				<% end %>
+				</ul>
 			<% end %>
 			<br />
 		<% end -%>

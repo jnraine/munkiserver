@@ -93,6 +93,7 @@ class VersionTracker < ActiveRecord::Base
       end
       # strip down any white speace before and after the description string
       self.description = description.lstrip.rstrip
+      self.version = latest_version
       self.save
       # Return results
       {'latest_version' => self.version, 'description' => self.description}
