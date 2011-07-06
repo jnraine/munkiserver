@@ -25,4 +25,21 @@ namespace :packages do
     end
     VersionTracker.update_all
   end
+  
+  desc "Conform package branch name to contraints" 
+  task :conform_names => :environment do
+    PackageBranch.all.each do |pb|
+      original_name = pb.name
+      conformed_name = PackageBranch.conform_to_name_constraints(original_name)
+      if original_name != conformed_name
+        print "Conforming #{original_name} to #{conformed_name} for package branch ID #{pb.id}"
+        pb.name = conformed_name
+        if pb.save
+          puts "OK"
+        else
+          puts "failed!"
+        end
+      end
+    end
+  end
 end
