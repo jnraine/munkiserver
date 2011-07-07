@@ -85,6 +85,18 @@
 		</tr>
 		<tr>
 			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>
+				MacUpdate.com Web ID or URL
+			</td>
+			<td>
+				Remove Web ID
+				<%= hidden_field_tag "package[version_tracker_web_id]", nil %>
+			</td>
+		</tr>
+		<tr>
+			<td>
 				
 			</td>
 			<td>
