@@ -1,5 +1,5 @@
 <% if @install_items.length > 0 %>
-	<%= form_tag update_multiple_install_items_path do |f| %>
+	<%= form_tag update_multiple_install_items_path(current_unit, @comptuer) do |f| %>
 		<table class="form">
 			<% for it in @install_items %>  
 				<%= fields_for "install_items[]", it do |f| %>
