@@ -21,7 +21,7 @@ class Configuration < ActiveRecord::Base
       computer_group.unit.client_pref
     end
 
-    if owner.isa? Unit
+    if owner.is_a? Unit
       MunkiService.client_pref
     end
   end

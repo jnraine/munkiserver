@@ -1,6 +1,6 @@
 class Computer < ActiveRecord::Base
   magic_mixin :manifest
-  magic_mixin :client_pref
+  # magic_mixin :client_pref
   
   belongs_to :computer_model
   belongs_to :computer_group
@@ -42,6 +42,21 @@ class Computer < ActiveRecord::Base
   def icon
     computer_model.icon
   end
+  
+  # Returns a hash representing the ManagedInstalls.plist
+    # that should be placed in /Library/Preferences on this client
+    def client_prefs
+      url = ActionMailer::Base.default_url_options[:host]
+      { :ClientIdentifier => client_identifier,
+        :DaysBetweenNotifications => 1,
+        :InstallAppleSoftwareUpdates => true,
+        :LogFile => "/Library/Managed Installs/Logs/ManagedSoftwareUpdate.log",
+        :LoggingLevel => 1,
+        :ManagedInstallsDir => "/Library/Managed Installs",
+        :ManifestURL => url,
+        :SoftwareRepoURL => url,
+        :UseClientCertificate => false }
+    end
   
   # For will_paginate gem.  Sets the default number of records per page.
   def self.per_page

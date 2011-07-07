@@ -117,7 +117,7 @@ module PackagesHelper
     # Grab all package branches in for this unit
     pbs = PackageBranch.unit(current_unit)
     # Remove branches if there isn't a new version
-    pbs.delete_if {|pb| !pb.new_version? }.compact
+    pbs.delete_if {|pb| !pb.new_version?(current_unit) }.compact
     render :partial => 'available_updates', :locals => {:package_branches => pbs}
   end
   

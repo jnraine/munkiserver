@@ -53,7 +53,7 @@ Munki::Application.routes.draw do
     resources :computer_groups, :bundles
     
     match 'install_items/edit_multiple/:computer_id' => 'install_items#edit_multiple', :as => "edit_multiple_install_items", :via => :get
-    match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :via => :get
+    match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :via => :put
   end
   
   root :to => redirect("/login")
