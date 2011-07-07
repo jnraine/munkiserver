@@ -119,7 +119,8 @@ class Computer < ActiveRecord::Base
   end
 
   def client_identifier
-    self.class.to_s.tableize + "/" + mac_address + ".plist"
+    # self.class.to_s.tableize + "/" + mac_address + ".plist"
+    mac_address + ".plist"
   end
   
   # Validates the presence of a computer model
