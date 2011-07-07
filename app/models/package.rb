@@ -937,12 +937,12 @@ class Package < ActiveRecord::Base
   end
   
   # update multiple attributes
-  def self.bulk_update_attributes(packages,params)
-    if (params == nil || packages == nil)
+  def self.bulk_update_attributes(packages,package_params)
+    if (package_params == nil || packages == nil)
       raise PackageError.new ("Nothing to update")
     else
       packages.each do |p|
-        p.update_attributes(params.reject {|k,v| v.blank?})
+        p.update_attributes(package_params)
       end
     end
   end
