@@ -27,7 +27,7 @@
 	</tr>
 	<tr>
 		<td><strong>Uninstall method</strong></td>
-		<td><%= @package.uninstall_method.titleize %></td>
+		<td><%= @package.uninstall_method.present? ? @package.uninstall_method.titleize : "None" %></td>
 	</tr>
 	<tr>
 		<td><strong>Minimum OS</strong></td>
