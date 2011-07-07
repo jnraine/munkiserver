@@ -32,7 +32,8 @@ class ApplicationController < ActionController::Base
   
   def require_valid_unit
     begin
-      raise Exception.new("You are not permitted this unit (#{current_unit})") unless current_user.member_of(current_unit)
+      # raise Exception.new("You are not permitted this unit (#{current_unit})") unless current_user.member_of(current_unit)
+      current_unit
     rescue Exception => e
       flash[:error] = "The unit you requested (#{params[:unit]}) does not exist or you do not have permission to it!"
       render :file => "#{Rails.root}/public/generic_error.html", :layout => false
