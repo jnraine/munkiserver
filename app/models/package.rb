@@ -335,9 +335,8 @@ class Package < ActiveRecord::Base
   end
 
   # Get the latest packages from a specific unit
-  def self.latest_from_unit(unit)
-    pbs = PackageBranch.unit(unit)
-    pbs.map(&:latest)
+  def self.latest_where_unit(unit)
+    PackageBranch.unit(unit).map {|pb| pb.latest_where_unit(unit) }
   end
   
   # Default parameters for the table_asm_select method
@@ -466,7 +465,7 @@ class Package < ActiveRecord::Base
   
   # calls package_branch new version check method
   def new_version?
-    package_branch.new_version?
+    package_branch.new_version?(self.unit)
   end
   
   # Create a hash intended for plist output

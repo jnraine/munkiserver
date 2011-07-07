@@ -19,7 +19,7 @@
 	</tr>
 	<tr>
 		<td><strong>Installer type</strong></td>
-		<td><%= @package.installer_type.titleize %></td>
+		<td><%= @package.installer_type.present? ? @package.installer_type.titleize : "Package" %></td>
 	</tr>
 	<tr>
 		<td><strong>Uninstallable?</strong></td>
@@ -64,14 +64,14 @@
 			<% if @package.requires.nil? or @package.requires.empty? %>
 				None
 			<% else %>
-				<%= @package.requires.collect { |p| link_to p.to_s(:pretty_with_version), p }.join("<br />").html_safe %>
+				<%= @package.requires.collect { |p| link_to p.to_s(:pretty_with_version), package_path(p.unit,p) }.join("<br />").html_safe %>
 			<% end %>
 		</td>
 	</tr>
 	
 	<tr>
 		<td><strong>Update Available?</strong></td>
-		<td><%= @package.new_version? ? "Yes #{@package.package_branch.version_tracker.version} is available to download"  : "No" %></td>
+		<td><%= @package.new_version? ? "Yes - version #{@package.package_branch.version_tracker.version}"  : "No" %></td>
 	</tr>
 	<tr>
 		<td><strong>MacUpdate Web ID</strong></td>

@@ -11,7 +11,9 @@ class AdminMailer < ActionMailer::Base
   
   def package_update_available(package)
     @package = package
-    mail(:bcc => recipients(@package), :subject => "[Munki Server] #{@package.name.capitalize} has an update! ")
+    @version_tracker = @package.package_branch.version_tracker
+    @macupdate_url = VersionTracker::MAC_UPDATE_PACKAGE_URL + @version_tracker.web_id.to_s
+    mail(:bcc => recipients(@package), :subject => "[Munki Server] #{@package.to_s(:pretty)} has an update! ")
   end
   
   # # A list of computers that are considered "dormant", including their

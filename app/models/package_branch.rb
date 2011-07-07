@@ -91,11 +91,16 @@ class PackageBranch < ActiveRecord::Base
   end
   
   # True if a newer version is available in this branch
-  def new_version?
+  def new_version?(unit = nil)
     if version_tracker.version.nil?
       return false
     else
-    vtv.version_string_comparison(version_tracker.version) == -1
+      version_string = vtv(unit)
+      if version_string.present?
+        version_string.version_string_comparison(version_tracker.version) == -1
+      else
+        raise Exception.new("No package found with package branch of #{self} inside #{unit} unit")
+      end
     end
   end
   
@@ -129,8 +134,9 @@ class PackageBranch < ActiveRecord::Base
   end
   
   # Grabs vtv from latest package
-  def vtv
-    latest.vtv unless latest.nil?
+  def vtv(unit = nil)
+    p = unit.present? ? latest_where_unit(unit) : latest
+    p.vtv unless p.nil?
   end
 
   # Sets iVars @environment_id and @unit_id to bind this record, temporarily, to a certain scope
@@ -182,12 +188,12 @@ class PackageBranch < ActiveRecord::Base
   def self.available_updates(unit = nil)
     packages_with_updates = []
     if unit.present?
-      p = Package.latest_from_unit(unit)
-      packages_with_updates = p.delete_if {|p| !p.new_version? }      
+      latest_packages = Package.latest_where_unit(unit)
+      packages_with_updates = latest_packages.delete_if {|p| !p.new_version? }      
     else
       Unit.all.each do |unit|
-        p = Package.latest_from_unit(unit)
-        packages_with_updates = packages_with_updates + p.delete_if {|p| !p.new_version? }
+        latest_packages = Package.latest_where_unit(unit)
+        packages_with_updates += latest_packages.delete_if {|p| !p.new_version? }
       end
     end
     packages_with_updates
