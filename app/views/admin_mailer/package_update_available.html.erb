@@ -6,6 +6,16 @@
 
 <p>Click <%= link_to "here to add", new_package_url(@package.unit) %> the package</p>
 
-<p>Click <%= link_to "here to download", download_url %> the package</p>
+<% if @package.package_branch.version_tracker.download_links.present? %>
+	<div>
+		<p><strong>Download Links</strong></p>
+		<div>
+			<% @package.package_branch.version_tracker.download_links.each do |download_link| %>
+				<%= link_to "#{download_link.text}", download_link.url  , :target => "_blank" %> - <%= download_link.caption %>
+				<%= download_link == @package.package_branch.version_tracker.download_links.last ? "|" : "" %>
+			<% end %>
+		</div>
+	</div>
+<% end %>
 
 <p>For more details on this package please check <%= link_to macupdate_url, macupdate_url %></p>
