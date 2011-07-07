@@ -130,9 +130,9 @@ class PackagesController < ApplicationController
     call_rake("packages:check_for_updates")
     flash[:notice] = "Checking for updates now"
     # for each package that has updates available send an email to the admin
-    PackageBranch.available_updates(current_unit).each do |package|
-      AdminMailer.package_update_available(package).deliver
-    end
+    # PackageBranch.available_updates(current_unit).each do |package|
+    #       AdminMailer.package_update_available(package).deliver
+    #     end
     redirect_to(:action => "index")
   end
 end
