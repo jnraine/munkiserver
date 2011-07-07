@@ -7,7 +7,6 @@ class InstallItemsController < ApplicationController
       @install_items = []
     end
     @install_items = @computer.install_items unless @computer.nil?
-    
     respond_to do |format|
       format.js
     end
