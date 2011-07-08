@@ -427,9 +427,13 @@ thead th a:hover,
 
 .installed-mark {
 	color: #594F4F;
-	font-size:1.6em;
+	font-size:1.5em;
 }
-
+/* hide the checkmark */
+.not-installed-mark{
+	font-size:1.5em;
+	visibility:hidden;
+}
 #managed_install_report {
 	border:#594F4F dashed 1px;
 /*	background-color:#f6fbfb;*/
@@ -442,7 +446,14 @@ thead th a:hover,
 	overflow:auto;
 }
 
-#lightbox_target{
+
+
+#affectedItemsLink{
+	float: right;
+	display: inline;
+}
+
+#lightbox_target, #affectedItems{
 	text-align: center;
 	-moz-border-radius: 6px;
     background: #eef2f7;
@@ -451,7 +462,7 @@ thead th a:hover,
     -webkit-box-shadow: rgba(0,0,0,.6) 0px 2px 12px;
     -moz-box-shadow:  rgba(0,0,0,.6) 0px 2px 12px;;
     padding: 14px 22px;
-    width: 450px;
+    width: 500px;
     position: relative;
     display: none;
 }

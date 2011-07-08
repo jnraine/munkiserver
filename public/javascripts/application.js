@@ -250,6 +250,14 @@ $(document).ready(function() {
 	        removeSubtleValue(this);
 	    });
 	});
+	// trigger lightbox to show a list of install/uninstall/optional install items
+	$("#affectedItems").hide();
+	$("#affectedItemsLink").click(function(){
+		$("#affectedItems").lightbox_me({
+			centered: true
+		})
+	})
+	
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field

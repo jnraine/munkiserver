@@ -16,7 +16,9 @@
 	
 	<!-- First tab starts here -->
 	<div id="packages_tab">
-		<h4>Computer (<%= link_to "edit", edit_computer_url(@computer.unit, @computer) %>)</h4>
+		<h4 style="display:inline;">Computer (<%= link_to "edit", edit_computer_url(@computer.unit, @computer) %>)</h4>
+		<%= link_to "Show affected items", "#affectedItems", :id => "affectedItemsLink"  %>
+		
 		<%= inventory(@computer,@computer) %>
 
 		<% unless @computer.computer_group.nil? %>
@@ -49,4 +51,22 @@
 			<em>No managed install report available</em>
 		</div>
 	</div>
+</div>
+
+<div id="affectedItems">
+	<table class="packagePicker">
+		<thead>
+			<tr>
+				<th>Managed Installs</th>
+				<th>Managed Uninstalls</th>
+				<th>Optional Installs</th>
+			</tr>
+		</thead>
+		<tr>
+			<td><%= pkg_list(@computer.precedent_install_items, @computer) %></td>
+			<td><%= pkg_list(@computer.precedent_uninstall_items) %></td>
+			<td><%= pkg_list(@computer.precedent_optional_install_items, @computer) %></td>
+		</tr>
+	</table>
+	<p class="quiet"><span>✓</span> denotes item is installed</p>	
 </div>
