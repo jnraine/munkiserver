@@ -65,6 +65,9 @@ module Manifest
             mi << install_item.package.to_s(:version)
           end
         end
+        # unless self.additional_managed_installs.nil?
+        #           mi.concat(additional_managed_installs)
+        #         end
         mi
       end
 
@@ -322,6 +325,34 @@ module Manifest
           a << "#{computer_group.to_s(:path)}.plist" unless computer_group.nil?
         end
         a
+      end
+      
+      
+      # assuming computer calles to check and return a hash of available download items 
+      # from Bundle and Computer Group
+      def additional_managed_installs
+        additional_installs = []
+        if self.bundles.present?
+          # if there is only one instance of Bundle
+          if self.bundles.class == Bundle
+            additional_installs.concat(bundle.managed_installs)
+          else
+            self.bundles.each do |bundle|
+              additional_installs.concat(bundle.managed_installs)
+            end
+          end
+        end
+        if self.computer_group.present?
+          # if there is only one instance of ComputerGroup
+          if self.computer_group.class == ComputerGroup
+            additional_installs.concat(self.computer_group.managed_installs)
+          else
+            self.computer_group.each do |cg|
+              additional_installs.concat(self.computer_group.managed_installs)
+            end
+          end
+        end
+        additional_installs
       end
       
       # Attempts a couple different queries in order of importance to
