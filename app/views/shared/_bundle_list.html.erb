@@ -15,5 +15,14 @@
 		<span class="groupListingContentsTitle">Uninstall</span>
 		<%= pkg_list(bundle.uninstall_items) %>
 	<% end %>
+
+	<% unless bundle.bundles.empty? %>
+		<span class="groupListingContentsTitle">Bundle</span>
+		<% bundle.bundles.each do |item| %>
+			<div class="packageListItem">
+				<span><%= link_to item, bundle_path(current_unit, item) %></span>
+			</div>
+		<% end %>
+	<% end %>
 </div>
 <% end %>
