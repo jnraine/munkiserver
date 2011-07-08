@@ -3,7 +3,12 @@ module Manifest
   # Used to augment the class definition
   # of the class passed as an argument
   # Put class customization in here!
+  
+  # swith to use let Munki sort items or
+  # let Munki server sort out the list of items to
+  # install/uninstall/optional install
   USING_PRECEDENT_ITEMS = true
+  
   def self.extend_class(k)
     k.class_exec do
       # ====================
@@ -36,7 +41,6 @@ module Manifest
       
       magic_mixin :unit_member
       
-
       
       # True if name attribute is unique in the unit
       def uniqueness_of_name_in_unit
@@ -117,20 +121,20 @@ module Manifest
       
       # Returns an array of strings representing managed_installs
       # based on the items specified in install_items
-      def managed_installs(using_precedent_items = true)
-        using_precedent_items ? create_item_array("install_items") : create_item_array("install_items", false)
+      def managed_installs
+        USING_PRECEDENT_ITEMS ? create_item_array("install_items") : create_item_array("install_items", false)
       end
       
       # Concatentates installs (specified by admins) and user installs (specified
       # by users) to create the managed_installs virtual attribute
-      def managed_uninstalls(using_precedent_items = true)
-        using_precedent_items ? create_item_array("uninstall_items") : create_item_array("uninstall_items", false)
+      def managed_uninstalls
+        USING_PRECEDENT_ITEMS ? create_item_array("uninstall_items") : create_item_array("uninstall_items", false)
       end
       
       # Same as managed_installs and managed_uninstalls
       # optional_installs virtual attribute let user to choose a list of items to install
-      def managed_optional_installs(using_precedent_items = true)
-        using_precedent_items ? create_item_array("optional_install_items") : create_item_array("optional_install_items", false)
+      def managed_optional_installs
+        USING_PRECEDENT_ITEMS ? create_item_array("optional_install_items") : create_item_array("optional_install_items", false)
       end
       
       # Pass a package object or package ID to append the package to this record
@@ -360,35 +364,7 @@ module Manifest
         end
         a
       end
-      
-      
-      # assuming computer calles to check and return a hash of available download items 
-      # from Bundle and Computer Group
-      def additional_managed_installs
-        additional_installs = []
-        if self.bundles.present?
-          # if there is only one instance of Bundle
-          if self.bundles.class == Bundle
-            additional_installs.concat(bundle.managed_installs)
-          else
-            self.bundles.each do |bundle|
-              additional_installs.concat(bundle.managed_installs)
-            end
-          end
-        end
-        if self.computer_group.present?
-          # if there is only one instance of ComputerGroup
-          if self.computer_group.class == ComputerGroup
-            additional_installs.concat(self.computer_group.managed_installs)
-          else
-            self.computer_group.each do |cg|
-              additional_installs.concat(self.computer_group.managed_installs)
-            end
-          end
-        end
-        additional_installs
-      end
-      
+            
       # Attempts a couple different queries in order of importance to
       # find the appropriate record for the show action
       def self.find_for_show(s)
