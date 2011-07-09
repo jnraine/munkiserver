@@ -1,6 +1,7 @@
 <h2>New package</h2>
 <div id="new_package_form_container">
 	<%= form_for(@package, :html => {:multipart => true, :id => "new_upload_package_form"}) do |f| %>
+		<%= f.error_messages %>
 		<div>
 			<h3>Upload</h3>
 			<p>

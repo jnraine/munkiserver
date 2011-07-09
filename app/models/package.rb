@@ -1,3 +1,5 @@
+require 'digest'
+
 class Package < ActiveRecord::Base
   magic_mixin :unit_member
   
@@ -20,8 +22,13 @@ class Package < ActiveRecord::Base
   before_save :save_package_branch
   # before_save :require_icon
   
+  validates :version, :presence => true
+  validates :installer_item_location, :presence => true
+  validates :package_branch_id, :presence => true
   validates :receipts, :plist_array => true
   validates :installs, :plist_array => true
+  validates :version, :uniqueness_in_unit => true
+  
 
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
@@ -450,6 +457,13 @@ class Package < ActiveRecord::Base
     yaml
   end
   
+  def add_raw_tag(key,value)
+    self.raw_mode_id = 1 if no_raw?
+    raw_tags_hash = self.raw_tags
+    raw_tags_hash[key] = value
+    write_attribute(:raw_tags,raw_tags_hash)
+  end
+  
   # Get the version that corresponds with the version tracker version
   # This is intended to handle some oddities in the version tracker
   # database.  For example, if you version 3.0.1 and version tracker
@@ -551,302 +565,15 @@ class Package < ActiveRecord::Base
     end
   end
   
-  # Takes a tmp file, moves it to the appropriate place, and checks it in
-  # Return value is the same as Package.checkin.  If it fails, it will raise
-  # an PackageError exception
-  def self.upload(file, pkginfo, options = {})
-    original_filename = nil
-    if file.respond_to?(:original_filename)
-      original_filename = file.original_filename
-    else
-      original_filename = File.basename(file.path)
-    end
-    
-    # Add timestamp to original filename
-    installer_item_name = Time.now.to_s(:ordered_numeric) + "_" + original_filename
-    # Create absolute path
-    dest_path = Munki::Application::PACKAGE_DIR + installer_item_name
-    
-    # Make sure a file of that name doesn't already exist and fix it if it does
-    if File.exists?(dest_path)
-      installer_item_name = Time.now.to_s(:ordered_numeric) + "_" + rand(1001) + "_" + original_filename
-      dest_path = Munki::Application::PACKAGE_DIR + installer_item_name
-    end
-    
-    # Move from the tmp location to destination
-    FileUtils.move(file.path,dest_path)
-    dest_path = Package.rename_installer_item(dest_path)
-    
-    # Checkin the package if the munki tools are available, or import if they are not
-    if Munki::Application::MUNKI_TOOLS_AVAILABLE
-      # Check package in
-      begin
-        Package.checkin(dest_path, options)
-      rescue PackageError
-        if FileUtils.remove(dest_path)
-          raise PackageError.new("There was a problem checking in #{dest_path}")
-        else
-          raise PackageError.new("There was a problem checking in #{dest_path}. Unable to delete it.")
-        end
-      end
-    else
-      begin
-        pkginfo_string = File.read(pkginfo)
-        p = Package.import(pkginfo_string)
-        p.installer_item_location = dest_path
-        {:package => p, :plist_string => pkginfo_string}
-      rescue Exception => e
-        raise PackageError.new("There was an error while importing #{File.basename(dest_path)}")
-      end
-    end
-  end
-  
-  # Renames item at path with escaped installer item name
-  # Pass an absolute path for best results
-  def self.rename_installer_item(path)
-    # Convert path to Pathname object
-    path = Pathname.new(path)
-    # Split up path for manipulation
-    dir = File.dirname(path)
-    name = File.basename(path)
-    # Escape it
-    new_name = name.gsub(' ','_').gsub(/['"\(\)]/,'')
-    new_path = Pathname.new("#{dir}/#{new_name}")
-
-    # Move it if it is any different
-    # Return new path if it works, old path if it doesn't work
-    FileUtils.move(path,new_path) unless path == new_path
-    if File.exists?(new_path)
-      new_path
-    else
-      path
-    end
-  end
-  
-  # Creates a package instance from a temporary file, pkginfo file, and options.
-  # Returns an unsaved instance of the Package class
-  def self.create_from_uploaded_file(uploaded_file,pkginfo_file = nil, options = {})
-    if uploaded_file == nil 
-      raise PackageError.new("Please select a file")
-    else
-      file = self.init_uploaded_file(uploaded_file)
-      self.create(file,pkginfo_file,options)
-    end
-  end
-  
-  # Renames and moves temporary files to the appropriate package store. Returns
-  # a File object for newly renamed/moved file
-  def self.init_uploaded_file(uploaded_file)
-    destination_path = nil
-    
-    # Get the absolute path for the package store
-    begin
-      unique_name = self.uniquify_name(uploaded_file.original_filename)
-      destination_path = Pathname.new(Munki::Application::PACKAGE_DIR + unique_name)
-    end while File.exists?(destination_path)
-    
-    # Move tmp_file to the package store
-    begin
-      FileUtils.mv uploaded_file.tempfile.path, destination_path
-    rescue Errno::EACCES => e
-      raise PackageError.new("Unable to write to package store")
-    end
-    
-    # Return the package as a File object
-    begin
-      File.new(destination_path)
-    rescue
-      raise PackageError.new("Unable to read #{destination_path}")
-    end
-  end
-  
-  # Create a unique name from a string by prepending the current timestamp
-  # and adding a random number
-  def self.uniquify_name(name)
-    Time.now.to_s(:ordered_numeric) + rand(10001).to_s + "_" + name
-  end
-  
   # Instantiate a package object from a package file and an optional
   # pkginfo file, as well as some options
-  def self.create(package_file, pkginfo_file = nil, options = {})
-    package = nil
-
-    # Create a package
-    if Munki::Application::MUNKI_TOOLS_AVAILABLE and pkginfo_file.nil?
-      package = self.process_package(package_file, options[:makepkginfo_options])
-    elsif pkginfo_file.present?
-      package = self.process_pkginfo(pkginfo_file)
-    else
-      raise PackageError.new("Package file and/or pkginfo file missing")
-    end
-    
-    # Apply munkiserver attributes
-    package = self.apply_munki_server_attributes(package,options[:attributes][:unit_id],options[:attributes][:environment_id])
-    
-    # Apply attributes from existing version in the same unit
-    package = self.apply_old_version_attributes(package)
-  end
-  
-  # Run makepkginfo on server against package file to generate a pkginfo
-  def self.process_package(file,makepkginfo_options = {})
-    # Generate command-line options array
-    cmd_line_options = makepkginfo_options.map do |k,v| 
-      v = v.gsub(/ /,'\ ')
-      "--#{k}=#{v}" unless v.blank?
-    end
-    cmd_line_options = cmd_line_options.compact
-    
-    # Run makepkginfo
-    stdout_tmp_path = Pathname.new("/tmp/ms-#{File.basename(file)}-#{rand(100001)}.plist")
-    stderr_tmp_path = Pathname.new("/tmp/ms-#{File.basename(file)}-#{rand(100001)}.plist")
-    makepkginfo_succeeded = system("#{Munki::Application::MAKEPKGINFO} #{cmd_line_options.join(" ")} '#{file.path}' 1> '#{stdout_tmp_path}' 2>'#{stderr_tmp_path}'")
-    exit_status = $?.exitstatus
-    
-    pkginfo = File.new(stdout_tmp_path)
-    
-    package = nil
-    # Process pkginfo
-    if exit_status == 0
-      package = self.process_pkginfo(pkginfo)
-    else
-      # Remove package and raise error
-      FileUtils.rm(file.path)
-      raise PackageError.new("Munki tools were unable to process package file: " + File.read(stderr_tmp_path) + "\n" + File.read(stdout_tmp_path))
-    end
-    
-    # Remove tmp files (no error checking)
-    FileUtils.rm(stdout_tmp_path)
-    FileUtils.rm(stderr_tmp_path)
-    
-    package
-  end
-  
-  # Instantiate a package from a pkginfo file (File instance)
-  def self.process_pkginfo(file)
-    pkginfo_hash = nil
-    
-    # Parse plist
-    begin
-      pkginfo_hash = Plist.parse_xml(file.read)
-    rescue RuntimeError => e
-      raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml raised RuntimeError: #{e}")
-    end
-    
-    # Make sure pkginfo_hash isn't nil
-    if pkginfo_hash.nil?
-      raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml returned nil: pkginfo file probably empty")
-    end
-    
-    # Create a package from hash
-    self.process_pkginfo_hash(pkginfo_hash)
-  end
-  
-  # Applies munki server attributes (environment, unit) to a package.
-  def self.apply_munki_server_attributes(package, unit_id, environment_id = nil)
-    environment_id ||= Environment.start
-    
-    package.unit_id = unit_id
-    package.environment_id = environment_id
-    
-    package
-  end
-  
-  # Apply inherited attributes (as defined by self.inherited_attributes)
-  # from an older version from the package's package branch and unit
-  def self.apply_old_version_attributes(package)
-    old_version = Package.where(:package_branch_id => package.package_branch_id, :unit_id => package.unit_id).order('version DESC').first
-    if old_version.present?
-      self.inherited_attributes.each do |attr|
-        package.send("#{attr}=",old_version.send(attr)) unless old_version.send(attr).blank?
-      end
-    end
-    package
-  end
-  
-  # Instantiate a package from a hash. Deals with non-applicable values
-  # generated by makepkginfo (such as the catalogs array) and other 
-  # munki server special cases
-  def self.process_pkginfo_hash(pkginfo_hash)
-    package = Package.new
-    
-    # Remove items that we don't need
-    pkginfo_hash.delete('catalogs')
-
-    # Find or create a package branch for this
-    pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'])
-    package.package_branch = PackageBranch.find_or_create_by_name(pb_name)
-    pkginfo_hash.delete('name')
-    # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
-    pkginfo_hash.each do |k,v|
-      unless known_attributes.include?(k)
-        # Add non-attribute tag to raw_tags
-        package.raw_tags = package.raw_tags.merge({k => v})
-        # Remove non-attribute from hash
-        pkginfo_hash.delete(k)
-        # Change raw_mode to append
-        package.raw_mode_id = 1
-      end
-    end
-    
-    # Assign attributes to package
-    package.attributes = pkginfo_hash
-    
-    # Assign a package category based on the installer_type
-    package.package_category_id = PackageCategory.default(package.installer_type).id
-    
-    package
-  end
-  
-  # Creates valid and populated Pkgsinfo object
-  # Pass path to package.  Returns a helpful hash
-  # => :package - An new, unsaved package instance
-  # => :plist_string - The string split out by MAKEPKGINFO
-  def self.checkin(path, options = {})
-    # Format options into command line options
-    cmd_line_options = options.map do |k,v| 
-      # Escape for spaces
-      v = v.gsub(/ /,'\ ')
-      "--#{k}=#{v}" unless v.blank?
-    end
-    cmd_line_options = cmd_line_options.compact
-    # Rename package on disk to match proper style
-    path = Package.rename_installer_item(path)
-    logger.info "Checking in #{path}..."
-    tmp_file_path = "/tmp/mor-#{rand(1000)}.plist"
-    logger.info `#{Munki::Application::MAKEPKGINFO} #{cmd_line_options.join(" ")} "#{path}" > "#{tmp_file_path}"`
-    exit_status = `echo $?`.chomp
-    
-    package = nil
-    # If makepkgsinfo exited with zero and outputted a valid pkgsinfo plist file, continue.
-    # TO-DO add a plist validator to this if
-    if exit_status.to_i == 0
-      package = Package.import(tmp_file_path)
-      # Assign the starting environment
-      package.environment = Environment.start
-      
-      # Set defaults based on previous records with the same name
-      existing_version = Package.where(:package_branch_id => package.package_branch_id).order('version DESC').first
-      unless existing_version.nil?
-        # Call package.attr = existing_version.attr to assign inheritable attributes to the new package
-        self.inherited_attributes.each do |attr|
-          package.send("#{attr}=",existing_version.send(attr)) unless existing_version.send(attr).blank?
-        end
-      end
-
-      # Determine installer_choices
-      # TO-DO fix the installer_choices
-      # pkgsinfo.installer_choices_xml = pkgsinfo.derive_installer_choices
-    else
-      logger.warn "Checking in #{File.basename(pkg_path)} failed!"
-      logger.warn "Here's the output of makepkgsinfo:\n" + File.read(tmp_file_path)
-    end
-    
-    # Build hash
-    hash = {:package => package, :plist_string => File.read(tmp_file_path)}
-    # Remove tmp file
-    File.unlink(tmp_file_path)
-    # Return hash
-    hash
+  # package_file, pkginfo_file = nil, options = {}
+  def self.create(options = {})
+    defaults = {:special_attributes => {:environment_id => Environment.start.id}}
+    options = defaults.deep_merge(options)
+    validate_create_options(options)
+    package_file = self.initialize_upload(options.delete(:package_file))
+    package = process_package_file(package_file,options)
   end
   
   # over write the default get description, check if nil then get the description from version_trackers
@@ -866,7 +593,7 @@ class Package < ActiveRecord::Base
   end
   
   # Returns a hash of default attributes that are used to intialize
-  # a new package object.  Used in self.import.
+  # a new package object.
   def self.default_attributes
     {}
   end
@@ -876,41 +603,6 @@ class Package < ActiveRecord::Base
   def self.known_attributes
     # TO-DO find a better way to return a list of attribute keys
     @known_attributes = Package.new.attributes.keys + ["display_name"]
-  end
-  
-  # Creates Pkgsinfo model object from valid plist
-  # Typically, this method is passed the output file created from makepkgsinfo (upon upload or check-in)
-  def self.import(plist_file)
-    p = Package.new
-    h = File.read(plist_file).from_plist
-    if h.nil?
-      raise PackageError.new("There was a problem parsing the plist provided from makepkginfo")
-    else
-      # Remove items that we don't need
-      h.delete('catalogs')
-      # Apply default values
-      p.attributes = Package.default_attributes
-      # Find or create a package branch for this
-      p.name = h['name']
-      h.delete('name')
-      # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
-      h.each do |k,v|
-        unless known_attributes.include?(k)
-          # Add non-attribute tag to raw_tags
-          p.raw_tags = p.raw_tags.merge({k => v})
-          # Remove non-attribute from hash
-          h.delete(k)
-          # Change raw_mode to append
-          p.raw_mode_id = 1
-        end
-      end
-      
-      # This will barf if a key exists in h that isn't an attribute of this model
-      p.attributes = h
-      # Assign a package category based on the installer_type
-      p.package_category_id = PackageCategory.default(p.installer_type).id
-      p
-    end
   end
   
   # True if update_for or requires have items
@@ -945,4 +637,170 @@ class Package < ActiveRecord::Base
       end
     end
   end
+  
+  private
+    # Run makepkginfo on server against package file to generate a pkginfo
+    def self.process_package_file(package_file,options = {})
+      if Munki::Application::MUNKI_TOOLS_AVAILABLE and options[:pkginfo_file].nil?
+        self.process_package_file_with_makepkginfo(package_file, options)
+      elsif options[:pkginfo_file].present?
+        self.process_pkginfo_file(options[:pkginfo_file],package_file,options)
+      else
+        raise PackageError.new("Package file and/or pkginfo file missing")
+      end
+    end
+
+    # Generate command-line options string from hash
+    def self.process_makepkginfo_cmd_line_options(cmd_line_options)
+      cmd_line_options_array = cmd_line_options.map do |k,v| 
+        v = v.gsub(/ /,'\ ')
+        "--#{k}=#{v}" unless v.blank?
+      end
+      cmd_line_options_array.compact.join(" ")
+    end
+
+    # Process package_file with makepkginfo on localhost. Return a populated, 
+    # unsaved instance of Package
+    def self.process_package_file_with_makepkginfo(package_file,options)
+      cmd_line_options = process_makepkginfo_cmd_line_options(options[:makepkginfo_options])
+
+      # Run makepkginfo
+      out_log = Tempfile.new("out_log")
+      error_log = Tempfile.new("error_log")
+      makepkginfo_succeeded = system("#{Munki::Application::MAKEPKGINFO} #{cmd_line_options} '#{package_file.path}' 1> '#{out_log.path}' 2>'#{error_log}'")
+      exit_status = $?.exitstatus
+  
+      # If there was a problem, cleanup, then raise an error
+      if exit_status != 0
+        # Remove package and raise error
+        FileUtils.rm(file.path)
+        raise PackageError.new("Munki tools were unable to process package file: " + out_log.read + "\n" + error_log.read)
+      end
+
+      # pkginfo file, if all went well
+      process_pkginfo_file(out_log,package_file,options)
+    end
+  
+    # Process a pkginfo_file for package_file. Return a populated, unsaved 
+    # instance of Package
+    def self.process_pkginfo_file(pkginfo_file,package_file,options)
+      pkginfo_hash = nil
+    
+      # Parse plist
+      begin
+        pkginfo_hash = Plist.parse_xml(pkginfo_file.read)
+      rescue RuntimeError => e
+        raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml raised RuntimeError: #{e}")
+      end
+    
+      # Make sure pkginfo_hash isn't nil
+      if pkginfo_hash.nil?
+        raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml returned nil: pkginfo file probably empty")
+      end
+    
+      # Create a package from hash
+      self.process_pkginfo_hash(pkginfo_hash,package_file,options)
+    end
+  
+    # Applies special attributes (unit, environment, other) to a package.
+    def self.apply_special_attributes(package, attributes = {})
+      attributes.each do |attribute,value|
+        package.send("#{attribute}=",value)
+      end
+      package
+    end
+  
+    # Apply inherited attributes (as defined by self.inherited_attributes)
+    # from an older version from the package's package branch and unit
+    def self.apply_previous_version_attributes(package)
+      previous_version = Package.where(:package_branch_id => package.package_branch_id, :unit_id => package.unit_id).order('version DESC').first
+      if previous_version.present?
+        self.inherited_attributes.each do |attr|
+          package.send("#{attr}=",previous_version.send(attr)) unless previous_version.send(attr).blank?
+        end
+      end
+      package
+    end
+  
+    # Instantiate a package from a hash. Deals with non-applicable values
+    # generated by makepkginfo (such as the catalogs array) and other 
+    # munki server special cases
+    def self.process_pkginfo_hash(pkginfo_hash,package_file,options)
+      package = Package.new
+    
+      # Remove items that we don't need
+      pkginfo_hash.delete('catalogs')
+
+      # Find or create a package branch for this
+      pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'])
+      package.package_branch = PackageBranch.find_or_create_by_name(pb_name)
+      pkginfo_hash.delete('name')
+      # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
+      pkginfo_hash.each do |k,v|
+        unless known_attributes.include?(k)
+          # Add non-attribute tag to raw_tags
+          package.raw_tags = package.raw_tags.merge({k => v})
+          # Remove non-attribute from hash
+          pkginfo_hash.delete(k)
+          # Change raw_mode to append
+          package.raw_mode_id = 1
+        end
+      end
+    
+      # Assign attributes to package
+      package.attributes = pkginfo_hash
+      # Assign a package category based on the installer_type
+      package.package_category_id = PackageCategory.default(package.installer_type).id
+      # Ensure the installer_item_location is correct
+      package.installer_item_location = File.basename(package_file.path)
+      # Ensure the hash is correct
+      package.add_raw_tag("installer_item_hash",Digest::SHA256.file(package_file).hexdigest)
+      # Apply munkiserver attributes
+      package = self.apply_special_attributes(package,options[:special_attributes])
+      # Apply attributes from existing version in the same unit
+      package = self.apply_previous_version_attributes(package)
+      
+      package
+    end
+
+      # Checks to ensure what should be present is. If something is missing, raise 
+      # PackageError exception.
+      def self.validate_create_options(options)
+        raise PackageError.new("Please select a file") if options[:package_file].nil?
+        raise PackageError.new("Must provide an :special_attributes option") if options[:special_attributes].nil?
+        raise PackageError.new("Must provide a unit ID") if options[:special_attributes][:unit_id].nil?
+        raise PackageError.new("Must provide an environment ID") if options[:special_attributes][:environment_id].nil?
+      end
+
+      # Renames and moves temporary files to the appropriate package store. Returns
+      # a File object for newly renamed/moved file
+      def self.initialize_upload(package_file)
+        destination_path = nil
+
+        # Get the absolute path for the package store
+        begin
+          unique_name = self.uniquify_name(package_file.original_filename)
+          destination_path = Pathname.new(Munki::Application::PACKAGE_DIR + unique_name)
+        end while File.exists?(destination_path)
+
+        # Move tmp_file to the package store
+        begin
+          FileUtils.mv package_file.tempfile.path, destination_path
+        rescue Errno::EACCES => e
+          raise PackageError.new("Unable to write to package store")
+        end
+
+        # Return the package as a File object
+        begin
+          File.new(destination_path)
+        rescue
+          raise PackageError.new("Unable to read #{destination_path}")
+        end
+      end
+
+      # Create a unique name from a string by prepending the current timestamp
+      # and adding a random number
+      def self.uniquify_name(name)
+        Time.now.to_s(:ordered_numeric) + rand(10001).to_s + "_" + name
+      end
 end
