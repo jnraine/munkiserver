@@ -29,7 +29,7 @@ class VersionTracker < ActiveRecord::Base
   # Returns true if the record "looks" like it points to a valid version tracker source
   def looks_good?
     # Web ID is only digits
-    web_id.to_s.match(/^\d+$/) != nil and url_exists?
+    web_id.to_s.match(/^\d+$/) != nil and url_exists? and macupdate_is_up?
   end
   
   # Return true if the macupdate.com url exists
@@ -44,6 +44,16 @@ class VersionTracker < ActiveRecord::Base
       return false
     else 
       return true
+    end
+  end
+  
+  # return false if macupdate is down
+  def macupdate_is_up?
+    begin
+      response = Net::HTTP.get_response(URI.parse("http://"+MAC_UPDATE_SITE_URL))
+      response.instance_of?(Net::HTTPOK)
+    rescue SocketError
+      return false
     end
   end
   
@@ -149,16 +159,18 @@ class VersionTracker < ActiveRecord::Base
 
   # Retrieves and assigns the first web ID from a macupdate search
   def retrieve_web_id
-    info_doc = Nokogiri::HTML(open(MAC_UPDATE_SEARCH_URL + self.package_branch.name))
-    # if macupdate return a search page
-    if info_doc.css(".titlelink").present?
-      href_match = info_doc.css(".titlelink").first[:href].match(/([0-9]{4,})/) if info_doc.css(".titlelink").first.present?
-      self.web_id = href_match[1] if href_match.present?
-      # if macupdate redirect to the single page
-    elsif info_doc.css("#listingarea script").text.include?("document.location")
-      self.web_id = info_doc.css("#listingarea script").text.match(/([0-9]+{4,})/)[0].to_i unless info_doc.css("#listingarea script").text.match(/([0-9]+{4,})/).nil?
-    else
-      # do nothing
+    if macupdate_is_up?
+      info_doc = Nokogiri::HTML(open(MAC_UPDATE_SEARCH_URL + self.package_branch.name))
+      # if macupdate return a search page
+      if info_doc.css(".titlelink").present?
+        href_match = info_doc.css(".titlelink").first[:href].match(/([0-9]{4,})/) if info_doc.css(".titlelink").first.present?
+        self.web_id = href_match[1] if href_match.present?
+        # if macupdate redirect to the single page
+      elsif info_doc.css("#listingarea script").text.include?("document.location")
+        self.web_id = info_doc.css("#listingarea script").text.match(/([0-9]+{4,})/)[0].to_i unless info_doc.css("#listingarea script").text.match(/([0-9]+{4,})/).nil?
+      else
+        # do nothing
+      end
     end
   end
 end
