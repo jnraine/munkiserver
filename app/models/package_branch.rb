@@ -222,4 +222,8 @@ class PackageBranch < ActiveRecord::Base
       else name
     end
   end
+  
+  def to_param
+    name
+  end
 end

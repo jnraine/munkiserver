@@ -52,6 +52,11 @@ class Package < ActiveRecord::Base
                                                ['AdobeSetup','AdobeSetup'],
                                                ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']]}
   
+  # An hash of params to be used for linking to a package instance
+  def to_params
+    {:unit => unit,:package_branch => package_branch, :version => version}
+  end
+  
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)

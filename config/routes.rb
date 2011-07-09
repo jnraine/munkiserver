@@ -37,7 +37,25 @@ Munki::Application.routes.draw do
         put :multiple_update
       end
     end
-  
+    
+    controller :packages do
+      match 'packages(.:format)', :action => 'index', :via => :get, :as => 'npackages'
+      match 'packages(.:format)', :action => 'create', :via => :post
+      
+      scope '/packages' do
+        constraints({:version => /.+/}) do
+          match ':package_branch/:version(.:format)', :action => 'show', :via => :get, :as => 'npackage'
+          match ':package_branch/:version/edit(.:format)', :action => 'edit', :via => :get, :as => 'edit_npackage'
+          match ':package_branch/:version(.:format)', :action => 'update', :via => :put
+          match ':package_branch/:version(.:format)', :action => 'delete', :via => :delete
+        end
+        match 'add(.:format)', :action => 'new', :via => :get, :as => 'new_npackage'
+        match 'multiple(.:format)', :action => 'edit_multiple', :via => :get, :as => 'edit_multiple_npackages'
+        match 'multiple(.:format)', :action => 'update_multiple', :via => :put
+        match 'check_for_updates', :action => 'check_for_updates', :via => :get, :as => 'check_for_package_updates'
+      end
+    end
+    
     resources :packages do
       collection do
         post :multiple_edit
