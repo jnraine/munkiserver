@@ -3,8 +3,10 @@
 class UniquenessInUnitValidator < ActiveModel::EachValidator
   def validate_each(record,attribute,value)
     return if value.blank?
-    packages = Package.unit(record.unit).where(:package_branch_id => record.package_branch_id)
-    if packages.map(&:version).include?(value)
+    relation = Package.unit(record.unit)
+    relation = relation.where(:package_branch_id => record.package_branch_id)
+    relation = relation.where('id <> ?', record.id) unless record.id.nil?
+    if relation.map(&:version).include?(value)
       record.errors.add attribute, 'must be unique within this unit'
     end
   end

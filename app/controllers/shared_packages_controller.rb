@@ -23,7 +23,7 @@ class SharedPackagesController < ApplicationController
     respond_to do |format|
       if @package.save
         flash[:notice] = "Successfully imported #{@shared_package.display_name} (#{@shared_package.version})"
-        format.html { redirect_to edit_package_path(@package.unit, @package) }
+        format.html { redirect_to edit_package_path(@package.to_params) }
       else
         flash[:error] = "Unable to import #{@shared_package.display_name} (#{@shared_package.version})"
         format.html { redirect_to shared_packages_path(current_unit) }

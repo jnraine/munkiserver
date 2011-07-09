@@ -63,6 +63,10 @@ class ApplicationController < ActionController::Base
     session[:username] = "default"
   end
 
+  def page_not_found
+    {:file => "#{Rails.root}/public/404.html", :layout => false, :status => 404}
+  end
+  
   def error_page
     {:file => "#{Rails.root}/public/generic_error.html", :layout => false}
   end

@@ -39,30 +39,37 @@ Munki::Application.routes.draw do
     end
     
     controller :packages do
-      match 'packages(.:format)', :action => 'index', :via => :get, :as => 'npackages'
+      match 'packages(.:format)', :action => 'index', :via => :get, :as => 'packages'
       match 'packages(.:format)', :action => 'create', :via => :post
       
+      proc = lambda do |request|
+        request.params["format"] = "plist"
+        true
+      end
+      
       scope '/packages' do
-        constraints({:version => /.+/}) do
-          match ':package_branch/:version(.:format)', :action => 'show', :via => :get, :as => 'npackage'
-          match ':package_branch/:version/edit(.:format)', :action => 'edit', :via => :get, :as => 'edit_npackage'
-          match ':package_branch/:version(.:format)', :action => 'update', :via => :put
-          match ':package_branch/:version(.:format)', :action => 'delete', :via => :delete
-        end
-        match 'add(.:format)', :action => 'new', :via => :get, :as => 'new_npackage'
-        match 'multiple(.:format)', :action => 'edit_multiple', :via => :get, :as => 'edit_multiple_npackages'
+        match 'add(.:format)', :action => 'new', :via => :get, :as => 'new_package'
+        match 'multiple(.:format)', :action => 'edit_multiple', :via => :get, :as => 'edit_multiple_packages'
         match 'multiple(.:format)', :action => 'update_multiple', :via => :put
         match 'check_for_updates', :action => 'check_for_updates', :via => :get, :as => 'check_for_package_updates'
+        constraints({:version => /.+/}) do
+          constraints(ExtractFormatFromParam.new(:version)) do
+            match ':package_branch(/:version)/edit(.:format)', :action => 'edit', :via => :get, :as => 'edit_package'
+            match ':package_branch(/:version)(.:format)', :action => 'show', :via => :get, :as => 'package'
+            match ':package_branch(/:version)(.:format)', :action => 'update', :via => :put
+            match ':package_branch(/:version)(.:format)', :action => 'destroy', :via => :delete
+          end
+        end
       end
     end
     
-    resources :packages do
-      collection do
-        post :multiple_edit
-        get :check_for_updated
-        put :check_for_updated, :multiple_update
-      end
-    end
+    # resources :packages do
+    #   collection do
+    #     post :multiple_edit
+    #     get :check_for_updated
+    #     put :check_for_updated, :multiple_update
+    #   end
+    # end
     
     resources :shared_packages do
       get :import, :on => :member

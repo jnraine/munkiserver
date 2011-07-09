@@ -52,9 +52,27 @@ class Package < ActiveRecord::Base
                                                ['AdobeSetup','AdobeSetup'],
                                                ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']]}
   
+  def self.find_where_params(params)
+    unit = Unit.where(:name => params[:unit]).first
+    package_branch = PackageBranch.where(:name => params[:package_branch]).first
+
+    if unit.present? and package_branch.present?
+      relation = self.unit(unit)
+      relation = relation.where(:package_branch_id => package_branch.id)
+      relation = relation.order('version DESC')
+      relation = relation.limit(1)
+      relation = relation.where(:version => params[:version]) if params[:version].present?
+      relation.first
+    end
+  end
+
   # An hash of params to be used for linking to a package instance
   def to_params
-    {:unit => unit,:package_branch => package_branch, :version => version}
+    params = {}
+    params[:unit] = unit
+    params[:package_branch] = package_branch
+    params[:version] = version unless self.latest?
+    params
   end
   
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
@@ -633,13 +651,16 @@ class Package < ActiveRecord::Base
   end
   
   # update multiple attributes
-  def self.bulk_update_attributes(packages,package_params)
-    if (package_params == nil || packages == nil)
+  def self.bulk_update_attributes(packages,package_attributes)
+    if package_attributes.nil? or packages.empty?
       raise PackageError.new ("Nothing to update")
     else
-      packages.each do |p|
-        p.update_attributes(package_params)
+      results = packages.map do |p|
+        p.update_attributes(package_attributes)
       end
+      successes = results.map {|b| b == false }
+      failures = results.map {|b| b == true }
+      {:total => packages.count, :successes => successes.count, :failures => failures.count}
     end
   end
   

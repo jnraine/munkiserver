@@ -20,9 +20,9 @@
 
 <p><em>Editing the name property will change the package branch of this package</em></p>
 
-<%= form_for(@package, :url => package_path(@package.unit, @package) ,:html => {:multipart => true} ) do |f| %>
+<%= form_for(@package, :url => package_path(@package.to_params) ,:html => {:multipart => true} ) do |f| %>
 	<%= f.error_messages %>
 	<%= render :partial => "edit_tabs", :locals => {:f => f} %>
 	<p style="float:right;"><%= f.submit 'Update' %></p>
 <% end %>
-<%= link_to 'Show', package_path(@package.unit, @package) %>
+<%= link_to 'Show', package_path(@package.to_params) %>
