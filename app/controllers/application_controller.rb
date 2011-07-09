@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
       end
     else
       flash[:warning] = "You must be logged in to view that page"
-      redirect_to login_path
+      redirect_to login_path(:redirect => request.request_uri)
     end
   end
   
@@ -61,6 +61,10 @@ class ApplicationController < ActionController::Base
   
   def fake_login
     session[:username] = "default"
+  end
+
+  def error_page
+    {:file => "#{Rails.root}/public/generic_error.html", :layout => false}
   end
   
   protected

@@ -2,6 +2,7 @@
 	<%= form_tag "/create_session" do %>
 		<%= text_field_tag "username" %>
 		<%= subtle_value_tag("username", "Username") %><br />
+		<%= hidden_field_tag "redirect", params[:redirect] %>
 		<%= password_field_tag "pass" %><br />
 		<%= submit_tag "Login (#{Rails.env})" %>
 	<% end %>
