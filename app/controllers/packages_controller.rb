@@ -14,8 +14,10 @@ class PackagesController < ApplicationController
   def create
     exceptionMessage = nil
     begin
-      @package = Package.create_from_uploaded_file(params[:package_file],params[:pkginfo_file], {:makepkginfo_options => params[:makepkginfo_options],
-                                                                                            :attributes => {:unit_id => current_unit.id}})
+      @package = Package.create(:package_file => params[:package_file],
+                                :pkginfo_file => params[:pkginfo_file],
+                                :makepkginfo_options => params[:makepkginfo_options],
+                                :special_attributes => {:unit_id => current_unit.id})
     rescue PackageError => e
       @package = Package.new
       exceptionMessage = e.to_s
@@ -30,7 +32,7 @@ class PackagesController < ApplicationController
         # Failure
         flash[:error] = "Failed to add package"
         flash[:error] = flash[:error] + ": " + exceptionMessage if exceptionMessage.present?
-        format.html { redirect_to :back }
+        format.html { render :action => "new"}
       end
     end
   end
@@ -126,13 +128,8 @@ class PackagesController < ApplicationController
   
   # Used to check for available updates across all units
   def check_for_updated
-   
     call_rake("packages:check_for_updates")
     flash[:notice] = "Checking for updates now"
-    # for each package that has updates available send an email to the admin
-    # PackageBranch.available_updates(current_unit).each do |package|
-    #       AdminMailer.package_update_available(package).deliver
-    #     end
-    redirect_to(:action => "index")
+    redirect_to :back
   end
 end
