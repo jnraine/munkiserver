@@ -119,7 +119,10 @@ class Computer < ActiveRecord::Base
   end
 
   def client_identifier
+<<<<<<< HEAD
     # self.class.to_s.tableize + "/" + mac_address + ".plist"
+=======
+>>>>>>> 3d72b43ec306f2c14805934f3f845433056003c2
     mac_address + ".plist"
   end
   

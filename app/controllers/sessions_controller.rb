@@ -13,12 +13,15 @@ class SessionsController < ApplicationController
       redirect_to login_path
     elsif u.unit_ids.empty?
       flash[:warning] = "You are not permitted to any units!"
-      render :file => "#{Rails.root}/public/generic_error.html", :layout => false
+      render error_page
     else
       session[:username] = u.username
-      session[:unit_id] = u.unit_ids.first
-      params[:unit] = Unit.find(u.unit_ids.first)
-      redirect_to computers_path(params[:unit])
+      unit = Unit.find(u.unit_ids.first)
+      if params[:redirect].present?
+        redirect_to params[:redirect]
+      else
+        redirect_to computers_path(unit)
+      end
     end
   end
   
