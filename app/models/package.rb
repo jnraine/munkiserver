@@ -693,13 +693,13 @@ class Package < ActiveRecord::Base
       # Run makepkginfo
       out_log = Tempfile.new("out_log")
       error_log = Tempfile.new("error_log")
-      makepkginfo_succeeded = system("#{Munki::Application::MAKEPKGINFO} #{cmd_line_options} '#{package_file.path}' 1> '#{out_log.path}' 2>'#{error_log}'")
+      makepkginfo_succeeded = system("#{Munki::Application::MAKEPKGINFO} #{cmd_line_options} '#{package_file.path}' 1> '#{out_log.path}' 2>'#{error_log.path}'")
       exit_status = $?.exitstatus
   
       # If there was a problem, cleanup, then raise an error
       if exit_status != 0
         # Remove package and raise error
-        FileUtils.rm(file.path)
+        FileUtils.rm(package_file.path)
         raise PackageError.new("Munki tools were unable to process package file: " + out_log.read + "\n" + error_log.read)
       end
 
