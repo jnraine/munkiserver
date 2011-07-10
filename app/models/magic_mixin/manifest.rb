@@ -3,6 +3,12 @@ module Manifest
   # Used to augment the class definition
   # of the class passed as an argument
   # Put class customization in here!
+  
+  # swith to use let Munki sort items or
+  # let Munki server sort out the list of items to
+  # install/uninstall/optional install
+  USING_PRECEDENT_ITEMS = true
+  
   def self.extend_class(k)
     k.class_exec do
       # ====================
@@ -35,6 +41,7 @@ module Manifest
       
       magic_mixin :unit_member
       
+      
       # True if name attribute is unique in the unit
       def uniqueness_of_name_in_unit
         # Create flag
@@ -53,48 +60,82 @@ module Manifest
       def environments
         environment.environments
       end
+
+      # Recursively collect, based on precedent, the install
+      # items.
+      def precedent_install_items
+        exclusion_items_hash = create_item_hash(self.uninstall_items)
+        precedent_items("install_items",exclusion_items_hash)
+      end
+      
+      def precedent_uninstall_items
+        exclusion_items_hash = create_item_hash(self.install_items)
+        precedent_items("uninstall_items",exclusion_items_hash)
+      end
+
+      def precedent_optional_install_items
+        exclusion_items_hash = create_item_hash(self.precedent_install_items).merge(create_item_hash(self.precedent_uninstall_items))
+        precedent_items("optional_install_items",exclusion_items_hash)
+      end
+      
+      def precedent_items(item_name,exclusion_items_hash)
+        item_hash = create_item_hash(self.send(item_name))
+        second_item_hash = create_item_hash(self.bundles.map {|b| b.send("precedent_#{item_name}") }.flatten)
+        third_item_hash = (self.is_a? Computer) ? create_item_hash(self.computer_group.send("precedent_#{item_name}")) : {}
+        
+        aux_items = third_item_hash.merge(second_item_hash)
+        aux_items.delete_if { |k,v| exclusion_items_hash[k].present? }
+        aux_items.merge(item_hash).values
+      end
+
+      # Takes an array of InstallItem/UninstallItem/OptionalInstallItem
+      # instances and returns a hash with keys matching the associated
+      # package branch ID.
+      def create_item_hash(items)
+        hash = {}
+        items.each do |items|
+          hash[items.package_branch.id] = items
+        end
+        hash
+      end
+      
+      # Takes option to whether use the presedent_items or 
+      # let Munki to sort out the install/uninstall/optional install conflict
+      def create_item_array(item_method, using_precedent_items = true)
+        item_array = []
+        if using_precedent_items
+          method = "precedent_#{item_method}"
+        else
+          method = "#{item_method}"
+        end
+          
+        self.send("#{method}").each do |item|
+          if item.package_id.blank?
+            item_array << item.package.to_s
+          else
+            item_array << item.package.to_s(:version)
+          end
+        end
+        item_array
+      end
       
       # Returns an array of strings representing managed_installs
       # based on the items specified in install_items
       def managed_installs
-        mi = []
-        install_items.each do |install_item|
-          if install_item.package_id.blank?
-            mi << install_item.package.to_s
-          else
-            mi << install_item.package.to_s(:version)
-          end
-        end
-        mi
+        USING_PRECEDENT_ITEMS ? create_item_array("install_items") : create_item_array("install_items", false)
       end
-
+      
       # Concatentates installs (specified by admins) and user installs (specified
       # by users) to create the managed_installs virtual attribute
       def managed_uninstalls
-        mui = []
-        uninstall_items.each do |uninstall_item|
-          if uninstall_item.package_id.blank?
-            mui << uninstall_item.package.to_s
-          else
-            mui << uninstall_item.package.to_s(:version)
-          end
-        end
-        mui
+        USING_PRECEDENT_ITEMS ? create_item_array("uninstall_items") : create_item_array("uninstall_items", false)
       end
       
       # Same as managed_installs and managed_uninstalls
       # optional_installs virtual attribute let user to choose a list of items to install
-      def optional_installs
-        oi = []
-        optional_install_items.each do |optional_install_item|
-          if optional_install_item.package_id.blank?
-            oi << optional_install_item.package.to_s
-          else
-            oi << optional_install_item.package.to_s(:version)
-          end
-        end
-        oi
-      end      
+      def managed_optional_installs
+        USING_PRECEDENT_ITEMS ? create_item_array("optional_install_items") : create_item_array("optional_install_items", false)
+      end
       
       # Pass a package object or package ID to append the package to this record
       # If the package's package branch, or another version of the package is specified
@@ -265,7 +306,7 @@ module Manifest
 
       def optional_installs_package_branch_ids
         optional_install_items.collect(&:package_branch).uniq.collect(&:id)
-      end      
+      end
       
       # Returns all package_branches that belongs to the unit and the environment
       def assignable_package_branches
@@ -302,10 +343,10 @@ module Manifest
       def serialize_for_plist
         h = {}
         h[:name] = name
-        h[:included_manifests] = included_manifests
+        h[:included_manifests] = included_manifests unless USING_PRECEDENT_ITEMS
         h[:managed_installs] = managed_installs
         h[:managed_uninstalls] = managed_uninstalls
-        h[:optional_installs] = optional_installs
+        h[:optional_installs] = managed_optional_installs
         h
       end
       
@@ -323,7 +364,7 @@ module Manifest
         end
         a
       end
-      
+            
       # Attempts a couple different queries in order of importance to
       # find the appropriate record for the show action
       def self.find_for_show(s)

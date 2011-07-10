@@ -1,13 +1,16 @@
 <% item_list.each do |item| %>
 	<div class="packageListItem">
+		<% if target.respond_to?(:installed?) and target.installed?(item.package) %>
+			<span class="installed-mark">&nbsp;&#10003;</span>
+		<% else %>
+			<span class="not-installed-mark">&nbsp;&#10003;</span>
+		<% end %>
+	
 		<%= image_tag item.package.icon.url(:tiny) if item.package.icon %>
 		<% if item.package_id.blank? %>
 			<span><%= link_to item.package, package_path(item.to_params) %></span>
 		<% else %>
 			<span><%= link_to item.package.to_s(:pretty_with_version), package_path(item.to_params) %></span>
-		<% end %>
-		<% if target.respond_to?(:installed?) and target.installed?(item.package) %>
-			<span class="installed-mark">&nbsp;&#10003;</span>
 		<% end %>
 	</div>
 <% end %>

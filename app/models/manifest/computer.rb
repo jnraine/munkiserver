@@ -91,15 +91,6 @@ class Computer < ActiveRecord::Base
   def require_computer_group
     self.computer_group_id = ComputerGroup.default(self.unit).id if self.computer_group_id.nil?
   end
-
-  # Moved this method to unit_member so it was only in one place (also present in Package class)
-  # def catalogs
-  #   c = []
-  #   environments.each do |env|
-  #     c << "#{unit.id}_#{env.name}.plist"
-  #   end
-  #   c
-  # end
   
   # Extend manifest by removing name attribute and adding the catalogs
   def serialize_for_plist
