@@ -448,12 +448,12 @@ thead th a:hover,
 
 
 
-#affectedItemsLink{
+#effectiveItemsLink{
 	float: right;
 	display: inline;
 }
 
-#lightbox_target, #affectedItems{
+#lightbox_target, #effectiveItems{
 	text-align: center;
 	-moz-border-radius: 6px;
     background: #eef2f7;

@@ -13,7 +13,6 @@ class Computer < ActiveRecord::Base
   # Validations
   validate :computer_model
   validates_presence_of :name
-  # mac_address attribute must look something like ff:12:ff:34:ff:56
   validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/
   validates_format_of :name, :with => /^[a-zA-Z0-9-]+$/, :message => "must only contain alphanumeric and hyphens characters"
   validates_uniqueness_of :mac_address,:name
@@ -202,7 +201,8 @@ class Computer < ActiveRecord::Base
     end
     write_attribute(:mac_address,formatted.join(""))
   end
-  # bulk update 
+  
+  # Bulk update
   def self.bulk_update_attributes(computers,p)
     if (computers == nil || p == nil)
       raise ComputerError.new ("Nothing to update")
@@ -212,9 +212,8 @@ class Computer < ActiveRecord::Base
       end
     end
   end
-  # overwirte to_param so the name of the commputer can be displayed in the URL
+  
   def to_param
     name
   end
-
 end

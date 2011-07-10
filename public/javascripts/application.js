@@ -251,9 +251,9 @@ $(document).ready(function() {
 	    });
 	});
 	// trigger lightbox to show a list of install/uninstall/optional install items
-	$("#affectedItems").hide();
-	$("#affectedItemsLink").click(function(){
-		$("#affectedItems").lightbox_me({
+	$("#effectiveItems").hide();
+	$("#effectiveItemsLink").click(function(){
+		$("#effectiveItems").lightbox_me({
 			centered: true
 		})
 	})
