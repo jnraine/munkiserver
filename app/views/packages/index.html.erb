@@ -22,7 +22,7 @@
 		<h5>There are no packages in the <%= current_environment.to_s.downcase %> environment</h5>
 		<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
 	<% else %>
-	<%= form_tag multiple_edit_packages_path, :id => "bulk_edit_form", :remote => true do %>
+	<%= form_tag edit_multiple_packages_path, :method => :get, :id => "bulk_edit_form", :remote => true do %>
 		<p><%= record_count(@packages) %><%= submit_tag "Multiple Edit", :id => "bulk_edit" %></p>
 	
 		<%= package_table(@packages) %> 

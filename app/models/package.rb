@@ -52,6 +52,29 @@ class Package < ActiveRecord::Base
                                                ['AdobeSetup','AdobeSetup'],
                                                ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']]}
   
+  def self.find_where_params(params)
+    unit = Unit.where(:name => params[:unit]).first
+    package_branch = PackageBranch.where(:name => params[:package_branch]).first
+
+    if unit.present? and package_branch.present?
+      relation = self.unit(unit)
+      relation = relation.where(:package_branch_id => package_branch.id)
+      relation = relation.order('version DESC')
+      relation = relation.limit(1)
+      relation = relation.where(:version => params[:version]) if params[:version].present?
+      relation.first
+    end
+  end
+
+  # An hash of params to be used for linking to a package instance
+  def to_params
+    params = {}
+    params[:unit] = unit
+    params[:package_branch] = package_branch
+    params[:version] = version unless self.latest?
+    params
+  end
+  
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)
@@ -628,13 +651,16 @@ class Package < ActiveRecord::Base
   end
   
   # update multiple attributes
-  def self.bulk_update_attributes(packages,package_params)
-    if (package_params == nil || packages == nil)
+  def self.bulk_update_attributes(packages,package_attributes)
+    if package_attributes.nil? or packages.empty?
       raise PackageError.new ("Nothing to update")
     else
-      packages.each do |p|
-        p.update_attributes(package_params)
+      results = packages.map do |p|
+        p.update_attributes(package_attributes)
       end
+      successes = results.map {|b| b == false }
+      failures = results.map {|b| b == true }
+      {:total => packages.count, :successes => successes.count, :failures => failures.count}
     end
   end
   
@@ -667,13 +693,13 @@ class Package < ActiveRecord::Base
       # Run makepkginfo
       out_log = Tempfile.new("out_log")
       error_log = Tempfile.new("error_log")
-      makepkginfo_succeeded = system("#{Munki::Application::MAKEPKGINFO} #{cmd_line_options} '#{package_file.path}' 1> '#{out_log.path}' 2>'#{error_log}'")
+      makepkginfo_succeeded = system("#{Munki::Application::MAKEPKGINFO} #{cmd_line_options} '#{package_file.path}' 1> '#{out_log.path}' 2>'#{error_log.path}'")
       exit_status = $?.exitstatus
   
       # If there was a problem, cleanup, then raise an error
       if exit_status != 0
         # Remove package and raise error
-        FileUtils.rm(file.path)
+        FileUtils.rm(package_file.path)
         raise PackageError.new("Munki tools were unable to process package file: " + out_log.read + "\n" + error_log.read)
       end
 

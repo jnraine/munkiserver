@@ -11,55 +11,30 @@ class PackagesController < ApplicationController
     end
   end
 
-  def create
-    exceptionMessage = nil
-    begin
-      @package = Package.create(:package_file => params[:package_file],
-                                :pkginfo_file => params[:pkginfo_file],
-                                :makepkginfo_options => params[:makepkginfo_options],
-                                :special_attributes => {:unit_id => current_unit.id})
-    rescue PackageError => e
-      @package = Package.new
-      exceptionMessage = e.to_s
-    end
-    
-    respond_to do |format|
-      if @package.save
-        # Success
-        flash[:notice] = "Package successfully saved"
-        format.html { redirect_to edit_package_path(@package.unit, @package) }
-      else
-        # Failure
-        flash[:error] = "Failed to add package"
-        flash[:error] = flash[:error] + ": " + exceptionMessage if exceptionMessage.present?
-        format.html { render :action => "new"}
+    def show
+      @package = Package.find_where_params(params)
+      respond_to do |format|
+        if @package.present?
+          format.html
+          format.plist { render :text => @package.to_plist }
+        else
+          format.html { render page_not_found }
+          format.plist { render page_not_found }
+        end
       end
     end
-  end
-
-  def destroy
-    @package = Package.find(params[:id])
-    
-    if @package.destroy
-      flash[:notice] = "Package was destroyed successfully"
-    end
-    
-    respond_to do |format|
-      format.html { redirect_to packages_path(current_unit) }
-    end
-  end
 
   def edit
-    @package = Package.find(params[:id])
+    @package = Package.find_where_params(params)
   end
 
   def update
-    @package = Package.unit(current_unit).find(params[:id])
+    @package = Package.find_where_params(params)
     
     respond_to do |format|
       if @package.update_attributes(params[:package])
         flash[:notice] = "Package was successfully updated."
-        format.html { redirect_to package_path(@package.unit, @package) }
+        format.html { redirect_to package_path(@package.to_params) }
         format.xml { head :ok }
       else
         flash[:error] = "Could not update package!"
@@ -73,45 +48,72 @@ class PackagesController < ApplicationController
     @package = Package.new
   end
 
-  def show
-    @package = Package.find(params[:id])
-    
+  def create
+    exceptionMessage = nil
+    begin
+      @package = Package.create(:package_file => params[:package_file],
+                                :pkginfo_file => params[:pkginfo_file],
+                                :makepkginfo_options => params[:makepkginfo_options],
+                                :special_attributes => {:unit_id => current_unit.id})
+    rescue PackageError => e
+      @package = Package.new
+      exceptionMessage = e.to_s
+    end
+
     respond_to do |format|
-      format.html
-      format.plist { render :text => @package.to_plist }
+      if @package.save
+        # Success
+        flash[:notice] = "Package successfully saved"
+        format.html { redirect_to edit_package_path(@package.to_params) }
+      else
+        # Failure
+        flash[:error] = "Failed to add package"
+        flash[:error] = flash[:error] + ": " + exceptionMessage if exceptionMessage.present?
+        format.html { render :action => "new"}
+      end
+    end
+  end
+
+  def destroy
+    @package = Package.find_where_params(params)
+
+    if @package.destroy
+      flash[:notice] = "Package was destroyed successfully"
+    end
+
+    respond_to do |format|
+      format.html { redirect_to packages_path(current_unit) }
     end
   end
   
   # Allows multiple edits
-  def multiple_edit
+  def edit_multiple
     @packages = Package.find(params[:selected_records])
   end
   
-  def multiple_update
-    @packages = Package.find(params[:selected_records])
-    p = params[:package]
-    results = []
+  def update_multiple
+    results = {}
     exceptionMessage = nil
     begin
-      results = Package.bulk_update_attributes(@packages, p)
+      @packages = Package.where(:id => params[:selected_records])
+      results = Package.bulk_update_attributes(@packages, params[:package])
     rescue PackageError => e
       exceptionMessage = e.to_s
     end
     
     respond_to do |format|
-        if results.empty?
-          flash[:error] = exceptionMessage
-          format.html { redirect_to(:action => "index") }
-        elsif !results.include?(false)
-          flash[:notice] = "All #{results.length} packages were successfully updated."
-          format.html { redirect_to(:action => "index") } 
-        elsif results.include?(false) && results.include?(true)
-          flash[:warning] = "#{results.delete_if {|e| e}.length} of #{results.length} packages updated."
-          format.html { redirect_to(:action => "index") }
-        elsif !results.include?(true)
-          flash[:error] = "None of the #{results.length} packages were updated !"
-          format.html { redirect_to(:action => "index") }
-        end
+      if exceptionMessage
+        flash[:error] = "A problem occurred: " + exceptionMessage
+      elsif results[:total] == results[:successes] and results[:failures] == 0
+        flash[:notice] = "All #{results[:total]} packages were successfully updated."
+      elsif results[:total] == results[:failures] and results[:successes] == 0
+        flash[:error] = "None of the #{results[:total]} packages were updated!"
+      elsif results[:successes] > 0 and results[:failures] > 0
+        flash[:warning] = "#{results[:successes]} of #{results[:total]} packages updated."
+      else
+        flash[:error] = "Something weird happened. Here are the results: #{results.inspect}"
+      end
+      format.html { redirect_to packages_path }
     end
   end
   
@@ -122,12 +124,12 @@ class PackagesController < ApplicationController
     if @package.present?
       send_file Munki::Application::PACKAGE_DIR + @package.installer_item_location, :filename => @package.to_s(:download_filename)
     else
-      render :template => "404.html", :status => :not_found
+      render page_not_found
     end
   end
   
   # Used to check for available updates across all units
-  def check_for_updated
+  def check_for_updates
     call_rake("packages:check_for_updates")
     flash[:notice] = "Checking for updates now"
     redirect_to :back
