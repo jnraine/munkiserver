@@ -54,6 +54,8 @@ class VersionTracker < ActiveRecord::Base
       response.instance_of?(Net::HTTPOK)
     rescue SocketError
       return false
+    rescue Errno::ETIMEDOUT # occurs on RHEL, not sure why
+      return false
     end
   end
   
