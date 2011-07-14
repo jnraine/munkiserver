@@ -43,11 +43,4 @@ module ComputersHelper
   def computer_group_options
     options_for_select(ComputerGroup.unit(current_unit).collect {|cg| [cg.name, cg.id] })
   end
-  
-  # bulk update 
-  def bulk_update_attributes(computer)
-    computer.map do |computer|
-      computer.update_attributes(params[:computer].reject {|k,v| v.blank?})
-    end
-  end
 end

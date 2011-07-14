@@ -132,7 +132,7 @@
 			</tr>
 			<tr>
 				<td>Environment</td>
-				<td><%= f.collection_select :environment_id, Environment.all, :id, :name %></td>
+				<td><%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "environment"}%></td>
 			</tr>
 			<tr>
 				<td>Supported Architectures</td>
@@ -215,7 +215,9 @@
 			
 				<tr>
 					<td colspan="2">
-						<%= tabled_asm_select(@package) %>
+						<div class="change_with_environment" id="tabled_asm_select">
+							<%= tabled_asm_select(@package) %>
+						</div>
 					</td>	
 				</tr>
 				<% unless @package.installer_appdmg? %>
