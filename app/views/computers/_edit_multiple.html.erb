@@ -1,0 +1,67 @@
+<div id="bulk_edit_computers">
+	<h2>Bulk Edit Computers</h2>
+	<%= form_for(@computers, :url => update_multiple_computers_path(current_unit),:html => {:method => :put, :id => "multiple_update_computers_form"})  do |f| %>
+		<%= f.error_messages %>
+		<% for c in @computers %>
+
+			<%= hidden_field_tag "selected_records[]", c.id %>
+	
+		<% end %>
+		<p><em>Editing <%= @computers.count %> computers</em></p>
+		<table>
+		<tr>
+			<td>
+				
+			</td>
+			<td>
+			<%= f.label :environment_id %>
+			</td>
+			<td>
+			<%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "computer_environment_mult_edit"} %>
+			</td>
+		</tr>
+		<tr id="computer_group_multi_edit">
+			<%= render :partial => "computer_group_edit_multiple", :locals => {:environment_id => c.environment.id } %>
+		</tr>
+		<tr>
+			<td>
+				<!-- Intend to be empty -->
+			</td>
+			<td>
+				<!-- Intend to be empty -->
+			</td>
+			<td>
+				<%= f.submit "Update" %>
+				<a href="#" class="cancel">Cancel</a>
+			</td>
+		</tr>
+		</table>
+	<% end %>
+</div>
+
+<script>
+// change the computer group dropdown list depending on the selected environment
+function switchEnvironemnt(environment_id){
+		switch (environment_id){
+			<% Environment.all.each do |env| %>
+			case <%= env.id %>:
+			$("#computer_group_multi_edit").html("<%= escape_javascript(render :partial => "computer_group_edit_multiple", :locals => {:environment_id => env.id}) %>");
+			break;
+			<% end %>
+		}
+}
+$("select.computer_environment_mult_edit").live('change', function(){
+	environment_id = parseInt($(this).val());
+	computerGroup = $(this).parents().find("#computer_group_multi_edit");
+	computerGroup.animate({
+		backgroundColor: "#FBEC5D",
+		opacity: .9
+	}, 'fast');
+	switchEnvironemnt(environment_id);
+	computerGroup.animate({
+		backgroundColor: "#eef2f7",
+		opacity: .9
+	}, 'fast');
+	
+})
+</script>

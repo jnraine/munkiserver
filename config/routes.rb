@@ -33,8 +33,9 @@ Munki::Application.routes.draw do
       get :import, :on => :new
       get 'managed_install_reports/:id' => 'managed_install_reports#show', :on => :collection, :as => "managed_install_reports"
       collection do
-        post :create_import, :multiple_edit, :force_redirect
-        put :multiple_update
+        post :create_import, :force_redirect
+        put :update_multiple
+        get :edit_multiple
       end
     end
     

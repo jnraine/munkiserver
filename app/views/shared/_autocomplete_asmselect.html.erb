@@ -3,9 +3,11 @@
 <script type="text/javascript">
 	var <%= element_id %>Choices = <%= choices.to_json.html_safe %>;
 	$(document).ready(function() {
+		// alert("Doing it again ?");
 		var $textField = $("#<%= autocomplete_id %>");
 		$textField.autocomplete(<%= element_id %>Choices);
 		$textField.subtle_value('<%= default_value %>');
+		initializeAsmSelect($textField.siblings(".asmSource"));
 		$textField.push_value_to_asmselect();
 	});
 </script>

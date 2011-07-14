@@ -371,18 +371,20 @@ class Package < ActiveRecord::Base
   
   # Default parameters for the table_asm_select method
   # Returns values for self
-  def tas_params
-    self.class.tas_params(self)
+  def tas_params(environment_id = nil)
+    self.class.tas_params(self,environment_id)
   end
 
   # Default parameters for a tabled_asm_select method
   # Takes an object of the current class and returns params
-  def self.tas_params(model_obj)
+  def self.tas_params(model_obj, environment_id = nil)
+    environment_id ||= model_obj.environment_id
+    environment = Environment.find(environment_id)
     # Get all the package branches associated with this unit and environment
-    update_for_options = PackageBranch.unit_member(model_obj).map { |e| [e.to_s,e.to_s] unless e.id == model_obj.package_branch.id }.compact
+    update_for_options = PackageBranch.unit_and_environment(model_obj.unit,environment).map { |e| [e.to_s,e.to_s] unless e.id == model_obj.package_branch.id }.compact
     update_for_selected = model_obj.update_for.map(&:package_branch).map(&:to_s)
     # update_for_selected = model_obj.update_for_items.map(&:package_branches).map(&:to_s)
-    requires_options = Package.unit_member(model_obj).where("id != #{model_obj.id}").map { |e| [e.to_s(:version),e.to_s(:version)] }
+    requires_options = Package.unit(model_obj.unit).environment(environment).where("id != #{model_obj.id}").map { |e| [e.to_s(:version),e.to_s(:version)] }
     requires_selected = model_obj.require_items.map(&:package).map {|e| e.to_s(:version) }
     
     model_name = self.to_s.underscore
@@ -650,7 +652,7 @@ class Package < ActiveRecord::Base
     "#{id}-#{to_s(:download_filename)}"
   end
   
-  # update multiple attributes
+  # Update multiple attributes
   def self.bulk_update_attributes(packages,package_attributes)
     if package_attributes.nil? or packages.empty?
       raise PackageError.new ("Nothing to update")
@@ -663,7 +665,7 @@ class Package < ActiveRecord::Base
       {:total => packages.count, :successes => successes.count, :failures => failures.count}
     end
   end
-  
+
   private
     # Run makepkginfo on server against package file to generate a pkginfo
     def self.process_package_file(package_file,options = {})

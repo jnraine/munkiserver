@@ -47,7 +47,7 @@ class VersionTracker < ActiveRecord::Base
     end
   end
   
-  # return false if macupdate is down
+  # Return false if macupdate is down
   def macupdate_is_up?
     begin
       response = Net::HTTP.get_response(URI.parse("http://"+MAC_UPDATE_SITE_URL))
@@ -104,17 +104,17 @@ class VersionTracker < ActiveRecord::Base
         raise VersionTrackerError.new("Malformed version tracker website at #{info_url}: #{e}")
       end
       
-      # if package doesn't have an icon then scrape the icon from macupdate.com
+      # If package doesn't have an icon then scrape the icon from macupdate.com
       if self.icon.nil? or new_web_id
         self.icon = scrape_icon(icon_url)
       end
-      # strip down any white speace before and after the description string
+      # Strip down any white speace before and after the description string
       self.description = description.lstrip.rstrip
       self.version = latest_version
       # Return results
       {'latest_version' => self.version, 'description' => self.description}
     else
-      # reset the values associated to the version tracker to nil if the value is blank
+      # Reset the values associated to the version tracker to nil if the value is blank
       self.version = nil
       self.description = nil
       self.icon.destroy unless self.icon.nil?
@@ -123,7 +123,7 @@ class VersionTracker < ActiveRecord::Base
     end
   end
   
-  # get the package icon download url and download the icon
+  # Get the package icon download url and download the icon
   def scrape_icon(icon_url)
     original_filename = icon_url.match(/(\/)([^\/]+)$/)[2]
     f = open(icon_url)

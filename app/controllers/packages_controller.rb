@@ -26,6 +26,7 @@ class PackagesController < ApplicationController
 
   def edit
     @package = Package.find_where_params(params)
+    @package.environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update

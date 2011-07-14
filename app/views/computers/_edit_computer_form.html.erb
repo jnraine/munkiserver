@@ -15,20 +15,23 @@
 			<td><%= f.text_field :mac_address, :disabled => true, :maxlength => 17, :size => 18 %></td>
 		</tr>
 		<tr>
-			<td>Computer Group</td>
-			<td><%= f.collection_select :computer_group_id, ComputerGroup.unit_member(@computer), :id, :name %></td>
+			<td>Environment</td>
+			<td><%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "environment"}%></td>
 		</tr>
 		<tr>
 			<td>
 				Model <%= f.collection_select :computer_model_id, ComputerModel.order('name ASC'), :id, :name %>
 			</td>
-			<td>Environment <%= f.collection_select :environment_id, Environment.all, :id, :name %></td>
+			<td id="computer_group_select_tag" class="change_with_environment"><%= render :partial => 'edit_computer_form_computer_group', :locals => {:environment_id => @computer.environment.id}%></td>
+
 		</tr>
 		<tr>
 			<td colspan="2"><%= f.text_area :description, :size => "40x3" %></td>
 		</tr>
 	</table>
-	<%= tabled_asm_select(@computer) %>
+	<div class="change_with_environment" id="tabled_asm_select">
+		<%= tabled_asm_select(@computer) %>
+	</div>
 	
 	<p><%= f.submit submit_button_string %></p>
 <% end %>
