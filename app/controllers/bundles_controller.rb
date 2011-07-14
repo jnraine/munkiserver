@@ -38,6 +38,7 @@ class BundlesController < ApplicationController
 
   def edit
     @bundle = Bundle.find_by_name(params[:id])
+    @environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update

@@ -4,7 +4,7 @@ class PackageBranch < ActiveRecord::Base
   # Validations
   validates_presence_of :name, :display_name
   validates_uniqueness_of :name, :display_name
-  validates_format_of :name, :with => /^[^ -]+$/, :message => "must not contain spaces or hyphens"
+  validates_format_of :name, :with => /^[^ -.]+$/, :message => "must not contain spaces or hyphens or dots"
   
   attr_protected :id, :name
   
@@ -29,7 +29,7 @@ class PackageBranch < ActiveRecord::Base
   # Conforms a string to the package branch name constraints
   # => Replaces anything that are not alpheranumrical to underscores
   def self.conform_to_name_constraints(value)
-    value.gsub(/[^A-Za-z0-9_\.]+/,"_")
+    value.gsub(/[^A-Za-z0-9_]+/,"_")
   end
 
   # Returns the latest package (based on version)

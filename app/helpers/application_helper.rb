@@ -55,20 +55,16 @@ module ApplicationHelper
   # Creates a multiple select based on passed params
   # Parameters is filled with hashes with the following keys:
   # title, model_name, attribute_name, select_title, options
-  def tabled_asm_select(parameters,table_class = "packagePicker",header_enabled = true)
+  def tabled_asm_select(parameters,table_class = nil,header_enabled = nil,environment_id = nil)
     # If parameter is an active record model, get tas_params
     if parameters.class.superclass == ActiveRecord::Base
-          parameters = parameters.tas_params
+      parameters = parameters.tas_params(environment_id)
     end
-    # Let us know if we're passing blank parameters (we shouldn't be)
-    # parameters.each do |section|
-    #       section.each do |key, val|
-    #         if section[key].blank?
-    #           puts "Error: parameters #{key} was blank!"
-    #         end
-    #       end
-    #     end
-    #render_table_asm_select(parameters, table_class, header_enabled)
+    
+    # Ensure sane default values
+    table_class ||= "packagePicker"
+    header_enabled ||= true
+    
     render :partial => "shared/table_multi_select", :locals => {:parameters => parameters, :table_class => table_class, :header_enabled => header_enabled} 
     
   end

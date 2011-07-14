@@ -389,19 +389,24 @@ module Manifest
       
       # Default parameters for the table_asm_select method
       # Returns values for self
-      def tas_params
-        self.class.tas_params(self)
+      def tas_params(environment_id = nil)
+        self.class.tas_params(self, environment_id)
       end
 
       # Default parameters for a tabled_asm_select method
       # Takes an object of the current class and returns params
-      def self.tas_params(model_obj)
+      def self.tas_params(model_obj,environment_id = nil)
         # Get all the package branches associated with this unit and environment
-        pkg_branch_options = PackageBranch.unit_member(model_obj).collect { |e| [e.name,e.id] }
+        # exam_packages = Package.unit_member(model_obj)
+        environment_id ||= model_obj.environment_id
+        environment = Environment.find(environment_id)
+        
+        pkg_branch_options = PackageBranch.unit_and_environment(model_obj.unit,environment).collect { |e| [e.name,e.id] }
+        
         if model_obj.class == Bundle
-          bundle_options = Bundle.where('id <> ?',model_obj.id).unit_member(model_obj).collect { |e| [e.name,e.id] }
+          bundle_options = Bundle.where('id <> ?',model_obj.id).unit_and_environment(model_obj.unit,environment).collect { |e| [e.name,e.id] }
         else
-          bundle_options = Bundle.unit_member(model_obj).collect { |e| [e.name,e.id] }
+          bundle_options = Bundle.unit_and_environment(model_obj.unit,environment).collect { |e| [e.name,e.id] }
         end
         
         model_name = self.to_s.underscore
@@ -428,7 +433,7 @@ module Manifest
           {:title => "Optional Install",
           :model_name => model_name,
           :attribute_name => "optional_installs",
-          :select_title => "Select Optional Intalls",
+          :select_title => "Select optional intalls",
           :options => pkg_branch_options,
           :selected_options => model_obj.optional_installs_package_branch_ids }]
       end

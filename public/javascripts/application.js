@@ -1,8 +1,6 @@
 $(document).ready(function() {
 	// Turn all multiple select tags into asmSelect tags
-	$("select[multiple]").asmSelect({
-	    animate: true
-	});
+	initializeAsmSelect(".asmSource");
 
 	// Hide loading graphic on load
 	$('#loading_graphic').hide();
@@ -115,7 +113,32 @@ $(document).ready(function() {
 		}
 		return false;
 	});
-	// Load managed install report on change to drop down
+	
+	
+	// Get the changed environment ID, and reload the edit partical
+	// effected pages including ComputerGroup, Bundles, Packages
+	// animate during the ajax call
+	$("select.environment").live('change', function(){
+		form = $(this).parents("form");
+		tabled_asm_select = form.find(".change_with_environment");
+			tabled_asm_select.animate({
+				backgroundColor: "#FBEC5D",
+				opacity: .9
+			}, 'fast');
+			$.ajax({
+				url: form.attr("action") + "/edit.js",
+				data: {"environment_id":$(this).val()},
+				complete: function() {
+					tabled_asm_select.animate({
+						backgroundColor: "#FFFFFF",
+						opacity: 1.0
+					}, 1000);
+					}
+			});
+	});
+	// $("select.computer_environment").live('change',
+	
+	// $("select.environment").change();
 	// Load managed install report on change to drop down
 	$("select#managed_install_reports").change(function() {
 			$(".loading").show();
@@ -258,6 +281,7 @@ $(document).ready(function() {
 		})
 	})
 	
+
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field
@@ -441,3 +465,8 @@ function submit_auto_package(jq_id) {
 	return false;
 }
 
+function initializeAsmSelect(targetSelector) {
+	$(targetSelector).asmSelect({
+	    animate: true
+	});
+}

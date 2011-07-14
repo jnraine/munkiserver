@@ -51,7 +51,7 @@ class ComputersController < ApplicationController
 
   def edit
     @computer = Computer.find_for_show(CGI::unescape(params[:id]))
-    # @computer = Computer.unit(Unit.where(:name => params[:unit_id]).first).find_for_show(CGI::unescape(params[:id]))
+    @environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update
@@ -140,11 +140,16 @@ class ComputersController < ApplicationController
   
   
   # Allows multiple edits
-  def multiple_edit
+  def edit_multiple
     @computers = Computer.find(params[:selected_records])
+    @environment_id = params[:environment_id] if params[:environment_id].present?
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
   
-  def multiple_update
+  def update_multiple
     @computers = Computer.find(params[:selected_records])
     p = params[:computer]
     results = []

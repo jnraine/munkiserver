@@ -1,0 +1,2 @@
+$("#tabled_asm_select").html("<%= escape_javascript(tabled_asm_select(@computer_group,nil,nil,@environment_id)) %>");
+$("#tabled_asm_select_members").html("<%= escape_javascript(tabled_asm_select(@computer_group.computers_tas(@environment_id))) %>");
