@@ -3,9 +3,9 @@ class VersionTracker < ActiveRecord::Base
   require 'open-uri'
   require 'net/http'
 
-  MAC_UPDATE_SEARCH_URL = "http://www.macupdate.com/find/mac/" #append search package name in the end of URL
-  MAC_UPDATE_PACKAGE_URL = "http://www.macupdate.com/app/mac/" #append web_id in the end of URL
-  MAC_UPDATE_SITE_URL = "www.macupdate.com" #for Net HTTP response
+  MAC_UPDATE_SITE_URL = "http://www.macupdate.com" #for Net HTTP response
+  MAC_UPDATE_SEARCH_URL = MAC_UPDATE_SITE_URL + "/find/mac/" #append search package name in the end of URL
+  MAC_UPDATE_PACKAGE_URL = MAC_UPDATE_SITE_URL + "/app/mac/" #append web_id in the end of URL
   
   # validates_presence_of :package_branch_id
   
@@ -29,32 +29,33 @@ class VersionTracker < ActiveRecord::Base
   # Returns true if the record "looks" like it points to a valid version tracker source
   def looks_good?
     # Web ID is only digits
-    web_id.to_s.match(/^\d+$/) != nil and url_exists? and macupdate_is_up?
+    web_id.to_s.match(/^\d+$/) != nil and info_url_exists? and macupdate_is_up?
   end
   
   # Return true if the macupdate.com url exists
-  def url_exists?
-    response = nil
-    Net::HTTP.start(MAC_UPDATE_SITE_URL, 80) {|http|
-      response = http.head(MAC_UPDATE_PACKAGE_URL+web_id.to_s)
-    }
-    location = response['location']
-    # if redirect to main page then the web_id is invalided return false, else return true
-    if location == "http://#{MAC_UPDATE_SITE_URL}/"
+  def info_url_exists?
+    begin
+      response = Net::HTTP.get_response(URI.parse(info_url))
+      response.instance_of?(Net::HTTPOK) or response["location"].nil? or response["location"].match(/#{info_url}/).present?
+    rescue SocketError
       return false
-    else 
-      return true
+    rescue Errno::ETIMEDOUT # occurs on RHEL, not sure why
+      return false
+    rescue Errno::ECONNREFUSED # server refused to connect
+      return false
     end
   end
   
   # return false if macupdate is down
   def macupdate_is_up?
     begin
-      response = Net::HTTP.get_response(URI.parse("http://"+MAC_UPDATE_SITE_URL))
+      response = Net::HTTP.get_response(URI.parse(url))
       response.instance_of?(Net::HTTPOK)
-    rescue SocketError
+    rescue SocketError # DNS name not found
       return false
     rescue Errno::ETIMEDOUT # occurs on RHEL, not sure why
+      return false
+    rescue Errno::ECONNREFUSED # server refused to connect
       return false
     end
   end
