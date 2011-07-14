@@ -18,7 +18,7 @@
 		<%= submit_tag "Filter" %>
 	<% end %>
 	</div>
-	<%= form_tag(multiple_edit_computers_path(current_unit), :id => "bulk_edit_form", :remote => true) do %>
+	<%= form_tag edit_multiple_computers_path(current_unit), :id => "bulk_edit_form", :method => 'get', :remote => true do %>
 		<%= computer_table(@computers) %>
 	<% end %>
 </div>

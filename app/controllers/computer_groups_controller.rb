@@ -44,6 +44,7 @@ class ComputerGroupsController < ApplicationController
 
   def edit
     @computer_group = ComputerGroup.find_for_show(params[:id])
+    @environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update

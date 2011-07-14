@@ -1,6 +1,6 @@
 <h2>Editing bundle</h2>
 
-<%= form_for(@bundle, :validate => true, :url => bundle_path(@bundle.unit)) do |f| %>
+<%= form_for @bundle, :validate => true, :url => bundle_path(@bundle.unit) do |f| %>
 	<%= f.error_messages %>
 	<table class="form">
 		<tr>
@@ -9,13 +9,17 @@
 		</tr>
 		<tr>
 			<td>Environment</td>
-			<td><%= f.collection_select :environment_id, Environment.all, :id, :name %></td>
+			<td><%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "environment"} %></td>
 		</tr>
 		<tr>
 			<td colspan="2"><%= f.text_area :description, :size => "40x3" %></td>
 		</tr>
 	</table>
-	<%= tabled_asm_select(@bundle)%>
+	
+	<div class="change_with_environment" id="tabled_asm_select">
+		<%= tabled_asm_select(@bundle)%>
+	</div>
+	
 	<p>
 	<%= f.submit 'Update' %>
 	</p>
