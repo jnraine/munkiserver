@@ -202,17 +202,9 @@ module ApplicationHelper
     "<script type='text/javascript'>\n\tjQuery('##{dom_id}').subtle_value('#{value}');\n</script>\n".html_safe
   end
   
-  # Pass dom_id of element for rollover, and content for box
-  def extra_info(dom_id,content,jq_event = 'mouseover')
-    render :partial => 'shared/extra_info_box', :locals => {:dom_id => dom_id, :content => content, :jq_event => jq_event}
-  end
-  
   # Provides a question mark rollover with extra information
-  def helpful_info(content,jq_event = 'click')
-    dom_id = content[0,25].gsub(/[^[:alnum:]]/, '_') + "_" + rand(1001).to_s  
-    code = image_tag('question_mark.png', :id => dom_id, :style => "vertical-align:middle;cursor:pointer")
-    code += extra_info(dom_id,content,jq_event)
-    code
+  def helpful_info(content)
+    render :partial => 'shared/helpful_info', :locals => {:content => content}
   end
   
   # Creates a set of tags for a checkbox: the checkbox, a label (with passed string), a hidden tag (to nullify value)

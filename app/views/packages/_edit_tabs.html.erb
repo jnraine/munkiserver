@@ -218,11 +218,9 @@
 						<div class="change_with_environment" id="tabled_asm_select">
 							<%= tabled_asm_select(@package) %>
 						</div>
-					</td>	
+					</td>
 				</tr>
-				<% unless @package.installer_appdmg? %>
-				
-		</table>		
+		</table>
 	</div>
 	
 	<!-- Second tab starts here -->
@@ -235,45 +233,22 @@
 								Receipts
 								<%= helpful_info("Must be a valid plist with an array as the root object") %>
 							</h4>
-							<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
-							# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
-							<div id="gui_receipts_container">
-								# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
-							</div>
-							-->
 							<div id="receipts_plist_container" class="toggle_container">
 								<%= f.text_area :receipts_plist, :size => "80x20", "data-format" => 'xml' %>
 							</div>
-							<!-- <hr /> -->
 						</td>
 					</tr>
-				<% end %>
 				<tr>
 					<td colspan="2">
 						<h4>
 							Installs
 							<%= helpful_info("Must be a valid plist with an array as the root object") %>
 						</h4>
-						 <!-- #radio_button_tag 'installs_mode', 'gui', checked = true # label_tag 'installs_mode_gui', 'GUI'
-						 #radio_button_tag 'installs_mode', 'text' # label_tag 'installs_mode_text', 'Text'<br />
-						<div id="gui_installs_container">
-							render :partial => 'gui_installs', :locals => {:installs => @package.installs}
-						</div>
-						 -->
 						<div id="installs_plist_container" class="toggle_container">
 							<%= f.text_area :installs_plist, :size => "80x20", "data-format" => 'xml' %>
 						</div>
-						<!-- <hr /> -->
 					</td>
 				</tr>
-				<!-- <% if @package.installer_package? %>
-					<tr>
-						<td colspan="2">
-							<h4><%= f.label :use_installer_choices, "Installer Choices" %></h4>
-							<p>Needs to be added.</p>
-						</td>
-					</tr>
-				<% end %> -->
 				<tr>
 					<td colspan="2">
 						<h4>
@@ -300,16 +275,9 @@
 							Pre Install Script
 							<%= helpful_info("Enter the content of the script here to run before the installation") %>
 						</h4>
-						<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
-						# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
-						<div id="gui_receipts_container">
-							# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
-						</div>
-						-->
 						<div id="preinstall_script_container" class="toggle_container">
 							<%= f.text_area :preinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
 						</div>
-						<!-- <hr /> -->
 					</td>
 				</tr>
 
@@ -319,16 +287,9 @@
 							Post Install Script
 							<%= helpful_info("Enter the content of the script here to run after the installation") %>
 						</h4>
-						<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
-						# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
-						<div id="gui_receipts_container">
-							# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
-						</div>
-						-->
 						<div id="postinstall_script_container" class="toggle_container">
 							<%= f.text_area :postinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
 						</div>
-						<!-- <hr /> -->
 					</td>
 				</tr>
 
@@ -338,16 +299,9 @@
 							Pre Uninstall Script
 							<%= helpful_info("Enter the content of the script here to run after the installation") %>
 						</h4>
-						<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
-						# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
-						<div id="gui_receipts_container">
-							# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
-						</div>
-						-->
 						<div id="preuninstall_script_container" class="toggle_container">
 							<%= f.text_area :preuninstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
 						</div>
-						<!-- <hr /> -->
 					</td>
 				</tr>
 
@@ -357,16 +311,9 @@
 							Post Uninstall Script
 							<%= helpful_info("Enter the content of the script here to run after the installation") %>
 						</h4>
-						<!-- # radio_button_tag 'receipts_mode', 'gui', checked = true # label_tag 'receipts_mode_gui', 'GUI'
-						# radio_button_tag 'receipts_mode', 'text' # label_tag 'receipts_mode_text', 'Text' <br />
-						<div id="gui_receipts_container">
-							# render :partial => 'gui_receipts', :locals => {:receipts => @package.receipts}
-						</div>
-						-->
 						<div id="postuninstall_script_container" class="toggle_container">
 							<%= f.text_area :postuninstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
 						</div>
-						<!-- <hr /> -->
 					</td>
 				</tr>
 

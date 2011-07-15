@@ -361,16 +361,6 @@ thead th a:hover,
 	
 }
 
-.extra_info_box {
-	margin-top:5px;
-	margin-left:-30px;
-	padding:10px;
-	color:#fff;
-	border:2px solid rgb(69, 173, 168);
-	background-color:#594F4F;
-	z-index: 1; /* fix for overlay CodeMirror textarea, always show top*/
-}
-
 .clean_list {
 	list-style-type:none;
 }
@@ -446,7 +436,9 @@ thead th a:hover,
 	overflow:auto;
 }
 
-
+/* ============== */
+/* = Lightbox me = */
+/* ============== */
 
 #effectiveItemsLink{
 	float: right;
@@ -465,4 +457,26 @@ thead th a:hover,
     width: 500px;
     position: relative;
     display: none;
+}
+
+/* ============== */
+/* = Misc = */
+/* ============== */
+
+.helpful_info{
+	display: inline;
+	vertical-align:middle;
+	cursor:pointer;
+	height: 18px;
+	width: 18px;
+}
+.helpful_info div{
+	display: none;
+	margin-top:5px !important;
+	margin-left:5px !important;
+	padding:10px !important;
+	color:#fff;
+	border:2px solid rgb(69, 173, 168);
+	background-color:#594F4F;
+	z-index: 1; /* fix for overlay CodeMirror textarea, always show top*/
 }

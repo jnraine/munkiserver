@@ -46,7 +46,7 @@ class VersionTracker < ActiveRecord::Base
     end
   end
   
-  # Return false if macupdate is down
+  # Return true if macupdate is reachable
   def macupdate_is_up?
     begin
       response = Net::HTTP.get_response(URI.parse(MAC_UPDATE_SITE_URL))
