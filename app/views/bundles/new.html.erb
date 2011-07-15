@@ -1,16 +1,5 @@
 <h2>New bundle</h2>
 
-<%= form_for(@bundle, :validate => true) do |f| %>
-	<%= f.error_messages %>
-	<p>
-		<%= f.text_field :name, "data-subtle-value" => "Name" %>
-	</p>
-	<p>
-		<%= f.text_area :description, :size => "30x6", "data-subtle-value" => "Description" %>
-		<!-- 		<%= subtle_value(@bundle, :description) %> -->
-	</p>
-	<p>Environment <%= f.collection_select :environment_id, Environment.all, :id, :name %></p>
-	<p>
-	<%= f.submit 'Create' %>
-	</p>
+<%= form_for @bundle, :validate => true, :html => {"data-environment-change" => bundle_environment_change_url(@bundle.unit,"new")} do |f| %>
+	<%= render :partial => 'form', :locals => {:f => f, :submit_value => "Create"} %>
 <% end %>

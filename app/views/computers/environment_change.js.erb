@@ -1,0 +1,2 @@
+$("#tabled_asm_select").html("<%= escape_javascript(tabled_asm_select(@computer,nil,nil,@environment_id)) %>");
+$("#computer_group_select_tag").html("<%= escape_javascript(render :partial => "computer_group_field", :locals => {:environment_id => @environment_id}) %>");

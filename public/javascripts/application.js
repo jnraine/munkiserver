@@ -63,19 +63,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	// Hide raw text area if raw_mode_id is 0 container
-	// if($('#package_raw_mode_id').val() == 0) {
-	// 	$('#package_raw_tags').hide();
-	// }
-	// // Flip visibility of raw tag text area
-	// $("#package_raw_mode_id").change(function() {
-	// 	if(this.value == 0) {
-	// 		$('#package_raw_tags').slideUp();
-	// 	} else {
-	// 		$('#package_raw_tags').slideDown();
-	// 	}
-	// });	
-	
 	// For USER views, enable/disable change password
 	if($('#change_password_checkbox').attr('checked') == false) {
 		$('#user_password').attr("disabled",true);
@@ -102,41 +89,52 @@ $(document).ready(function() {
 	});
 
 	// Field lock control method
-	$(".field-lock-control").click(function() {
-		$el = $("#" + $(this).attr("data-target-id"));
-		if($el.is(":disabled")) {
-			$el.attr("disabled",false).css("color","#000").focus();
-			$("#" + $el.attr('id') + "_control").html("lock");
-		} else {
-			$el.attr("disabled",true).css("color","#666");
-			$("#" + $el.attr('id') + "_control").html("unlock");
-		}
-		return false;
-	});
+	$(".field-lock-control")
+	  .click(function() {
+  		$el = $("#" + $(this).attr("data-target-id"));
+  		if($el.is(":disabled")) {
+  			$el.attr("disabled",false).css("color","#000").focus();
+  			$("#" + $el.attr('id') + "_control").html("lock");
+  		} else {
+  			$el.attr("disabled",true).css("color","#666");
+  			$("#" + $el.attr('id') + "_control").html("unlock");
+  		}
+  		return false;
+  	})
+  	.each(function() {
+  		var lockState = $(this).attr("data-lock-state");
+    	$el = $("#" + $(this).attr("data-target-id"));
+    	if(lockState == "unlocked") {
+  			$el.attr("disabled",false).css("color","#000");
+  			$("#" + $el.attr('id') + "_control").html("lock");
+  		} else {
+  			$el.attr("disabled",true).css("color","#666");
+  			$("#" + $el.attr('id') + "_control").html("unlock");
+  		}
+  	});
 	
 	
 	// Get the changed environment ID, and reload the edit partical
 	// effected pages including ComputerGroup, Bundles, Packages
 	// animate during the ajax call
 	$("select.environment").live('change', function(){
-		form = $(this).parents("form");
-		tabled_asm_select = form.find(".change_with_environment");
-			tabled_asm_select.animate({
-				backgroundColor: "#FBEC5D",
-				opacity: .9
-			}, 'fast');
-			$.ajax({
-				url: form.attr("action") + "/edit.js",
-				data: {"environment_id":$(this).val()},
-				complete: function() {
-					tabled_asm_select.animate({
-						backgroundColor: "#FFFFFF",
-						opacity: 1.0
-					}, 1000);
-					}
-			});
+	  $form = $(this).parents("form");
+		$modifiedElements = $form.find(".change_with_environment");
+		
+	  function unhighlightModifiedElements() {
+			$modifiedElements.animate({backgroundColor: "#FFFFFF",opacity: 1.0}, 1000);
+		}
+		
+		// Highlight soon-to-be modified elements
+		$modifiedElements.animate({backgroundColor: "#FBEC5D", opacity: .9}, 'fast');
+		
+		// Load and execute environment change
+		$.ajax({
+			url: $form.attr("data-environment-change"),
+			data: {"environment_id":$(this).val()},
+			complete: unhighlightModifiedElements
+		});
 	});
-	// $("select.computer_environment").live('change',
 	
 	// $("select.environment").change();
 	// Load managed install report on change to drop down
@@ -199,7 +197,7 @@ $(document).ready(function() {
 		$("#package_uninstall_method").change(function (){
 			
 			if (this.value === val){
-				$(vid).parent().parent().show();								
+				$(vid).parent().parent().show();
 			}
 			else{
 				$(vid).parent().parent().hide();
@@ -214,7 +212,7 @@ $(document).ready(function() {
 	$("#package_uninstall_method").change();
 		
 	// Initialize tabs
-    $("#tabs").tabs();
+  $("#tabs").tabs();
 	
 	// client side validation $ animation
 	clientSideValidations.callbacks.element.fail = function(element, message, callback) {
