@@ -49,7 +49,7 @@ class VersionTracker < ActiveRecord::Base
   # Return false if macupdate is down
   def macupdate_is_up?
     begin
-      response = Net::HTTP.get_response(URI.parse(url))
+      response = Net::HTTP.get_response(URI.parse(MAC_UPDATE_SITE_URL))
       response.instance_of?(Net::HTTPOK)
     rescue SocketError # DNS name not found
       return false
