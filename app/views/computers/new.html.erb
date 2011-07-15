@@ -6,34 +6,6 @@
 	</div>
 <% end %>
 <h2>New computer</h2>
-
-<%= form_for(@computer, :validate => true) do |f| %>
-	<%= f.error_messages %>
-	<table class="form">
-		<tr>
-			<td>Name</td>
-			<td><%= f.text_field :name, :size => 18 %></td>
-		</tr>
-		<tr>
-			<td>Hostname</td>
-			<td><%= f.text_field :hostname, :size => 18 %></td>
-		</tr>
-		<tr>
-			<td>MAC Address</td>
-			<td><%= f.text_field :mac_address, :size => 18 %></td>
-		</tr>
-		<tr>
-			<td>Computer Group</td>
-			<td><%= f.collection_select :computer_group_id, ComputerGroup.unit(current_unit), :id, :name %></td>
-		</tr>
-		<tr>
-			<td>Model <%= f.collection_select :computer_model_id, ComputerModel.order('name ASC'), :id, :name %></td>
-			<td>Environment <%= f.collection_select :environment_id, Environment.all, :id, :name %></td>
-		</tr>
-		<tr>
-			<td colspan="3"><%= f.text_area :description, :size => "40x3" %></td>
-		</tr>
-	</table>
-	<%= hidden_field_tag "[computer][unit_id]", current_unit.id %>
-	<p><%= f.submit 'Create' %></p>
+<%= form_for(@computer, :validate => true, :html => {"data-environment-change" => computer_environment_change_url(@computer.unit,"new")}) do |f| %>
+	<%= render :partial => 'form', :locals => {:f => f, :submit_value => "Add"} %>
 <% end %>

@@ -49,22 +49,21 @@ class ComputerGroupsController < ApplicationController
 
   def update
     @computer_group = ComputerGroup.unit(current_unit).find_for_show(CGI::unescape(params[:id]))
-    @manifest_service = ManifestService.new(@computer_group,params[:computer_group])
+    
     respond_to do |format|
-      if @manifest_service.save
-        flash[:notice] = "Computer group was successfully updated."
+      if @computer_group.update_attributes(params[:computer_group])
+        flash[:notice] = "#{@computer_group} was successfully updated."
         format.html { redirect_to computer_group_path(@computer_group.unit, @computer_group) }
-        format.xml { head :ok }
       else
         flash[:error] = "Could not update computer group!"
         format.html { redirect_to edit_computer_group(@computer_group.unit, @computer_group) }
-        format.xml { render :xml => @computer_group.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   def new
     @computer_group = ComputerGroup.new
+    @computer_group.unit = current_unit
   end
 
   def show
@@ -74,6 +73,20 @@ class ComputerGroupsController < ApplicationController
       format.html
       format.manifest { render :text => @computer_group.to_plist }
       format.plist { render :text => @computer_group.to_plist }
+    end
+  end
+  
+  def environment_change
+    if params[:computer_group_id] == "new"
+      @computer_group = ComputerGroup.new({:unit_id => current_unit.id})
+    else
+      @computer_group = ComputerGroup.find(params[:computer_group_id])
+    end
+    
+    @environment_id = params[:environment_id] if params[:environment_id].present?
+    
+    respond_to do |format|
+      format.js
     end
   end
 end

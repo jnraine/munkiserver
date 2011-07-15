@@ -169,8 +169,9 @@ module ApplicationHelper
     render :partial => 'shared/autocomplete_asmselect', :locals => {:element_id => element_id, :autocomplete_id => element_id + "_autocomplete", :choices => choices, :default_value => default_value}
   end
   
-  def field_lock_control(id)
-    render :partial => 'shared/field_lock_control', :locals => {:id => id}
+  def field_lock_control(id, locked = true)
+    lock_state = locked ? "locked" : "unlocked"
+    render :partial => 'shared/field_lock_control', :locals => {:id => id, :lock_state => lock_state}
   end
   
   def current_link?(string)

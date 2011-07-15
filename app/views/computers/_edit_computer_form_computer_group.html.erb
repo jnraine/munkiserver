@@ -1,1 +1,0 @@
-Computer Group <%= select_tag "computer[computer_group_id]", options_from_collection_for_select(ComputerGroup.unit_and_environment(current_unit, environment_id), "id", "name", @computer.computer_group_id)%>

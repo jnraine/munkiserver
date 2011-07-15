@@ -17,8 +17,6 @@ class Computer < ActiveRecord::Base
   validates_format_of :name, :with => /^[a-zA-Z0-9-]+$/, :message => "must only contain alphanumeric and hyphens characters"
   validates_uniqueness_of :mac_address,:name
   
-  # before_save :require_computer_group
-  
   # Maybe I shouldn't be doing this
   include ActionView::Helpers
   
@@ -35,6 +33,13 @@ class Computer < ActiveRecord::Base
     model = ComputerModel.where(:name => system_profile.machine_model).first if system_profile.present?
     model ||= ComputerModel.find(computer_model_id) if computer_model_id.present?
     model ||= ComputerModel.default
+  end
+  
+  def computer_group_options_for_select(unit,environment_id = nil)
+    environment = Environment.where(:id => environment_id).first
+    environment ||= self.environment
+    environment ||= Environment.start
+    ComputerGroup.unit_and_environment(unit, environment).map {|cg| [cg.name,cg.id] }
   end
 
   # Alias the computer_model icon to this computer
@@ -82,13 +87,6 @@ class Computer < ActiveRecord::Base
   def dormant?
     # (self.last_successful_run.nil? and self.created_at < self.class.dormant_interval) or (self.last_successful_run.created_at < self.class.dormant_interval)
     false
-  end
-
-  # Make sure this computer is assigned a computer group
-  # if it isn't, assign the default computer group
-  # No longer used, instead, trying to not assume a computer has a group
-  def require_computer_group
-    self.computer_group_id = ComputerGroup.default(self.unit).id if self.computer_group_id.nil?
   end
   
   # Extend manifest by removing name attribute and adding the catalogs

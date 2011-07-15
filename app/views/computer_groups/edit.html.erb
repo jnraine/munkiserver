@@ -1,18 +1,7 @@
 <h2>Editing <%= @computer_group %></h2>
 
-<%= form_for(@computer_group, :validate => true, :url => computer_group_path(@computer_group.unit, @computer_group)) do |f| %>
-	<%= f.error_messages %>
-	
-	<p><%= f.text_field :name %></p>
-	<p><%= f.text_area :description, :size => "30x6" %></p>
-	<p>Environment <%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "environment"} %></p>
-	<div class ="change_with_environment" id="tabled_asm_select">
-		<%= tabled_asm_select(@computer_group)%>
-	</div>
-	<div class ="change_with_environment" id="tabled_asm_select_members">
-		<%= tabled_asm_select(@computer_group.computers_tas)%>
-	</div>
-	<p><%= f.submit 'Update' %></p>
+<%= form_for(@computer_group, :validate => true, :url => computer_group_path(@computer_group.unit, @computer_group), :html => {:name => "edit_computer", "data-environment-change" => computer_group_environment_change_url(@computer_group.unit,@computer_group.id)}) do |f| %>
+	<%= render :partial => 'form', :locals => {:f => f, :submit_value => "Update"} %>
 <% end %>
 
 <%= link_to 'Show', computer_group_path(@computer_group.unit, @computer_group) %>

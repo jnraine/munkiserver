@@ -135,4 +135,13 @@ class PackagesController < ApplicationController
     flash[:notice] = "Checking for updates now"
     redirect_to :back
   end
+  
+  def environment_change
+    @package = Package.find(params[:package_id])
+    @environment_id = params[:environment_id] if params[:environment_id].present?
+    
+    respond_to do |format|
+      format.js
+    end
+  end
 end

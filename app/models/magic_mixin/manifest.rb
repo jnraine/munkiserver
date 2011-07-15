@@ -41,7 +41,6 @@ module Manifest
       
       magic_mixin :unit_member
       
-      
       # True if name attribute is unique in the unit
       def uniqueness_of_name_in_unit
         # Create flag
@@ -81,7 +80,7 @@ module Manifest
       def precedent_items(item_name,exclusion_items_hash)
         item_hash = create_item_hash(self.send(item_name))
         second_item_hash = create_item_hash(self.bundles.map {|b| b.send("precedent_#{item_name}") }.flatten)
-        third_item_hash = (self.is_a? Computer) ? create_item_hash(self.computer_group.send("precedent_#{item_name}")) : {}
+        third_item_hash = (self.is_a?(Computer) and self.computer_group.present?) ? create_item_hash(self.computer_group.send("precedent_#{item_name}")) : {}
         
         aux_items = third_item_hash.merge(second_item_hash)
         aux_items.delete_if { |k,v| exclusion_items_hash[k].present? }
@@ -308,6 +307,46 @@ module Manifest
         optional_install_items.collect(&:package_branch).uniq.collect(&:id)
       end
       
+      def bundle_ids
+        bundles.map(&:id)
+      end
+      
+      def bundle_ids=(value)
+        Bundle.where(:id => value).to_a
+      end
+      
+      def bundle_ids
+        bundles.map(&:id)
+      end
+      
+      def bundle_ids=(value)
+        self.bundles = Bundle.where(:id => value).to_a
+      end
+      
+      def installs_package_branch_ids
+        install_items.map(&:package_branch).map(&:id)
+      end
+      
+      def installs_package_branch_ids=(value)
+        self.installs = PackageBranch.where(:id => value).to_a
+      end
+      
+      def uninstalls_package_branch_ids
+        uninstall_items.map(&:package_branch).map(&:id)
+      end
+      
+      def uninstalls_package_branch_ids=(value)
+        self.uninstalls = PackageBranch.where(:id => value).to_a
+      end
+      
+      def optional_installs_package_branch_ids
+        optional_install_items.map(&:package_branch).map(&:id)
+      end
+      
+      def optional_installs_package_branch_ids=(value)
+        self.optional_installs = PackageBranch.where(:id => value).to_a
+      end
+      
       # Returns all package_branches that belongs to the unit and the environment
       def assignable_package_branches
         # Grab all package branches referenced by packages of this unit and environment
@@ -399,7 +438,8 @@ module Manifest
         # Get all the package branches associated with this unit and environment
         # exam_packages = Package.unit_member(model_obj)
         environment_id ||= model_obj.environment_id
-        environment = Environment.find(environment_id)
+        environment = Environment.where(:id => environment_id).first
+        environment ||= Environment.start
         
         pkg_branch_options = PackageBranch.unit_and_environment(model_obj.unit,environment).collect { |e| [e.name,e.id] }
         
@@ -414,25 +454,25 @@ module Manifest
         # Array for table_asm_select
         [{:title => "Bundles",
           :model_name => model_name,
-          :attribute_name => "bundles",
+          :attribute_name => "bundle_ids",
           :select_title => "Select a bundle",
           :options => bundle_options,
           :selected_options => model_obj.bundle_ids },
          {:title => "Installs",
           :model_name => model_name,
-          :attribute_name => "installs",
+          :attribute_name => "installs_package_branch_ids",
           :select_title => "Select a package branch",
           :options => pkg_branch_options,
           :selected_options => model_obj.installs_package_branch_ids },
          {:title => "Uninstalls",
           :model_name => model_name ,
-          :attribute_name => "uninstalls",
+          :attribute_name => "uninstalls_package_branch_ids",
           :select_title => "Select a package branch",
           :options => pkg_branch_options,
           :selected_options => model_obj.uninstalls_package_branch_ids },
           {:title => "Optional Install",
           :model_name => model_name,
-          :attribute_name => "optional_installs",
+          :attribute_name => "optional_installs_package_branch_ids",
           :select_title => "Select optional intalls",
           :options => pkg_branch_options,
           :selected_options => model_obj.optional_installs_package_branch_ids }]

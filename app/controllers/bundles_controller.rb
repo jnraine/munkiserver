@@ -43,23 +43,21 @@ class BundlesController < ApplicationController
 
   def update
     @bundle = Bundle.unit(current_unit).find_by_name(params[:id])
-    @manifest_service = ManifestService.new(@bundle,params[:bundle])
     
     respond_to do |format|
-      if @manifest_service.save
-        flash[:notice] = "Bundle was successfully updated."
+      if @bundle.update_attributes(params[:bundle])
+        flash[:notice] = "#{@bundle} was successfully updated."
         format.html { redirect_to bundle_path(@bundle.unit, @bundle) }
-        format.xml { head :ok }
       else
         flash[:error] = "Could not update bundle!"
         format.html { redirect_to edit_bundle(@bundle.unit, @bundle) }
-        format.xml { render :xml => @bundle.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   def new
     @bundle = Bundle.new
+    @bundle.unit = current_unit
   end
 
   def show
@@ -69,6 +67,20 @@ class BundlesController < ApplicationController
       format.html
       format.manifest { render :text => @bundle.to_plist }
       format.plist { render :text => @bundle.to_plist }
+    end
+  end
+  
+  def environment_change
+    if params[:bundle_id] == "new"
+      @bundle = Bundle.new({:unit_id => current_unit.id})
+    else
+      @bundle = Bundle.find(params[:bundle_id])
+    end
+    
+    @environment_id = params[:environment_id] if params[:environment_id].present?
+    
+    respond_to do |format|
+      format.js
     end
   end
 end

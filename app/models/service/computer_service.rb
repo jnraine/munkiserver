@@ -2,30 +2,6 @@
 # thus cleaning up the implementation of the controller quite a bit.
 class ComputerService
   attr_accessor :computer, :attr
-
-  # Creates a ComputerService object that does the extra params hash handling
-  # duties (such as querying for PackageBranch records)
-  # TO-DO Optimization: if the IDs were used to create association objects directly, it would save some work
-  def initialize(computer, attributes)
-    @computer = computer
-    @attr = attributes
-    
-    # Retrieve PackageBranch records for all installs if edit_*installs is not nil
-    # If no valid PackageBranch IDs are passed, an ActiveRecord::RecordNotFound
-    # exception will be thrown and will cause the @attr[:*install] to be set to nil
-    @attr[:installs] = PackageBranch.where(:id => @attr[:installs]).to_a if @attr[:installs] != nil
-    @attr[:uninstalls] = PackageBranch.where(:id => @attr[:uninstalls]).to_a if @attr[:uninstalls] != nil
-    @attr[:user_installs] = PackageBranch.where(:id => @attr[:user_installs]).to_a if @attr[:user_installs] != nil
-    @attr[:user_uninstalls] = PackageBranch.where(:id => @attr[:user_uninstalls]).to_a if @attr[:user_uninstalls] != nil
-    @attr[:optional_installs] = PackageBranch.where(:id => @attr[:optional_installs]).to_a if @attr[:optional_installs] != nil
-    # Retrieve bundle records in the exact way as done with the *installs
-    @attr[:bundles] = Bundle.where(:id => @attr[:bundles]).to_a if @attr[:bundles] != nil
-  end
-  
-  # Perform a save on the @computer object (after assigning all the *installs)
-  def save
-    @computer.update_attributes(@attr)
-  end
   
   # Takes some options (importantly, a plist file) a creates computer objects
   # Objects are not yet saved.  So, keep that in mind, eh?

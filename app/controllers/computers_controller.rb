@@ -13,18 +13,21 @@ class ComputersController < ApplicationController
   end
 
   def new
-    @computer = Computer.new
+    @computer = Computer.new({:unit_id => current_unit.id})
+    
+    respond_to do |format|
+      format.html
+      format.js { render :action => "edit" }
+    end
   end
 
   def create
-    @computer = Computer.new(params[:computer])
-    # @computer.unit = current_unit
+    @computer = Computer.new(params[:computer].merge({:unit_id => current_unit.id}))
     
     respond_to do |format|
       if @computer.save
         flash[:notice] = "#{@computer} was successfully created."
         format.html { redirect_to computer_path(@computer.unit, @computer) }
-        format.xml { render :xml => @computer, :status => :created }
       else
         flash[:error] = "Failed to create #{@computer} computer object!"
         format.html { render :action => "new"}
@@ -51,21 +54,18 @@ class ComputersController < ApplicationController
 
   def edit
     @computer = Computer.find_for_show(CGI::unescape(params[:id]))
-    @environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update
     @computer = Computer.find_for_show(CGI::unescape(params[:id]))
-    @computer_service = ComputerService.new(@computer,params[:computer])
+    
     respond_to do |format|
-      if @computer_service.save
+      if @computer.update_attributes(params[:computer])
         flash[:notice] = "#{@computer.name} was successfully updated."
         format.html { redirect_to computer_path(@computer.unit, @computer) }
-        format.xml  { head :ok }
       else
         flash[:error] = 'Could not update computer!'
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @computer.errors, :status => :unprocessable_entity }
       end
     end 
   end
@@ -174,6 +174,20 @@ class ComputersController < ApplicationController
           flash[:error] = "None of the #{results.length} computer objects were updated !"
           format.html { redirect_to(:action => "index") }
         end
+    end
+  end
+  
+  def environment_change
+    if params[:computer_id] == "new"
+      @computer = Computer.new({:unit_id => current_unit.id})
+    else
+      @computer = Computer.find(params[:computer_id])
+    end
+    
+    @environment_id = params[:environment_id] if params[:environment_id].present?
+    
+    respond_to do |format|
+      format.js
     end
   end
 end
