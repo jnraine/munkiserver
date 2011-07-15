@@ -466,9 +466,9 @@ thead th a:hover,
 .extra_info{
 	display: inline;
 }
-.extra_info_box p{
+.extra_info div{
 	margin-top:5px;
-	margin-left:-30px;
+	margin-left:-25px;
 	padding:10px;
 	color:#fff;
 	border:2px solid rgb(69, 173, 168);
