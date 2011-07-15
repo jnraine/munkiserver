@@ -463,13 +463,18 @@ thead th a:hover,
 /* = Misc = */
 /* ============== */
 
-.extra_info{
+.helpful_info{
 	display: inline;
+	vertical-align:middle;
+	cursor:pointer;
+	height: 18px;
+	width: 18px;
 }
-.extra_info div{
-	margin-top:5px;
-	margin-left:-25px;
-	padding:10px;
+.helpful_info div{
+	display: inline;
+	margin-top:5px !important;
+	margin-left:5px !important;
+	padding:10px !important;
 	color:#fff;
 	border:2px solid rgb(69, 173, 168);
 	background-color:#594F4F;

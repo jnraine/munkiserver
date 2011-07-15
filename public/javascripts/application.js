@@ -280,13 +280,13 @@ $(document).ready(function() {
 	})
 	
 	// trigger help message appear
-	$(".extra_info div").hide();
-	$(".extra_info img").click(function(e){
-		$(this).parent().find("div").css({"position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px","margin":"0 0 0 50px"});
-		$(this).parent().find("div").fadeIn("fast");
+	$(".helpful_info_message").hide();
+	$(".helpful_info").click(function(e){
+		$(this).parent().find(".helpful_info_message").css({"position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px","margin":"0 0 0 50px"});
+		$(this).parent().find(".helpful_info_message").fadeIn("fast");
 	})
-	$(".extra_info img").mouseout(function() {
-		$(this).parent().find("div").fadeOut("fast");
+	$(".helpful_info").mouseout(function() {
+		$(this).parent().find(".helpful_info_message").fadeOut("fast");
 	});
 }); // end document ready function
 
