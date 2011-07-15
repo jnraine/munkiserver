@@ -66,33 +66,6 @@ module ApplicationHelper
     header_enabled ||= true
     
     render :partial => "shared/table_multi_select", :locals => {:parameters => parameters, :table_class => table_class, :header_enabled => header_enabled} 
-    
-  end
-  
-  
-  def render_table_asm_select(parameters,table_class,header_enabled)
-    offset = 0
-    parameters.to_s
-    parameters.each_with_index do |section, i|
-      if parameters[i+offset] == nil
-        break
-      else
-        parameters[i+offset][:title].to_s
-        offset += 1
-      end
-
-      
-    end
-    content_tag :table, :class => table_class do
-      
-    end     
-
-  end  
-
-  def display_package_version(pkgsinfo)
-    unless Pkgsinfo.latest?(pkgsinfo)
-      "(#{pkgsinfo.version})"
-    end
   end
   
   def record_count(model_objs,word = "record")

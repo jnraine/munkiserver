@@ -70,7 +70,7 @@ class Package < ActiveRecord::Base
     params = {}
     params[:unit] = unit
     params[:package_branch] = package_branch
-    params[:version] = version unless self.latest?
+    params[:version] = version unless self.latest_in_unit?
     params
   end
   
@@ -241,11 +241,10 @@ class Package < ActiveRecord::Base
     end
   end
   
-  # Checks if the current package
-  # is the latest (newest) package
-  # in the package branch
-  def latest?
-    package_branch.latest(self).id == id
+  # Checks if the current package is the latest (newest version) 
+  # package in the package branch in this unit.
+  def latest_in_unit?
+    package_branch.packages.unit(self.unit).order("version DESC").first.id == id
   end
 
   # Extend destroy method
