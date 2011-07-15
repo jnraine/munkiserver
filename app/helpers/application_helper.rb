@@ -237,7 +237,9 @@ module ApplicationHelper
   def helpful_info(content,jq_event = 'click')
     dom_id = content[0,25].gsub(/[^[:alnum:]]/, '_') + "_" + rand(1001).to_s  
     code = image_tag('question_mark.png', :id => dom_id, :style => "vertical-align:middle;cursor:pointer")
-    code += extra_info(dom_id,content,jq_event)
+    code += "<div class=\"extra_info_box\"><p>#{content}</p></div>".html_safe
+    code.insert(0,"<div class=\"extra_info\">")
+    code << ("</div>").html_safe
     code
   end
   

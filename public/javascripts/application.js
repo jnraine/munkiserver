@@ -281,7 +281,15 @@ $(document).ready(function() {
 		})
 	})
 	
-
+	// trigger help message appear
+	$(".extra_info_box p").hide();
+	$(".extra_info img").click(function(e){
+		$(".extra_info_box p").css({"position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px","margin":"0 0 0 50px"});
+		$(".extra_info_box p").show("fast");
+	})
+	$(".extra_info img").mouseout(function() {
+		$(".extra_info_box p").hide("fast");
+	});
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field
