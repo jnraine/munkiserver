@@ -471,7 +471,7 @@ thead th a:hover,
 	width: 18px;
 }
 .helpful_info div{
-	display: inline;
+	display: none;
 	margin-top:5px !important;
 	margin-left:5px !important;
 	padding:10px !important;

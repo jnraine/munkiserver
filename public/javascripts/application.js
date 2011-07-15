@@ -280,14 +280,15 @@ $(document).ready(function() {
 	})
 	
 	// trigger help message appear
-	$(".helpful_info_message").hide();
-	$(".helpful_info").click(function(e){
-		$(this).parent().find(".helpful_info_message").css({"position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px","margin":"0 0 0 50px"});
-		$(this).parent().find(".helpful_info_message").fadeIn("fast");
-	})
-	$(".helpful_info").mouseout(function() {
+	$(".helpful_info").live('click', (function(e){
+		$helpful_info_message = $(this).parent().find(".helpful_info_message")
+		$helpful_info_message.css({"display":"inline","position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px","margin":"0 0 0 50px"});
+		$helpful_info_message.hide();
+		$helpful_info_message.fadeIn("fast");
+	}))
+	$(".helpful_info").live('mouseout', (function() {
 		$(this).parent().find(".helpful_info_message").fadeOut("fast");
-	});
+	}));
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field
