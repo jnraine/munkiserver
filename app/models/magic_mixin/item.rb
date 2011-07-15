@@ -18,7 +18,7 @@ module Item
       # it grabs the latest package from the package branch and returns that
       def package
         p = Package.find(package_id) if package_id?
-        p ||= package_branch.latest
+        p ||= package_branch.latest(manifest)
         p
       end
       
