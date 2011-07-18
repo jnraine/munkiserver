@@ -26,13 +26,12 @@ class Package < ActiveRecord::Base
   validates :package_branch_id, :presence => true
   validates :receipts_plist, :plist => true
   validates :installs_plist, :plist => true
+  validates :raw_tags_plist, :plist => true
   validates :receipts, :array => true
   validates :installs, :array => true
-  # validates :raw_tags, :hash => true
+  validates :raw_tags, :hash => true
   validates :version, :uniqueness_in_unit => true
-
   
-
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
                   :installer_types         => [['Package',''],
@@ -138,7 +137,6 @@ class Package < ActiveRecord::Base
        self.send("#{attribute}=", obj)
      rescue RuntimeError
        # Cache string value
-       debugger
        instance_variable_set("@cached_#{attribute}_plist",value)
        self.send("#{attribute}=", nil)
      end
@@ -148,7 +146,7 @@ class Package < ActiveRecord::Base
     begin
       send(attribute).to_plist
     rescue NoMethodError
-      debugger
+      # return the invalide attribute
       self.send("#{attribute}")
       # instance_variable_get("@cached_#{attribute}_plist")
     end
@@ -178,7 +176,35 @@ class Package < ActiveRecord::Base
   def installs_plist=(value)
     plist_virtual_attribute_set(:installs,value)
   end
-
+  
+  # Virutal attribute getter
+  # Converts raw_tags hash into plist
+  def raw_tags_plist
+    plist_virtual_attribute_get(:raw_tags)
+  end
+  
+  # Setter for the raw_tags attribute. Converts the plist string value to
+  # a ruby object and assigns it to the attribute. Takes a raw plist string.
+  def raw_tags_plist=(value)
+    begin
+      obj = value.from_plist
+      yaml = obj.to_yaml
+    rescue TypeError
+      yaml = value.to_yaml
+    rescue NoMethodError
+      yaml = value.to_yaml
+    end
+    write_attribute(:raw_tags,yaml) unless yaml.nil?
+    yaml
+  end
+  
+  def add_raw_tag(key,value)
+    self.raw_mode_id = 1 if no_raw?
+    raw_tags_hash = self.raw_tags
+    raw_tags_hash[key] = value
+    write_attribute(:raw_tags,raw_tags_hash)
+  end
+  
   # Virtual attribute that parses the array value of a tabled asm select into package and 
   # package branches and assigns that value to the upgrade_for attribute
   def update_for_tas=(value)
@@ -466,26 +492,6 @@ class Package < ActiveRecord::Base
   
   def versions
     package_branch.packages_like_unit_member(self)
-  end
-  
-  # Setter for the raw_tags attribute. Converts the plist string value to
-  # a ruby object and assigns it to the attribute. Takes a raw plist string.
-  def raw_tags=(value)
-    begin
-      obj = Plist.parse_xml(value)
-      yaml = obj.to_yaml
-    rescue TypeError
-      yaml = value.to_yaml
-    end
-    write_attribute(:raw_tags,yaml)
-    yaml
-  end
-  
-  def add_raw_tag(key,value)
-    self.raw_mode_id = 1 if no_raw?
-    raw_tags_hash = self.raw_tags
-    raw_tags_hash[key] = value
-    write_attribute(:raw_tags,raw_tags_hash)
   end
   
   # Get the version that corresponds with the version tracker version

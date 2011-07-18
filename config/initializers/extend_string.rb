@@ -7,9 +7,11 @@ class String
     begin
       Plist.parse_xml(self)
     rescue RuntimeError
-      return  self #return nothign not a valide plist string
+      return self #return nothign not a valide plist string
     rescue NoMethodError
-      return  self #return nothing invalide syntax or nil object
+      return self #return nothing invalide syntax or nil object
+    rescue Errno::EISDIR
+      return self #only happen if you have a string "test", not sure why
     end
   end
   

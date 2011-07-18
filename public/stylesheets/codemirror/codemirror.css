@@ -16,7 +16,11 @@
 .inactiveline{
  background: #fff;
 }
-
+/*.CodeMirror-scroll {
+   height: auto;
+   overflow-y: hidden;
+   overflow-x: auto;
+ }*/
 .CodeMirror-gutter {
   position: absolute; left: 0; top: 0;
   background-color: #f7f7f7;
