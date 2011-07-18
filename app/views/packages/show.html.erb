@@ -34,6 +34,13 @@
 		<td><%= @package.minimum_os_version %></td>
 	</tr>
 	<tr>
+		<td><strong>Supported Architectures</strong></td>
+		<td><% @package.supported_architectures.each do |sa| %>
+			<%= sa %> |
+			<% end %>
+		</td>
+	</tr>
+	<tr>
 		<td><strong>Package size</strong></td>
 		<td><%= humanize_kilobytes(@package.installer_item_size) %></td>
 	</tr>

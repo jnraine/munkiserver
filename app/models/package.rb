@@ -11,8 +11,8 @@ class Package < ActiveRecord::Base
   has_many :require_items, :as => :manifest
   has_many :update_for_items, :as => :manifest
   
-  serialize :installs, Array
-  serialize :receipts, Array
+  serialize :installs
+  serialize :receipts
   serialize :supported_architectures, Array
   serialize :raw_tags
   
@@ -24,9 +24,13 @@ class Package < ActiveRecord::Base
   validates :version, :presence => true
   validates :installer_item_location, :presence => true
   validates :package_branch_id, :presence => true
-  validates :receipts, :plist_array => true
-  validates :installs, :plist_array => true
+  validates :receipts_plist, :plist => true
+  validates :installs_plist, :plist => true
+  validates :receipts, :array => true
+  validates :installs, :array => true
+  # validates :raw_tags, :hash => true
   validates :version, :uniqueness_in_unit => true
+
   
 
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
@@ -130,20 +134,23 @@ class Package < ActiveRecord::Base
   
   def plist_virtual_attribute_set(attribute, value)
     begin
-      obj = value.from_plist
-      self.send("#{attribute}=", obj)
-    rescue RuntimeError
-      # Cache string value
-      instance_variable_set("@cached_#{attribute}_plist",value)
-      self.send("#{attribute}=", nil)
-    end
+       obj = value.from_plist
+       self.send("#{attribute}=", obj)
+     rescue RuntimeError
+       # Cache string value
+       debugger
+       instance_variable_set("@cached_#{attribute}_plist",value)
+       self.send("#{attribute}=", nil)
+     end
   end
   
   def plist_virtual_attribute_get(attribute)
     begin
       send(attribute).to_plist
     rescue NoMethodError
-      instance_variable_get("@cached_#{attribute}_plist")
+      debugger
+      self.send("#{attribute}")
+      # instance_variable_get("@cached_#{attribute}_plist")
     end
   end
   
