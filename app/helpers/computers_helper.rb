@@ -19,7 +19,7 @@ module ComputersHelper
     unless computer_groups.empty?
       render :partial => 'computer_group_link', :collection => computer_groups
     else
-      render :text => "None", :layout => false
+      render :text => "None"
     end
   end
   
