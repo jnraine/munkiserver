@@ -25,7 +25,7 @@ class BundlesController < ApplicationController
   end
 
   def destroy
-    @bundle = Bundle.find_by_name(params[:id])
+    @bundle = Bundle.find_for_show(params[:unit], params[:id])
     
     if @bundle.destroy
       flash[:notice] = "Bundle was destroyed successfully"
@@ -37,12 +37,12 @@ class BundlesController < ApplicationController
   end
 
   def edit
-    @bundle = Bundle.find_by_name(params[:id])
+    @bundle = Bundle.find_for_show(params[:unit], params[:id])
     @environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update
-    @bundle = Bundle.unit(current_unit).find_by_name(params[:id])
+    @bundle = Bundle.find_for_show(params[:unit], params[:id])
     
     respond_to do |format|
       if @bundle.update_attributes(params[:bundle])
@@ -61,12 +61,16 @@ class BundlesController < ApplicationController
   end
 
   def show
-    @bundle = Bundle.find_for_show(params[:id])
+    @bundle = Bundle.find_for_show(params[:unit], params[:id])
     
     respond_to do |format|
-      format.html
-      format.manifest { render :text => @bundle.to_plist }
-      format.plist { render :text => @bundle.to_plist }
+      if @bundle.present?
+        format.html
+        format.manifest { render :text => @bundle.to_plist }
+        format.plist { render :text => @bundle.to_plist }
+      else
+        format.html{ render :file => "#{Rails.root}/public/404.html", :layout => false }
+      end
     end
   end
   

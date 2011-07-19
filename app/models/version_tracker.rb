@@ -3,9 +3,9 @@ class VersionTracker < ActiveRecord::Base
   require 'open-uri'
   require 'net/http'
 
-  MAC_UPDATE_SITE_URL = "http://www.macupdate.com" #for Net HTTP response
-  MAC_UPDATE_SEARCH_URL = MAC_UPDATE_SITE_URL + "/find/mac/" #append search package name in the end of URL
-  MAC_UPDATE_PACKAGE_URL = MAC_UPDATE_SITE_URL + "/app/mac/" #append web_id in the end of URL
+  MAC_UPDATE_SITE_URL = "www.macupdate.com" #for Net HTTP response
+  MAC_UPDATE_SEARCH_URL = "http://www.macupdate.com/find/mac/" #append search package name in the end of URL
+  MAC_UPDATE_PACKAGE_URL = "http://www.macupdate.com/app/mac/" #append web_id in the end of URL
   
   # validates_presence_of :package_branch_id
   
@@ -49,7 +49,7 @@ class VersionTracker < ActiveRecord::Base
   # Return true if macupdate is reachable
   def macupdate_is_up?
     begin
-      response = Net::HTTP.get_response(URI.parse(MAC_UPDATE_SITE_URL))
+      response = Net::HTTP.get_response(URI.parse("http://"+MAC_UPDATE_SITE_URL))
       response.instance_of?(Net::HTTPOK)
     rescue SocketError # DNS name not found
       return false
