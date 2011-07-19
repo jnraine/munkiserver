@@ -4,10 +4,10 @@
 		<%= f.error_messages %>
 		<div>
 			<h3>Upload</h3>
-			<p>
+			
 				Choose a .dmg
 				<%= helpful_info("You cannot upload packages, applications, or Adobe installers without wrapping them in a disk image first!") %>
-			</p>
+			<br /><br />
 			<p><%= file_field_tag :package_file %></p>
 			<% unless Munki::Application::MUNKI_TOOLS_AVAILABLE %>
 				<p>

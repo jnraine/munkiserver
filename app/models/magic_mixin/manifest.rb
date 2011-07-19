@@ -406,8 +406,9 @@ module Manifest
             
       # Attempts a couple different queries in order of importance to
       # find the appropriate record for the show action
-      def self.find_for_show(s)
+      def self.find_for_show(unit, s)
         # Find by ID, if s is only digits
+        current_unit = Unit.where(:name => unit).first unless unit.nil?
         record = self.where(:id => s).first if s.match(/^\d+$/)
         # Find by id-name
         match = s.match(/^(\d+)([-_]{1})(.+)$/)
@@ -417,7 +418,7 @@ module Manifest
           record ||= self.where(:id => id, :name => name).first
         end
         # Find by name
-        record ||= self.where(:name => s).first
+        record ||= self.where(:unit_id => current_unit.id, :name => s).first unless current_unit.nil?
         # Return results
         record
       end

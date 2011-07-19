@@ -25,7 +25,7 @@ class ComputerGroupsController < ApplicationController
   end
 
   def destroy
-    @computer_group = ComputerGroup.find_for_show(CGI::unescape(params[:id]))
+    @computer_group = ComputerGroup.find_for_show(params[:unit], CGI::unescape(params[:id]))
     
     begin
       if @computer_group.destroy
@@ -43,12 +43,12 @@ class ComputerGroupsController < ApplicationController
   end
 
   def edit
-    @computer_group = ComputerGroup.find_for_show(params[:id])
+    @computer_group = ComputerGroup.find_for_show(params[:unit], params[:id])
     @environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update
-    @computer_group = ComputerGroup.unit(current_unit).find_for_show(CGI::unescape(params[:id]))
+    @computer_group = ComputerGroup.unit(current_unit).find_for_show(params[:unit], CGI::unescape(params[:id]))
     
     respond_to do |format|
       if @computer_group.update_attributes(params[:computer_group])
@@ -67,12 +67,16 @@ class ComputerGroupsController < ApplicationController
   end
 
   def show
-    @computer_group = ComputerGroup.find_for_show(params[:id])
+    @computer_group = ComputerGroup.find_for_show(params[:unit], params[:id])
     
     respond_to do |format|
-      format.html
-      format.manifest { render :text => @computer_group.to_plist }
-      format.plist { render :text => @computer_group.to_plist }
+      if @computer_group.present?
+        format.html
+        format.manifest { render :text => @computer_group.to_plist }
+        format.plist { render :text => @computer_group.to_plist }
+      else
+        format.html{ render :file => "#{Rails.root}/public/404.html", :layout => false }
+      end
     end
   end
   
