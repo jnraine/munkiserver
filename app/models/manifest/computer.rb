@@ -98,10 +98,10 @@ class Computer < ActiveRecord::Base
   end
   
   # Extended from manifest magic_mixin, adds mac_address matching
-  def self.find_for_show(s)
-    record = find_for_show_super(s)
+  def self.find_for_show(unit, id)
+    record = find_for_show_super(unit, id)
     # For mac_address
-    record ||= self.where(:mac_address => s).first
+    record ||= self.where(:mac_address => id).first
     # Return record
     record
   end

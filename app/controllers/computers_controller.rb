@@ -36,7 +36,7 @@ class ComputersController < ApplicationController
   end
   
   def show
-    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit], CGI::unescape(params[:id]))
     
     respond_to do |format|
       if @computer.present?
@@ -53,11 +53,11 @@ class ComputersController < ApplicationController
   end
 
   def edit
-    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit], CGI::unescape(params[:id]))
   end
 
   def update
-    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit], CGI::unescape(params[:id]))
     
     respond_to do |format|
       if @computer.update_attributes(params[:computer])
@@ -71,7 +71,7 @@ class ComputersController < ApplicationController
   end
 
   def destroy
-    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit], CGI::unescape(params[:id]))
     
     if @computer.destroy
       flash[:notice] = "Computer was destroyed successfully"
