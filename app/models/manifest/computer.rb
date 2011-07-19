@@ -201,16 +201,28 @@ class Computer < ActiveRecord::Base
   end
   
   # Bulk update
-  def self.bulk_update_attributes(computers,p)
-    if (computers == nil || p == nil)
+  def self.bulk_update_attributes(computers,computer_attributes)
+    if computer_attributes.nil? or computers.empty? 
       raise ComputerError.new ("Nothing to update")
     else
       computers.each do |c|
-        c.update_attributes(p.reject {|k,v| v.blank?})
+        c.update_attributes(computer_attributes)
       end
     end
   end
   
+  def self.bulk_update_attributes(packages,package_attributes)
+    if package_attributes.nil? or packages.empty?
+      raise PackageError.new ("Nothing to update")
+    else
+      results = packages.map do |p|
+        p.update_attributes(package_attributes)
+      end
+      successes = results.map {|b| b == false }
+      failures = results.map {|b| b == true }
+      {:total => packages.count, :successes => successes.count, :failures => failures.count}
+    end
+  end
   def to_param
     name
   end
