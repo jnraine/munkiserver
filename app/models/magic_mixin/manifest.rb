@@ -20,22 +20,22 @@ module Manifest
       validates_presence_of :name
       
       # Bundles
-      has_many :bundle_items, :as => :manifest
-      has_many :bundles, :through => :bundle_items
+      has_many :bundle_items, :as => :manifest, :dependent => :destroy
+      has_many :bundles, :through => :bundle_items, :dependent => :destroy
       
       # Install and uninstall items
-      has_many :install_items, :as => :manifest
-      has_many :uninstall_items, :as => :manifest
+      has_many :install_items, :as => :manifest, :dependent => :destroy
+      has_many :uninstall_items, :as => :manifest,:dependent => :destroy
       
       # A list of user allowed install/uninstall items
-      has_many :user_allowed_items, :as => :manifest
+      has_many :user_allowed_items, :as => :manifest, :dependent => :destroy
       
       # User specified install and uninstall items
-      has_many :user_install_items, :as => :manifest
-      has_many :user_uninstall_items, :as => :manifest
+      has_many :user_install_items, :as => :manifest, :dependent => :destroy
+      has_many :user_uninstall_items, :as => :manifest, :dependent => :destroy
       
       # Optional Install items
-      has_many :optional_install_items, :as => :manifest
+      has_many :optional_install_items, :as => :manifest, :dependent => :destroy
               
       attr_is_hash :version_rollback
       
