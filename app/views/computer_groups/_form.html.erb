@@ -3,10 +3,10 @@
 <p><%= f.text_field :name %></p>
 <p><%= f.text_area :description, :size => "30x6" %></p>
 <p>Environment <%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "environment"} %></p>
-<div class ="change_with_environment" id="tabled_asm_select">
+<div id="tabled_asm_select">
 	<%= tabled_asm_select(@computer_group)%>
 </div>
-<div class ="change_with_environment" id="tabled_asm_select_members">
+<div id="tabled_asm_select_members">
 	<%= tabled_asm_select(@computer_group.computers_tas)%>
 </div>
 <p><%= f.submit submit_value %></p>
