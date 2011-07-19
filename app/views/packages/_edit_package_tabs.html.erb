@@ -257,7 +257,7 @@
 							<%= helpful_info("Raw tags allow the ability to add extra Plist tags to the manifest.  Must be formatted as a valid plist with a dictionary at the root. If you define a tag that is already defined above, the raw tag overwrites it.  In append mode, the tags are added to the info plist.  In exclusive mode, only the tags shown here are used.") %>
 						</h4>
 						<div id="raw_tags_container" class="toggle_container">
-							<%= text_area_tag "package[raw_tags]", (@package.raw_tags.to_plist unless @package.raw_tags.nil?), :size => "80x15", "data-format" => 'xml' %>
+							<%= text_area_tag "package[raw_tags_plist]", (@package.raw_tags_plist unless @package.raw_tags.nil?), :size => "80x15", "data-format" => 'xml' %>
 						</div>
 					</td>
 				</tr>
@@ -334,9 +334,8 @@
 					<%= f.text_field :version_tracker_web_id, :size => 70 %>
 					<%= helpful_info("Optionally, specify a version string used when comparing this package to the latest on macupdate.com") %>
 				</td>
-				
+
 			</tr>
 		</table>
 	</div>
-
 </div>

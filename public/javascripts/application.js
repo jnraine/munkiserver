@@ -149,13 +149,11 @@ $(document).ready(function() {
 		});
 	$("select#managed_install_reports").change();
 	// add Codemirror with $ animation to highlight XML/plist/bash syntax in package list
-	$("textarea[data-format]").each(function () {
-		
+	$("textarea[data-format]").each(function () {	
 		var format = $(this).attr("data-format");
 		var toRefresh = function(){
 			editor.refresh();
 		}
-	
 		var editor = CodeMirror.fromTextArea(this, {
 					onFocus: function() {
 					    //$ animation goes here				
@@ -163,15 +161,12 @@ $(document).ready(function() {
 					        height: "300px"
 					    },
 					    400, "swing", toRefresh);
-	
-	
 					},
 					onBlur: function() {
 					    $(editor.getWrapperElement()).animate({
 					        height: "78px"
 					    },
 					    400, "swing", toRefresh);
-	
 					},
 					lineNumbers: true,
 					matchBrackets: true,
@@ -212,7 +207,9 @@ $(document).ready(function() {
 	$("#package_uninstall_method").change();
 		
 	// Initialize tabs
-  $("#tabs").tabs();
+	initializeTabs();
+//   $("#tabs").tabs();
+// var selected = $tabs.tabs('option', 'selected');
 	
 	// client side validation $ animation
 	clientSideValidations.callbacks.element.fail = function(element, message, callback) {
@@ -476,4 +473,9 @@ function initializeAsmSelect(targetSelector) {
 	$(targetSelector).asmSelect({
 	    animate: true
 	});
+}
+
+function initializeTabs(){
+	var $tabs = $("#tabs").tabs();
+	var selected = $tabs.tabs('option', 'selected');
 }

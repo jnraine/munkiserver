@@ -13,7 +13,7 @@
 			<td>
 				MAC Address
 				<% unless @computer.new_record?%>
-					(<%= field_lock_control("computer_mac_address", false) %>)
+					(<%= field_lock_control("computer_mac_address", true) %>)
 				<% end %>
 			</td>
 			<td><%= f.text_field :mac_address, :maxlength => 17, :size => 18 %></td>

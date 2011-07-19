@@ -24,7 +24,8 @@ class Unit < ActiveRecord::Base
           :create_package,:read_package,:edit_package,:destroy_package]
   
   before_save :check_settings
-  after_save :require_computer_group
+  # will no longer create a computer group after a new unit is created
+  # after_save :require_computer_group
   
   # Returns the membership that self and user share
   def membership(user)
@@ -47,19 +48,19 @@ class Unit < ActiveRecord::Base
   end
   
   # Creates default computer group if there are none assigned to this unit
-  def require_computer_group
-    create_default_computer_group if self.computer_groups.count == 0
-  end
+  # def require_computer_group
+  #   create_default_computer_group if self.computer_groups.count == 0
+  # end
   
   # Attempts to create and save a computer group named "Default"
-  def create_default_computer_group
-    cg = ComputerGroup.unit(self).find_by_name("Default")
-    cg ||= ComputerGroup.new({:name => "Default", :unit_id => self.id, :environment_id => Environment.first.id})
-    cg.save and self.save
-  end
+  # def create_default_computer_group
+  #   cg = ComputerGroup.unit(self).find_by_name("Default")
+  #   cg ||= ComputerGroup.new({:name => "Default", :unit_id => self.id, :environment_id => Environment.first.id})
+  #   cg.save and self.save
+  # end
   
   # Returns an array of tas option hashes
-  def tas_params
+  def tas_params(environment_id = nil)
     [{:title => "Users",
       :model_name => "unit",
       :attribute_name => "user_ids",
