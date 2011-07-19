@@ -443,7 +443,7 @@ class Package < ActiveRecord::Base
   def to_s(style = nil)    
     case style
     when :unique then
-      if latest?
+      if latest_in_unit?
         "#{id}_#{name}"
       else
         "#{id}_#{name}-#{version}"
