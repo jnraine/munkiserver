@@ -122,7 +122,6 @@ class ComputersController < ApplicationController
   # of the last successful munki run.  May be extended in the future.
   def checkin
     @computer = Computer.find_for_show(nil, params[:id])
-    
     if params[:managed_install_report_plist].present?
       report_hash = ManagedInstallReport.format_report_plist(params[:managed_install_report_plist]).merge({:ip => request.remote_ip})
       @computer.managed_install_reports.build(report_hash)
@@ -130,7 +129,7 @@ class ComputersController < ApplicationController
     
     if params[:system_profiler_plist].present?
       system_profile_hash = SystemProfile.format_system_profiler_plist(params[:system_profiler_plist])
-      @computer.build_system_profile(system_profile_hash)
+      @computer.system_profile.update_attributes(system_profile_hash)
     end
     
     @computer.save
