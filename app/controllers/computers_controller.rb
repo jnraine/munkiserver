@@ -130,7 +130,7 @@ class ComputersController < ApplicationController
     if params[:system_profiler_plist].present?
       system_profile_hash = SystemProfile.format_system_profiler_plist(params[:system_profiler_plist])
       sp = SystemProfile.find_or_create_by_computer_id(@computer.id)
-      sp.update_attributes(system_profile_hash)
+      @computer.system_profile.attributes = system_profile_hash
     end
     
     @computer.save
