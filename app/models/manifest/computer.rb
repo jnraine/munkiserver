@@ -6,6 +6,8 @@ class Computer < ActiveRecord::Base
   belongs_to :computer_group
   
   has_one :system_profile
+  has_one :warranty
+
   
   has_many :client_logs
   has_many :managed_install_reports
@@ -223,7 +225,12 @@ class Computer < ActiveRecord::Base
       {:total => packages.count, :successes => successes.count, :failures => failures.count}
     end
   end
+  
   def to_param
     name
+  end
+  
+  def serial_number
+    self.system_profile.serial_number
   end
 end

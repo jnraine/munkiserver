@@ -12,6 +12,7 @@
 		<li><a href="#packages_tab"><span>Packages</span></a></li>
 		<li><a href="#system_profile_tab"><span>System Profile</span></a></li>
 		<li><a href="#managed_install_reports_tab"><span>Managed Install Reports (<%= @computer.managed_install_reports.count %>)</span></a></li>
+		<li><a href="#warranty_tab"><span>Warranty</span></a></li>
 	</ul>
 	
 	<!-- First tab starts here -->
@@ -50,6 +51,11 @@
 		<div id="managed_install_report">
 			<em>No managed install report available</em>
 		</div>
+	</div>
+
+	<!-- Fourth tab starts here -->
+	<div id="warranty_tab">
+		<%= render :partial => "warranty" %>
 	</div>
 </div>
 

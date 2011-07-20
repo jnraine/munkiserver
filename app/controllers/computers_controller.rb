@@ -130,6 +130,7 @@ class ComputersController < ApplicationController
     
     if params[:system_profiler_plist].present?
       system_profile_hash = SystemProfile.format_system_profiler_plist(params[:system_profiler_plist])
+      puts system_profile_hash 
       @computer.build_system_profile(system_profile_hash)
     end
     
@@ -189,5 +190,22 @@ class ComputersController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+  
+  
+  def update_warranty
+    @computer = Computer.find_for_show(params[:unit], params[:computer_id])
+    
+    @computer.warranty.delete if @computer.warranty.present?
+    @computer.warranty = nil
+              
+    warranty_hash = Warranty.get_warranty_hash(@computer.serial_number)
+    warnt = @computer.build_warranty(warranty_hash)
+    if warnt.save
+      flash[:notice] = "#{@computer.name}'s warranty was successfully updated."
+    else
+      flash[:error] = "#{@computer.name}'s warranty was not updated."
+    end
+    redirect_to computer_path(@computer.unit, @computer) + '#warranty_tab'  
   end
 end

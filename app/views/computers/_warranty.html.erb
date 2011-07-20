@@ -1,0 +1,34 @@
+<h3>Warranty</h3>
+<% if @computer.warranty.present? %>
+	<h4>Warranty Overview</h4>
+	<table class="form">
+		<tr>
+			<td><strong>Serial Number</strong></td>
+			<td><%= @computer.serial_number %></td>
+		</tr>
+		<tr>
+			<td><strong>Product Description</strong></td>
+			<td><%= @computer.warranty.product_description %></td>
+		</tr>
+		<tr>
+			<td><strong>Purchase Date</strong></td>
+			<td><%= @computer.warranty.purchase_date %></td>
+		</tr>
+		<tr>
+			<td><strong>Coverage Expired</strong></td>
+			<td><%= @computer.warranty.coverage_expired %></td>
+		</tr>
+		<tr>
+			<td><strong>Coverage End Date</strong></td>
+			<td><%= @computer.warranty.coverage_end_date %></td>
+		</tr>
+		
+	</table>
+
+	<p><em><%= link_to "Refresh warranty", computer_update_warranty_path(@computer.unit, @computer) %></em></p>
+
+<% else %>
+	<p><em>No warranty available</em></p>
+	<p><em><%= link_to "Find warranty", computer_update_warranty_path(@computer.unit, @computer) %></em></p>
+	
+<% end -%>

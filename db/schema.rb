@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110705185845) do
+ActiveRecord::Schema.define(:version => 20110720162729) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -393,6 +393,16 @@ ActiveRecord::Schema.define(:version => 20110705185845) do
     t.datetime "updated_at"
     t.integer  "icon_id"
     t.text     "description"
+  end
+
+  create_table "warranties", :force => true do |t|
+    t.datetime "purchase_date"
+    t.string   "product_description"
+    t.datetime "coverage_end_date"
+    t.boolean  "coverage_expired"
+    t.integer  "computer_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
