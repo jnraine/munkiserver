@@ -135,6 +135,8 @@ class ComputersController < ApplicationController
     end
     
     @computer.save
+    
+    @computer.warranty.destroy if @computer.serial_number != @computer.warranty.serial_number
     AdminMailer.computer_report(@computer).deliver if @computer.report_due?
     render :text => ''
   end
@@ -206,6 +208,6 @@ class ComputersController < ApplicationController
     else
       flash[:error] = "#{@computer.name}'s warranty was not updated."
     end
-    redirect_to computer_path(@computer.unit, @computer) + '#warranty_tab'  
+    redirect_to computer_path(@computer.unit, @computer, anchor: 'warranty_tab')   
   end
 end

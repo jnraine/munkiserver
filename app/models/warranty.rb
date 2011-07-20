@@ -24,11 +24,25 @@ class Warranty < ActiveRecord::Base
       }
       hash
     }
-    { product_description:  hash['PROD_DESCR'], 
+    
+    ret = { serial_number:        serial, 
+      product_description:  hash['PROD_DESCR'], 
       purchase_date:        Time.new(hash['PURCHASE_DATE']),
       coverage_expired:     hash['HW_HAS_COVERAGE'] == 'N',
-      coverage_end_date:    Time.new(hash['COV_END_DATE'])
+      coverage_end_date:    Time.new(hash['COV_END_DATE']),
+      hw_support_coverage:  hash['HW_SUPPORT_COV_SHORT'],
+      hw_coverage_description: hash['HW_COVERAGE_DESC'],
+      product_type:         hash['PRODUCT_TYPE'],
       
+      image_url:            hash['PROD_IMAGE_URL'], 
+      registered:           hash['IS_REGISTERED'] == 'Y',
+      specs_url:            "http://support.apple.com/specs/#{serial}",
+      hw_support_url:       hash['HW_SUPPORT_LINK'],
+      forum_url:            hash['FORUMS_URL'],
+      phone_support_url:    hash['PHONE_SUPPORT_LINK'],
     }
+    
+    puts ret
+    ret
   end
 end

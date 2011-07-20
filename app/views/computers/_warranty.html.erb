@@ -4,7 +4,11 @@
 	<table class="form">
 		<tr>
 			<td><strong>Serial Number</strong></td>
-			<td><%= @computer.serial_number %></td>
+			<td><%= @computer.warranty.serial_number %></td>
+		</tr>
+		<tr>
+			<td><strong>Product Type</strong></td>
+			<td><%= @computer.warranty.product_type %></td>
 		</tr>
 		<tr>
 			<td><strong>Product Description</strong></td>
@@ -15,6 +19,14 @@
 			<td><%= @computer.warranty.purchase_date %></td>
 		</tr>
 		<tr>
+			<td><strong>Hardware Support Coverage</strong></td>
+			<td><%= @computer.warranty.hw_support_coverage %></td>
+		</tr>
+		<tr>
+			<td><strong>Hardware Coverage Description</strong></td>
+			<td><%= @computer.warranty.hw_coverage_description %></td>
+		</tr>
+		<tr>
 			<td><strong>Coverage Expired</strong></td>
 			<td><%= @computer.warranty.coverage_expired %></td>
 		</tr>
@@ -22,7 +34,30 @@
 			<td><strong>Coverage End Date</strong></td>
 			<td><%= @computer.warranty.coverage_end_date %></td>
 		</tr>
-		
+		<tr>
+			<td><strong>Registered</strong></td>
+			<td><%= @computer.warranty.registered %></td>
+		</tr>
+		<tr>
+			<td><strong>Default Specs URL</strong></td>
+			<td><%= link_to @computer.warranty.specs_url, @computer.warranty.specs_url %></td>
+		</tr>
+		<tr>
+			<td><strong>Hardware Support URL</strong></td>
+			<td><%= link_to @computer.warranty.hw_support_url, @computer.warranty.hw_support_url %></td>
+		</tr>
+		<tr>
+			<td><strong>Forum URL</strong></td>
+			<td><%= link_to @computer.warranty.forum_url, @computer.warranty.forum_url %></td>
+		</tr>
+		<tr>
+			<td><strong>Phone Support URL</strong></td>
+			<td><%= link_to @computer.warranty.phone_support_url, @computer.warranty.phone_support_url %></td>
+		</tr>
+		<tr>
+			<td><strong>Image URL</strong></td>
+			<td><%= link_to image_tag(@computer.warranty.image_url), @computer.warranty.image_url %></td>
+		</tr>
 	</table>
 
 	<p><em><%= link_to "Refresh warranty", computer_update_warranty_path(@computer.unit, @computer) %></em></p>
