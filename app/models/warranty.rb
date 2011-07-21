@@ -44,8 +44,5 @@ class Warranty < ActiveRecord::Base
       forum_url:            hash['FORUMS_URL'],
       phone_support_url:    hash['PHONE_SUPPORT_LINK'],
     }
-    
-    puts ret
-    ret
   end
 end

@@ -196,20 +196,10 @@ class ComputersController < ApplicationController
   
   def update_warranty
     @computer = Computer.find_for_show(params[:unit], params[:computer_id])
-    
-    @computer.warranty.delete if @computer.warranty.present?
-    @computer.warranty = nil
-    
-    if @computer.serial_number.nil?
-      flash[:error] = "Cannot find a warranty for #{@computer.name} without a serial number."
+    if @computer.update_warranty
+      flash[:notice] = "#{@computer.name}'s warranty was successfully updated."
     else
-      warranty_hash = Warranty.get_warranty_hash(@computer.serial_number)
-      warnt = @computer.build_warranty(warranty_hash)
-      if warnt.save
-        flash[:notice] = "#{@computer.name}'s warranty was successfully updated."
-      else
-        flash[:error] = "#{@computer.name}'s warranty was not updated."
-      end
+      flash[:error] = "#{@computer.name}'s warranty could not be updated."
     end
     redirect_to computer_path(@computer.unit, @computer, anchor: 'warranty_tab')   
   end

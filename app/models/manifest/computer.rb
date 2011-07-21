@@ -233,4 +233,13 @@ class Computer < ActiveRecord::Base
   def serial_number
     self.system_profile.serial_number if self.system_profile.present?
   end
+  
+  def update_warranty
+    self.warranty.destroy if self.warranty.present?
+    self.warranty = nil
+    if serial_number
+      build_warranty(Warranty.get_warranty_hash(serial_number))
+      save
+    end
+  end
 end
