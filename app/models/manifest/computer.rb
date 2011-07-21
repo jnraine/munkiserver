@@ -231,6 +231,6 @@ class Computer < ActiveRecord::Base
   end
   
   def serial_number
-    self.system_profile.serial_number
+    self.system_profile.serial_number if self.system_profile.present?
   end
 end
