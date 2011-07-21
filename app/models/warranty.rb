@@ -1,3 +1,6 @@
+# This was based off of a script by Gary Larizza.
+# https://github.com/glarizza/scripts/blob/master/ruby/warranty.rb
+
 require 'open-uri'
 require 'openssl'
 
