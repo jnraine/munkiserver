@@ -397,22 +397,22 @@ ActiveRecord::Schema.define(:version => 20110720201338) do
 
   create_table "warranties", :force => true do |t|
     t.datetime "purchase_date"
-    t.string   "product_description"
+    t.string   "product_description",     :default => ""
     t.datetime "coverage_end_date"
     t.boolean  "coverage_expired"
     t.integer  "computer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "serial_number"
-    t.string   "image_url"
+    t.string   "serial_number",           :default => ""
+    t.string   "image_url",               :default => ""
     t.boolean  "registered"
-    t.string   "specs_url"
-    t.string   "hw_support_url"
-    t.string   "forum_url"
-    t.string   "phone_support_url"
-    t.string   "hw_support_coverage"
-    t.string   "hw_coverage_description"
-    t.string   "product_type"
+    t.string   "specs_url",               :default => ""
+    t.string   "hw_support_url",          :default => ""
+    t.string   "forum_url",               :default => ""
+    t.string   "phone_support_url",       :default => ""
+    t.string   "hw_support_coverage",     :default => ""
+    t.string   "hw_coverage_description", :default => ""
+    t.string   "product_type",            :default => ""
   end
 
 end

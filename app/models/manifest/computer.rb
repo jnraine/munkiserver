@@ -238,8 +238,8 @@ class Computer < ActiveRecord::Base
     self.warranty.destroy if self.warranty.present?
     self.warranty = nil
     if serial_number
-      build_warranty(Warranty.get_warranty_hash(serial_number))
-      save
+      warranty = build_warranty(Warranty.get_warranty_hash(serial_number))
+      warranty.save
     end
   end
 end
