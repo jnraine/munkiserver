@@ -77,11 +77,14 @@ class PackagesController < ApplicationController
 
   def destroy
     @package = Package.find_where_params(params)
-
-    if @package.destroy
-      flash[:notice] = "Package was destroyed successfully"
+    if RequireItem.where(:package_id => @package.id).present?
+      RequireItem.where(:package_id => @package.id).first.destroy
+      @package.destroy
+      flash[:notice] = "Package and it's dependency were destroyed successfully"
+    elsif @package.destroy
+        flash[:notice] = "Package was destroyed successfully"
     end
-
+    
     respond_to do |format|
       format.html { redirect_to packages_path(current_unit) }
     end

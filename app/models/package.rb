@@ -507,7 +507,7 @@ class Package < ActiveRecord::Base
     vtv
   end
   
-  # calls package_branch new version check method
+  # Calls package_branch new version check method
   def new_version?
     package_branch.new_version?(self.unit)
   end
@@ -669,6 +669,11 @@ class Package < ActiveRecord::Base
       failures = results.map {|b| b == true }
       {:total => packages.count, :successes => successes.count, :failures => failures.count}
     end
+  end
+  
+  
+  def self.has_required_package?(package)
+    RequireItem.where(:package_id => package.id).first.present?
   end
 
   private
