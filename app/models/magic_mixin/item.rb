@@ -18,11 +18,11 @@ module Item
       # ID is specified, grabbing a package if it exists.  If that fails
       # it grabs the latest package from the package branch and returns that
       def package
-        p = super
+        p = Package.where(:id => self.package_id).first
         p ||= package_branch.latest(manifest) if package_branch.present?
         p
       end
-      
+      #       
       # Returns array of versions for use with options_for_select view method
       def versions_for_select(unit_member)
         static_options = [['Most Recent','']]

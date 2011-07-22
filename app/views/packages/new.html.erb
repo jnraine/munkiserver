@@ -20,13 +20,13 @@
 		<h4><a id="options-link" href="#">OPTIONAL</a></h4>
 		<div id="options">
 			<% if Munki::Application::MUNKI_TOOLS_AVAILABLE %>
-				<p>
+				
 					Choose a pkginfo plist
 					<%= helpful_info("Generate a pkginfo plist using makepkginfo and upload it")%>
-				</p>
+				<br /><br />
 				<p><p><%= file_field_tag :pkginfo_file %></p>
 			<% end %>
-			<p>
+			
 				<%= text_field_tag "makepkginfo_options[pkgname]" %> 
 				Package name
 				<%= helpful_info("From makepkginfo help page: If the upload is a disk image containing
@@ -41,8 +41,7 @@
 				                  mounted dmg.
 				                  If this flag is missing, the AdobeUber* files should
 				                  be at the top level of the mounted dmg.") %>
-			</p>
-			<p>
+				<br /><br />
 				<%= text_field_tag "makepkginfo_options[appname]" %> 
 				Application path
 				<%= helpful_info("From makepkginfo help page: If the upload is a disk image with a
@@ -50,7 +49,7 @@
 				                  relative path of the application
 				                  to be installed. Useful if there
 				                  is more than one application at the root of the dmg") %>
-			</p>
+					<br /><br />
 		</div>
 		<p><%= submit_tag 'Upload' %></p>
 	<% end %>
