@@ -194,22 +194,26 @@ namespace :bootstrap do
     end
   end
   
-  desc "Create default computer group"
-  task :computer_group, :name, :needs => :environment do |t, args|
-    # Makes we have a unit and an environment to assign
-    Rake::Task["bootstrap:unit"].invoke if Unit.count == 0
-    Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
-    name = args.name
-    name ||= "Default"
-    cg = ComputerGroup.find_or_create_by_name(name)
-    cg.description = "Created by bootstrap"
-    cg.unit = Unit.first
-    cg.environment = Environment.find_by_name("Production")
-    cg.environment = Environment.first if cg.environment.nil?
-    unless cg.save
-      puts "Default computer group failed to save: " + cg.errors.inspect
-    end
-  end
+  # desc "Create default computer group"
+  # task :computer_group, :name, :needs => :environment do |t, args|
+  #   # Makes we have a unit and an environment to assign
+  #   Rake::Task["bootstrap:unit"].invoke if Unit.count == 0
+  #   Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
+  #   unit = Unit.first
+  #   if unit.nil?
+  #     raise Exception.new("Unable to create a computer group -- no unit found")
+  #   end
+  #   name = args.name
+  #   name ||= "Default"
+  #   cg = ComputerGroup.find_or_create_by_name(name)
+  #   cg.description = "Created by bootstrap"
+  #   cg.unit = unit
+  #   cg.environment = Environment.find_by_name("Production")
+  #   cg.environment = Environment.first if cg.environment.nil?
+  #   unless cg.save
+  #     puts "Default computer group failed to save: " + cg.errors.inspect
+  #   end
+  # end
   
   desc "Create first user"
   task :user, :name, :needs => :environment do |t, args|
@@ -279,7 +283,7 @@ namespace :bootstrap do
   
   desc "Generate preflight script"
   task :prelight_script do |t, args|
-    #Build a prefligh script dependant 
+    # Build a preflight script dependant 
     
   end
   
