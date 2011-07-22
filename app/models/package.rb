@@ -8,8 +8,18 @@ class Package < ActiveRecord::Base
   accepts_nested_attributes_for :package_branch
   belongs_to :package_category
   belongs_to :icon
+  has_many :dependents, :class_name => "RequireItem", :dependent => :destroy
   has_many :require_items, :as => :manifest, :dependent => :destroy
-  has_many :update_for_items, :as => :manifest
+  has_many :updates, :class_name => "UpdateForItem", :dependent => :destroy
+  has_many :update_for_items, :as => :manifest, :dependent => :destroy
+  has_many :install_items, :dependent => :destroy
+  has_many :uninstall_items, :dependent => :destroy
+  has_many :optional_install_items, :dependent => :destroy
+  has_many :user_install_items, :dependent => :destroy
+  has_many :user_uninstall_items, :dependent => :destroy
+  has_many :user_allowed_items, :dependent => :destroy
+  has_many :require_items, :dependent => :destroy
+  has_many :update_for_items, :dependent => :destroy
   
   serialize :installs
   serialize :receipts
