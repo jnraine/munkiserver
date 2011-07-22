@@ -134,6 +134,8 @@ class ComputersController < ApplicationController
     end
     
     @computer.save
+    
+    @computer.warranty.destroy if @computer.serial_number != @computer.warranty.serial_number
     AdminMailer.computer_report(@computer).deliver if @computer.report_due?
     render :text => ''
   end
@@ -189,5 +191,16 @@ class ComputersController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+  
+  
+  def update_warranty
+    @computer = Computer.find_for_show(params[:unit], params[:computer_id])
+    if @computer.update_warranty
+      flash[:notice] = "#{@computer.name}'s warranty was successfully updated."
+    else
+      flash[:error] = "#{@computer.name}'s warranty could not be updated."
+    end
+    redirect_to computer_path(@computer.unit, @computer, anchor: 'warranty_tab')   
   end
 end

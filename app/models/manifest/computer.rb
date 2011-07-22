@@ -6,6 +6,8 @@ class Computer < ActiveRecord::Base
   belongs_to :computer_group
   
   has_one :system_profile
+  has_one :warranty
+
   
   has_many :client_logs
   has_many :managed_install_reports
@@ -223,7 +225,21 @@ class Computer < ActiveRecord::Base
       {:total => packages.count, :successes => successes.count, :failures => failures.count}
     end
   end
+  
   def to_param
     name
+  end
+  
+  def serial_number
+    self.system_profile.serial_number if self.system_profile.present?
+  end
+  
+  def update_warranty
+    self.warranty.destroy if self.warranty.present?
+    self.warranty = nil
+    if serial_number
+      warranty = build_warranty(Warranty.get_warranty_hash(serial_number))
+      warranty.save
+    end
   end
 end

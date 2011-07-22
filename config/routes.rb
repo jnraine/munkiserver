@@ -23,6 +23,8 @@ Munki::Application.routes.draw do
 
   # Make munki-client-friendly URLs
   match ':id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
+  match 'computers/:id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
+  
   match 'catalogs/:unit_id-:environment_name.plist' => 'catalogs#show', :format => 'plist'
   match 'pkgs/:id' => 'packages#download', :as => 'download_package', :id => /[A-Za-z0-9_\-\.%]+/
   match '/configuration/:id.plist', :controller => 'computers', :action => 'show', :format => 'client_prefs', :id => /[A-Za-z0-9_\-\.:]+/
@@ -33,6 +35,8 @@ Munki::Application.routes.draw do
       get :import, :on => :new
       get 'managed_install_reports/:id' => 'managed_install_reports#show', :on => :collection, :as => "managed_install_reports"
       get 'environment_change(.:format)', :action => "environment_change", :as => 'environment_change'
+      get 'update_warranty', :action => "update_warranty", :as => 'update_warranty'
+      
       collection do
         post :create_import, :force_redirect
         put :update_multiple
