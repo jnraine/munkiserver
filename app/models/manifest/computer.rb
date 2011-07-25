@@ -5,7 +5,7 @@ class Computer < ActiveRecord::Base
   belongs_to :computer_model
   belongs_to :computer_group
   
-  has_one :system_profile
+  has_one :system_profile, :dependent => :destroy, :autosave => true
   
   has_many :client_logs
   has_many :managed_install_reports
