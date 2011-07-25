@@ -7,7 +7,7 @@ namespace :chore do
     puts "Destroyed #{total - failed} out of #{total} unused system profile records"
   end
 
-  desc "Validates all models stored in the database, optional 'no_color' argument to suppress colorizing output."
+  desc "Validates all models stored in the database"
   task :validate_models, :needs => :environment do |t, args|
     #Force load all models
     Dir[Rails.root + 'app/models/**/*.rb'].each do |path|
