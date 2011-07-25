@@ -153,6 +153,9 @@ html, body {
 	right:0px;
 }
 
+.footer p.text-center { text-align: center }
+
+
 /* Form styles */
 
 input[type=submit] {
