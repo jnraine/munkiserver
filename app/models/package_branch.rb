@@ -43,19 +43,6 @@ class PackageBranch < ActiveRecord::Base
     end
   end
   
-  # Over write the default method
-  # def self.find_or_create_by_name(name)
-  #   if name == validate_package_branch_display_name(name)
-  #     super(name)
-  #   else
-  #     display_name = validate_package_branch_display_name(name)
-  #     package_branch = PackageBranch.new
-  #     package_branch.name = name
-  #     package_branch.display_name = display_name
-  #     package_branch.save
-  #     package_branch
-  #   end
-  # end
   # Returns the latest package (based on version)
   # in the package branch.  Results are scoped if scoped? returns true
   def latest(unit_member = nil)
