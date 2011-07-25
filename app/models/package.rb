@@ -778,8 +778,15 @@ class Package < ActiveRecord::Base
       # Remove items that we don't need
       pkginfo_hash.delete('catalogs')
       # Find or create a package branch for this
-      pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'], pkginfo_hash['version'])
+      pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'])
       package.package_branch = PackageBranch.find_or_create_by_name(pb_name)
+      # Check if there exists package branch display name conflicts, if a new package branch record is created
+      if package.package_branch.new_record?
+        package.package_branch.display_name = PackageBranch.validate_package_branch_display_name(package.package_branch.display_name)
+        # Update and save the new package branch
+        package.package_branch.save if package.package_branch.changed?
+        package.package_branch
+      end
       pkginfo_hash.delete('name')
       # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
       pkginfo_hash.each do |k,v|

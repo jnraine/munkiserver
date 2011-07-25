@@ -28,25 +28,34 @@ class PackageBranch < ActiveRecord::Base
 
   # Conforms a string to the package branch name constraints
   # => Replaces anything that are not alpheranumrical to underscores
-  def self.conform_to_name_constraints(name, version)
+  def self.conform_to_name_constraints(name)
     name.gsub(/[^A-Za-z0-9_]+/,"_")
-    validate_package_branch_name(name, version)
   end
   
   # Check if there exists a pacakge branch display name that matches the 
-  # current package branch name, if found, return a new package branch name
-  # with package name, if still have conlfict then append time stamp after the name
-  def self.validate_package_branch_name(name, version)
+  # current package branch name, if found, return a new package branch 
+  # display name follow by appending time stamp
+  def self.validate_package_branch_display_name(name)
     if PackageBranch.where(:display_name => name).present?
-      # append the first digit of the version after the name
-      name = name + "_" + version.match(/[0-9]+/)[0]
+      name = name + "_" + Time.now.to_s.gsub(/:| |-+/, "-")
+    else
+      name
     end
-    if PackageBranch.where(:display_name => name).present?
-      name = name + "_" + Time.now.year.to_s+"_"+Time.now.month.to_s+"_"+Time.now.day.to_s
-    end
-    name
   end
-
+  
+  # Over write the default method
+  # def self.find_or_create_by_name(name)
+  #   if name == validate_package_branch_display_name(name)
+  #     super(name)
+  #   else
+  #     display_name = validate_package_branch_display_name(name)
+  #     package_branch = PackageBranch.new
+  #     package_branch.name = name
+  #     package_branch.display_name = display_name
+  #     package_branch.save
+  #     package_branch
+  #   end
+  # end
   # Returns the latest package (based on version)
   # in the package branch.  Results are scoped if scoped? returns true
   def latest(unit_member = nil)
