@@ -28,8 +28,23 @@ class PackageBranch < ActiveRecord::Base
 
   # Conforms a string to the package branch name constraints
   # => Replaces anything that are not alpheranumrical to underscores
-  def self.conform_to_name_constraints(value)
-    value.gsub(/[^A-Za-z0-9_]+/,"_")
+  def self.conform_to_name_constraints(name, version)
+    name.gsub(/[^A-Za-z0-9_]+/,"_")
+    validate_package_branch_name(name, version)
+  end
+  
+  # Check if there exists a pacakge branch display name that matches the 
+  # current package branch name, if found, return a new package branch name
+  # with package name, if still have conlfict then append time stamp after the name
+  def self.validate_package_branch_name(name, version)
+    if PackageBranch.where(:display_name => name).present?
+      # append the first digit of the version after the name
+      name = name + "_" + version.match(/[0-9]+/)[0]
+    end
+    if PackageBranch.where(:display_name => name).present?
+      name = name + "_" + Time.now.year.to_s+"_"+Time.now.month.to_s+"_"+Time.now.day.to_s
+    end
+    name
   end
 
   # Returns the latest package (based on version)

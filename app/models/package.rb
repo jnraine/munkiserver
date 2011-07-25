@@ -775,12 +775,10 @@ class Package < ActiveRecord::Base
     # munki server special cases
     def self.process_pkginfo_hash(pkginfo_hash,package_file,options)
       package = Package.new
-    
       # Remove items that we don't need
       pkginfo_hash.delete('catalogs')
-
       # Find or create a package branch for this
-      pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'])
+      pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'], pkginfo_hash['version'])
       package.package_branch = PackageBranch.find_or_create_by_name(pb_name)
       pkginfo_hash.delete('name')
       # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
@@ -824,7 +822,7 @@ class Package < ActiveRecord::Base
       # a File object for newly renamed/moved file
       def self.initialize_upload(package_file)
         destination_path = nil
-
+        
         # Get the absolute path for the package store
         begin
           unique_name = self.uniquify_name(package_file.original_filename)

@@ -105,6 +105,7 @@ class PackagesController < ApplicationController
     rescue PackageError => e
       exceptionMessage = e.to_s
     end
+    
     respond_to do |format|
       if exceptionMessage
         flash[:error] = "A problem occurred: " + exceptionMessage
