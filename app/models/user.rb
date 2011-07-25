@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
     :pass_upper => "must contain at least one upper case character",
     :pass_lower => "must contain at least one lower case character"}
 
-  validates_length_of :username, :within => 3..40
+  validates_length_of :username, :within => 39..40
   # ensure password has enough letters, but not too many
   validates_length_of :password, :in => 5..24, :if => :password_changed?,
     :message => @@password_constraints[:pass_len]

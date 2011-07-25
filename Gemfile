@@ -9,6 +9,7 @@ gem "nokogiri"
 gem "paperclip"
 gem "client_side_validations"
 gem 'whenever'
+gem "declarative_authorization"
 
 group :development do
   gem "ruby-debug19" , :require => "ruby-debug"
