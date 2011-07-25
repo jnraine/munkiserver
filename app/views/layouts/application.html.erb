@@ -129,7 +129,11 @@
 <div class="footer">
 	<div class="container">
 		<!-- <%= `echo $PATH` %> -->
-		<p class="span-8 last prepend-8 append-8">munki server <%= Munki::Application::VERSION %></p>
+		<p class="span-8 last prepend-8 append-8 text-center">
+			munki server <%= Munki::Application::VERSION %><br>
+			munki tools <%= Munki::Application::MUNKITOOLS_VERSION %>
+		</p>
+		
 		<%= image_tag 'footer_graphic.png', :id => "footer_graphic" %>
 	</div>
 	<script type="text/javascript">
