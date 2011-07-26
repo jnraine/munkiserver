@@ -35,11 +35,11 @@ class PackageBranch < ActiveRecord::Base
   # Check if there exists a pacakge branch display name that matches the 
   # current package branch name, if found, return a new package branch 
   # display name follow by appending time stamp
-  def self.validate_package_branch_display_name(name)
-    if PackageBranch.where(:display_name => name).present?
-      name = name + "_" + Time.now.to_s.gsub(/:| |-+/, "-")
+  def self.conform_to_display_name_constraints(display_name,id)
+    if PackageBranch.where(:display_name => display_name).where("id <> ?", id.to_i).present?
+      display_name = "#{display_name}_#{Time.now.to_s.gsub(/:| |-+/, "_")}"
     else
-      name
+      display_name
     end
   end
   
