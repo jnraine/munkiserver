@@ -18,7 +18,9 @@ module Item
       # ID is specified, grabbing a package if it exists.  If that fails
       # it grabs the latest package from the package branch and returns that
       def package
-        p = super
+        # p = super
+        p = Package.where(:id => package_id).first if package_id?
+        
         p ||= package_branch.latest(manifest) if package_branch.present?
         p
       end

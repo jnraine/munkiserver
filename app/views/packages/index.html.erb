@@ -1,6 +1,8 @@
 <% content_for :sidebar do %>
 	<%= recent_packages %>
-	<%= available_updates %>
+	<% if permitted_to? :modify, :packages %>
+		<%= available_updates %>
+	<% end %>
 <% end %>
 
 <h2>Listing packages</h2>

@@ -12,14 +12,14 @@ authorization do
     
     has_permission_on :bundles, :to => :manage
     has_permission_on :packages, :to => :manage
-    has_permission_on :shared_packages, :to => :import
+    has_permission_on :shared_packages, :to => [:manage, :import]
     
   end
   
   role :user do
     includes :guest
-    has_permission_on [:computer_groups, :computers], :to => :manage
-    has_permission_on [:bundles, :packages, :shared_packages], :to => :see
+    has_permission_on [:computer_groups, :computers, :bundles], :to => :manage
+    has_permission_on [:packages], :to => :read
     
     has_permission_on :users, :to => [:modify, :show] do
       if_attribute :id => is { user.id }
@@ -36,14 +36,14 @@ end
 
 privileges do
   privilege :manage do
-    includes :make, :edit, :update, :delete, :see
+    includes :make, :modify, :delete, :read
   end
   
   privilege :make do
     includes :new, :create
   end
   
-  privilege :see do
+  privilege :read do
     includes :index, :show
   end
   
