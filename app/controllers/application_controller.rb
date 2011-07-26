@@ -25,6 +25,10 @@ class ApplicationController < ActionController::Base
         flash[:warning] = "You are not permitted to any units!"
         render :file => "#{Rails.root}/public/generic_error.html", :layout => false
       end
+      # TODO - Kinda hacky and not very orthogonal...
+      if logged_in? and !current_unit.nil? and !current_user.units.include? current_unit
+        permission_denied
+      end
     else
       flash[:warning] = "You must be logged in to view that page"
       redirect_to login_path(:redirect => request.request_uri)

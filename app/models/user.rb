@@ -112,9 +112,6 @@ class User < ActiveRecord::Base
   
   # Roles used by this application.  This is required by
   # the declarative_authorization gem
-  # def role_symbols
-  #   [:admin, :developer,:support_person]
-  # end
   def role_symbols
     (roles || []).map {|r| r.to_sym}
   end
@@ -122,14 +119,10 @@ class User < ActiveRecord::Base
   # Not proud of this one... Only way I could figure out how to get
   # declarative authorization to use friendly urls...
   def self.find(id)
-    if id.class == String
-      if id.to_i == 0
+    if id.class == String and id.to_i == 0
         find_by_username(id)
-      else
-        find_by_id(id)
-      end
     else
-      super id
+      super id unless id.nil?
     end   
   end
 end
