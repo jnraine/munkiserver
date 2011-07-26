@@ -278,13 +278,13 @@ $(document).ready(function() {
 	
 	// trigger help message appear
 	$(".helpful_info").live('click', (function(e){
-		$helpful_info_message = $(this).parent().find(".helpful_info_message")
+		$helpful_info_message = $(this).find(".helpful_info_message");
 		$helpful_info_message.css({"display":"inline","position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px","margin":"0 0 0 50px"});
 		$helpful_info_message.hide();
 		$helpful_info_message.fadeIn("fast");
 	}))
 	$(".helpful_info").live('mouseout', (function() {
-		$(this).parent().find(".helpful_info_message").fadeOut("fast");
+		$(this).find(".helpful_info_message").fadeOut("fast");
 	}));
 }); // end document ready function
 

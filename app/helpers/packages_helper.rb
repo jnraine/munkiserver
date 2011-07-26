@@ -148,4 +148,14 @@ module PackagesHelper
     end
     concat(render :partial => 'pkgsinfo_plist_errors', :locals => {:invalid_plists => invalid_plists })
   end
+  
+  # def has_required?(package)
+  #   ri = RequireItem.where(:package_id => package.id).first
+  #   if ri.present? and ri.manifest_id.present?
+  #     required_package = Package.find(ri.manifest_id)
+  #     return "#{package.to_s(:version)} is required by #{required_package.to_s(:version)}. Are you sure you want to destory #{package.to_s(:version)}?"
+  #   else
+  #     return "Are you sure you want to destory #{package.to_s(:version)}?"
+  #   end
+  # end
 end
