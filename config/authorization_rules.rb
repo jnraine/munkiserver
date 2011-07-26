@@ -12,13 +12,14 @@ authorization do
     
     has_permission_on :bundles, :to => :manage
     has_permission_on :packages, :to => :manage
+    has_permission_on :shared_packages, :to => :import
     
   end
   
   role :user do
     includes :guest
     has_permission_on [:computer_groups, :computers], :to => :manage
-    has_permission_on [:bundles, :packages], :to => :see
+    has_permission_on [:bundles, :packages, :shared_packages], :to => :see
     
     has_permission_on :users, :to => [:modify, :show] do
       if_attribute :id => is { user.id }
@@ -27,10 +28,7 @@ authorization do
     has_permission_on :sessions, :to => :destroy
     
   end
-  
-  
-  # allowed = {:show => [:manifest, :client_prefs, :plist],:download => [:all], :checkin => [:all]}
-  
+    
   role :guest do
     has_permission_on :sessions, :to => [:new, :create]    
   end

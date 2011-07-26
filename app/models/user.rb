@@ -122,10 +122,14 @@ class User < ActiveRecord::Base
   # Not proud of this one... Only way I could figure out how to get
   # declarative authorization to use friendly urls...
   def self.find(id)
-    if id.to_i == 0
-      find_by_username(id)
+    if id.class == String
+      if id.to_i == 0
+        find_by_username(id)
+      else
+        find_by_id(id)
+      end
     else
-      find_by_id(id)
-    end
+      super id
+    end   
   end
 end

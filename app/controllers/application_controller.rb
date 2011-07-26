@@ -84,9 +84,7 @@ class ApplicationController < ActionController::Base
     if action_and_format_excluded?
       
     else
-      puts "Sorry, you are not allowed to access that page."
       flash[:error] = "Sorry, you are not allowed to access that page."
-      puts flash
       redirect_to root_url
     end
   end

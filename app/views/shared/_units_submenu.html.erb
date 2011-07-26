@@ -27,7 +27,9 @@
 	<%= link_to "Packages", packages_path(current_unit) %>
 		<ul>
 			<li><%= link_to "List packages", packages_path(current_unit) %></li>
-			<li><%= link_to "Add package", new_package_path(current_unit) %></li>
+			<% if permitted_to? :make, :packages %>
+				<li><%= link_to "Add package", new_package_path(current_unit) %></li>
+			<% end %>
 			<li><%= link_to "Shared packages", shared_packages_path(current_unit) %></li>	
 			<li><%= link_to "Check for updates", check_for_package_updates_path(current_unit) %></li>
 		</ul>
