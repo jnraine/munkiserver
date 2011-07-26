@@ -77,5 +77,5 @@ Munki::Application.routes.draw do
     match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :via => :put
   end
   
-  root :to => redirect("/login")
+  root :to => "sessions#new"
 end

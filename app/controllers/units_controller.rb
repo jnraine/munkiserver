@@ -1,4 +1,6 @@
 class UnitsController < ApplicationController
+  filter_access_to :all
+  
   before_filter :super_user?
 
   def index

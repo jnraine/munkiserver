@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   
   before_filter :require_login
   
+  
   private
   
   include ApplicationHelper
@@ -77,5 +78,16 @@ class ApplicationController < ActionController::Base
   # This is required by the declarative_authorization gem
   def set_current_user_for_auth
     Authorization.current_user = current_user
+  end
+    
+  def permission_denied
+    if action_and_format_excluded?
+      
+    else
+      puts "Sorry, you are not allowed to access that page."
+      flash[:error] = "Sorry, you are not allowed to access that page."
+      puts flash
+      redirect_to root_url
+    end
   end
 end

@@ -1,5 +1,7 @@
 class ComputersController < ApplicationController
   before_filter :require_valid_unit
+  filter_access_to :all
+
   require 'cgi'
 
   def index

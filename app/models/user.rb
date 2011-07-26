@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
     :pass_upper => "must contain at least one upper case character",
     :pass_lower => "must contain at least one lower case character"}
 
-  validates_length_of :username, :within => 39..40
+  validates_length_of :username, :within => 3..40
   # ensure password has enough letters, but not too many
   validates_length_of :password, :in => 5..24, :if => :password_changed?,
     :message => @@password_constraints[:pass_len]
@@ -33,9 +33,14 @@ class User < ActiveRecord::Base
   has_many :memberships
   has_many :units, :through => :memberships
   
+  has_many :assignments
+  has_many :roles, :through => :assignments
+  
   has_one :settings, :dependent => :destroy, :class_name => "UserSetting", :autosave => true
 
   before_save :check_settings
+  
+
   
   def self.password_constraints
     @@password_constraints.values
@@ -82,11 +87,6 @@ class User < ActiveRecord::Base
     unit.membership(self)
   end
   
-  # Returns true if user is super user
-  def super_user?
-    super_user
-  end
-  
   # A to string method
   def to_s
     username
@@ -104,14 +104,28 @@ class User < ActiveRecord::Base
     self.settings = us
   end
   
-  # Roles used by this application.  This is required by
-  # the declarative_authorization gem
-  def role_symbols
-    [:admin,:developer,:support_person]
-  end
-  
   # over write default to_param use name in the routing instead of id
   def to_param
     username
+  end
+  
+  
+  # Roles used by this application.  This is required by
+  # the declarative_authorization gem
+  # def role_symbols
+  #   [:admin, :developer,:support_person]
+  # end
+  def role_symbols
+    (roles || []).map {|r| r.to_sym}
+  end
+  
+  # Not proud of this one... Only way I could figure out how to get
+  # declarative authorization to use friendly urls...
+  def self.find(id)
+    if id.to_i == 0
+      find_by_username(id)
+    else
+      find_by_id(id)
+    end
   end
 end

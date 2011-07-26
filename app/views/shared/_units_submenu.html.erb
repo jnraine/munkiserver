@@ -1,0 +1,35 @@
+<ul class="dropdown dropdown-horizontal">
+	<li class="dir<%= " current" if current_link?("Computers") %>">
+		<%= link_to "Computers", computers_url(current_unit) %>
+		<ul>
+			<li><%= link_to "List computers", computers_path(current_unit) %></li>
+			<li><%= link_to "Add computer", new_computer_path(current_unit) %></li>
+			<li><%= link_to "Import ARD list", import_new_computer_path(current_unit) %></li>
+		</ul>
+	</li>
+	<li class="dir<%= " current" if current_link?("Computer Groups") %>">
+		<%= link_to "Computer Groups", computer_groups_url(current_unit) %>
+		<ul>
+			<li><%= link_to "List computer groups", computer_groups_url(current_unit) %></li>
+			<li><%= link_to "Add computer group", new_computer_group_url(current_unit) %></li>
+		</ul>
+	</li>
+	<li class="dir<%= " current" if current_link?("Bundles") %>">
+	<%= link_to "Bundles", bundles_url(current_unit) %>
+		<ul>
+			<li><%= link_to "List bundles", bundles_url(current_unit) %></li>
+			<% if permitted_to? :make, :bundles %>
+				<li><%= link_to "Add bundle", new_bundle_url(current_unit) %></li>
+			<% end %>
+		</ul>
+	</li>
+	<li class="dir<%= " current" if current_link?("Packages") %>">
+	<%= link_to "Packages", packages_path(current_unit) %>
+		<ul>
+			<li><%= link_to "List packages", packages_path(current_unit) %></li>
+			<li><%= link_to "Add package", new_package_path(current_unit) %></li>
+			<li><%= link_to "Shared packages", shared_packages_path(current_unit) %></li>	
+			<li><%= link_to "Check for updates", check_for_package_updates_path(current_unit) %></li>
+		</ul>
+	</li>
+</ul>

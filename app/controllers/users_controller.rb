@@ -1,5 +1,8 @@
 class UsersController < ApplicationController
   before_filter :super_user?
+  filter_access_to :all, :attribute_check => true
+  
+  
   
   def index
     @users = User.all

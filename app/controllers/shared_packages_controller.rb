@@ -1,5 +1,7 @@
 class SharedPackagesController < ApplicationController
   before_filter :require_valid_unit
+  filter_access_to :all
+  
   def index
     @shared_packages = Package.shared_to_unit(current_unit)
     @imported_packages = Package.shared_to_unit_and_imported(current_unit)
