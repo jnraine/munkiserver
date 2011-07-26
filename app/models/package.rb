@@ -18,7 +18,6 @@ class Package < ActiveRecord::Base
   has_many :user_install_items, :dependent => :destroy
   has_many :user_uninstall_items, :dependent => :destroy
   has_many :user_allowed_items, :dependent => :destroy
-  has_many :require_items, :dependent => :destroy
   has_many :update_for_items, :dependent => :destroy
   
   serialize :installs
@@ -779,6 +778,7 @@ class Package < ActiveRecord::Base
       pkginfo_hash.delete('catalogs')
       # Find or create a package branch for this
       pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'])
+      # Assgin a package branch to this new package
       package.package_branch = retrieve_package_branch(pb_name, pkginfo_hash)
       pkginfo_hash.delete('name')
       # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
@@ -823,7 +823,7 @@ class Package < ActiveRecord::Base
           end
         end
       end
-      pb
+      pb # need to call this the package branch, else return nothing
     end
     
     # Checks to ensure what should be present is. If something is missing, raise 

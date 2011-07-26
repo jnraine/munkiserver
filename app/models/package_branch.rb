@@ -37,7 +37,7 @@ class PackageBranch < ActiveRecord::Base
   # display name follow by appending time stamp
   def self.conform_to_display_name_constraints(display_name,id)
     if PackageBranch.where(:display_name => display_name).where("id <> ?", id.to_i).present?
-      display_name = "#{display_name}_#{Time.now.to_s.gsub(/:| |-+/, "_")}"
+      display_name = "#{display_name}_#{Time.zone.now.to_s}"
     else
       display_name
     end

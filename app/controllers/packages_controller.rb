@@ -30,6 +30,7 @@ class PackagesController < ApplicationController
   end
 
   def update
+    debugger
     @package = Package.find_where_params(params)
     
     respond_to do |format|
