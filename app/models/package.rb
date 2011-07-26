@@ -18,7 +18,6 @@ class Package < ActiveRecord::Base
   has_many :user_install_items, :dependent => :destroy
   has_many :user_uninstall_items, :dependent => :destroy
   has_many :user_allowed_items, :dependent => :destroy
-  has_many :require_items, :dependent => :destroy
   has_many :update_for_items, :dependent => :destroy
   
   serialize :installs
@@ -43,7 +42,7 @@ class Package < ActiveRecord::Base
   validates :version, :uniqueness_in_unit => true
   
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
-                  :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0']],
+                  :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0'],['10.7','10.7.0']],
                   :installer_types         => [['Package',''],
                                                ['Copy From DMG', 'copy_from_dmg'],
                                                ['App DMG','appdmg'],
@@ -517,7 +516,7 @@ class Package < ActiveRecord::Base
     vtv
   end
   
-  # calls package_branch new version check method
+  # Calls package_branch new version check method
   def new_version?
     package_branch.new_version?(self.unit)
   end
@@ -680,6 +679,11 @@ class Package < ActiveRecord::Base
       {:total => packages.count, :successes => successes.count, :failures => failures.count}
     end
   end
+  
+  
+  def self.has_required_package?(package)
+    RequireItem.where(:package_id => package.id).first.present?
+  end
 
   private
     # Run makepkginfo on server against package file to generate a pkginfo
@@ -770,13 +774,12 @@ class Package < ActiveRecord::Base
     # munki server special cases
     def self.process_pkginfo_hash(pkginfo_hash,package_file,options)
       package = Package.new
-    
       # Remove items that we don't need
       pkginfo_hash.delete('catalogs')
-
       # Find or create a package branch for this
       pb_name = PackageBranch.conform_to_name_constraints(pkginfo_hash['name'])
-      package.package_branch = PackageBranch.find_or_create_by_name(pb_name)
+      # Assgin a package branch to this new package
+      package.package_branch = retrieve_package_branch(pb_name, pkginfo_hash)
       pkginfo_hash.delete('name')
       # Removes keys that are not attributes of a package and adds them to the raw_tags attribute
       pkginfo_hash.each do |k,v|
@@ -789,7 +792,6 @@ class Package < ActiveRecord::Base
           package.raw_mode_id = 1
         end
       end
-    
       # Assign attributes to package
       package.attributes = pkginfo_hash
       # Assign a package category based on the installer_type
@@ -802,48 +804,66 @@ class Package < ActiveRecord::Base
       package = self.apply_special_attributes(package,options[:special_attributes])
       # Apply attributes from existing version in the same unit
       package = self.apply_previous_version_attributes(package)
-      
+      # debugger
       package
     end
-
-      # Checks to ensure what should be present is. If something is missing, raise 
-      # PackageError exception.
-      def self.validate_create_options(options)
-        raise PackageError.new("Please select a file") if options[:package_file].nil?
-        raise PackageError.new("Must provide an :special_attributes option") if options[:special_attributes].nil?
-        raise PackageError.new("Must provide a unit ID") if options[:special_attributes][:unit_id].nil?
-        raise PackageError.new("Must provide an environment ID") if options[:special_attributes][:environment_id].nil?
-      end
-
-      # Renames and moves temporary files to the appropriate package store. Returns
-      # a File object for newly renamed/moved file
-      def self.initialize_upload(package_file)
-        destination_path = nil
-
-        # Get the absolute path for the package store
-        begin
-          unique_name = self.uniquify_name(package_file.original_filename)
-          destination_path = Pathname.new(Munki::Application::PACKAGE_DIR + unique_name)
-        end while File.exists?(destination_path)
-
-        # Move tmp_file to the package store
-        begin
-          FileUtils.mv package_file.tempfile.path, destination_path
-        rescue Errno::EACCES => e
-          raise PackageError.new("Unable to write to package store")
-        end
-
-        # Return the package as a File object
-        begin
-          File.new(destination_path)
-        rescue
-          raise PackageError.new("Unable to read #{destination_path}")
+    
+    # Create a new package branch if not existing
+    # else pick the existing package branch and assign to the package
+    def self.retrieve_package_branch(pb_name, pkginfo_hash)
+      pb = PackageBranch.find_or_create_by_name(pb_name)
+      # Check if there exists package branch display name conflicts, if a new package branch record is created
+      if pb.new_record?
+        display_name = pkginfo_hash['display_name'].present? ? pkginfo_hash['display_name'] : pkginfo_hash['name']
+        pb.display_name = PackageBranch.conform_to_display_name_constraints(display_name, pb.id)
+        # Update and save the new package branch
+        if pb.changed?
+          unless pb.save
+            raise PackageError.new("Error occurred while attempting to uniquify display name for package branch (#{package.package_branch})")
+          end
         end
       end
+      pb # need to call this the package branch, else return nothing
+    end
+    
+    # Checks to ensure what should be present is. If something is missing, raise 
+    # PackageError exception.
+    def self.validate_create_options(options)
+      raise PackageError.new("Please select a file") if options[:package_file].nil?
+      raise PackageError.new("Must provide an :special_attributes option") if options[:special_attributes].nil?
+      raise PackageError.new("Must provide a unit ID") if options[:special_attributes][:unit_id].nil?
+      raise PackageError.new("Must provide an environment ID") if options[:special_attributes][:environment_id].nil?
+    end
 
-      # Create a unique name from a string by prepending the current timestamp
-      # and adding a random number
-      def self.uniquify_name(name)
-        Time.now.to_s(:ordered_numeric) + rand(10001).to_s + "_" + name
+    # Renames and moves temporary files to the appropriate package store. Returns
+    # a File object for newly renamed/moved file
+    def self.initialize_upload(package_file)
+      destination_path = nil
+      
+      # Get the absolute path for the package store
+      begin
+        unique_name = self.uniquify_name(package_file.original_filename)
+        destination_path = Pathname.new(Munki::Application::PACKAGE_DIR + unique_name)
+      end while File.exists?(destination_path)
+
+      # Move tmp_file to the package store
+      begin
+        FileUtils.mv package_file.tempfile.path, destination_path
+      rescue Errno::EACCES => e
+        raise PackageError.new("Unable to write to package store")
       end
+
+      # Return the package as a File object
+      begin
+        File.new(destination_path)
+      rescue
+        raise PackageError.new("Unable to read #{destination_path}")
+      end
+    end
+
+    # Create a unique name from a string by prepending the current timestamp
+    # and adding a random number
+    def self.uniquify_name(name)
+      Time.now.to_s(:ordered_numeric) + rand(10001).to_s + "_" + name
+    end
 end

@@ -5,7 +5,6 @@
 		<% else %>
 			<span class="not-installed-mark">&nbsp;&#10003;</span>
 		<% end %>
-	
 		<%= image_tag item.package.icon.url(:tiny) if item.package.icon %>
 		<% if item.package_id.blank? %>
 			<span><%= link_to item.package, package_path(item.package.to_params) %></span>
