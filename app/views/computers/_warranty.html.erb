@@ -53,7 +53,7 @@
 		</tr>
 		<tr>
 			<td><strong>Purchase Date</strong></td>
-			<td><%= @computer.warranty.purchase_date %></td>
+			<td><%= @computer.warranty.purchase_date.to_s(:readable_date) %></td>
 		</tr>
 		<tr>
 			<td><strong>Last updated</strong></td>
