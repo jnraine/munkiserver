@@ -15,6 +15,7 @@ module Munki
     settings = nil
     begin
       settings = YAML.load(File.read("#{Rails.root}/config/settings.yaml"))
+      APP_CONFIG = settings
     rescue Errno::ENOENT
       # config/settings.yaml doesn't exist
     end

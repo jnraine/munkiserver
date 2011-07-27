@@ -57,8 +57,10 @@ class ApplicationController < ActionController::Base
   
   def permission_denied
     if action_and_format_excluded?
-      authenticate_or_request_with_http_basic do |user, pass|
-        USER == user && PASS == pass
+      if Munki::Application::APP_CONFIG[:require_http_basic_auth]
+        authenticate_or_request_with_http_basic do |user, pass|
+          USER == user && PASS == pass
+        end
       end
     else
       flash[:error] = "Sorry, you are not allowed to access that page."
