@@ -29,9 +29,9 @@
 			<td>
 				OS
 			</td>
-			<td>			
-				<%= select_tag "#{@package.class.to_s.downcase}[minimum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],p.minimum_os_version) %> to
-				<%= select_tag "#{@package.class.to_s.downcase}[maximum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],p.maximum_os_version) %>
+			<td>
+				<%= select_tag "package[minimum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],p.minimum_os_version) %> to
+				<%= select_tag "package[maximum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],p.maximum_os_version) %>
 			</td>
 		</tr>
 		

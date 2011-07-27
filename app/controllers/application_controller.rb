@@ -76,6 +76,11 @@ class ApplicationController < ActionController::Base
     {:file => "#{Rails.root}/public/generic_error.html", :layout => false}
   end
   
+  # Check if the given package has dependency issues if it's required by other packages
+  def is_required?(package)
+    RequireItem.where(:package_id => package.id).present?
+  end
+  
   protected
   
   # Sets the Authorization.current_user to the current_user
