@@ -58,14 +58,15 @@ class Warranty < ActiveRecord::Base
       app_registered:         hash['HW_HAS_APP'] == 'Y',
       app_eligible:           hash['IS_APP_ELIGIBLE'] == 'Y',
       phone_coverage_expired: hash['PH_HAS_COVERAGE'] == 'N',
-
+      
       specs_url:            "http://support.apple.com/specs/#{serial}",
       hw_support_url:       hash['HW_SUPPORT_LINK'],
       forum_url:            hash['FORUMS_URL'],
       phone_support_url:    hash['PHONE_SUPPORT_LINK'],
     }
-  end
   
+  end
+    
   def get_status(bool)
     if bool
       "green"

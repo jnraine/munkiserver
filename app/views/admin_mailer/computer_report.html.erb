@@ -1,6 +1,8 @@
+<% report = @computer.managed_install_reports.last %>
 <h2><%= @computer %> (<%= @computer.mac_address%>) - <%= @computer.status%></h2>
+<% ManagedInstallReport::LOG_ATTRIBUTES.each do |attribute_name| %>
+	<%= render :partial => 'managed_install_reports/report_log', :locals => {:attribute_name => attribute_name,:report => report} if report.send(attribute_name).present? %>
+<% end %>
 
-<%= render :partial => "computers/system_profile" %>
-
-<h3>Managed Install Report</h3>
-<%= render(:partial => 'managed_install_reports/report', :locals => {:report => @computer.last_report}) %>
+<br />
+<%= link_to "Click Here to view full report", "#{computer_url(@computer.unit,@computer)}\?tab=managed_install_reports_tab&report_id=#{report.id}", :target => "_blank" %>
