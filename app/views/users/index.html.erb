@@ -9,7 +9,7 @@
 	</thead>
 	<% @users.each do |user| %>
 		<tr>
-			<td><%= link_to user.username, edit_user_path(user) %></td>
+			<td><%= link_to user.username, user_path(user) %></td>
 			<td><% user.roles.each do |role|%> 
 					<%= role.name %> <br/>
 				<% end %>

@@ -3,7 +3,12 @@ authorization do
     includes :super_user
     
     has_permission_on :users, :to => :manage
+    has_permission_on :user_settings, :to => :manage
+    
     has_permission_on :units, :to => :manage
+    has_permission_on :unit_settings, :to => :manage
+    
+    
     has_permission_on :roles, :to => :manage
   end
   
@@ -17,8 +22,11 @@ authorization do
   role :user do
     includes :guest
     
-    has_permission_on [:computer_groups, :computers, :bundles], :to => :manage
-    has_permission_on [:packages], :to => :read
+    has_permission_on [:computers], :to => [:manage, :import, :create_import]
+    has_permission_on [:computer_groups, :bundles], :to => :manage
+    has_permission_on [:packages, :managed_install_reports], :to => :read
+    # has_permission_on [:install_items], :to => :modify
+    
     
     has_permission_on :sessions, :to => :destroy
     has_permission_on :users, :to => [:modify, :show] do
@@ -27,13 +35,13 @@ authorization do
   end
     
   role :guest do
-    has_permission_on :sessions, :to => [:new, :create]    
+    has_permission_on :sessions, :to => :make    
   end
 end
 
 privileges do
   privilege :manage do
-    includes :make, :modify, :delete, :read
+    includes :make, :modify, :destroy, :read
   end
   
   privilege :make do
@@ -45,7 +53,7 @@ privileges do
   end
   
   privilege :modify do
-    includes :edit, :update
+    includes :edit, :update, :edit_multiple, :update_multiple, :environment_change, :check_for_updates  
   end
   
 end

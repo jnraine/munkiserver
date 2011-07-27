@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  filter_access_to :all, :attribute_check => true
+  filter_access_to  :all, :attribute_check => true, 
+                    :load_method => lambda {|controller| User.find_by_username(params[:id])}
   
   def index
     @users = User.all

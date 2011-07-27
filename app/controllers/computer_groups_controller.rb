@@ -1,7 +1,6 @@
 class ComputerGroupsController < ApplicationController
-  filter_access_to :all
-  
   before_filter :require_valid_unit
+  filter_access_to :all
   
   def index
     @computer_groups = ComputerGroup.unit(current_unit)

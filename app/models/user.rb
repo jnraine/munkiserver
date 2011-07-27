@@ -115,14 +115,4 @@ class User < ActiveRecord::Base
   def role_symbols
     (roles || []).map {|r| r.to_sym}
   end
-  
-  # Not proud of this one... Only way I could figure out how to get
-  # declarative authorization to use friendly urls...
-  def self.find(id)
-    if id.class == String and id.to_i == 0
-        find_by_username(id)
-    else
-      super id unless id.nil?
-    end   
-  end
 end
