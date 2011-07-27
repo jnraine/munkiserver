@@ -136,18 +136,6 @@ $(document).ready(function() {
 		});
 	});
 	
-	// $("select.environment").change();
-	// Load managed install report on change to drop down
-	$("select#managed_install_reports").change(function() {
-			$(".loading").show();
-			$.ajax({
-			  url: "managed_install_reports/" +$(this).val()+ ".js",
-			  complete: function(){
-			    $(".loading").hide();
-			  }
-			});
-		});
-	$("select#managed_install_reports").change();
 	// add Codemirror with $ animation to highlight XML/plist/bash syntax in package list
 	$("textarea[data-format]").each(function () {	
 		var format = $(this).attr("data-format");
@@ -206,10 +194,20 @@ $(document).ready(function() {
 	hideUninstallField("uninstall_script","#postinstall_script_container");
 	$("#package_uninstall_method").change();
 		
-	// Initialize tabs
-	initializeTabs();
-//   $("#tabs").tabs();
-// var selected = $tabs.tabs('option', 'selected');
+	// Initialize tabs	
+	$("#tabs").tabs();
+	initializeTabUrlParams();
+	// Load managed install report on change to drop down
+	$("select#managed_install_reports").change(function() {
+		$(".loading").show();
+		$.ajax({
+		  url: "managed_install_reports/" +$(this).val()+ ".js",
+		  complete: function(){
+		    $(".loading").hide();
+		  }
+		});
+	});
+	$("select#managed_install_reports").change();
 	
 	// client side validation $ animation
 	clientSideValidations.callbacks.element.fail = function(element, message, callback) {
@@ -475,7 +473,27 @@ function initializeAsmSelect(targetSelector) {
 	});
 }
 
-function initializeTabs(){
-	var $tabs = $("#tabs").tabs();
-	var selected = $tabs.tabs('option', 'selected');
+// Get the url and takes all the params after ? into a hash
+function getParamsAsHash(){
+	var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+// Get the hash from URL params if exists, select the tab according to params
+// Select managed install reports if given in the params
+function initializeTabUrlParams(){
+	hash = getParamsAsHash();
+	// if there is params
+	if (hash.length != 0){
+		$("[href=#" + hash["tab"] + "]").click();
+		if (hash["report_id"] != undefined){
+			$("select#managed_install_reports").val(hash["report_id"]);
+		}
+	}
 }
