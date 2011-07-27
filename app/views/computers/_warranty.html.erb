@@ -29,7 +29,7 @@
         </div>
 
         <div class="status <%= @computer.warranty.phone_coverage_status %>">
-            <% if @computer.warranty.phone_coverage_expired %>
+            <% unless @computer.warranty.phone_coverage_expired %>
                 Technical phone support: Covered (until <%= @computer.warranty.phone_coverage_end_date.present? ? @computer.warranty.phone_coverage_end_date.to_s(:readable_date) : "unknown" %>)
             <% else %>
                 Technical phone support: Expired
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <h4>Other Information</h4>
+    <h4>More Information</h4>
 	<table class="form">
 		<tr>
 			<td><strong>Serial Number</strong></td>
@@ -78,4 +78,4 @@
 <% else %>
 	<p><em>No warranty available</em></p>
 	<p><em><%= link_to "Find warranty", computer_update_warranty_path(@computer.unit, @computer) %></em></p>
-<% end -%>
+<% end %>
