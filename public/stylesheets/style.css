@@ -483,3 +483,28 @@ thead th a:hover,
 	background-color:#594F4F;
 	z-index: 1; /* fix for overlay CodeMirror textarea, always show top*/
 }
+
+/* ============ */
+/* = Warranty = */
+/* ============ */
+
+#warranty_tab .status {
+  padding-left: 50px;
+  min-height: 40px;
+  vertical-align:middle;
+  font-size:1.2em;
+  font-weight:bold;
+  line-height:40px;
+}
+
+#warranty_tab .green {
+  background: url(/images/warranty_status_green.png) no-repeat 5px 5px;
+}
+
+#warranty_tab .red {
+  background: url(/images/warranty_status_yellow.png) no-repeat 5px 5px;
+}
+
+#warranty_summary {
+  padding-bottom:15px;
+}

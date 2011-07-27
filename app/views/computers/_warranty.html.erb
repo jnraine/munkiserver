@@ -1,6 +1,43 @@
 <h3>Warranty</h3>
 <% if @computer.warranty.present? %>
-	<h4>Warranty Overview</h4>
+    <h4>Summary</h4>
+    <div id="warranty_summary">
+        <div class="status <%= @computer.warranty.registered_status %>">
+            <% if @computer.warranty.registered %>
+                Registered
+            <% else %>
+                Not Registered
+            <% end %>
+        </div>
+    
+        <% unless @computer.warranty.app_registered %>
+        <div class="status <%= @computer.warranty.app_eligibility_status %>">
+            <% if @computer.warranty.app_eligible %>
+                Eligible for AppleCare Protection Plan (until <%= @computer.warranty.hw_coverage_end_date.present? ? @computer.warranty.hw_coverage_end_date.to_s(:readable_date) : "unknown" %>)
+            <% else %>
+                Not Eligible
+            <% end %>
+        </div>
+        <% end %>
+    
+        <div class="status <%= @computer.warranty.hw_coverage_status %>">
+            <% unless @computer.warranty.hw_coverage_expired %>
+                Repairs and service: Covered (until <%= @computer.warranty.hw_coverage_end_date.present? ? @computer.warranty.hw_coverage_end_date.to_s(:readable_date) : "unknown" %>)
+            <% else %>
+                Repairs and service: Expired
+            <% end %>
+        </div>
+
+        <div class="status <%= @computer.warranty.phone_coverage_status %>">
+            <% if @computer.warranty.phone_coverage_expired %>
+                Technical phone support: Covered (until <%= @computer.warranty.phone_coverage_end_date.present? ? @computer.warranty.phone_coverage_end_date.to_s(:readable_date) : "unknown" %>)
+            <% else %>
+                Technical phone support: Expired
+            <% end %>
+        </div>
+    </div>
+
+    <h4>Other Information</h4>
 	<table class="form">
 		<tr>
 			<td><strong>Serial Number</strong></td>
@@ -15,48 +52,24 @@
 			<td><%= @computer.warranty.product_description %></td>
 		</tr>
 		<tr>
-			<td><strong>Purchase Date</strong></td>
-			<td><%= @computer.warranty.purchase_date %></td>
+			<td><strong>Last updated</strong></td>
+			<td><%= @computer.warranty.updated_at.to_s(:readable_date) %></td>
 		</tr>
 		<tr>
-			<td><strong>Hardware Support Coverage</strong></td>
-			<td><%= @computer.warranty.hw_support_coverage %></td>
-		</tr>
-		<tr>
-			<td><strong>Hardware Coverage Description</strong></td>
-			<td><%= @computer.warranty.hw_coverage_description %></td>
-		</tr>
-		<tr>
-			<td><strong>Coverage Expired</strong></td>
-			<td><%= @computer.warranty.coverage_expired %></td>
-		</tr>
-		<tr>
-			<td><strong>Coverage End Date</strong></td>
-			<td><%= @computer.warranty.coverage_end_date %></td>
-		</tr>
-		<tr>
-			<td><strong>Registered</strong></td>
-			<td><%= @computer.warranty.registered %></td>
-		</tr>
-		<tr>
-			<td><strong>Default Specs URL</strong></td>
+			<td><strong>Specifications</strong></td>
 			<td><%= link_to @computer.warranty.specs_url, @computer.warranty.specs_url %></td>
 		</tr>
 		<tr>
-			<td><strong>Hardware Support URL</strong></td>
+			<td><strong>Repair and Service Support</strong></td>
 			<td><%= link_to @computer.warranty.hw_support_url, @computer.warranty.hw_support_url %></td>
 		</tr>
 		<tr>
-			<td><strong>Forum URL</strong></td>
-			<td><%= link_to @computer.warranty.forum_url, @computer.warranty.forum_url %></td>
-		</tr>
-		<tr>
-			<td><strong>Phone Support URL</strong></td>
+			<td><strong>Technical Phone Support</strong></td>
 			<td><%= link_to @computer.warranty.phone_support_url, @computer.warranty.phone_support_url %></td>
 		</tr>
 		<tr>
-			<td><strong>Image URL</strong></td>
-			<td><%= link_to image_tag(@computer.warranty.image_url), @computer.warranty.image_url %></td>
+			<td><strong>Forum Support</strong></td>
+			<td><%= link_to @computer.warranty.forum_url, @computer.warranty.forum_url %></td>
 		</tr>
 	</table>
 
@@ -65,5 +78,4 @@
 <% else %>
 	<p><em>No warranty available</em></p>
 	<p><em><%= link_to "Find warranty", computer_update_warranty_path(@computer.unit, @computer) %></em></p>
-	
 <% end -%>

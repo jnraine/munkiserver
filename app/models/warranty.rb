@@ -22,37 +22,71 @@ class Warranty < ActiveRecord::Base
 
 
   def self.get_warranty_hash(serial = "")
-      hash = {}
-      
-      begin
-      open('https://selfsolve.apple.com/warrantyChecker.do?sn=' + serial.upcase + '&country=USA') {|item|
+    if serial.blank?
+      Rails.logger.warn "Blank serial number for computer #{computer}"
+    end
+    
+    hash = {}
+    begin
+      open('https://selfsolve.apple.com/warrantyChecker.do?sn=' + serial.upcase) do |item|
         warranty_array = item.string.strip.split('"')
-        warranty_array.each {|array_item|
+        warranty_array.each do |array_item|
           hash[array_item] = warranty_array[warranty_array.index(array_item) + 2] if array_item =~ /[A-Z][A-Z\d]+/
-        }
+        end
         hash
-      }
-      rescue URI::Error
-        computer = Computer.where(serial_number: serial)
-        Rails.logger.error "Invalid serial number #{serial} for computer #{computer.name}"
-        puts "Invalid serial number #{serial} for computer #{computer.name}"
       end
-      
-     {  serial_number:        serial, 
-        product_description:  hash['PROD_DESCR'], 
-        purchase_date:        Time.new(hash['PURCHASE_DATE'].to_s),
-        coverage_expired:     hash['HW_HAS_COVERAGE'] == 'N',
-        coverage_end_date:    Time.new(hash['COV_END_DATE'].to_s),
-        hw_support_coverage:  hash['HW_SUPPORT_COV_SHORT'],
-        hw_coverage_description: hash['HW_COVERAGE_DESC'],
-        product_type:         hash['PRODUCT_TYPE'],
-      
-        image_url:            hash['PROD_IMAGE_URL'], 
-        registered:           hash['IS_REGISTERED'] == 'Y',
-        specs_url:            "http://support.apple.com/specs/#{serial}",
-        hw_support_url:       hash['HW_SUPPORT_LINK'],
-        forum_url:            hash['FORUMS_URL'],
-        phone_support_url:    hash['PHONE_SUPPORT_LINK'],
-      }
+    rescue URI::Error
+      computer = Computer.where(serial_number: serial)
+      Rails.logger.error "Invalid serial number #{serial} for computer #{computer}"
+      puts "Invalid serial number #{serial} for computer #{computer}"
+    end
+    
+    purchase_date = Date.parse(hash['PURCHASE_DATE']) if hash['PURCHASE_DATE'].present?
+    hw_coverage_end_date = Date.parse(hash['COV_END_DATE']) if hash['COV_END_DATE'].present?
+    phone_coverage_end_date = Date.parse(hash['PH_END_DATE']) if hash['PH_END_DATE'].present?
+    
+    { serial_number:        serial, 
+      product_description:  hash['PROD_DESCR'],
+      product_type:         hash['PRODUCT_TYPE'],
+
+      purchase_date:           purchase_date,
+      hw_coverage_end_date:    hw_coverage_end_date,
+      phone_coverage_end_date: phone_coverage_end_date,      
+
+      registered:             hash['IS_REGISTERED'] == 'Y',
+      hw_coverage_expired:    hash['HW_HAS_COVERAGE'] == 'N',
+      app_registered:         hash['HW_HAS_APP'] == 'Y',
+      app_eligible:           hash['IS_APP_ELIGIBLE'] == 'Y',
+      phone_coverage_expired: hash['PH_HAS_COVERAGE'] == 'N',
+
+      specs_url:            "http://support.apple.com/specs/#{serial}",
+      hw_support_url:       hash['HW_SUPPORT_LINK'],
+      forum_url:            hash['FORUMS_URL'],
+      phone_support_url:    hash['PHONE_SUPPORT_LINK'],
+    }
+  end
+  
+  def get_status(bool)
+    if bool
+      "green"
+    else
+      "red"
+    end
+  end
+
+  def registered_status
+    get_status(registered)
+  end
+  
+  def hw_coverage_status
+    get_status(!hw_coverage_expired)
+  end
+  
+  def phone_coverage_status
+    get_status(!phone_coverage_expired)
+  end
+  
+  def app_eligibility_status
+    get_status(app_eligible)
   end
 end
