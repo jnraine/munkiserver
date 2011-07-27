@@ -2,19 +2,13 @@ namespace :bootstrap do
   desc "Executing Munkiserver bootstrap tasks"
   task :all do
     tasks = tasks_in_namespace("bootstrap")
+    Rake::Task["bootstrap:create_assets_directory"].invoke # do this first
     tasks.each do |task|
       Rake::Task[task].invoke
       # Had some failing tasks, give them a second to breathe
       sleep 1
     end
   end
-  
-  # desc "Add a generic icon to the Icon model"
-  # task :generic_icon => :environment do
-  #   path = Rails.root.to_s + "/public/default_icons"
-  #   i = Icon.new(:uploaded_data => LocalFile.new("#{path}/generic.png"))
-  #   i.save
-  # end
   
   desc "Intialize PackageCategory with default categories"
   task :package_categories => :environment do
@@ -194,27 +188,6 @@ namespace :bootstrap do
     end
   end
   
-  # desc "Create default computer group"
-  # task :computer_group, :name, :needs => :environment do |t, args|
-  #   # Makes we have a unit and an environment to assign
-  #   Rake::Task["bootstrap:unit"].invoke if Unit.count == 0
-  #   Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
-  #   unit = Unit.first
-  #   if unit.nil?
-  #     raise Exception.new("Unable to create a computer group -- no unit found")
-  #   end
-  #   name = args.name
-  #   name ||= "Default"
-  #   cg = ComputerGroup.find_or_create_by_name(name)
-  #   cg.description = "Created by bootstrap"
-  #   cg.unit = unit
-  #   cg.environment = Environment.find_by_name("Production")
-  #   cg.environment = Environment.first if cg.environment.nil?
-  #   unless cg.save
-  #     puts "Default computer group failed to save: " + cg.errors.inspect
-  #   end
-  # end
-  
   desc "Create first user"
   task :user, :name, :needs => :environment do |t, args|
     if User.first.present?
@@ -290,6 +263,14 @@ namespace :bootstrap do
   desc "Generate crontab jobs passing rails current environment"
   task :crontab => :environment do
     `whenever --update-crontab --set environment=#{Rails.env}`
+  end
+  
+  desc "Create munkiserver_asset symlink as sibling of munkiserver directory"
+  task :create_assets_directory => :environment do
+    assets_dir = "#{Rails.root}/../munkiserver_assets"
+    unless File.exist?(assets_dir)
+      `mkdir #{assets_dir}`
+    end
   end
 end
 
