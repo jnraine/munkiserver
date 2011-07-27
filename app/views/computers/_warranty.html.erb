@@ -52,6 +52,10 @@
 			<td><%= @computer.warranty.product_description %></td>
 		</tr>
 		<tr>
+			<td><strong>Purchase Date</strong></td>
+			<td><%= @computer.warranty.purchase_date %></td>
+		</tr>
+		<tr>
 			<td><strong>Last updated</strong></td>
 			<td><%= @computer.warranty.updated_at.to_s(:readable_date) %></td>
 		</tr>
