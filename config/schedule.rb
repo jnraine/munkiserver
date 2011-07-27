@@ -4,5 +4,5 @@
 # default rails enviroment set to production, when deploy need to remove development settings
 every 1.day, :at => '11:00pm' do  
   rake "packages:send_update_notifications"
+  rake "warranties:update_all"
 end
-# Learn more: http://github.com/javan/whenever
