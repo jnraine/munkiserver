@@ -1,5 +1,4 @@
 class SessionsController < ApplicationController
-  skip_before_filter :require_login, :only => ['new','create','destroy']
   filter_access_to :all
   
   def new
