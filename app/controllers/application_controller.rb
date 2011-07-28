@@ -2,9 +2,6 @@ class ApplicationController < ActionController::Base
   helper :all
   protect_from_forgery :except => [:checkin]
   
-  # TODO - Shitty HTTP Basic Auth
-  USER, PASS = 'comp', 'pass'
-  
   private
   
   include ApplicationHelper
@@ -59,7 +56,9 @@ class ApplicationController < ActionController::Base
     if action_and_format_excluded?
       if Munki::Application::APP_CONFIG[:require_http_basic_auth]
         authenticate_or_request_with_http_basic do |user, pass|
-          USER == user && PASS == pass
+          # TODO - Very bad HTTP Basic Auth... but it works. Once Settings are incorporated, this is where
+          #         username and password would be looked up.
+          user == 'comp' && pass == 'pass'
         end
       end
     else
