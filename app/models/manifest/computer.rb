@@ -276,7 +276,7 @@ class Computer < ActiveRecord::Base
   # Return how many days until the warrany expires
   def warranty_days_left
     if warranty.hw_coverage_end_date.present?
-      diff = self.warranty.hw_coverage_end_date.to_date - Time.now.to_date
+      diff = warranty.hw_coverage_end_date.to_date - Time.now.to_date
       diff.to_i
     end
   end
