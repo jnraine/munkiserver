@@ -12,9 +12,6 @@
 	<tr>
 		<td>Receive Email Notification :<%= @user.settings.receive_email_notifications? ? "Yes" : "No" %></td>
 	</tr>
-	<tr>
-		<td>Super user: <%= @user.super_user? ? "Yes" : "No" %></td>
-	</tr>
 </table>
 
 
@@ -30,6 +27,23 @@
 	<% @user.units.each do |unit| %>
 	<tr>
 		<td><li><%= unit %></li></td>
+	<% end %>
+	</tr>
+</ul>
+</table>
+
+<h3>Roles</h3>
+
+<% if @user.roles.empty? %>
+<table class="form">
+	<tr>
+		<td>This user does not have any roles.</td>
+	</tr>
+<% end %>
+<ul>
+	<% @user.roles.each do |role| %>
+	<tr>
+		<td><li><%= role %></li></td>
 	<% end %>
 	</tr>
 </ul>

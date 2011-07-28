@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110726132838) do
+ActiveRecord::Schema.define(:version => 20110728141633) do
 
   create_table "assignments", :force => true do |t|
     t.integer  "user_id"
@@ -393,7 +393,6 @@ ActiveRecord::Schema.define(:version => 20110726132838) do
     t.string   "hashed_password"
     t.string   "email"
     t.string   "salt"
-    t.boolean  "super_user",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -407,26 +406,6 @@ ActiveRecord::Schema.define(:version => 20110726132838) do
     t.datetime "updated_at"
     t.integer  "icon_id"
     t.text     "description"
-  end
-
-  create_table "warranties", :force => true do |t|
-    t.datetime "purchase_date"
-    t.string   "product_description",     :default => ""
-    t.datetime "coverage_end_date"
-    t.boolean  "coverage_expired"
-    t.integer  "computer_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "serial_number",           :default => ""
-    t.string   "image_url",               :default => ""
-    t.boolean  "registered"
-    t.string   "specs_url",               :default => ""
-    t.string   "hw_support_url",          :default => ""
-    t.string   "forum_url",               :default => ""
-    t.string   "phone_support_url",       :default => ""
-    t.string   "hw_support_coverage",     :default => ""
-    t.string   "hw_coverage_description", :default => ""
-    t.string   "product_type",            :default => ""
   end
 
 end
