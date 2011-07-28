@@ -22,7 +22,7 @@ authorization do
   role :user do
     includes :guest
     
-    has_permission_on [:computers], :to => [:manage, :import, :create_import]
+    has_permission_on [:computers], :to => [:manage, :import, :create_import, :update_warranty]
     has_permission_on [:computer_groups, :bundles], :to => :manage
     has_permission_on [:packages, :managed_install_reports], :to => :read
     # has_permission_on [:install_items], :to => :modify
@@ -53,7 +53,7 @@ privileges do
   end
   
   privilege :modify do
-    includes :edit, :update, :edit_multiple, :update_multiple, :environment_change, :check_for_updates  
+    includes :edit, :update, :edit_multiple, :update_multiple, :environment_change, :check_for_updates
   end
   
 end
