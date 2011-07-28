@@ -1,4 +1,6 @@
 class UnitSettingsController < ApplicationController
+  filter_access_to :all
+  
   def edit
     @unit_setting = UnitSetting.where(:unit_id => Unit.where(:name => params[:id]).first.id).first
   end

@@ -1,4 +1,6 @@
 class UserSettingsController < ApplicationController
+  filter_access_to :all
+  
   def edit
     @user_setting = UserSetting.find(params[:id])
   end

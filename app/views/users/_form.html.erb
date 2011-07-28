@@ -22,11 +22,16 @@
 			<td><%= f.password_field :password_confirmation %></td>
 			<td><%= helpful_info("#{User.password_constraints}") %></td>
 		</tr>
-		<tr>
-			<td>Super User</td>
-			<td><%= f.check_box :super_user %></td>
-			<td><%= helpful_info("Grant super user privileges to this user.\nUse with caution.") %></td>
-		</tr>
+		<% if permitted_to? :manage, :roles %>
+			<tr>
+				<td>Roles</td>
+		    	<td><% for role in Role.all %>
+			      <%= check_box_tag "user[role_ids][]", role.id, @user.roles.include?(role) %> <%=h role.name %><br/>
+			    	<% end %>
+				</td>
+				<td><%= helpful_info("Choose a permission level for this user.") %></td>
+			</tr>
+		<% end %>
 
 	</table>
 	<p>

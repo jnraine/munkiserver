@@ -255,6 +255,12 @@ ActiveRecord::Schema.define(:version => 20110720162729) do
     t.datetime "updated_at"
   end
 
+  create_table "roles", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "sp_printers", :force => true do |t|
     t.string   "name"
     t.string   "cupsversion"
@@ -379,7 +385,6 @@ ActiveRecord::Schema.define(:version => 20110720162729) do
     t.string   "hashed_password"
     t.string   "email"
     t.string   "salt"
-    t.boolean  "super_user",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

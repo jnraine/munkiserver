@@ -1,6 +1,8 @@
 <% content_for :sidebar do %>
 	<%= recent_packages %>
-	<%= available_updates %>
+	<% if permitted_to? :modify, :packages %>
+		<%= available_updates %>
+	<% end %>
 <% end %>
 
 <h2>Listing packages</h2>
@@ -20,10 +22,14 @@
 
 	<% if @packages.length == 0 %>
 		<h5>There are no packages in the <%= current_environment.to_s.downcase %> environment</h5>
-		<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
+		<% if permitted_to? :make, :packages %>
+			<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
+		<% end %>
 	<% else %>
 	<%= form_tag edit_multiple_packages_path, :method => :get, :id => "bulk_edit_form", :remote => true do %>
-		<p><%= record_count(@packages) %><%= submit_tag "Multiple Edit", :id => "bulk_edit" %></p>
+		<p><%= record_count(@packages) %>
+			<% if permitted_to? :modify, :packages %><%= submit_tag "Multiple Edit", :id => "bulk_edit" %><% end %>
+		</p>
 	
 		<%= package_table(@packages) %> 
 	<% end %>

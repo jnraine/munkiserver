@@ -1,5 +1,6 @@
 class BundlesController < ApplicationController
   before_filter :require_valid_unit
+  filter_access_to :all
   
   def index
     @bundles = Bundle.unit(current_unit)

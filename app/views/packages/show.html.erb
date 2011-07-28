@@ -104,4 +104,7 @@
 	</tr>
 	<% end %>
 </table>
-<%= link_to 'Edit', edit_package_path(@package.to_params) %> | <%= link_to 'Download', download_package_path(@package.download_name) %>
+<% if permitted_to? :modify, :packages %>
+	<%= link_to 'Edit', edit_package_path(@package.to_params) %> | 
+<% end %>
+<%= link_to 'Download', download_package_path(@package.download_name) %>

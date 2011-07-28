@@ -9,6 +9,7 @@ gem "nokogiri"
 gem "paperclip"
 gem "client_side_validations"
 gem 'whenever'
+gem "declarative_authorization"
 gem "plist"
 
 group :development do

@@ -1,5 +1,7 @@
 class ManagedInstallReportsController < ApplicationController
   before_filter :require_valid_unit
+  filter_access_to :all
+  
   def show
     begin
       @managed_install_report = ManagedInstallReport.find(params[:id])
