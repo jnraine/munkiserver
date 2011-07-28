@@ -233,11 +233,68 @@ class Computer < ActiveRecord::Base
   end
   
   def update_warranty
-    self.warranty.destroy if self.warranty.present?
-    self.warranty = nil
+    # self.warranty.destroy if self.warranty.present?
+    # self.warranty = nil
     if serial_number
-      warranty = build_warranty(Warranty.get_warranty_hash(serial_number))
-      warranty.save
+      warranty = Warranty.find_or_create_by_serial_number(serial_number)
+      warranty_hash = Warranty.get_warranty_hash(serial_number)
+      # append computer_id into the hash
+      warranty_hash[:computer_id] = self.id
+      result = warranty.update_attributes(warranty_hash)
+      if warranty_report_due? and result
+        AdminMailer.warranty_report(self).deliver
+        self.warranty.notifications.create
+      end
     end
+  end
+  
+  # Return true if warranty is about to expire in 30, 15, 5 days
+  def warranty_report_due?
+    if warranty.hw_coverage_end_date.present?
+      # if no notification send before and is less than 30 days untill expires
+      if warranty.notifications.nil? and Time.now.to_date >= send_notifications_on.first
+        return true
+      elsif notifications_not_send.include?(true) 
+        return true
+      end
+    else
+      # no hardware coverage found
+      return false
+    end
+  end
+  
+  # Return an array of booleans true if notifications not send
+  def notifications_not_send
+    results = []
+    send_date = send_notifications_on
+    send_date.each do |date|
+      results << "#{Time.now.to_date > date}"
+    end
+    results
+  end
+  
+  # Return how many days until the warrany expires
+  def warranty_days_left
+    if warranty.hw_coverage_end_date.present?
+      diff = self.warranty.hw_coverage_end_date.to_date - Time.now.to_date
+      diff.to_i
+    end
+  end
+  
+  # Return the days since last notification send
+  def days_since_last_warranty_report
+    last_send_date = warranty.notifications.last.updated_at.to_date
+    days_apart = Time.now.to_date - last_send_date
+    days_apart.to_i
+  end
+  
+  # Return an array of real dates the notifications suppose to be send
+  def send_notifications_on
+    interval = [30,15,5]
+    notification_send_on = []
+    interval.each do |date|
+      notification_send_on << warranty.hw_coverage_end_date.to_date - date
+    end
+    notification_send_on
   end
 end

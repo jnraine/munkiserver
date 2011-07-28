@@ -284,6 +284,8 @@ $(document).ready(function() {
 	$(".helpful_info").live('mouseout', (function() {
 		$(this).find(".helpful_info_message").fadeOut("fast");
 	}));
+	// add zebra-table
+	// $("tr:nth-child(even)").addClass("even");
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field

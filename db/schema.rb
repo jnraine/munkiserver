@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110720201338) do
+ActiveRecord::Schema.define(:version => 20110728000844) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -175,6 +175,13 @@ ActiveRecord::Schema.define(:version => 20110720201338) do
     t.string   "manifest_type"
     t.string   "identifier"
     t.string   "request_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "notifications", :force => true do |t|
+    t.integer  "notified_id"
+    t.string   "notified_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
