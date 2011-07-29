@@ -252,10 +252,12 @@ class Computer < ActiveRecord::Base
   def warranty_report_due?
     if warranty.hw_coverage_end_date.present?
       # if no notification send before and is less than 30 days untill expires
-      if warranty.notifications.nil? and Time.now.to_date >= send_notifications_on.first
+      if warranty.notifications.nil? and (Time.now.to_date >= send_notifications_on.first)
         return true
       elsif notifications_not_send.include?(true) 
         return true
+      else
+        return false
       end
     else
       # no hardware coverage found
@@ -268,7 +270,7 @@ class Computer < ActiveRecord::Base
     results = []
     send_date = send_notifications_on
     send_date.each do |date|
-      results << "#{Time.now.to_date > date}"
+      results << (Time.now.to_date > date)
     end
     results
   end

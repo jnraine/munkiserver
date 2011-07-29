@@ -40,6 +40,8 @@ class Warranty < ActiveRecord::Base
       computer = Computer.where(serial_number: serial)
       Rails.logger.error "Invalid serial number #{serial} for computer #{computer}"
       puts "Invalid serial number #{serial} for computer #{computer}"
+    rescue SocketError
+      # No internet connection return nil
     end
     
     purchase_date = Date.parse(hash['PURCHASE_DATE']) if hash['PURCHASE_DATE'].present?
