@@ -286,6 +286,88 @@ $(document).ready(function() {
 	}));
 	// add zebra-table
 	// $("tr:nth-child(even)").addClass("even");
+	
+	// get all tbody rows
+	var rows = $("tbody tr");
+	var rowspan = [];
+	// orignal array of rowspans
+	$.each(rows, function(){
+		rowspan.push($(this).find("td").first().attr("rowspan"));
+	});
+	
+	var newValue = undefined;
+	var newValueCount = 0;
+	var newArray = [];
+	var index = 0;
+	// create a new array from orignal rowspans
+	$.each(rowspan, function(){
+		if (rowspan[index] === 1 & newValue === undefined){
+			newArray.push(rowspan[index]);
+			index++;
+		}else{
+			if (rowspan[index] != 1 && newValue === undefined){
+				newValue = rowspan[index];
+				newArray.push(newValue);
+				index++;
+				newValueCount++;
+			}
+			if (rowspan[index] === 1 && newValue != undefined){
+				if(newValueCount != newValue){
+					newArray.push(newValue);
+					index++;
+					newValueCount++;
+					if (newValueCount == newValue){
+						newValue = undefined;
+						newValueCount = 0;
+					}
+				}else{
+					newValue = undefined;
+					newValueCount = 0;
+					newArray.push(rowspan[index]);
+					index++;
+				}
+			}
+		}
+	});
+	// cleanup undefined items from the new array
+	var cleanArray = [];
+	for (k in newArray) if(newArray[k]) cleanArray.push(newArray[k]);
+	
+	var i = 0;
+	var currentNumberOfRow = 1;
+	var added = false;
+	var arrayIndex = 0;
+	
+	$.each(rows, function(){
+		// if row and rowspan is odd add currentNumberOfRow count
+		if(currentNumberOfRow%2 === 1 && cleanArray[arrayIndex] === 1){
+			$(this).addClass("odd");
+			currentNumberOfRow++;
+			arrayIndex++;
+		}else if(currentNumberOfRow%2 != 1 && cleanArray[arrayIndex] === 1){
+			currentNumberOfRow++;
+			arrayIndex++;
+		}else if(currentNumberOfRow%2 != 1 && cleanArray[arrayIndex] > 1){
+			// if we have a rowspan counting withint a rowspan
+			i++;
+			if(i === cleanArray[arrayIndex]){
+				i = 0;
+				currentNumberOfRow++;
+			}
+			arrayIndex++;
+		}else if(currentNumberOfRow%2 === 1 && cleanArray[arrayIndex] > 1){
+			// inner count rowspans
+			i++;
+			if(i < cleanArray[arrayIndex]){
+				$(this).addClass("odd");
+			}else if(i === cleanArray[arrayIndex]){
+				$(this).addClass("odd");
+				i = 0;
+				currentNumberOfRow++;
+			}
+			arrayIndex++; 
+		}
+	});
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field

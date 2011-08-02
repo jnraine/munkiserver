@@ -256,6 +256,12 @@ table.form {
 
 }
 
+table tbody .odd{
+	background: #eaeaea;
+/*	border-style:solid;
+	border-bottom:#c6c6c6;*/
+}
+
 /* Message / notice box */
 .message {
 	padding:.8em;
