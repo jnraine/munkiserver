@@ -122,6 +122,21 @@
 	
 	<!-- Second tab starts here -->
 	<div id="effected_items">
-		<%= get_effected_install(@package)%>
+		<table class="packagePicker">
+			<thead>
+				<tr>
+					<th>Installs</th>
+					<th>Uninstalls</th>
+					<th>Optional Installs</th>
+				</tr>
+			</thead>
+			
+			<tr>
+				<td><%= get_effected_install(@package)%></td>
+				<td><%= get_effected_uninstall(@package)%></td>
+				<td><%= get_effected_optional_install(@package)%></td>
+			</tr>
+
+		</table>
 	</div>
 </div>

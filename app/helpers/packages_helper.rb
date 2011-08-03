@@ -139,23 +139,28 @@ module PackagesHelper
         bundle_id << item.manifest_id if item.manifest_type == "Bundle"
       end
       
-      computers = Computer.where(:id => computer_id, :unit_id => current_unit.id) if computer_id.present?
-      computer_groups = ComputerGroup.where(:id => computer_group_id, :unit_id => current_unit.id) if computer_group_id.present?
-      bundles = Bundle.where(:id => bundle_id, :unit_id => current_unit.id) if bundle_id.present?
+      computers = Computer.where(:id => computer_id, :unit_id => current_unit.id)
+      computer_groups = ComputerGroup.where(:id => computer_group_id, :unit_id => current_unit.id)
+      bundles = Bundle.where(:id => bundle_id, :unit_id => current_unit.id)
     end
-    render :partial => 'effected_items', :locals => {:computers => computers, :computer_groups => computer_groups, :bundles => bundles}
+    computers.present? ? @computers = computers : @computers = nil
+    computer_groups.present? ? @computer_groups = computer_groups : @computer_groups = nil
+    bundles.present? ? @bundles = bundles : @bundles = nil
   end
   
   def get_effected_install(package)
     get_effected_items(package, "InstallItem")
+    render :partial => 'effected_items', :locals => {:computers => @computers, :computer_groups => @computer_groups, :bundles => @bundles}
   end
   
   def get_effected_uninstall(package)
     get_effected_items(package, "UninstallItem")
+    render :partial => 'effected_items', :locals => {:computers => @computers, :computer_groups => @computer_groups, :bundles => @bundles}
   end
   
   def get_effected_optional_install(package)
     get_effected_items(package, "OptionalInstallItem")
+    render :partial => 'effected_items', :locals => {:computers => @computers, :computer_groups => @computer_groups, :bundles => @bundles}
   end
   
 end
