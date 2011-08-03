@@ -1,0 +1,35 @@
+<table class="packagePicker">
+	<thead>
+		<tr>
+			<th>Installs</th>
+			<th>Uninstalls</th>
+			<th>Optional Installs</th>
+		</tr>
+	</thead>
+		<% if computers.present? %>
+				<tr><td><strong>Computers</strong></td></tr>
+			<% computers.each do |c| %>
+				<tr>
+					<td><%= link_to c.name, computer_url(c.unit, c) %></td>
+				</tr>
+			<% end %>
+		<% end %>
+		
+		<% if bundles.present? %>
+				<tr><td><strong>Bundles</strong></td></tr>
+			<% bundles.each do |b| %>
+				<tr>
+					<td><%= link_to b.name, bundle_url(b.unit, b) %></td>
+				</tr>
+			<% end %>
+		<% end %>
+		
+		<% if computer_groups.present? %>
+				<tr><td><strong>Computer Groups</strong></td></tr>
+			<% computer_groups.each do |cg| %>
+				<tr>
+					<td><%= link_to cg.name, computer_group_url(cg.unit, cg) %></td>
+				</tr>
+			<% end %>
+		<% end %>
+</table>

@@ -11,9 +11,9 @@
 	<td rowspan="<%= package.versions.count %>">
 		<% unless package.has_dependencies? %>
 			<% if has_shared?(package) %>
-				<%= link_to "import", import_shared_package_path(current_unit,import_package(package)), {"data-confirm-message" => "Are you sure you want to import #{package.name} #{import_package(package).version} from #{import_package_unit_name(package)} ?"} %>
+				<%= link_to "Available<br />Import".html_safe, import_shared_package_path(current_unit,import_package(package)), {"data-confirm-message" => "Are you sure you want to import #{package.name} #{import_package(package).version} from #{import_package_unit_name(package)} ?"} %>
 			<% elsif package.package_branch.new_version? %>
-				<%= link_to "update", version_tracker_info_url(package), :target => "_blank" %>
+				<%= link_to "Available<br />Updates".html_safe, version_tracker_info_url(package), :target => "_blank" %>
 			<% end %>
 		<% end %>
 	</td>

@@ -28,6 +28,7 @@ class Package < ActiveRecord::Base
   scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u.id) }
   scope :shared, where(:shared => true)
   scope :from_other_unit, lambda {|p| where("unit_id != ?", p.unit_id)}
+  scope :same_unit, lambda {|p| where("unit_id = ?", p.unit_id)} 
   scope :has_greater_version, lambda {|p| where("version > ?", p.version)}
   
   before_save :save_package_branch

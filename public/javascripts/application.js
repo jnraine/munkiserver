@@ -288,7 +288,7 @@ $(document).ready(function() {
 	// $("tr:nth-child(even)").addClass("even");
 	
 	// get all tbody rows
-	var rows = $("tbody tr");
+	var rows = $(".zebra tbody tr");
 	var rowspan = [];
 	// orignal array of rowspans
 	$.each(rows, function(){
