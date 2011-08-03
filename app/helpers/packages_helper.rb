@@ -149,13 +149,30 @@ module PackagesHelper
     concat(render :partial => 'pkgsinfo_plist_errors', :locals => {:invalid_plists => invalid_plists })
   end
   
-  # def has_required?(package)
-  #   ri = RequireItem.where(:package_id => package.id).first
-  #   if ri.present? and ri.manifest_id.present?
-  #     required_package = Package.find(ri.manifest_id)
-  #     return "#{package.to_s(:version)} is required by #{required_package.to_s(:version)}. Are you sure you want to destory #{package.to_s(:version)}?"
-  #   else
-  #     return "Are you sure you want to destory #{package.to_s(:version)}?"
-  #   end
-  # end
+  # Return true if there exists packages in other unit that are shared and has higher version
+  # add logic to compare if version tracker has high version or the import package has higher version
+  # return true if the shared package is higher or equal to the version tracker version else return the version tracker version
+  def has_shared?(package)
+    if import_package(package).present?
+         return true if (import_package(package).unit_id != current_unit.id)
+     else
+       return false
+     end
+  end
+  
+  # Return the unit name of where the package is importing from
+  def import_package_unit_name(package)
+    unit_id = Package.from_other_unit(package).where(:package_branch_id => package.package_branch_id, :shared => true).order("version desc").first.unit_id
+    Unit.where(:id => unit_id).first.name
+  end
+  
+  # Return true if there is package available to import from other unit
+  def import_package(package)
+    Package.from_other_unit(package).has_greater_version(package).where(:package_branch_id => package.package_branch_id, :shared => true).order("version desc").first
+  end
+  
+  def version_tracker_info_url(package)
+    PackageBranch.where(:id => package.package_branch_id).first.version_tracker.info_url
+  end
+  
 end
