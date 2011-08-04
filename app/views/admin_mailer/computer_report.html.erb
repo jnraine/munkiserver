@@ -1,5 +1,5 @@
 <% report = @computer.managed_install_reports.last %>
-<h2><%= @computer %> (<%= @computer.mac_address%>) - <%= @computer.status%></h2>
+<h2><%= @computer %> (<%= @computer.hostname%>) - <%= @computer.status%></h2>
 <% ManagedInstallReport::LOG_ATTRIBUTES.each do |attribute_name| %>
 	<%= render :partial => 'managed_install_reports/report_log', :locals => {:attribute_name => attribute_name,:report => report} if report.send(attribute_name).present? %>
 <% end %>
