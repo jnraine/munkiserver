@@ -256,6 +256,10 @@ table.form {
 
 }
 
+table tbody .odd{
+	background: #F4F4F4;
+}
+
 /* Message / notice box */
 .message {
 	padding:.8em;
@@ -482,6 +486,9 @@ thead th a:hover,
 	border:2px solid rgb(69, 173, 168);
 	background-color:#594F4F;
 	z-index: 1; /* fix for overlay CodeMirror textarea, always show top*/
+}
+.centerize{
+	text-align: center;
 }
 
 /* ============ */

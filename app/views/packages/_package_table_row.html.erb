@@ -4,17 +4,17 @@
 		<%= package.display_name %><br />
 		<em><%= package.name %></em>
 	</td>
-	
-		<%= render :partial => 'package_version_column', :locals => {:pkg => package.versions.first} %>
-	
-	<td rowspan="<%= package.versions.count %>">
-		<%= "&#10003;".html_safe if (package.package_branch.new_version_shared?(package.unit) or package.package_branch.new_version?) %>
+	<%= render :partial => 'package_version_column', :locals => {:pkg => package.versions.first} %>
+	<td rowspan="<%= package.versions.count %>" class="centerize">
+		<% unless package.has_dependencies? %>
+			<%= update_or_import(package) %>
+		<% end %>
 	</td>
 </tr>
 <% package.versions.each_with_index do |pkg,i| %>
 	<% unless i == 0 %>
 		<tr>
-				<%= render :partial => 'package_version_column', :locals => {:pkg => pkg} %>
+			<%= render :partial => 'package_version_column', :locals => {:pkg => pkg} %>
 		</tr>
 	<% end %>
 <% end %>

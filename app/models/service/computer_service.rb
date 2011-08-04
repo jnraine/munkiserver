@@ -78,6 +78,7 @@ class ComputerService
       # against injection attacks or errors)
       case params[:col]
         when "mac_address" then col = "mac_address"
+        when "last_report" then col = "last_report"
         else col = "name"
       end
       computers = computers.order(col + " " + params[:order])
