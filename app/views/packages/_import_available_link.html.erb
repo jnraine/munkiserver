@@ -1,0 +1,1 @@
+<%= link_to "Import<br />Available".html_safe, import_shared_package_path(current_unit,import_package(package)), {"data-confirm-message" => "Are you sure you want to import #{package.name} #{import_package(package).version} from #{import_package_unit_name(package)} ?"} %>

@@ -30,7 +30,7 @@ module PackagesHelper
 
 	def package_header(package, show = nil)
 	  packages = Package.where(:package_branch_id => package.package_branch_id, :unit_id => package.unit_id).order("version ASC")
-	  show ||= false 
+	  show ||= false
     render :partial => 'record_header', :locals => {
                               														:title => package.display_name,
                               														:img => package.icon,
@@ -105,15 +105,37 @@ module PackagesHelper
   # return true if the shared package is higher or equal to the version tracker version else return the version tracker version
   def has_shared?(package)
     if import_package(package).present?
-      return true if (import_package(package).unit_id != current_unit.id)
+      return true
     else
       return false
     end
   end
   
-  # Return true if there is package available to import from other unit
+  # Determine to show import or update links based on the versions of the available import package and version tracker version
+  def update_or_import(package)
+    # if the package has other greather version shared packages and has newer version tracker version
+    if import_package(package).present? and package.package_branch.new_version?
+      # if the version tracker has higher version than the shared package
+      if package.package_branch.version_tracker.version > import_package(package).version
+        render :partial => 'update_available_link', :locals => {:package => package }
+      else
+        render :partial => 'import_available_link', :locals => {:package => package }
+      end
+    elsif import_package(package).present?
+      render :partial => 'import_available_link', :locals => {:package => package }
+    elsif package.package_branch.new_version?
+      render :partial => 'update_available_link', :locals => {:package => package }
+    else
+      # show nothing
+    end
+  end
+  
+  # Return latest package if available to import from other unit
   def import_package(package)
-    Package.from_other_unit(package).has_greater_version(package).where(:package_branch_id => package.package_branch_id, :shared => true).order("version desc").first
+    result = Package.from_other_unit(package).has_greater_version(package).where(:package_branch_id => package.package_branch_id, :shared => true).order("version desc").first
+    if result.present?
+      result.version > package.latest_in_unit.version ? result : nil
+    end
   end
   
   # Return the unit name of where the package is importing from
@@ -121,19 +143,15 @@ module PackagesHelper
     Unit.where(:id => import_package(package).unit_id).first.name
   end
   
-  # Return the version tracker url for this package
-  def version_tracker_info_url(package)
-    PackageBranch.where(:id => package.package_branch_id).first.version_tracker.info_url
-  end
-  
   # Need a package and classname to restrieve a list of effected items by Computers, Computer Groups and Bundles
   def get_effected_items(package, classname)
-    if (package == Package.where(:package_branch_id => package.package_branch_id, 
-                                 :unit_id => current_unit.id, 
-                                 :environment_id => current_environment.id).order("version DESC").first)
-      items = Kernel.const_get(classname).where(:package_branch_id => package.package_branch_id)
+    # Make sure the selected pacakge is bounded to current unit and environment
+    if package.latest_in_unit_and_environment?
+      # If package id is blank, than default to the highest version of the package that are blong to current unit & environment
+      items = classname.constantize.where(:package_branch_id => package.package_branch_id, :package_id => nil)
     else
-      items = Kernel.const_get(classname).where(:package_id => package.id)
+      # If package id is given then find by id
+      items = classname.constantize.where(:package_id => package.id)
     end
     computer_id = []
     computer_group_id = []
@@ -144,17 +162,17 @@ module PackagesHelper
         computer_group_id << item.manifest_id if item.manifest_type == "ComputerGroup"
         bundle_id << item.manifest_id if item.manifest_type == "Bundle"
       end
-      computers = Computer.where(:id => computer_id, :unit_id => current_unit.id)
-      computer_groups = ComputerGroup.where(:id => computer_group_id, :unit_id => current_unit.id)
-      bundles = Bundle.where(:id => bundle_id, :unit_id => current_unit.id)
+      computers = Computer.where(:id => computer_id, :unit_id => current_unit.id, :environment_id => package.environment_id)
+      computer_groups = ComputerGroup.where(:id => computer_group_id, :unit_id => current_unit.id, :environment_id => package.environment_id)
+      bundles = Bundle.where(:id => bundle_id, :unit_id => current_unit.id, :environment_id => package.environment_id)
     end
-
     # Turn to instance variable so other methods can have access to, make sure not cache any results
     computers.present? ? @computers = computers : @computers = nil
     computer_groups.present? ? @computer_groups = computer_groups : @computer_groups = nil
     bundles.present? ? @bundles = bundles : @bundles = nil
   end
   
+  # Get a list of Computers, Computer Groups and Bundles that have this package set to install
   def get_effected_install(package)
     get_effected_items(package, "InstallItem")
     render :partial => 'effected_items', :locals => {:computers => @computers, 
@@ -162,6 +180,7 @@ module PackagesHelper
                                                      :bundles => @bundles}
   end
   
+  # Get a list of Computers, Computer Groups and Bundles that have this package set to unisntall
   def get_effected_uninstall(package)
     get_effected_items(package, "UninstallItem")
     render :partial => 'effected_items', :locals => {:computers => @computers, 
@@ -169,6 +188,7 @@ module PackagesHelper
                                                      :bundles => @bundles}
   end
   
+  # Get a list of Computers, Computer Groups and Bundles that have this package set as optional install
   def get_effected_optional_install(package)
     get_effected_items(package, "OptionalInstallItem")
     render :partial => 'effected_items', :locals => {:computers => @computers, 

@@ -31,6 +31,7 @@ class Package < ActiveRecord::Base
   scope :has_greater_version, lambda {|p| where("version > ?", p.version)}
   
   before_save :save_package_branch
+  before_save :handle_environment_change
   
   validates :version, :presence => true
   validates :installer_item_location, :presence => true
@@ -258,6 +259,24 @@ class Package < ActiveRecord::Base
     [environment]
   end
   
+  # If package changed environment, remove all releations in install/uninstall/optional items
+  def handle_environment_change
+    if environment_id_changed?
+      
+      # Handle references to this package
+      self.optional_install_items.each(&:destroy)
+      self.install_items.each(&:destroy)
+      self.uninstall_items.each(&:destroy)
+      # Handle references to the package branch
+      num_of_packages = self.package_branch.packages.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was).count
+      if num_of_packages == 1
+        self.package_branch.optional_install_items.each(&:destroy)
+        self.package_branch.install_items.each(&:destroy)
+        self.package_branch.uninstall_items.each(&:destroy)
+      end
+    end
+  end
+  
   # Returns a URL path to the package download
   def public_filename
     "/packages/#{environment_id}/#{unit_id}/#{installer_item_location}"
@@ -288,7 +307,18 @@ class Package < ActiveRecord::Base
   # Checks if the current package is the latest (newest version) 
   # package in the package branch in this unit.
   def latest_in_unit?
-    package_branch.packages.unit(self.unit).order("version DESC").first.id == id
+    latest_in_unit.id == id
+  end
+  
+  #Return the latest package within this unit
+  def latest_in_unit
+    package_branch.packages.unit(self.unit).order("version DESC").first
+  end
+  # Return true if the pacakge is the greatest within current unit and environment
+  def latest_in_unit_and_environment?
+    scoped = Package.where(:package_branch_id => self.package_branch_id, :unit_id => self.unit_id, :environment_id => self.environment_id)
+    scoped = scoped.order("version DESC").limit(1)
+    scoped.first.id == id
   end
 
   # Extend destroy method
