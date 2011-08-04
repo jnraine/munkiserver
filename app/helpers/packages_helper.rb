@@ -128,7 +128,9 @@ module PackagesHelper
   
   # Need a package and classname to restrieve a list of effected items by Computers, Computer Groups and Bundles
   def get_effected_items(package, classname)
-    if (package == Package.where(:package_branch_id => package.package_branch_id).order("version DESC").first)
+    if (package == Package.where(:package_branch_id => package.package_branch_id, 
+                                 :unit_id => current_unit.id, 
+                                 :environment_id => current_environment.id).order("version DESC").first)
       items = Kernel.const_get(classname).where(:package_branch_id => package.package_branch_id)
     else
       items = Kernel.const_get(classname).where(:package_id => package.id)
@@ -155,17 +157,23 @@ module PackagesHelper
   
   def get_effected_install(package)
     get_effected_items(package, "InstallItem")
-    render :partial => 'effected_items', :locals => {:computers => @computers, :computer_groups => @computer_groups, :bundles => @bundles}
+    render :partial => 'effected_items', :locals => {:computers => @computers, 
+                                                     :computer_groups => @computer_groups, 
+                                                     :bundles => @bundles}
   end
   
   def get_effected_uninstall(package)
     get_effected_items(package, "UninstallItem")
-    render :partial => 'effected_items', :locals => {:computers => @computers, :computer_groups => @computer_groups, :bundles => @bundles}
+    render :partial => 'effected_items', :locals => {:computers => @computers, 
+                                                     :computer_groups => @computer_groups, 
+                                                     :bundles => @bundles}
   end
   
   def get_effected_optional_install(package)
     get_effected_items(package, "OptionalInstallItem")
-    render :partial => 'effected_items', :locals => {:computers => @computers, :computer_groups => @computer_groups, :bundles => @bundles}
+    render :partial => 'effected_items', :locals => {:computers => @computers, 
+                                                     :computer_groups => @computer_groups, 
+                                                     :bundles => @bundles}
   end
   
 end
