@@ -29,7 +29,7 @@ module PackagesHelper
   end
 
 	def package_header(package, show = nil)
-	  packages = Package.same_unit(package).where(:package_branch_id => package.package_branch_id).order("version ASC")
+	  packages = Package.where(:package_branch_id => package.package_branch_id, :unit_id => package.unit_id).order("version ASC")
 	  show ||= false 
     render :partial => 'record_header', :locals => {
                               														:title => package.display_name,
