@@ -143,6 +143,7 @@ module PackagesHelper
       computer_groups = ComputerGroup.where(:id => computer_group_id, :unit_id => current_unit.id)
       bundles = Bundle.where(:id => bundle_id, :unit_id => current_unit.id)
     end
+    # Turn to instance variable so other methods can have access to, make sure not cache any results
     computers.present? ? @computers = computers : @computers = nil
     computer_groups.present? ? @computer_groups = computer_groups : @computer_groups = nil
     bundles.present? ? @bundles = bundles : @bundles = nil
