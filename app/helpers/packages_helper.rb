@@ -127,8 +127,12 @@ module PackagesHelper
   end
   
   # Need a package and classname to restrieve a list of effected items by Computers, Computer Groups and Bundles
-  def get_effected_items(package, className)
-    items = Kernel.const_get(className).where(:package_id => package.id) +  Kernel.const_get(className).where(:package_branch_id => package.package_branch_id)
+  def get_effected_items(package, classname)
+    if (package == Package.where(:package_branch_id => package.package_branch_id).order("version DESC").first)
+      items = Kernel.const_get(classname).where(:package_branch_id => package.package_branch_id)
+    else
+      items = Kernel.const_get(classname).where(:package_id => package.id)
+    end
     computer_id = []
     computer_group_id = []
     bundle_id = []
@@ -138,11 +142,11 @@ module PackagesHelper
         computer_group_id << item.manifest_id if item.manifest_type == "ComputerGroup"
         bundle_id << item.manifest_id if item.manifest_type == "Bundle"
       end
-      
       computers = Computer.where(:id => computer_id, :unit_id => current_unit.id)
       computer_groups = ComputerGroup.where(:id => computer_group_id, :unit_id => current_unit.id)
       bundles = Bundle.where(:id => bundle_id, :unit_id => current_unit.id)
     end
+
     # Turn to instance variable so other methods can have access to, make sure not cache any results
     computers.present? ? @computers = computers : @computers = nil
     computer_groups.present? ? @computer_groups = computer_groups : @computer_groups = nil
