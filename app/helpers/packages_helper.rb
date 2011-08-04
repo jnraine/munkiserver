@@ -28,12 +28,16 @@ module PackagesHelper
     htmlcode += "</p>"
   end
 
-	def package_header(package)
-    render :partial => 'shared/record_header', :locals => {
+	def package_header(package, show = nil)
+	  packages = Package.same_unit(package).where(:package_branch_id => package.package_branch_id).order("version ASC")
+	  show ||= false 
+    render :partial => 'record_header', :locals => {
                               														:title => package.display_name,
                               														:img => package.icon,
                               														:soft_info => package.name,
-                              														:bold_info => package.version }
+                              														:bold_info => package.version,
+                              														:packages => packages,
+                              														:show => show }
 	end
 	
 	def recent_packages
@@ -57,59 +61,6 @@ module PackagesHelper
 	    output += render :partial => 'packages_of_category_table', :locals => {:category_name => category_name, :packages => packages}  
     end
     output.html_safe
-  end
-  
-  def scrape_latest_version_info(pkg)
-    require 'scrapi'
-
-    # Define scrape for latest version, and download redirect URL
-    scraper = Scraper.define do
-      process "span.appVersion", :version => :text
-      process ".product-quick-links>h2>a", :download_redirect_url => "@href"
-      result :version,:download_redirect_url
-    end
-
-    # Version tracker URL to application page
-    uri = URI.parse("http://www.versiontracker.com/dyn/moreinfo/macosx/#{pkg.version_tracker_id}")
-
-    # Scrape latest version and download redirect URL
-    results = scraper.scrape(uri)
-    latest_version = results.version
-
-    # Define scrape for latest version, and download redirect URL
-    scraper = Scraper.define do
-      process "p.contactDevSite>a", :download_url => "@href"
-      result :download_url
-    end
-    
-    unless(results.download_redirect_url == nil)
-      # Version tracker URL to download redirect
-      uri = URI.parse(results.download_redirect_url)
-
-      # Scrape download URL
-      download_url = scraper.scrape(uri)
-    else
-      download_url = nil
-    end
-    
-    {'latest_version' => latest_version, 'download_url' => download_url}
-  end
-  
-  # Checks when versions were last checked and re-checks if within given time
-  # Sets session[:versions_checked_at]
-  def check_versions?
-    seconds_between_checks = 300
-    if session[:versions_checked_at].nil?
-      # Check versions, if not checked yet
-      session[:versions_checked_at] = Time.now.to_i
-      true
-    elsif session[:versions_checked_at] < (Time.now.to_i - seconds_between_checks)
-      # Check versions, if seconds_between_checks has passed
-      true
-    else
-      # Don't check versions
-      false
-    end
   end
   
   # Check version tracker for package updates, display available updates
@@ -149,13 +100,68 @@ module PackagesHelper
     concat(render :partial => 'pkgsinfo_plist_errors', :locals => {:invalid_plists => invalid_plists })
   end
   
-  # def has_required?(package)
-  #   ri = RequireItem.where(:package_id => package.id).first
-  #   if ri.present? and ri.manifest_id.present?
-  #     required_package = Package.find(ri.manifest_id)
-  #     return "#{package.to_s(:version)} is required by #{required_package.to_s(:version)}. Are you sure you want to destory #{package.to_s(:version)}?"
-  #   else
-  #     return "Are you sure you want to destory #{package.to_s(:version)}?"
-  #   end
-  # end
+  # Return true if there exists packages in other unit that are shared and has higher version
+  # add logic to compare if version tracker has high version or the import package has higher version
+  # return true if the shared package is higher or equal to the version tracker version else return the version tracker version
+  def has_shared?(package)
+    if import_package(package).present?
+      return true if (import_package(package).unit_id != current_unit.id)
+    else
+      return false
+    end
+  end
+  
+  # Return true if there is package available to import from other unit
+  def import_package(package)
+    Package.from_other_unit(package).has_greater_version(package).where(:package_branch_id => package.package_branch_id, :shared => true).order("version desc").first
+  end
+  
+  # Return the unit name of where the package is importing from
+  def import_package_unit_name(package)
+    Unit.where(:id => import_package(package).unit_id).first.name
+  end
+  
+  # Return the version tracker url for this package
+  def version_tracker_info_url(package)
+    PackageBranch.where(:id => package.package_branch_id).first.version_tracker.info_url
+  end
+  
+  # Need a package and classname to restrieve a list of effected items by Computers, Computer Groups and Bundles
+  def get_effected_items(package, className)
+    items = Kernel.const_get(className).where(:package_id => package.id) +  Kernel.const_get(className).where(:package_branch_id => package.package_branch_id)
+    computer_id = []
+    computer_group_id = []
+    bundle_id = []
+    if items.present?
+      items.each do |item|
+        computer_id << item.manifest_id if item.manifest_type == "Computer"
+        computer_group_id << item.manifest_id if item.manifest_type == "ComputerGroup"
+        bundle_id << item.manifest_id if item.manifest_type == "Bundle"
+      end
+      
+      computers = Computer.where(:id => computer_id, :unit_id => current_unit.id)
+      computer_groups = ComputerGroup.where(:id => computer_group_id, :unit_id => current_unit.id)
+      bundles = Bundle.where(:id => bundle_id, :unit_id => current_unit.id)
+    end
+    # Turn to instance variable so other methods can have access to, make sure not cache any results
+    computers.present? ? @computers = computers : @computers = nil
+    computer_groups.present? ? @computer_groups = computer_groups : @computer_groups = nil
+    bundles.present? ? @bundles = bundles : @bundles = nil
+  end
+  
+  def get_effected_install(package)
+    get_effected_items(package, "InstallItem")
+    render :partial => 'effected_items', :locals => {:computers => @computers, :computer_groups => @computer_groups, :bundles => @bundles}
+  end
+  
+  def get_effected_uninstall(package)
+    get_effected_items(package, "UninstallItem")
+    render :partial => 'effected_items', :locals => {:computers => @computers, :computer_groups => @computer_groups, :bundles => @bundles}
+  end
+  
+  def get_effected_optional_install(package)
+    get_effected_items(package, "OptionalInstallItem")
+    render :partial => 'effected_items', :locals => {:computers => @computers, :computer_groups => @computer_groups, :bundles => @bundles}
+  end
+  
 end

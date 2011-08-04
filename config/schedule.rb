@@ -5,4 +5,8 @@
 every 1.day, :at => '11:00pm' do  
   rake "packages:send_update_notifications"
   rake "warranties:update_all"
+<<<<<<< HEAD
 end
+=======
+end
+>>>>>>> experimental

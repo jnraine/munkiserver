@@ -1,107 +1,142 @@
-<%= package_header(@package) %>
+<%= package_header(@package, true) %>
 
 <% if !@package.description.blank? %>
 	<p><%= @package.description %></p>
 <% else %>
 	<p><em>No description</em></p>
 <% end %>
-	<table class="form">
-	<tr>
-		<td><strong>Environment</strong></td>
-		<td><%= @package.environment %></td>
-	</tr>
-	<tr>
-		<td><strong>Category</strong></td>
-		<td>
-			<%= @package.package_category %>
-		</td>
-	</tr>
-	<tr>
-		<td><strong>Installer type</strong></td>
-		<td><%= @package.installer_type.present? ? @package.installer_type.titleize : "Package" %></td>
-	</tr>
-	<tr>
-		<td><strong>Uninstallable?</strong></td>
-		<td><%= @package.uninstallable ? "Yes" : "No" %></td>
-	</tr>
-	<tr>
-		<td><strong>Uninstall method</strong></td>
-		<td><%= @package.uninstall_method.present? ? @package.uninstall_method.titleize : "None" %></td>
-	</tr>
-	<tr>
-		<td><strong>Minimum OS</strong></td>
-		<td><%= @package.minimum_os_version %></td>
-	</tr>
-	<% if @package.supported_architectures[0].present? %>
-		<tr>
-			<td><strong>Supported Architectures</strong></td>
-			<td>
-					<% @package.supported_architectures.each do |sa| %>
-						<%= sa %> |
+
+<div id="tabs">
+	
+	<ul>
+		<li><a href="#package_info_tab"><span>Package Info</span></a></li>
+		<li><a href="#effected_items"><span>Effected To</span></a></li>
+	</ul>
+	
+	<!-- First tab starts here -->
+	<div id="package_info_tab">
+		<table class="form">
+			<tr>
+				<td><strong>Environment</strong></td>
+				<td><%= @package.environment %></td>
+			</tr>
+			<tr>
+				<td><strong>Category</strong></td>
+				<td><%= @package.package_category %></td>
+			</tr>
+			<tr>
+				<td><strong>Version</strong></td>
+				<td><%= @package.version %></td>
+			</tr>
+			<tr>
+				<td><strong>Installer type</strong></td>
+				<td><%= @package.installer_type.present? ? @package.installer_type.titleize : "Package" %></td>
+			</tr>
+			<tr>
+				<td><strong>Uninstallable?</strong></td>
+				<td><%= @package.uninstallable ? "Yes" : "No" %></td>
+			</tr>
+			<tr>
+				<td><strong>Uninstall method</strong></td>
+				<td><%= @package.uninstall_method.present? ? @package.uninstall_method.titleize : "None" %></td>
+			</tr>
+			<tr>
+				<td><strong>Minimum OS</strong></td>
+				<td><%= @package.minimum_os_version %></td>
+			</tr>
+			<% if @package.supported_architectures[0].present? %>
+				<tr>
+					<td><strong>Supported Architectures</strong></td>
+					<td>
+							<% @package.supported_architectures.each do |sa| %>
+								<%= sa %> |
+							<% end %>
+					</td>
+				</tr>
+			<% end %>
+			<tr>
+				<td><strong>Package size</strong></td>
+				<td><%= humanize_kilobytes(@package.installer_item_size) %></td>
+			</tr>
+
+			<% if !@package.installer_item_size == 0 or @package.installer_item_size < 0 %>
+				<tr>
+					<td><strong>Installed size</strong> </td>
+					<td><%= humanize_kilobytes(@package.installed_size) %></td>
+				</tr>
+			<% end %>
+
+
+			<% if @package.update_for.length > 0 %>
+				<tr>
+					<td><strong>Update for</strong></td>
+					<td>
+						<% @package.update_for.each do |p| %>
+							<%= p.to_s(:unique) %><br />
+						<% end %>
+					</td>
+				</tr>
+			<% end -%>
+
+			<% %>
+			<tr>
+				<td><strong>Dependancies</strong></td>
+				<td>
+					<% if @package.requires.nil? or @package.requires.empty? %>
+						None
+					<% else %>
+						<%= @package.requires.collect { |p| link_to p.to_s(:pretty_with_version), package_path(p.to_params) }.join("<br />").html_safe %>
 					<% end %>
-			</td>
-		</tr>
-	<% end %>
-	<tr>
-		<td><strong>Package size</strong></td>
-		<td><%= humanize_kilobytes(@package.installer_item_size) %></td>
-	</tr>
+				</td>
+			</tr>
 
-	<% if !@package.installer_item_size == 0 or @package.installer_item_size < 0 %>
-		<tr>
-			<td><strong>Installed size</strong> </td>
-			<td><%= humanize_kilobytes(@package.installed_size) %></td>
-		</tr>
-	<% end %>
-
-
-	<% if @package.update_for.length > 0 %>
-		<tr>
-			<td><strong>Update for</strong></td>
-			<td>
-				<% @package.update_for.each do |p| %>
-					<%= p.to_s(:unique) %><br />
-				<% end %>
-			</td>
-		</tr>
-	<% end -%>
-
-	<% %>
-	<tr>
-		<td><strong>Dependancies</strong></td>
-		<td>
-			<% if @package.requires.nil? or @package.requires.empty? %>
-				None
-			<% else %>
-				<%= @package.requires.collect { |p| link_to p.to_s(:pretty_with_version), package_path(p.to_params) }.join("<br />").html_safe %>
+			<tr>
+				<td><strong>Update Available?</strong></td>
+				<td><%= @package.new_version? ? "Yes - version #{@package.package_branch.version_tracker.version}"  : "No" %></td>
+			</tr>
+			<tr>
+				<td><strong>MacUpdate Web ID</strong></td>
+				<td>
+					<% if @package.package_branch.version_tracker.web_id.present? %>
+						<%= @package.package_branch.version_tracker.web_id %>
+						- <%= link_to "Package Info", @package.package_branch.version_tracker.info_url, :target => "_blank" %>
+					<% else %>
+						None
+					<% end %>
+				</td>
+			</tr>
+			<% if @package.package_branch.version_tracker.download_links.present? %>
+			<tr>
+				<td><strong>Download Links</strong></td>
+				<td>
+					<% @package.package_branch.version_tracker.download_links.each do |download_link| %>
+						<%= link_to "#{download_link.text}", download_link.url  , :target => "_blank" %> - <%= download_link.caption %><% unless download_link == @package.package_branch.version_tracker.download_links.last %> | <% end %>
+					<% end %>
+				</td>
+			</tr>
 			<% end %>
-		</td>
-	</tr>
+		</table>
+		
+		<%= link_to 'Edit', edit_package_path(@package.to_params) %> | <%= link_to 'Download', download_package_path(@package.download_name) %>
+	</div>
+	
+	<!-- Second tab starts here -->
+	<div id="effected_items">
+		<table class="packagePicker">
+			<thead>
+				<tr>
+					<th>Installs</th>
+					<th>Uninstalls</th>
+					<th>Optional Installs</th>
+				</tr>
+			</thead>
+			
+			<tr>
+				<td><%= get_effected_install(@package)%></td>
+				<td><%= get_effected_uninstall(@package)%></td>
+				<td><%= get_effected_optional_install(@package)%></td>
+			</tr>
 
-	<tr>
-		<td><strong>Update Available?</strong></td>
-		<td><%= @package.new_version? ? "Yes - version #{@package.package_branch.version_tracker.version}"  : "No" %></td>
-	</tr>
-	<tr>
-		<td><strong>MacUpdate Web ID</strong></td>
-		<td>
-			<% if @package.package_branch.version_tracker.web_id.present? %>
-				<%= @package.package_branch.version_tracker.web_id %>
-				- <%= link_to "Package Info", @package.package_branch.version_tracker.info_url, :target => "_blank" %>
-			<% else %>
-				None
-			<% end %>
-		</td>
-	</tr>
-	<% if @package.package_branch.version_tracker.download_links.present? %>
-	<tr>
-		<td><strong>Download Links</strong></td>
-		<td>
-			<% @package.package_branch.version_tracker.download_links.each do |download_link| %>
-				<%= link_to "#{download_link.text}", download_link.url  , :target => "_blank" %> - <%= download_link.caption %><% unless download_link == @package.package_branch.version_tracker.download_links.last %> | <% end %>
-			<% end %>
-		</td>
-	</tr>
-	<% end %>
-</table>
-<%= link_to 'Edit', edit_package_path(@package.to_params) %> | <%= link_to 'Download', download_package_path(@package.download_name) %>
+		</table>
+	</div>
+</div>
