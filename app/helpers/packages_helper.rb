@@ -28,16 +28,16 @@ module PackagesHelper
     htmlcode += "</p>"
   end
 
-	def package_header(package, show = nil)
+	def package_header(package, editable = nil)
 	  packages = Package.where(:package_branch_id => package.package_branch_id, :unit_id => package.unit_id).order("version ASC")
-	  show ||= false
+	  editable ||= false
     render :partial => 'record_header', :locals => {
                               														:title => package.display_name,
                               														:img => package.icon,
                               														:soft_info => package.name,
                               														:bold_info => package.version,
                               														:packages => packages,
-                              														:show => show }
+                              														:editable => editable }
 	end
 	
 	def recent_packages
