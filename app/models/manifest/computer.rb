@@ -232,19 +232,20 @@ class Computer < ActiveRecord::Base
     self.system_profile.serial_number if self.system_profile.present?
   end
   
+  # updates warranty, return true upon success
   def update_warranty
-    # self.warranty.destroy if self.warranty.present?
-    # self.warranty = nil
     if serial_number
       warranty = Warranty.find_or_create_by_serial_number(serial_number)
       warranty_hash = Warranty.get_warranty_hash(serial_number)
       # append computer_id into the hash
       warranty_hash[:computer_id] = self.id
+      warranty_hash[:updated_at] = Time.now
       result = warranty.update_attributes(warranty_hash)
       if warranty_report_due? and result
         AdminMailer.warranty_report(self).deliver
         self.warranty.notifications.create
       end
+      result ? true : false
     end
   end
   
