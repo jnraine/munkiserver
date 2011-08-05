@@ -38,6 +38,7 @@ class Warranty < ActiveRecord::Base
           hash[array_item] = warranty_array[warranty_array.index(array_item) + 2] if array_item =~ /[A-Z][A-Z\d]+/
         end
         hash
+      end
     rescue URI::Error
       computer = Computer.where(serial_number: serial)
       Rails.logger.error "Invalid serial number #{serial} for computer #{computer}"
@@ -45,8 +46,6 @@ class Warranty < ActiveRecord::Base
     rescue SocketError
       # No internet connection return nil
     end
-    
-    if hash
     
     purchase_date = Date.parse(hash['PURCHASE_DATE']) if hash['PURCHASE_DATE'].present?
     hw_coverage_end_date = Date.parse(hash['COV_END_DATE']) if hash['COV_END_DATE'].present?
@@ -71,7 +70,6 @@ class Warranty < ActiveRecord::Base
       forum_url:            hash['FORUMS_URL'],
       phone_support_url:    hash['PHONE_SUPPORT_LINK'],
     }
-  
   end
     
   def get_status(bool)
