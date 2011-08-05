@@ -9,3 +9,6 @@ end
 
 class ComputerError < Exception
 end
+
+class WarrantyException < Exception
+end

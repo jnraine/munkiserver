@@ -11,7 +11,7 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 20110728000844) do
-  
+
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
     t.string   "manifest_type"

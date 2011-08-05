@@ -1,7 +1,7 @@
 namespace :warranties do  
   desc "Update warranties for all available computers"
   task :update_all => :environment do
-    computers = Computer.all.select{ |c| c.serial_number }
+    computers = Computer.all.select { |c| c.serial_number }
     computers.each do |comp|
       if comp.update_warranty
         puts "Successfully updated #{comp.name}'s warranty."

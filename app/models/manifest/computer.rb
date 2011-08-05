@@ -236,7 +236,13 @@ class Computer < ActiveRecord::Base
   def update_warranty
     if serial_number
       warranty = Warranty.find_or_create_by_serial_number(serial_number)
-      warranty_hash = Warranty.get_warranty_hash(serial_number)
+      warranty_hash = {}
+      begin
+        warranty_hash = Warranty.get_warranty_hash(serial_number)
+      rescue WarrantyException
+        # Just catch and return false for now
+        return false
+      end
       # append computer_id into the hash
       warranty_hash[:computer_id] = self.id
       warranty_hash[:updated_at] = Time.now

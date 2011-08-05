@@ -21,7 +21,7 @@ class Warranty < ActiveRecord::Base
   
   validates_format_of :serial_number, :with => /^[a-zA-Z0-9]+$/
 
-
+  # Creates a hash used to update or create a warranty object.  Raises WarrantyException
   def self.get_warranty_hash(serial = "")
     if serial.blank?
       Rails.logger.warn "Blank serial number for computer #{computer}"
@@ -30,6 +30,9 @@ class Warranty < ActiveRecord::Base
     hash = {}
     begin
       open('https://selfsolve.apple.com/warrantyChecker.do?sn=' + serial.upcase) do |item|
+        if item.string.match(/ERROR_CODE/)
+          raise WarrantyException.new("Unable to retrieve warranty information for serial number #{serial.upcase}")
+        end
         warranty_array = item.string.strip.split('"')
         warranty_array.each do |array_item|
           hash[array_item] = warranty_array[warranty_array.index(array_item) + 2] if array_item =~ /[A-Z][A-Z\d]+/
@@ -43,6 +46,8 @@ class Warranty < ActiveRecord::Base
     rescue SocketError
       # No internet connection return nil
     end
+    
+    if hash
     
     purchase_date = Date.parse(hash['PURCHASE_DATE']) if hash['PURCHASE_DATE'].present?
     hw_coverage_end_date = Date.parse(hash['COV_END_DATE']) if hash['COV_END_DATE'].present?
