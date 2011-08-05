@@ -299,7 +299,7 @@ class Computer < ActiveRecord::Base
   
   # Return an array of real dates the notifications suppose to be send
   def send_notifications_on
-    interval = [30,15,5]
+    interval = [90,30,15,5]
     notification_send_on = []
     interval.each do |date|
       notification_send_on << warranty.hw_coverage_end_date.to_date - date
