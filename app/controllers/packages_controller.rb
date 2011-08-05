@@ -128,7 +128,7 @@ class PackagesController < ApplicationController
     @package = Package.find(params[:id])
     if @package.present?
       send_file Munki::Application::PACKAGE_DIR + @package.installer_item_location, :filename => @package.to_s(:download_filename)
-      fresh_when(:etag => @package, :last_modified => @package.created_at.utc, :public => true)
+      fresh_when :etag => @package, :last_modified => @package.created_at.utc, :public => true
     else
       render page_not_found
     end
