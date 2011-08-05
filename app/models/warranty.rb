@@ -38,7 +38,6 @@ class Warranty < ActiveRecord::Base
           hash[array_item] = warranty_array[warranty_array.index(array_item) + 2] if array_item =~ /[A-Z][A-Z\d]+/
         end
         hash
-      end
     rescue URI::Error
       computer = Computer.where(serial_number: serial)
       Rails.logger.error "Invalid serial number #{serial} for computer #{computer}"
@@ -98,5 +97,4 @@ class Warranty < ActiveRecord::Base
   def app_eligibility_status
     get_status(app_eligible)
   end
-  
 end
