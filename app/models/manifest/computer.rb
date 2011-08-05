@@ -255,7 +255,7 @@ class Computer < ActiveRecord::Base
       # if no notification send before and is less than 30 days untill expires
       if warranty.notifications.nil? and (Time.now.to_date >= send_notifications_on.first)
         return true
-      elsif notifications_not_send.include?(true) 
+      elsif notifications_not_sent.include?(true) 
         return true
       else
         return false
@@ -266,11 +266,11 @@ class Computer < ActiveRecord::Base
     end
   end
   
-  # Return an array of booleans true if notifications not send
-  def notifications_not_send
+  # Return an array of booleans true if notifications not sent
+  def notifications_not_sent
     results = []
-    send_date = send_notifications_on
-    send_date.each do |date|
+    send_dates = send_notifications_on
+    send_dates.each do |date|
       results << (Time.now.to_date > date)
     end
     results
