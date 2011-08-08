@@ -27,7 +27,7 @@ class Ability
     include_privilege :none
     
     can :manage, [Computer, ComputerGroup, Bundle]
-    can :read, Package
+    can :read, [Package, :shared_package]
     can :destroy, :session
     can [:show, :update], User do |user|
       user == @user

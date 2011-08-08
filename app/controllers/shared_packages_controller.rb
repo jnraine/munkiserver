@@ -1,5 +1,5 @@
 class SharedPackagesController < ApplicationController
-  authorize_resource
+  authorize_resource :class => false
   
   def index
     @shared_packages = Package.shared_to_unit(current_unit)

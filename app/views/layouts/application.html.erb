@@ -35,7 +35,7 @@
 	
 		<div id="app-menu" class="span-6 last">
 			<ul class="dropdown dropdown-horizontal">
-				<% if super_user? %>
+				<% if can? :manage, User %>
 					<li class="dir">
 						<%= link_to("Users", users_path)%>
 						<ul>
@@ -44,6 +44,8 @@
 							<li><%= link_to "Create user", new_user_path %></li>
 						</ul>
 					</li>
+				<% end %>
+				<% if can? :manage, Unit %>
 					<li class="dir">
 						<%= link_to("Units", units_url)%>
 						<ul>
@@ -51,23 +53,26 @@
 							<li><%= link_to "Add unit", new_unit_path %></li>
 						</ul>
 					</li>
+				<% end %>
 					<!-- ><li class="dir">
 						<%= link_to "Settings", "..." %>
 						<ul>
 
 						</ul>
 					</li> -->
-				<% end -%>
 				<% if logged_in? %>					
-					<li><%= link_to("Logout", logout_path) %> (<%= current_user.username %>)</li>
+					<li><%= link_to("Logout", logout_path) %> 
+						<% if can? :update, current_user %>( <%= link_to current_user.username, user_path(current_user) %> )
+						<% else %>( <%= current_user.username %> )
+						<% end %></li>
 				<% end %>
 			</ul>
-			<!-- <% if logged_in? %>
+			<!-- <%# if logged_in? %>
 						<div id="search">
-							<%= text_field_tag "search_field" %>
-							<%= submit_tag "Search" %>
+							<%#= text_field_tag "search_field" %>
+							<%#= submit_tag "Search" %>
 						</div>
-					<% end %> -->
+					<%# end %> -->
 		</div>
 	
 		<div id="units_menu" class="span-24 last">
@@ -105,9 +110,13 @@
 					<%= link_to "Packages", packages_path(current_unit) %>
 						<ul>
 							<li><%= link_to "List packages", packages_path(current_unit) %></li>
-							<li><%= link_to "Add package", new_package_path(current_unit) %></li>
+							<% if can? :create, Package %>
+								<li><%= link_to "Add package", new_package_path(current_unit) %></li>
+							<% end %>
 							<li><%= link_to "Shared packages", shared_packages_path(current_unit) %></li>	
-							<li><%= link_to "Check for updates", check_for_package_updates_path(current_unit) %></li>
+							<% if can? :update, Package %>
+								<li><%= link_to "Check for updates", check_for_package_updates_path(current_unit) %></li>
+							<% end %>
 						</ul>
 					</li>
 				</ul>
