@@ -1,4 +1,6 @@
 class UserSettingsController < ApplicationController
+  authorize_resource
+  
   def edit
     @user_setting = UserSetting.find(params[:id])
   end

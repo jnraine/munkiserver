@@ -1,5 +1,6 @@
 class ComputersController < ApplicationController
-  before_filter :require_valid_unit
+  authorize_resource
+  
   require 'cgi'
 
   def index
@@ -135,7 +136,7 @@ class ComputersController < ApplicationController
     
     @computer.save
     
-    @computer.warranty.destroy if @computer.serial_number != @computer.warranty.serial_number
+    @computer.warranty.destroy if @computer.system_profile.serial_number != @computer.warranty.serial_number
     AdminMailer.computer_report(@computer).deliver if @computer.report_due?
     render :text => ''
   end

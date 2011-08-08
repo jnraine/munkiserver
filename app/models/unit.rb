@@ -7,8 +7,9 @@ class Unit < ActiveRecord::Base
   has_many :bundles, :dependent => :destroy
   has_many :packages, :dependent => :destroy
   
-  has_many :memberships, :dependent => :destroy
-  has_many :users, :through => :memberships
+  # has_many :memberships, :dependent => :destroy
+  has_many :assignments
+  has_many :users, :through => :assignments
   
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
   accepts_nested_attributes_for :settings, :allow_destroy => true

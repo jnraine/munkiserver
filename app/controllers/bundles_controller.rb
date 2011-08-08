@@ -1,6 +1,6 @@
 class BundlesController < ApplicationController
-  before_filter :require_valid_unit
-  
+  authorize_resource
+    
   def index
     @bundles = Bundle.unit(current_unit)
     

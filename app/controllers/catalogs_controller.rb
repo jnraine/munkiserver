@@ -1,4 +1,6 @@
 class CatalogsController < ApplicationController
+  authorize_resource :class => false
+  
   def show
     @catalog = Catalog.generate(params[:unit_id],params[:environment_name])
     respond_to do |format|

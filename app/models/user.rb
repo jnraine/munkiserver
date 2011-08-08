@@ -30,8 +30,10 @@ class User < ActiveRecord::Base
   attr_protected :id, :salt
   attr_accessor :password
 
-  has_many :memberships
-  has_many :units, :through => :memberships
+  # has_many :memberships
+  has_many :assignments
+  has_many :units, :through => :assignments
+  has_many :roles, :through => :assignments
   
   has_one :settings, :dependent => :destroy, :class_name => "UserSetting", :autosave => true
 

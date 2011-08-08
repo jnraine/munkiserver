@@ -188,6 +188,14 @@ namespace :bootstrap do
     end
   end
   
+  desc "Load default roles"
+  task :roles, :needs => :environment do |t, args|
+    puts "Creating default roles."
+    Role.find_or_create_by_name("Admin")
+    Role.find_or_create_by_name("Super User")
+    Role.find_or_create_by_name("User")
+  end
+  
   desc "Create first user"
   task :user, :name, :needs => :environment do |t, args|
     if User.first.present?
@@ -196,6 +204,8 @@ namespace :bootstrap do
       puts "Generating a new user"    
       # Make sure we have a unit to assign
       Rake::Task["bootstrap:unit"].invoke unless Unit.count
+      # Make sure we have a role to assign
+      Rake::Task["bootstrap:roles"].invoke unless Role.count
       username = args.name
       unless username
         print "Username: "
@@ -208,13 +218,41 @@ namespace :bootstrap do
       u.password = STDIN.gets.chomp
       print "Confirm password: "
       u.password_confirmation = STDIN.gets.chomp
-      u.super_user = true
+      u.roles << Role.admin
       u.units << Unit.first
       unless u.save
         puts "Default user failed to save: " + u.errors.inspect
       end
     end
   end
+  # 
+  # desc "Create first user"
+  # task :user, :name, :needs => :environment do |t, args|
+  #   if User.first.present?
+  #     puts "First user (#{User.first.username}) already exists"
+  #   else
+  #     puts "Generating a new user"    
+  #     # Make sure we have a unit to assign
+  #     Rake::Task["bootstrap:unit"].invoke unless Unit.count
+  #     username = args.name
+  #     unless username
+  #       print "Username: "
+  #       username = STDIN.gets.chomp
+  #     end
+  #     u = User.new(:username => username)
+  #     print "Email: "
+  #     u.email = STDIN.gets.chomp
+  #     print "Password: "
+  #     u.password = STDIN.gets.chomp
+  #     print "Confirm password: "
+  #     u.password_confirmation = STDIN.gets.chomp
+  #     u.super_user = true
+  #     u.units << Unit.first
+  #     unless u.save
+  #       puts "Default user failed to save: " + u.errors.inspect
+  #     end
+  #   end
+  # end
   
   desc "create a new settings.yaml file optional arguments rake setup:create[hostname] default localhost:3000"
   task :settings, :hostname, :needs => :environment do |t, args|

@@ -1,5 +1,5 @@
 class UnitsController < ApplicationController
-  before_filter :super_user?
+  authorize_resource
 
   def index
     @units = Unit.all
