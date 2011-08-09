@@ -7,6 +7,8 @@ class UnitsController < ApplicationController
 
   def new
     @unit = Unit.new
+    @users = User.order(username: "ASC").all
+    @roles = Role.order(name: "DESC").all
   end
 
   def create
@@ -30,6 +32,8 @@ class UnitsController < ApplicationController
 
   def edit
     @unit = Unit.find_by_name(params[:id])
+    @users = User.order(username: "ASC").all
+    @roles = Role.order(name: "DESC").all
   end
 
   def update
@@ -67,5 +71,10 @@ class UnitsController < ApplicationController
         format.html { render :action => "index" }
       end
     end
+  end
+  
+  protected
+  def current_ability
+    @current_ability ||= Ability.new(user: current_user)
   end
 end

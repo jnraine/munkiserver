@@ -5,7 +5,8 @@
 	<p><%= f.text_field :name %></p>
 	<p><%= f.text_area :description, :size => "30x3" %></p>
 	<div id="members">
-		<%= tabled_asm_select(@unit) %>
+		<%#= tabled_asm_select(@unit) %>
+		<%= render :partial => "user_select", :locals => {f: f}%>
 	</div>
 	<p><%= f.submit 'Update' %></p>
 <% end %>

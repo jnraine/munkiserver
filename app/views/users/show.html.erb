@@ -25,14 +25,15 @@
 	<tr>
 		<td>This user has no access to any units.</td>
 	</tr>
-<% end %>
+<% else %>
 <ul>
-	<% @user.units.each do |unit| %>
+	<% @user.assignments.each do |assignment| %>
 	<tr>
-		<td><li><%= unit %></li></td>
+		<td><li><%= "#{assignment.unit} - #{assignment.role}" %></li></td>
 	<% end %>
 	</tr>
 </ul>
+<% end %>
 </table>
 
 <%= link_to "Edit", edit_user_path(@user) %> 
