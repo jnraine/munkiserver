@@ -1,5 +1,5 @@
 <tr>
-	<td rowspan="<%= package.versions.count %>"><%= image_tag(package.icon.url(:small)) if package.icon %></td>
+	<td rowspan="<%= package.versions.count %>"><label><%= image_tag(package.icon.url(:small)) if package.icon %></label></td>
 	<td rowspan="<%= package.versions.count %>">
 		<%= package.display_name %><br />
 		<em><%= package.name %></em>

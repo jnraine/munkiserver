@@ -233,9 +233,10 @@ $(document).ready(function() {
 	});
 	
 	// when click computer image select the checkbox
-	$("tbody tr td img").click(function(){
+	$("tbody tr td label").click(function(){
 		$img = $(this).parent().parent().find(":checkbox");
 		$img.attr("checked", !$img.attr("checked"));
+		$img.change();
 	});
 	
 	function addSubtleValue() {
