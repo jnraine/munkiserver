@@ -18,7 +18,6 @@ class Package < ActiveRecord::Base
   has_many :user_install_items, :dependent => :destroy
   has_many :user_uninstall_items, :dependent => :destroy
   has_many :user_allowed_items, :dependent => :destroy
-  has_many :update_for_items, :dependent => :destroy
   
   serialize :installs
   serialize :receipts
