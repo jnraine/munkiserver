@@ -48,7 +48,8 @@ class Warranty < ActiveRecord::Base
     end
     
     purchase_date = Date.parse(hash['PURCHASE_DATE']) if hash['PURCHASE_DATE'].present?
-    hw_coverage_end_date = Date.parse(hash['COV_END_DATE']) if hash['COV_END_DATE'].present?
+    # change from COV_END_DATE to HW_END_DATE, experiencing glitches inaccurate dates from Apple using COV_END_DATE
+    hw_coverage_end_date = Date.parse(hash['HW_END_DATE']) if hash['HW_END_DATE'].present?
     phone_coverage_end_date = Date.parse(hash['PH_END_DATE']) if hash['PH_END_DATE'].present?
 
     { serial_number:        serial, 

@@ -13,8 +13,9 @@ class Unit < ActiveRecord::Base
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
   accepts_nested_attributes_for :settings, :allow_destroy => true
   
-  validates_uniqueness_of :name
-  validates_presence_of :name, :description
+  validates :name, :shortname_uniqueness => true
+  validates_presence_of :name, :description, :shortname
+  validates :shortname, :shortname => true
   # A list of ACL attribute names
   # This list of names get turned into methods that check
   # if a given user has permission to complete a given action
@@ -85,6 +86,12 @@ class Unit < ActiveRecord::Base
     name
   end
   
+  # Overwrite the default name setter to add shortname attribute when creating a name
+  def name=(value)
+    self.shortname = value.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-')
+    super
+  end
+  
   # Builts permission checking methods based on ACLS constant
   def self.construct_acl_methods
     ACLS.each do |acl|
@@ -109,7 +116,7 @@ class Unit < ActiveRecord::Base
   end
   
   def to_param
-    name
+    shortname
   end
   
   construct_acl_methods

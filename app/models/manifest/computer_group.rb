@@ -27,10 +27,6 @@ class ComputerGroup < ActiveRecord::Base
     environment = Environment.find(environment_id)
     ComputerGroup.unit(unit).environment(environment)
   end
-  
-  def to_param
-    name
-  end
 end
 
 class ComputerGroupException < Exception

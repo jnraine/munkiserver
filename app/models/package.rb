@@ -67,7 +67,7 @@ class Package < ActiveRecord::Base
                                                ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']]}
   
   def self.find_where_params(params)
-    unit = Unit.where(:name => params[:unit]).first
+    unit = Unit.where(:shortname => params[:unit_shortname]).first
     package_branch = PackageBranch.where(:name => params[:package_branch]).first
 
     if unit.present? and package_branch.present?
@@ -83,7 +83,7 @@ class Package < ActiveRecord::Base
   # An hash of params to be used for linking to a package instance
   def to_params
     params = {}
-    params[:unit] = unit
+    params[:unit_shortname] = unit
     params[:package_branch] = package_branch
     params[:version] = version unless self.latest_in_unit?
     params

@@ -234,7 +234,7 @@ $(document).ready(function() {
 	
 	// when click computer image select the checkbox
 	$("tbody tr td img").click(function(){
-		$img = $(this).parent().parent().find("input");
+		$img = $(this).parent().parent().find(":checkbox");
 		$img.attr("checked", !$img.attr("checked"));
 	});
 	
