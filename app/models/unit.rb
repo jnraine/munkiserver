@@ -8,7 +8,7 @@ class Unit < ActiveRecord::Base
   has_many :packages, :dependent => :destroy
   
   # has_many :memberships, :dependent => :destroy
-  has_many :assignments
+  has_many :assignments, :dependent => :destroy
   has_many :users, :through => :assignments
   
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true

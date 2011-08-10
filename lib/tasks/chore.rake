@@ -70,10 +70,12 @@ namespace :chore do
       Membership.all.each do |membership|
         user = membership.user
         unit = membership.unit
-        if user.super_user
-          Assignment.create user_id: user.id, unit_id: unit.id, role_id: Role.admin.id
-        else
-          Assignment.create user_id: user.id, unit_id: unit.id, role_id: Role.super_user.id
+        if user.present? and unit.present?
+          if user.super_user
+            Assignment.create user_id: user.id, unit_id: unit.id, role_id: Role.admin.id
+          else
+            Assignment.create user_id: user.id, unit_id: unit.id, role_id: Role.super_user.id
+          end
         end
       end
 

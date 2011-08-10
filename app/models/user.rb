@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   attr_protected :id, :salt
   attr_accessor :password
 
-  has_many :assignments
+  has_many :assignments, :dependent => :destroy
   has_many :units, :through => :assignments
   has_many :roles, :through => :assignments
   
