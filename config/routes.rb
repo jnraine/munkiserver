@@ -30,7 +30,7 @@ Munki::Application.routes.draw do
   match '/configuration/:id.plist', :controller => 'computers', :action => 'show', :format => 'client_prefs', :id => /[A-Za-z0-9_\-\.:]+/
   
   # add units into URLs
-  scope "/:unit" do
+  scope "/:unit_shortname" do
     resources :computers do
       get :import, :on => :new
       get 'managed_install_reports/:id' => 'managed_install_reports#show', :on => :collection, :as => "managed_install_reports"

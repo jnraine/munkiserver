@@ -12,10 +12,9 @@ class Computer < ActiveRecord::Base
   
   # Validations
   validate :computer_model
-  validates_presence_of :name
   validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/
-  validates_format_of :name, :with => /^[a-zA-Z0-9-]+$/, :message => "must only contain alphanumeric and hyphens characters"
-  validates_uniqueness_of :mac_address,:name
+  # validates_format_of :name, :with => /^[a-zA-Z0-9-]+$/, :message => "must only contain alphanumeric and hyphens characters"
+  validates_uniqueness_of :mac_address
   
   # Maybe I shouldn't be doing this
   include ActionView::Helpers
@@ -222,10 +221,6 @@ class Computer < ActiveRecord::Base
       failures = results.map {|b| b == true }
       {:total => packages.count, :successes => successes.count, :failures => failures.count}
     end
-  end
-  
-  def to_param
-    name
   end
   
   def serial_number

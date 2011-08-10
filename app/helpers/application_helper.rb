@@ -106,7 +106,7 @@ module ApplicationHelper
   end
   
   def current_unit
-    @current_unit ||= Unit.where(:name => params[:unit]).first
+    @current_unit ||= Unit.where(:shortname => params[:unit_shortname]).first
   end
   
   def current_user
@@ -229,7 +229,7 @@ module ApplicationHelper
   def unit_link(unit, controller)
     included_controllers = ["computers","packages","computer_groups","bundles","shared_packages","install_items"]
     controller = "computers" unless included_controllers.include?(controller)
-    {:controller => controller, :action => :index, :unit => unit.to_param}
+    {:controller => controller, :action => :index, :unit_shortname => unit.to_param}
   end
   
 end

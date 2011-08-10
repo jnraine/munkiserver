@@ -16,8 +16,9 @@ module Manifest
       # ====================
       
       # Validations
-      validate :uniqueness_of_name_in_unit
+      validates :name, :shortname_uniqueness => true
       validates_presence_of :name
+      validates_presence_of :shortname
       
       # Bundles
       has_many :bundle_items, :as => :manifest, :dependent => :destroy
@@ -41,18 +42,10 @@ module Manifest
       
       magic_mixin :unit_member
       
-      # True if name attribute is unique in the unit
-      def uniqueness_of_name_in_unit
-        # Create flag
-        is_unique = true
-        # Fetch all records from the same unit as self
-        records = self.class.unit(self.unit)
-        # Check each record and see if any one has the same name as self (except for self)
-        records.each do |r|
-          is_unique = false if r.name == self.name and r.id != self.id
-        end
-        # Return answer
-        errors.add_to_base("Name (#{self.name}) has already been taken in this unit (#{self.unit})") unless is_unique
+      # Overwrite the default name setter to add shortname attribute when creating a name
+      def name=(value)
+        self.shortname = value.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-')
+        super
       end
       
       # Return all the environments visible to this object
@@ -408,17 +401,17 @@ module Manifest
       # find the appropriate record for the show action
       def self.find_for_show(unit, s)
         # Find by ID, if s is only digits
-        current_unit = Unit.where(:name => unit).first unless unit.nil?
+        current_unit = Unit.where(:shortname => unit).first unless unit.nil?
         record = self.where(:id => s).first if s.match(/^\d+$/)
         # Find by id-name
         match = s.match(/^(\d+)([-_]{1})(.+)$/)
         if record.nil? and match.class == MatchData
           id = match[1]
-          name = match[3]
-          record ||= self.where(:id => id, :name => name).first
+          shortname = match[3]
+          record ||= self.where(:id => id, :shortname => shortname).first
         end
         # Find by name
-        record ||= self.where(:unit_id => current_unit.id, :name => s).first unless current_unit.nil?
+        record ||= self.where(:unit_id => current_unit.id, :shortname => s).first unless current_unit.nil?
         # Return results
         record
       end
@@ -490,7 +483,7 @@ module Manifest
       
       # overwrite default to_param for friendly bundle URLs
       def to_param
-        name
+        shortname
       end
       # ===================
       # = Code ends here! =

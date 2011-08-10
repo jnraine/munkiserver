@@ -44,7 +44,7 @@
 				<td><%= check_box_tag("selected_records[]",c.id, false, :class => "bulk_edit_checkbox") %></td>
 			<% end %>
 		
-			<td><%= image_tag c.icon.url(:small) if c.icon %>
+			<td><%= image_tag c.icon.url(:small), :class => "thumbnail" if c.icon %></td>
 			<td><%= link_to c.name, computer_url(c.unit, c) %></td>    
 		    <td><%= link_to c.hostname, computer_url(c.unit, c) %></td>
 			<td><%= c.mac_address %></td>

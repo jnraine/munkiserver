@@ -36,7 +36,7 @@ class ComputersController < ApplicationController
   end
   
   def show
-    @computer = Computer.find_for_show(params[:unit], CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     
     respond_to do |format|
       if @computer.present?
@@ -53,11 +53,11 @@ class ComputersController < ApplicationController
   end
 
   def edit
-    @computer = Computer.find_for_show(params[:unit], CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
   end
 
   def update
-    @computer = Computer.find_for_show(params[:unit], CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     
     respond_to do |format|
       if @computer.update_attributes(params[:computer])
@@ -71,7 +71,7 @@ class ComputersController < ApplicationController
   end
 
   def destroy
-    @computer = Computer.find_for_show(params[:unit], CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     
     if @computer.destroy
       flash[:notice] = "Computer was destroyed successfully"
@@ -195,7 +195,7 @@ class ComputersController < ApplicationController
   
   
   def update_warranty
-    @computer = Computer.find_for_show(params[:unit], params[:computer_id])
+    @computer = Computer.find_for_show(params[:unit_shortname], params[:computer_id])
     if @computer.update_warranty
       flash[:notice] = "#{@computer.name}'s warranty was successfully updated."
     else
