@@ -6,7 +6,8 @@ validates_presence_of :name
 validates_uniqueness_of :name, :message => "must be unique"
 
 def self.find_by_sym(sym = nil)
-  self.all.collect!{|r| r if r.to_sym == sym.to_sym}.compact!.first
+  roles = self.all.collect!{|r| r if r.to_sym == sym.to_sym}.compact!
+  roles.first if roles
 end
 
 def self.method_missing(meth, *args, &block)
