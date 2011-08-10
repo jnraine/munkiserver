@@ -25,7 +25,7 @@ class ComputerGroupsController < ApplicationController
   end
 
   def destroy
-    @computer_group = ComputerGroup.find_for_show(params[:unit], CGI::unescape(params[:id]))
+    @computer_group = ComputerGroup.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     
     begin
       if @computer_group.destroy
@@ -43,12 +43,12 @@ class ComputerGroupsController < ApplicationController
   end
 
   def edit
-    @computer_group = ComputerGroup.find_for_show(params[:unit], params[:id])
+    @computer_group = ComputerGroup.find_for_show(params[:unit_shortname], params[:id])
     @environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update
-    @computer_group = ComputerGroup.unit(current_unit).find_for_show(params[:unit], CGI::unescape(params[:id]))
+    @computer_group = ComputerGroup.unit(current_unit).find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     
     respond_to do |format|
       if @computer_group.update_attributes(params[:computer_group])
@@ -67,7 +67,7 @@ class ComputerGroupsController < ApplicationController
   end
 
   def show
-    @computer_group = ComputerGroup.find_for_show(params[:unit], params[:id])
+    @computer_group = ComputerGroup.find_for_show(params[:unit_shortname], params[:id])
     
     respond_to do |format|
       if @computer_group.present?

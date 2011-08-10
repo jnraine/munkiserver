@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110728000844) do
+ActiveRecord::Schema.define(:version => 20110808185913) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20110728000844) do
     t.text     "raw_mode",       :default => "f"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "shortname"
   end
 
   create_table "client_logs", :force => true do |t|
@@ -50,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20110728000844) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "configuration_id"
+    t.string   "shortname"
   end
 
   create_table "computer_models", :force => true do |t|
@@ -75,6 +77,7 @@ ActiveRecord::Schema.define(:version => 20110728000844) do
     t.datetime "updated_at"
     t.string   "hostname",             :default => ""
     t.integer  "configuration_id"
+    t.string   "shortname"
   end
 
   create_table "configurations", :force => true do |t|
@@ -336,6 +339,7 @@ ActiveRecord::Schema.define(:version => 20110728000844) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "configuration_id"
+    t.string   "shortname"
   end
 
   create_table "update_for_items", :force => true do |t|

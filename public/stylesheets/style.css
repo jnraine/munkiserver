@@ -225,7 +225,6 @@ textarea {
 	letter-spacing:3px;
 	padding-left:10px;
 }
-
 /* Tabs in Package Edit */
 
 
@@ -258,6 +257,10 @@ table.form {
 
 table tbody .odd{
 	background: #F4F4F4;
+}
+
+tbody tr td img:hover{
+	cursor:pointer;
 }
 
 /* Message / notice box */
