@@ -1,0 +1,3 @@
+namespace :auth do
+
+end

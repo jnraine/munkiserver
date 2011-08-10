@@ -1,4 +1,6 @@
 class UnitSettingsController < ApplicationController
+  authorize_resource
+  
   def edit
     @unit_setting = UnitSetting.where(:unit_id => Unit.where(:shortname => params[:id]).first.id).first
   end

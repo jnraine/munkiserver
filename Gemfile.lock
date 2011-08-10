@@ -32,6 +32,7 @@ GEM
     archive-tar-minitar (0.5.2)
     arel (2.0.4)
     builder (2.1.2)
+    cancan (1.6.5)
     client_side_validations (3.0.5)
       activesupport
     columnize (0.3.2)
@@ -100,6 +101,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cancan
   client_side_validations
   nokogiri
   paperclip

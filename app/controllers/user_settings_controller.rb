@@ -1,4 +1,6 @@
 class UserSettingsController < ApplicationController
+  load_and_authorize_resource
+  
   def edit
     @user_setting = UserSetting.find(params[:id])
   end
@@ -16,5 +18,10 @@ class UserSettingsController < ApplicationController
         format.xml  { render :xml => @user_setting.errors, :status => :unprocessable_entity }
       end
     end
+  end
+  
+  private
+  def load_user
+    @user_setting = User.find(params[:id])
   end
 end

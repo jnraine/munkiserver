@@ -7,8 +7,9 @@ class Unit < ActiveRecord::Base
   has_many :bundles, :dependent => :destroy
   has_many :packages, :dependent => :destroy
   
-  has_many :memberships, :dependent => :destroy
-  has_many :users, :through => :memberships
+  # has_many :memberships, :dependent => :destroy
+  has_many :assignments
+  has_many :users, :through => :assignments
   
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
   accepts_nested_attributes_for :settings, :allow_destroy => true
@@ -92,6 +93,29 @@ class Unit < ActiveRecord::Base
   
   def to_param
     shortname
+  end
+
+  
+  def role_of(user)
+    user = User.find_by_username(user) if user.kind_of? String
+    if user.present?
+      assign = assignments.find_by_user_id(user.id)
+      assign.role if assign.present?
+    end
+  end
+  
+  def method_missing(meth, *args, &block)
+    method = meth.to_s
+    if method =~ /^role_sym_of_[^\s=]+$/
+      role = role_of(method.sub(/^role_sym_of_/, ''))
+      role ||= "none"
+      role.to_sym
+    elsif method =~ /^users_with_privilege_[^\s=]+$/
+      role = method.sub(/^users_with_privilege_/, '')
+      users_with_privilege(role.to_sym)
+    else
+      super
+    end
   end
 end
 

@@ -13,17 +13,17 @@ namespace :chore do
     Dir[Rails.root + 'app/models/**/*.rb'].each do |path|
       require path
     end
-    
+
     # Find all subclasses of ActiveRecord::Base and validate
     subclasses = ActiveRecord::Base.send(:subclasses)
     invalid = []
     subclasses.each do |klass|
       puts "Validating #{klass.name.pluralize}"
       klass.all.each do |instance|
-      invalid << instance unless instance.valid?
+        invalid << instance unless instance.valid?
       end
     end
-    
+
     #Print results
     puts "\n-------------------------------------------------------------------\n\n"
     if invalid.empty?
@@ -37,8 +37,8 @@ namespace :chore do
       end
     end
   end
-  
-  
+
+
   desc "If missing, create shortname attribute from name attribute for appropriate models"
   task :generate_shortnames, :needs => :environment do
     records = Unit.all + Computer.all + Bundle.all + ComputerGroup.all
@@ -53,5 +53,53 @@ namespace :chore do
         end
       end
     end
+  end
+
+  desc "Upgrades munkiserver to use role based access control"
+  task :upgrade_to_cancan, :needs => :environment do
+    primary_db_version    = 20110808185940
+    if ActiveRecord::Migrator.current_version > primary_db_version
+      puts "Roles have already been applied - Nothing to be done."
+    else    
+      puts "Migrating database to add roles"
+      ENV['VERSION'] = primary_db_version.to_s
+      Rake::Task['db:migrate'].invoke
+      Rake::Task['bootstrap:roles'].invoke
+
+      puts "Assigning roles to existing users"
+      Membership.all.each do |membership|
+        user = membership.user
+        unit = membership.unit
+        if user.super_user
+          Assignment.create user_id: user.id, unit_id: unit.id, role_id: Role.admin.id
+        else
+          Assignment.create user_id: user.id, unit_id: unit.id, role_id: Role.super_user.id
+        end
+      end
+
+      puts "Removing super_user field from Users"
+      ENV['VERSION'] = nil
+      Rake::Task['db:migrate'].reenable
+      Rake::Task['db:migrate'].invoke
+    end
+  end
+
+  desc "Update each user to have a role linked to a specific unit"
+  task :upgrade_unit_roles, :needs => :environment do
+
+    User.all.each do |user|
+      role = user.roles.first 
+      user.assignments.destroy_all
+      Membership.where(user_id: user.id).each do |m|
+        assign = Assignment.new(user_id: user.id, unit_id: m.unit_id, role_id: role.id)
+        if assign.save
+          puts assign.inspect
+        else
+          puts "FECK"
+        end
+      end
+    end
+
+
   end
 end

@@ -3,17 +3,22 @@
 <table class="zebra">
 	<thead>
 		<th>Username</th>
-		<th>Superuser</th>
+		<th>Roles</th>
 		<th>Email</th>
 		<th>Actions
 	</thead>
 	<% @users.each do |user| %>
 		<tr>
 			<td><%= link_to user.username, edit_user_path(user) %></td>
-			<td><%= "&#10003;".html_safe if user.super_user?  %></td>
+			<td>
+				<% for assignment in user.assignments %>
+					<%= "#{assignment.unit} - #{assignment.role}"%>
+				<% end %>
+			</td>
 			<td><%= user.email %></td>
 			<td>
-				<%= link_to "Edit", edit_user_path(user) %>
+				<%= link_to "Edit", edit_user_path(user) %> 
+				<%= link_to "Settings", settings_edit_user_path(user.id) %> 
 				<%= link_to "Remove", user, :confirm => "Are you sure you want to delete #{user.username}?", :method => :delete %>
 			</td>
 		</tr>

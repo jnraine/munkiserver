@@ -22,12 +22,6 @@
 			<td><%= f.password_field :password_confirmation %></td>
 			<td><%= helpful_info("#{User.password_constraints}") %></td>
 		</tr>
-		<tr>
-			<td>Super User</td>
-			<td><%= f.check_box :super_user %></td>
-			<td><%= helpful_info("Grant super user privileges to this user.\nUse with caution.") %></td>
-		</tr>
-
 	</table>
 	<p>
 	<%= f.submit 'Submit' %>

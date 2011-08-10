@@ -2,7 +2,8 @@ require 'digest/sha1'
 
 class User < ActiveRecord::Base
   
-  @@password_constraints = {:pass_len => "must be between 5-24 characters",
+  @@password_constraints = {
+    :pass_len => "must be between 5-24 characters",
     :pass_nums => "must contain at least one number",
     :pass_upper => "must contain at least one upper case character",
     :pass_lower => "must contain at least one lower case character"}
@@ -30,8 +31,9 @@ class User < ActiveRecord::Base
   attr_protected :id, :salt
   attr_accessor :password
 
-  has_many :memberships
-  has_many :units, :through => :memberships
+  has_many :assignments
+  has_many :units, :through => :assignments
+  has_many :roles, :through => :assignments
   
   has_one :settings, :dependent => :destroy, :class_name => "UserSetting", :autosave => true
 
@@ -78,14 +80,9 @@ class User < ActiveRecord::Base
   end
   
   # Returns membership that self and unit share
-  def membership(unit)
-    unit.membership(self)
-  end
-  
-  # Returns true if user is super user
-  def super_user?
-    super_user
-  end
+  # def membership(unit)
+  #   unit.`membership`(self)
+  # end
   
   # A to string method
   def to_s
@@ -102,12 +99,6 @@ class User < ActiveRecord::Base
   def init_settings
     us = UserSetting.new
     self.settings = us
-  end
-  
-  # Roles used by this application.  This is required by
-  # the declarative_authorization gem
-  def role_symbols
-    [:admin,:developer,:support_person]
   end
   
   # over write default to_param use name in the routing instead of id

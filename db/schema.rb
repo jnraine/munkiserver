@@ -10,7 +10,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110808185913) do
+ActiveRecord::Schema.define(:version => 20110810190424) do
+
+  create_table "assignments", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "role_id"
+    t.integer  "unit_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -150,30 +158,6 @@ ActiveRecord::Schema.define(:version => 20110808185913) do
     t.datetime "updated_at"
   end
 
-  create_table "memberships", :force => true do |t|
-    t.integer  "unit_id"
-    t.integer  "user_id"
-    t.boolean  "create_computer",        :default => true
-    t.boolean  "read_computer",          :default => true
-    t.boolean  "edit_computer",          :default => true
-    t.boolean  "destroy_computer",       :default => true
-    t.boolean  "create_bundle",          :default => true
-    t.boolean  "read_bundle",            :default => true
-    t.boolean  "edit_bundle",            :default => true
-    t.boolean  "destroy_bundle",         :default => true
-    t.boolean  "create_computer_group",  :default => true
-    t.boolean  "read_computer_group",    :default => true
-    t.boolean  "edit_computer_group",    :default => true
-    t.boolean  "destroy_computer_group", :default => true
-    t.boolean  "create_package",         :default => true
-    t.boolean  "read_package",           :default => true
-    t.boolean  "edit_package",           :default => true
-    t.boolean  "destroy_package",        :default => true
-    t.boolean  "edit_unit",              :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "missing_manifests", :force => true do |t|
     t.string   "manifest_type"
     t.string   "identifier"
@@ -261,6 +245,12 @@ ActiveRecord::Schema.define(:version => 20110808185913) do
     t.integer  "package_id"
     t.integer  "manifest_id"
     t.string   "manifest_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -390,7 +380,6 @@ ActiveRecord::Schema.define(:version => 20110808185913) do
     t.string   "hashed_password"
     t.string   "email"
     t.string   "salt"
-    t.boolean  "super_user",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

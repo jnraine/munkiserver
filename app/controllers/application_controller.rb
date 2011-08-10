@@ -1,9 +1,8 @@
 class ApplicationController < ActionController::Base
   helper :all
   protect_from_forgery :except => [:checkin]
-  
-  before_filter :require_login
-  
+  check_authorization
+    
   private
   
   include ApplicationHelper
@@ -16,29 +15,6 @@ class ApplicationController < ActionController::Base
     system "rake #{task} #{args.join(' ')} --trace >> #{Rails.root}/log/rake.log &"
   end
   
-  # Redirects user to login path if logged_in returns false.
-  def require_login
-    # If we are logged in or the action we are requesting is excluded from login requirement
-    if logged_in? or action_and_format_excluded?
-      if logged_in? and current_user.units.empty?
-        flash[:warning] = "You are not permitted to any units!"
-        render :file => "#{Rails.root}/public/generic_error.html", :layout => false
-      end
-    else
-      flash[:warning] = "You must be logged in to view that page"
-      redirect_to login_path(:redirect => request.request_uri)
-    end
-  end
-  
-  def require_valid_unit
-    begin
-      # raise Exception.new("You are not permitted this unit (#{current_unit})") unless current_user.member_of(current_unit)
-      current_unit
-    rescue Exception => e
-      flash[:error] = "The unit you requested (#{params[:unit_shortname]}) does not exist or you do not have permission to it!"
-      render :file => "#{Rails.root}/public/generic_error.html", :layout => false
-    end
-  end
   
   # Checks to see if the requested page is excluded from login requirements
   # hashes like this: action => [formats, as, array]
@@ -59,9 +35,7 @@ class ApplicationController < ActionController::Base
     excluded
   end
   
-  def fake_login
-    session[:username] = "default"
-  end
+  
 
   def page_not_found
     {:file => "#{Rails.root}/public/404.html", :layout => false, :status => 404}
@@ -77,10 +51,17 @@ class ApplicationController < ActionController::Base
   end
   
   protected
+  def current_ability
+    if action_and_format_excluded?
+      # TODO - HTTP Basic Auth will go here
+      @current_ability ||= Ability.new(role: :computer, )
+    else
+      @current_ability ||= Ability.new(user: current_user, unit: current_unit)
+    end
+  end
   
-  # Sets the Authorization.current_user to the current_user
-  # This is required by the declarative_authorization gem
-  def set_current_user_for_auth
-    Authorization.current_user = current_user
+  rescue_from CanCan::AccessDenied do |exception|
+    flash[:error] = exception.message
+    redirect_to root_url
   end
 end

@@ -1,0 +1,21 @@
+<%= f.label :users %>
+
+<table>
+	<thead>
+		<td>Username \ Role</td>
+		<% @roles.each do |role| %>
+			<td><%= role.name %></td>
+		<% end %>
+		<td>None</td>
+	</thead>
+	
+	<% @users.each do |user| %>
+		<tr>
+			<td><%= user.username %></td>
+			<% @roles.each do |role| %>
+				<td><%= f.radio_button "role_sym_of_#{user.username}", role.to_sym %></td>
+			<% end %>
+				<td><%= f.radio_button "role_sym_of_#{user.username}", :none %></td>
+		</tr>
+	<% end %>
+</table>

@@ -1,17 +1,14 @@
-class UsersController < ApplicationController
-  before_filter :super_user?
+class UsersController < ApplicationController  
+  load_resource :find_by => :username
+  authorize_resource
   
   def index
-    @users = User.all
   end
   
   def new
-    @user = User.new
   end
   
-  def create
-    @user = User.new(params[:user])
-    
+  def create    
     respond_to do |format|
       if @user.save
         flash[:notice] = "#{@user.username} was successfully created."
@@ -25,16 +22,12 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = User.find_by_username(params[:id])
   end
   
   def edit
-    @user = User.find_by_username(params[:id])
   end
   
   def update
-    @user = User.find_by_username(params[:id])
-    
     respond_to do |format|
       if @user.update_attributes(params[:user])
         flash[:notice] = "#{@user.username} was successfully updated."
@@ -49,9 +42,6 @@ class UsersController < ApplicationController
   end
   
   def destroy
-    @user = User.find_by_username(params[:id])
-    username = @user.username
-    
     respond_to do |format|
       if @user.destroy
         flash[:notice] = "#{@user.username} was successfully removed."

@@ -12,9 +12,6 @@
 	<tr>
 		<td>Receive Email Notification :<%= @user.settings.receive_email_notifications? ? "Yes" : "No" %></td>
 	</tr>
-	<tr>
-		<td>Super user: <%= @user.super_user? ? "Yes" : "No" %></td>
-	</tr>
 </table>
 
 
@@ -25,14 +22,16 @@
 	<tr>
 		<td>This user has no access to any units.</td>
 	</tr>
-<% end %>
+<% else %>
 <ul>
-	<% @user.units.each do |unit| %>
+	<% @user.assignments.each do |assignment| %>
 	<tr>
-		<td><li><%= unit %></li></td>
+		<td><li><%= "#{assignment.unit} - #{assignment.role}" %></li></td>
 	<% end %>
 	</tr>
 </ul>
+<% end %>
 </table>
 
-<%= link_to "Edit", edit_user_path(@user) %> | <%= link_to "Back", users_path %>
+<%= link_to "Edit", edit_user_path(@user) %> | <%= link_to "Edit User Settings", settings_edit_user_path(@user.id) %> 
+<% if can? :read, User %>| <%= link_to "Back", users_path %><% end %>
