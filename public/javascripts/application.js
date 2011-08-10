@@ -161,7 +161,7 @@ $(document).ready(function() {
 					mode: format,
 					onCursorActivity: function() {
 					    editor.setLineClass(hlLine, null);
-					    hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
+					    hlLine = editor.setLineClass(editor.getWrapperElement().line, "activeline");
 					}
 		      });
 		var hlLine = editor.setLineClass(0, "activeline");	
@@ -232,11 +232,20 @@ $(document).ready(function() {
 		}
 	});
 	
-	// when click computer image select the checkbox
-	$("tbody tr td label").click(function(){
-		$img = $(this).parent().parent().find(":checkbox");
-		$img.attr("checked", !$img.attr("checked"));
-		$img.change();
+	// Clickable image to select the corresponding checkbox
+	$(".thumbnail").click(function(){
+		var package_branch_id = $(this).attr("data-package-branch-id");
+		var $checkbox = null;
+		if(package_branch_id != null) {
+			// Handle package table
+			css_class = "package_branch_" + package_branch_id;
+			$checkbox = $(this).parents("tbody").find("." + css_class + ":checkbox");
+		} else {
+			// Handle computer table
+			$checkbox = $(this).parents("tr").find(":checkbox");
+		}
+		$checkbox.attr("checked", !$checkbox.attr("checked"));
+		$checkbox.change();
 	});
 	
 	function addSubtleValue() {
