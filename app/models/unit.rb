@@ -13,20 +13,23 @@ class Unit < ActiveRecord::Base
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
   accepts_nested_attributes_for :settings, :allow_destroy => true
   
-  validates :name, :shortname_uniqueness => true
-  validates_presence_of :name, :description, :shortname
-  validates :shortname, :shortname => true
-  # A list of ACL attribute names
-  # This list of names get turned into methods that check
-  # if a given user has permission to complete a given action
-  ACLS = [:create_computer,:read_computer,:edit_computer,:destroy_computer,
-          :create_bundle,:read_bundle,:edit_bundle,:destroy_bundle,
-          :create_computer_group,:read_computer_group,:edit_computer_group,:destroy_computer_group,
-          :create_package,:read_package,:edit_package,:destroy_package]
+  validates :name, :presence => true, :unique_as_shortname => true
+  validates :description, :presence => true
+  validates :shortname, :presence => true, :format => {:with => /^[a-z0-9-]+$/}
   
   before_save :check_settings
-  # will no longer create a computer group after a new unit is created
-  # after_save :require_computer_group
+  
+  # Takes a name attribute and returns a valid shortname attribute
+  def conform_name_to_shortname(name = nil)
+    name ||= self.name
+    name.to_s.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-')
+  end
+  
+  # Overwrite the default name setter to add shortname attribute when creating a name
+  def name=(value)
+    self.shortname = conform_name_to_shortname(value)
+    super
+  end
   
   # Returns the membership that self and user share
   def membership(user)
@@ -47,18 +50,6 @@ class Unit < ActiveRecord::Base
   def members=(value)
     self.users = value
   end
-  
-  # Creates default computer group if there are none assigned to this unit
-  # def require_computer_group
-  #   create_default_computer_group if self.computer_groups.count == 0
-  # end
-  
-  # Attempts to create and save a computer group named "Default"
-  # def create_default_computer_group
-  #   cg = ComputerGroup.unit(self).find_by_name("Default")
-  #   cg ||= ComputerGroup.new({:name => "Default", :unit_id => self.id, :environment_id => Environment.first.id})
-  #   cg.save and self.save
-  # end
   
   # Returns an array of tas option hashes
   def tas_params(environment_id = nil)
@@ -86,22 +77,6 @@ class Unit < ActiveRecord::Base
     name
   end
   
-  # Overwrite the default name setter to add shortname attribute when creating a name
-  def name=(value)
-    self.shortname = value.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-')
-    super
-  end
-  
-  # Builts permission checking methods based on ACLS constant
-  def self.construct_acl_methods
-    ACLS.each do |acl|
-      # Checks if the current user has permission to do something
-      define_method "#{acl.to_s}?" do |user|
-        member?(user) and membership(user).edit_computer
-      end
-    end
-  end
-  
   # Generate key using the User.random_string method
   def self.generate_key
     User.random_string(30)
@@ -118,7 +93,5 @@ class Unit < ActiveRecord::Base
   def to_param
     shortname
   end
-  
-  construct_acl_methods
 end
 

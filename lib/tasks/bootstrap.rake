@@ -181,10 +181,11 @@ namespace :bootstrap do
     name = args.name
     name ||= "Default"
     u = Unit.find_or_create_by_name(name)
+    u.shortname = u.conform_name_to_shortname
     u.key = Unit.generate_key
     u.description = "Created by bootstrap"
     unless u.save
-      puts "Default user failed to save: " + u.errors.inspect
+      puts "Default unit failed to save: " + u.errors.inspect
     end
   end
   

@@ -16,9 +16,8 @@ module Manifest
       # ====================
       
       # Validations
-      validates :name, :shortname_uniqueness => true
-      validates_presence_of :name
-      validates_presence_of :shortname
+      validates :name, :presence => true, :unique_as_shortname => true
+      validates :shortname, :presence => true, :format => {:with => /^[a-z0-9-]+$/}
       
       # Bundles
       has_many :bundle_items, :as => :manifest, :dependent => :destroy
@@ -42,9 +41,15 @@ module Manifest
       
       magic_mixin :unit_member
       
+      # Takes a name attribute and returns a valid shortname attribute
+      def conform_name_to_shortname(name = nil)
+        name ||= self.name
+        name.to_s.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-')
+      end
+      
       # Overwrite the default name setter to add shortname attribute when creating a name
       def name=(value)
-        self.shortname = value.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-')
+        self.shortname = conform_name_to_shortname(value)
         super
       end
       

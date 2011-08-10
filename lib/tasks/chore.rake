@@ -27,7 +27,7 @@ namespace :chore do
     #Print results
     puts "\n-------------------------------------------------------------------\n\n"
     if invalid.empty?
-      puts "All Records are vailid"
+      puts "All Records are valid"
     else
       puts "Invalid Records"
       invalid.each do |inv|
@@ -39,32 +39,19 @@ namespace :chore do
   end
   
   
-  desc "Create shortname attribute based off existing name's from models"
-  task :generate_short_names, :needs => :environment do
-    units = Unit.all
-    computers = Computer.all
-    bundles = Bundle.all
-    computer_groups = ComputerGroup.all
-    
-    units.each do |unit|
-      unit.shortname = unit.name.downcase.gsub(/[^a-z0-9]+/, '-')
-      puts "Changing unit name \"#{unit.name}\" to #{unit.shortname}"
-      unit.save
-    end
-    computers.each do |computer|
-      computer.shortname = computer.name.downcase.gsub(/[^a-z0-9]+/, '-')
-      puts "Changing computer name \"#{computer.name}\" to #{computer.shortname}"
-      computer.save
-    end
-    bundles.each do |bundle|
-      bundle.shortname = bundle.name.downcase.gsub(/[^a-z0-9]+/, '-')
-      puts "Changing bundle name \"#{bundle.name}\" to #{bundle.shortname}"
-      bundle.save
-    end
-    computer_groups.each do |computer_group|
-      computer_group.shortname = computer_group.name.downcase.gsub(/[^a-z0-9]+/, '-')
-      puts "Changing computer group name \"#{computer_group.name}\" to #{computer_group.shortname}"
-      computer_group.save
+  desc "If missing, create shortname attribute from name attribute for appropriate models"
+  task :generate_shortnames, :needs => :environment do
+    records = Unit.all + Computer.all + Bundle.all + ComputerGroup.all
+    records.each do |record|
+      if record.shortname.blank?
+        record.shortname = record.conform_name_to_shortname
+        print "Adding shortname to #{record}: #{record.shortname}..."
+        if record.save
+          puts "ok"
+        else
+          puts "error: #{record.errors.inspect}"
+        end
+      end
     end
   end
 end
