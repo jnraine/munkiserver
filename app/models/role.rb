@@ -17,7 +17,8 @@ end
 def self.current_role(user, unit)
   if user.present? 
     if unit.present?
-      Assignment.find(:first, conditions: {user_id: user.id, unit_id: unit.id}).role
+      assign = Assignment.find(:first, conditions: {user_id: user.id, unit_id: unit.id})
+      assign.role if assign.present?
     else
       user.roles.first
     end

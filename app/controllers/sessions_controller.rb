@@ -1,8 +1,8 @@
 class SessionsController < ApplicationController
-  # skip_before_filter :require_login, :only => ['new','create','destroy']
   authorize_resource :class => false
   
   def new
+    flash.keep(:error)
     redirect_to computers_path(current_user.units.first) if logged_in?
   end
   

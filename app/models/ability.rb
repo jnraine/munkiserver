@@ -3,7 +3,7 @@ class Ability
 
   def initialize(opts = {})
     puts "Authenticating..."
-    @role, @user, @unit = opts[:role], opts[:user], opts[:unit]
+    @role, @user, @unit, @computer = opts[:role], opts[:user], opts[:unit], opts[:computer]
     @role ||= Role.current_role(@user, @unit) || :none
 
     puts @role
@@ -29,6 +29,11 @@ class Ability
     can :manage, [Computer, ComputerGroup, Bundle]
     can :read, [Package, :shared_package]
     can :destroy, :session
+    
+    can :update, UserSetting do |user_setting|
+      user_setting.user == @user
+    end
+    
     can [:show, :update], User do |user|
       user == @user
     end
@@ -39,9 +44,10 @@ class Ability
   end
   
   def computer
-    can :read, Computer
+    # TODO - Check that the "logged in" computer is able to read correct catalog, Computer, and Packages.
+    can [:read, :checkin], Computer 
     can :show, :catalog
-    can :checkin, Computer
+    can :download, Package
   end
   
   def include_privilege(role)

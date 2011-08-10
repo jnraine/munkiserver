@@ -10,6 +10,8 @@
 		<%= f.text_area :description, :size => "30x3" %>
 		<%= subtle_value(@unit,:description)%>
 	</p>
-	<%= render :partial => 'edit_members' %>
+	<%#= render :partial => 'edit_members' %>
+	<%#= render :partial => 'user_select', :locals => {f: f} %>
+	
 	<p><%= f.submit 'Create' %></p>
 <% end %>

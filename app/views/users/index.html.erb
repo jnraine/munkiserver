@@ -13,7 +13,8 @@
 			<td><%= "&#10003;".html_safe if user.super_user?  %></td>
 			<td><%= user.email %></td>
 			<td>
-				<%= link_to "Edit", edit_user_path(user) %>
+				<%= link_to "Edit", edit_user_path(user) %> 
+				<%= link_to "Settings", settings_edit_user_path(user.id) %> 
 				<%= link_to "Remove", user, :confirm => "Are you sure you want to delete #{user.username}?", :method => :delete %>
 			</td>
 		</tr>

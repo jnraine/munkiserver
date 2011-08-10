@@ -5,7 +5,11 @@
 	<%= link_to "#{pkg.version}", package_path(pkg.to_params), :title => "Show" %>
 </td>
 <td>
-	<%= link_to image_tag("edit.png", :class => "inline-icon", :title => "Edit"), edit_package_path(pkg.to_params) %>
+	<% if can? :update, Package %>
+		<%= link_to image_tag("edit.png", :class => "inline-icon", :title => "Edit"), edit_package_path(pkg.to_params) %>
+	<% end %>
 	<%= link_to image_tag("download.png", :class => "inline-icon", :title => "Download"), download_package_path(pkg.download_name) %>
-	<%= link_to(image_tag("delete.png", :class => "inline-icon", :title => "Remove"), package_path(pkg.to_params), :confirm => "Are you SURE ?", :method => :delete, :title => "Remove") %>
+	<% if can? :destroy, Package %>
+		<%= link_to(image_tag("delete.png", :class => "inline-icon", :title => "Remove"), package_path(pkg.to_params), :confirm => "Are you SURE ?", :method => :delete, :title => "Remove") %>
+	<% end %>
 </td>
