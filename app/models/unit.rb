@@ -13,6 +13,8 @@ class Unit < ActiveRecord::Base
   has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
   accepts_nested_attributes_for :settings, :allow_destroy => true
   
+  scope :from_other_unit, lambda {|u| where("id != ?", u.id)}
+  
   validates :name, :presence => true, :unique_as_shortname => true
   validates :description, :presence => true
   validates :shortname, :presence => true, :format => {:with => /^[a-z0-9-]+$/}

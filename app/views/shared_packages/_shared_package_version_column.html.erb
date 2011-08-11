@@ -1,0 +1,15 @@
+<td>
+	<%= check_box_tag("selected_records[]", pkg.id, false, :class => "package_branch_#{pkg.package_branch_id} bulk_edit_checkbox") %>
+</td>
+<td>
+	<%= link_to "#{pkg.version}", package_path(pkg.to_params), :title => "Show" %>
+</td>
+<td>
+	
+</td>
+<td>
+	
+</td>
+<td>
+	<%= link_to "Import" %>
+</td>

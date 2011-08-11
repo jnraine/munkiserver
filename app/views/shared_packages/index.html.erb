@@ -1,5 +1,18 @@
-<% content_for :sidebar do %>
+<h2>Shared Packages</h2>
+<% if @packages.present? %>
+	<p><em>Dependencies (found in "Update For" and "Requires" columns) are not imported!</em></p>
+<div id="tabs">
+	<ul>
+		<% @other_units.each do |unit| %>
+			<li><a href="#<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab"><span><%= unit.name %></span></a></li>
+		<% end %>
+	</ul>
+		<% @other_units.each do |unit| %>
+			<div id="<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab">
+				<%= shared_package_table(@packages, unit)%>
+			</div>
+		<% end %>
+</div>
+<% else %>
+	<h5>There are no shared packages</h5>
 <% end %>
-
-<%= render :partial => "shared_package_table", :locals => {:title => "shared packages", :packages => @shared_packages} %>
-<%= render :partial => "shared_package_table", :locals => {:title => "imported packages", :packages => @imported_packages} %>

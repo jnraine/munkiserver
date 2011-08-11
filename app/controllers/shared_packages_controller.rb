@@ -1,8 +1,15 @@
 class SharedPackagesController < ApplicationController
   before_filter :require_valid_unit
   def index
-    @shared_packages = Package.shared_to_unit(current_unit)
-    @imported_packages = Package.shared_to_unit_and_imported(current_unit)
+    # @packages = Package.shared_to_unit_and_imported(current_unit)
+    
+    @packages = Package.shared.where("unit_id != #{current_unit.id}")
+    pb_ids = []
+    @packages.each do |p|
+      pb_ids << p.package_branch_id
+    end
+    @package_branches = PackageBranch.find(pb_ids.uniq)
+    @other_units = Unit.from_other_unit(current_unit)
   end
   
   # Updates the shared package resource by adding a new instance of that package
