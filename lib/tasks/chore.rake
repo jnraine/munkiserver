@@ -79,29 +79,12 @@ namespace :chore do
         end
       end
 
-      puts "Removing super_user field from Users"
+      puts "Removing super_user field from Users and the Membership model"
       ENV['VERSION'] = nil
       Rake::Task['db:migrate'].reenable
       Rake::Task['db:migrate'].invoke
+
+      `rm app/models/join_models/membership.rb test/fixtures/memberships.yml test/unit/membership_test.rb`
     end
-  end
-
-  desc "Update each user to have a role linked to a specific unit"
-  task :upgrade_unit_roles, :needs => :environment do
-
-    User.all.each do |user|
-      role = user.roles.first 
-      user.assignments.destroy_all
-      Membership.where(user_id: user.id).each do |m|
-        assign = Assignment.new(user_id: user.id, unit_id: m.unit_id, role_id: role.id)
-        if assign.save
-          puts assign.inspect
-        else
-          puts "FECK"
-        end
-      end
-    end
-
-
   end
 end
