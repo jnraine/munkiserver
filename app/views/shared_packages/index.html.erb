@@ -1,18 +1,22 @@
 <h2>Shared Packages</h2>
 <% if @packages.present? %>
-	<p><em>Dependencies (found in "Update For" and "Requires" columns) are not imported!</em></p>
-<div id="tabs">
-	<ul>
-		<% @other_units.each do |unit| %>
-			<li><a href="#<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab"><span><%= unit.name %></span></a></li>
-		<% end %>
-	</ul>
-		<% @other_units.each do |unit| %>
-			<div id="<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab">
-				<%= shared_package_table(@packages, unit)%>
-			</div>
-		<% end %>
-</div>
+	<%= form_tag import_multiple_shared_packages_path(current_unit), :id => "multiple_import_form", :method => 'get' do %>
+	<p><em>Dependencies (found in "Update For" and "Requires" columns) are not imported!</em>
+	<%= submit_tag "Multiple Import", :id => "bulk_edit", "data-confirm-message" => "Are you sure you want to import selected packages ?" %></p>
+	
+		<div id="tabs">
+			<ul>
+				<% @other_units.each do |unit| %>
+					<li><a href="#<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab"><span><%= unit.name %></span></a></li>
+				<% end %>
+			</ul>
+				<% @other_units.each do |unit| %>
+					<div id="<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab">
+						<%= shared_package_table(@packages, unit)%>
+					</div>
+				<% end %>
+		</div>
+	<% end %>
 <% else %>
 	<h5>There are no shared packages</h5>
 <% end %>

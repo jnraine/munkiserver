@@ -6,15 +6,15 @@
 		<%= package_branch.display_name %><br />
 		<em><%= package_branch.name %></em>
 	</td>
-	<%= render :partial => 'shared_package_version_column', :locals => {:pkg => package_branch.shared_packages_from_unit(unit).first} %>
+	<%= render :partial => 'shared_package_version_column', :locals => {:package => package_branch.shared_packages_from_unit(unit).first} %>
 	<td rowspan="<%= package_branch.shared_packages_from_unit(unit).count %>" class="centerize">
 	
 	</td>
 </tr>
-<% package_branch.shared_packages_from_unit(unit).each_with_index do |pkg,i| %>
+<% package_branch.shared_packages_from_unit(unit).each_with_index do |package,i| %>
 	<% unless i == 0 %>
 		<tr>
-			<%= render :partial => 'shared_package_version_column', :locals => {:pkg => pkg} %>
+			<%= render :partial => 'shared_package_version_column', :locals => {:package => package} %>
 		</tr>
 	<% end %>
 <% end %>

@@ -227,6 +227,9 @@ textarea {
 }
 /* Tabs in Package Edit */
 
+#multiple_import{
+    float: right;
+}
 
 /* GUI view table*/
 

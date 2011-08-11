@@ -347,7 +347,8 @@ function initializeBulkEdit() {
 	$("#bulk_edit").css({"visibility":"hidden"});
 	
 	$(".select_all").change(function() {
-		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
+	    // select all enabled checkboxes
+		$(this).parents("table").find(":checkbox:enabled").attr("checked",$(this).attr("checked"));
 	});
 	
 	// show bulk edit button when 2 or more checkbox is selected
