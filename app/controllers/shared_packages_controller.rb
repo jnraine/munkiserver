@@ -41,10 +41,12 @@ class SharedPackagesController < ApplicationController
     end
     respond_to do |format|
       if results.include?(false)
-        flash[:error] = "Failed to Import packages"
+        flash[:error] = "Failed to import packages"
         format.html { redirect_to shared_packages_path(current_unit) }
       else
         flash[:notice] = "Successfully imported packages"
+        # upon success redirect to staging package index page, change current_environment
+        params[:eid] = 1
         format.html { redirect_to packages_path(current_unit) }
       end
     end

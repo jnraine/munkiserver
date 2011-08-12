@@ -81,9 +81,11 @@ class Package < ActiveRecord::Base
   end
 
   # An hash of params to be used for linking to a package instance
-  def to_params
+  # takes an optional params to specify the target unit
+  def to_params(target_unit = nil)
+    target_unit ||= unit
     params = {}
-    params[:unit_shortname] = unit
+    params[:unit_shortname] = target_unit
     params[:package_branch] = package_branch
     params[:version] = version unless self.latest_in_unit?
     params
@@ -305,7 +307,7 @@ class Package < ActiveRecord::Base
     end
   end
   
-  # Return the package id of the
+  # Return the package id of a package if there exists 
   def shared_installer_item_location(unit = nil)
     if @installer_item_locations.nil?
       @installer_item_locations = {}

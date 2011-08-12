@@ -2,7 +2,7 @@
 <% if @packages.present? %>
 	<%= form_tag import_multiple_shared_packages_path(current_unit), :id => "multiple_import_form", :method => 'get' do %>
 	<p><em>Dependencies (found in "Update For" and "Requires" columns) are not imported!</em>
-	<%= submit_tag "Multiple Import", :id => "bulk_edit", "data-confirm-message" => "Are you sure you want to import selected packages ?" %></p>
+	<%= submit_tag "Multiple Import", :id => "bulk_edit", :confirm => "Are you sure you want to import selected packages ?" %></p>
 	
 		<div id="tabs">
 			<ul>

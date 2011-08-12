@@ -20,8 +20,8 @@
 </td>
 <td>
 	<% if package.shared_installer_item_location(current_unit).present? %>
-		
-		<%= link_to "#{package.name} #{package.version}", package_path(package.to_params)%>
+		<p class="show_hidden_link">Imported</p>
+		<%= link_to "#{package.name} #{package.version}", package_path(package.to_params(current_unit)), :class => "hidden_link"%>
 	<% else %>
 		<% if package.has_dependencies? %>
 			<%= link_to "Import", import_shared_package_path(current_unit,package), {"data-confirm-message" => "Warning: This item has dependencies which will NOT be imported!"} %>
