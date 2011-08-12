@@ -92,22 +92,6 @@ class Package < ActiveRecord::Base
     params
   end
   
-  def force_install_after_date
-    self[:force_install_after_date]
-  end
-  
-  def force_install_after_date_string
-    self.force_install_after_date.localtime.strftime("%Y-%m-%d %I:%M %p") if self.force_install_after_date
-  end
-  
-  def force_install_after_date_string=(time_str)
-    if time_str == ""
-      self.force_install_after_date = nil
-    else
-      self.force_install_after_date = Time.parse(time_str)
-    end      
-  end
-  
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)
@@ -457,10 +441,17 @@ class Package < ActiveRecord::Base
     end
   end
   
-  # if package's description is nil, get scraped description from version tracker
-  # def get_descirption_from_version_tracker(package)
-  #  
-  # end
+  def force_install_after_date_string
+    self.force_install_after_date.localtime.strftime("%Y-%m-%d %I:%M %p") if self.force_install_after_date
+  end
+  
+  def force_install_after_date_string=(time_str)
+    if time_str == ""
+      self.force_install_after_date = nil
+    else
+      self.force_install_after_date = Time.parse(time_str)
+    end      
+  end
   
   # Require icon
   def require_icon
