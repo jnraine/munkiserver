@@ -1,9 +1,9 @@
 <% units.each do |unit| %>
-	<% if unit.id == current_unit.id %>
+	<% if current_unit.present? and unit.id == current_unit.id %>
 		<li class="current"><%= unit.name %></li>		
 	<% else %>
 		<li>
-			<%= link_to "#{unit.name}", change_unit_path(unit.id,params[:controller],params[:action]) %>
+			<%= link_to "#{unit.name}", unit_link(unit,params[:controller]) %>
 		</li>
-	<% end -%>
-<% end -%>
+	<% end %>
+<% end %>

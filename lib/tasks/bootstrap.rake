@@ -2,19 +2,13 @@ namespace :bootstrap do
   desc "Executing Munkiserver bootstrap tasks"
   task :all do
     tasks = tasks_in_namespace("bootstrap")
+    Rake::Task["bootstrap:create_assets_directory"].invoke # do this first
     tasks.each do |task|
       Rake::Task[task].invoke
       # Had some failing tasks, give them a second to breathe
       sleep 1
     end
   end
-  
-  # desc "Add a generic icon to the Icon model"
-  # task :generic_icon => :environment do
-  #   path = Rails.root.to_s + "/public/default_icons"
-  #   i = Icon.new(:uploaded_data => LocalFile.new("#{path}/generic.png"))
-  #   i.save
-  # end
   
   desc "Intialize PackageCategory with default categories"
   task :package_categories => :environment do
@@ -187,6 +181,7 @@ namespace :bootstrap do
     name = args.name
     name ||= "Default"
     u = Unit.find_or_create_by_name(name)
+    u.shortname = u.conform_name_to_shortname
     u.key = Unit.generate_key
     u.description = "Created by bootstrap"
     unless u.save
@@ -239,6 +234,27 @@ namespace :bootstrap do
     end
   end
   
+  desc "create a new settings.yaml file optional arguments rake setup:create[hostname] default localhost:3000"
+  task :settings, :hostname, :needs => :environment do |t, args|
+    if File.exists?("config/settings.yaml")
+      puts "settings.yaml file is already exists"
+    else
+      #if settings.yaml file doesn't exists
+      hostname = args.hostame
+      puts "Grenerating settings.yaml file, if blank default to \"localhost:3000\""
+      print "Hostname: "
+      hostname = STDIN.gets.chomp
+      if hostname.empty?
+        hostname = "localhost:3000"
+      end
+       h = {}
+        File.open( "config/settings.yaml", "w" ) do |file|
+         h[:action_mailer] = {:host => "#{hostname}" }
+         file.write(h.to_yaml)
+        end
+    end
+  end
+  
   desc "Load base environments"
   task :environments do |t, args|
     #Build the staging environment
@@ -258,13 +274,21 @@ namespace :bootstrap do
   
   desc "Generate preflight script"
   task :prelight_script do |t, args|
-    #Build a prefligh script dependant 
+    # Build a preflight script dependant 
     
   end
   
   desc "Generate crontab jobs passing rails current environment"
   task :crontab => :environment do
     `whenever --update-crontab --set environment=#{Rails.env}`
+  end
+  
+  desc "Create munkiserver_asset symlink as sibling of munkiserver directory"
+  task :create_assets_directory => :environment do
+    assets_dir = "#{Rails.root}/../munkiserver_assets"
+    unless File.exist?(assets_dir)
+      `mkdir #{assets_dir}`
+    end
   end
 end
 

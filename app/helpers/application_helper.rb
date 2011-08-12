@@ -55,48 +55,17 @@ module ApplicationHelper
   # Creates a multiple select based on passed params
   # Parameters is filled with hashes with the following keys:
   # title, model_name, attribute_name, select_title, options
-  def tabled_asm_select(parameters,table_class = "packagePicker",header_enabled = true)
+  def tabled_asm_select(parameters,table_class = nil,header_enabled = nil,environment_id = nil)
     # If parameter is an active record model, get tas_params
     if parameters.class.superclass == ActiveRecord::Base
-          parameters = parameters.tas_params
+      parameters = parameters.tas_params(environment_id)
     end
-    # Let us know if we're passing blank parameters (we shouldn't be)
-    # parameters.each do |section|
-    #       section.each do |key, val|
-    #         if section[key].blank?
-    #           puts "Error: parameters #{key} was blank!"
-    #         end
-    #       end
-    #     end
-    #render_table_asm_select(parameters, table_class, header_enabled)
-    render :partial => "shared/table_multi_select", :locals => {:parameters => parameters, :table_class => table_class, :header_enabled => header_enabled} 
     
-  end
-  
-  
-  def render_table_asm_select(parameters,table_class,header_enabled)
-    offset = 0
-    parameters.to_s
-    parameters.each_with_index do |section, i|
-      if parameters[i+offset] == nil
-        break
-      else
-        parameters[i+offset][:title].to_s
-        offset += 1
-      end
-
-      
-    end
-    content_tag :table, :class => table_class do
-      
-    end     
-
-  end  
-
-  def display_package_version(pkgsinfo)
-    unless Pkgsinfo.latest?(pkgsinfo)
-      "(#{pkgsinfo.version})"
-    end
+    # Ensure sane default values
+    table_class ||= "packagePicker"
+    header_enabled ||= true
+    
+    render :partial => "shared/table_multi_select", :locals => {:parameters => parameters, :table_class => table_class, :header_enabled => header_enabled} 
   end
   
   def record_count(model_objs,word = "record")
@@ -132,23 +101,12 @@ module ApplicationHelper
     @current_environment ||= Environment.default_view
   end
   
-  def current_unit_id
-    session[:unit_id]
-  end
-  
   def super_user?
     current_user.super_user?
   end
   
   def current_unit
-    begin
-      @current_unit ||= Unit.find(session[:unit_id])
-    rescue ActiveRecord::RecordNotFound
-      # If you can't find the unit with the session ID
-      session[:unit_id] = current_user.units.first.id
-      # Assign it again
-      @current_unit ||= Unit.find(session[:unit_id])
-    end
+    @current_unit ||= Unit.where(:shortname => params[:unit_shortname]).first
   end
   
   def current_user
@@ -174,10 +132,8 @@ module ApplicationHelper
   
   # Build units menu for currently logged in user
   def units_menu
-    unless current_unit.nil?
-      units = current_user.units
-      render :partial => "shared/units_menu", :locals => {:units => units, :current_unit => current_unit}
-    end
+    units = current_user.units
+    render :partial => "shared/units_menu", :locals => {:units => units, :current_unit => current_unit}
   end
   
   # Creates auto-complete text field for ASM select
@@ -186,8 +142,9 @@ module ApplicationHelper
     render :partial => 'shared/autocomplete_asmselect', :locals => {:element_id => element_id, :autocomplete_id => element_id + "_autocomplete", :choices => choices, :default_value => default_value}
   end
   
-  def field_lock_control(id)
-    render :partial => 'shared/field_lock_control', :locals => {:id => id}
+  def field_lock_control(id, locked = true)
+    lock_state = locked ? "locked" : "unlocked"
+    render :partial => 'shared/field_lock_control', :locals => {:id => id, :lock_state => lock_state}
   end
   
   def current_link?(string)
@@ -245,17 +202,9 @@ module ApplicationHelper
     "<script type='text/javascript'>\n\tjQuery('##{dom_id}').subtle_value('#{value}');\n</script>\n".html_safe
   end
   
-  # Pass dom_id of element for rollover, and content for box
-  def extra_info(dom_id,content,jq_event = 'mouseover')
-    render :partial => 'shared/extra_info_box', :locals => {:dom_id => dom_id, :content => content, :jq_event => jq_event}
-  end
-  
   # Provides a question mark rollover with extra information
-  def helpful_info(content,jq_event = 'click')
-    dom_id = content[0,25].gsub(/[^[:alnum:]]/, '_') + "_" + rand(1001).to_s  
-    code = image_tag('question_mark.png', :id => dom_id, :style => "vertical-align:middle;cursor:pointer")
-    code += extra_info(dom_id,content,jq_event)
-    code
+  def helpful_info(content)
+    render :partial => 'shared/helpful_info', :locals => {:content => content}
   end
   
   # Creates a set of tags for a checkbox: the checkbox, a label (with passed string), a hidden tag (to nullify value)
@@ -276,4 +225,11 @@ module ApplicationHelper
     
     render "shared/hash_checkboxes", :locals => {:options => options, :h => h}
   end
+  
+  def unit_link(unit, controller)
+    included_controllers = ["computers","packages","computer_groups","bundles","shared_packages","install_items"]
+    controller = "computers" unless included_controllers.include?(controller)
+    {:controller => controller, :action => :index, :unit_shortname => unit.to_param}
+  end
+  
 end

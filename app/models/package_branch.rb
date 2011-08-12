@@ -4,7 +4,7 @@ class PackageBranch < ActiveRecord::Base
   # Validations
   validates_presence_of :name, :display_name
   validates_uniqueness_of :name, :display_name
-  validates_format_of :name, :with => /^[^ -]+$/, :message => "must not contain spaces or hyphens"
+  validates_format_of :name, :with => /^[^ -.]+$/, :message => "must not contain spaces or hyphens or dots"
   
   attr_protected :id, :name
   
@@ -19,19 +19,32 @@ class PackageBranch < ActiveRecord::Base
   has_many :user_allowed_items, :dependent => :destroy
   has_many :require_items, :dependent => :destroy
   has_many :update_for_items, :dependent => :destroy
+  has_many :notifications, :as => :notified
   # has many Packages
   has_many :all_packages, :order => 'version desc', :class_name => "Package"
   has_one :version_tracker, :dependent => :destroy, :autosave => true
+  
   
   before_validation :require_display_name
   before_save :require_version_tracker
 
   # Conforms a string to the package branch name constraints
   # => Replaces anything that are not alpheranumrical to underscores
-  def self.conform_to_name_constraints(value)
-    value.gsub(/[^A-Za-z0-9_\.]+/,"_")
+  def self.conform_to_name_constraints(name)
+    name.gsub(/[^A-Za-z0-9_]+/,"_")
   end
-
+  
+  # Check if there exists a pacakge branch display name that matches the 
+  # current package branch name, if found, return a new package branch 
+  # display name follow by appending time stamp
+  def self.conform_to_display_name_constraints(display_name,id)
+    if PackageBranch.where(:display_name => display_name).where("id <> ?", id.to_i).present?
+      display_name = "#{display_name}_#{Time.zone.now.to_s}"
+    else
+      display_name
+    end
+  end
+  
   # Returns the latest package (based on version)
   # in the package branch.  Results are scoped if scoped? returns true
   def latest(unit_member = nil)
@@ -91,8 +104,17 @@ class PackageBranch < ActiveRecord::Base
   end
   
   # True if a newer version is available in this branch
-  def new_version?
-    vtv.version_string_comparison(version_tracker.version) == -1
+  def new_version?(unit = nil)
+    if version_tracker.version.nil?
+      return false
+    else
+      version_string = vtv(unit)
+      if version_string.present?
+        version_string.version_string_comparison(version_tracker.version) == -1
+      else
+        raise Exception.new("No package found with package branch of #{self} inside #{unit} unit")
+      end
+    end
   end
   
   # Returns latest package or package with
@@ -125,8 +147,9 @@ class PackageBranch < ActiveRecord::Base
   end
   
   # Grabs vtv from latest package
-  def vtv
-    latest.vtv unless latest.nil?
+  def vtv(unit = nil)
+    p = unit.present? ? latest_where_unit(unit) : latest
+    p.vtv unless p.nil?
   end
 
   # Sets iVars @environment_id and @unit_id to bind this record, temporarily, to a certain scope
@@ -178,12 +201,12 @@ class PackageBranch < ActiveRecord::Base
   def self.available_updates(unit = nil)
     packages_with_updates = []
     if unit.present?
-      p = Package.latest_from_unit(unit)
-      packages_with_updates = p.delete_if {|p| !p.new_version? }      
+      latest_packages = Package.latest_where_unit(unit)
+      packages_with_updates = latest_packages.delete_if {|p| !p.new_version? }      
     else
       Unit.all.each do |unit|
-        p = Package.latest_from_unit(unit)
-        packages_with_updates = packages_with_updates + p.delete_if {|p| !p.new_version? }
+        latest_packages = Package.latest_where_unit(unit)
+        packages_with_updates += latest_packages.delete_if {|p| !p.new_version? }
       end
     end
     packages_with_updates
@@ -211,5 +234,9 @@ class PackageBranch < ActiveRecord::Base
       when :pretty then display_name
       else name
     end
+  end
+  
+  def to_param
+    name
   end
 end

@@ -1,0 +1,22 @@
+<%= f.error_messages %>
+<table class="form">
+	<tr>
+		<td>Name</td>
+		<td><%= f.text_field :name %></td>
+	</tr>
+	<tr>
+		<td>Environment</td>
+		<td><%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "environment"} %></td>
+	</tr>
+	<tr>
+		<td colspan="2"><%= f.text_area :description, :size => "40x3" %></td>
+	</tr>
+</table>
+
+<div id="tabled_asm_select">
+	<%= tabled_asm_select(@bundle)%>
+</div>
+
+<p>
+<%= f.submit submit_value %>
+</p>

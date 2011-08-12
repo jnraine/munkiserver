@@ -1,4 +1,5 @@
 class InstallItemsController < ApplicationController
+  before_filter :require_valid_unit
   def edit_multiple
     begin
       @computer = Computer.unit(current_unit).find(params[:computer_id])
@@ -6,7 +7,6 @@ class InstallItemsController < ApplicationController
       @install_items = []
     end
     @install_items = @computer.install_items unless @computer.nil?
-    
     respond_to do |format|
       format.js
     end

@@ -40,7 +40,7 @@
 						<%= link_to("Users", users_path)%>
 						<ul>
 							<li><%= link_to "List users", users_path %></li>
-							<li><%= link_to "Edit user settings", edit_user_setting_path(current_user.settings) %></li>
+							<li><%= link_to "Edit user settings", settings_edit_user_path(current_user.settings) %></li>
 							<li><%= link_to "Create user", new_user_path %></li>
 						</ul>
 					</li>
@@ -48,15 +48,13 @@
 						<%= link_to("Units", units_url)%>
 						<ul>
 							<li><%= link_to "List units", units_path %></li>
-							<li><%= link_to "Edit unit settings", edit_unit_setting_path(current_unit.settings) %></li>
 							<li><%= link_to "Add unit", new_unit_path %></li>
 						</ul>
 					</li>
 					<!-- ><li class="dir">
 						<%= link_to "Settings", "..." %>
 						<ul>
-							<li><%= link_to "Edit unit settings", edit_unit_setting_path(current_unit.settings) %></li>
-							<li><%= link_to "Edit user settings", edit_user_setting_path(current_user.settings) %></li>
+
 						</ul>
 					</li> -->
 				<% end -%>
@@ -79,41 +77,41 @@
 		</div>
 	
 		<div id="units_submenu" class="span-23 prepend-1 last">
-			<ul class="dropdown dropdown-horizontal">
-				<% if current_unit.present? %>
+			<% if current_unit.present? %>
+				<ul class="dropdown dropdown-horizontal">
 					<li class="dir<%= " current" if current_link?("Computers") %>">
-						<%= link_to("Computers", computers_url) %>
+						<%= link_to "Computers", computers_url(current_unit) %>
 						<ul>
-							<li><%= link_to "List computers", computers_path %></li>
-							<li><%= link_to "Add computer", new_computer_path %></li>
-							<li><%= link_to "Import ARD list", import_new_computer_path %></li>
+							<li><%= link_to "List computers", computers_path(current_unit) %></li>
+							<li><%= link_to "Add computer", new_computer_path(current_unit) %></li>
+							<li><%= link_to "Import ARD list", import_new_computer_path(current_unit) %></li>
 						</ul>
 					</li>
 					<li class="dir<%= " current" if current_link?("Computer Groups") %>">
-						<%= link_to("Computer Groups", computer_groups_url) %>
+						<%= link_to "Computer Groups", computer_groups_url(current_unit) %>
 						<ul>
-							<li><%= link_to "List computer groups", computer_groups_url %></li>
-							<li><%= link_to "Add computer group", new_computer_group_url %></li>
+							<li><%= link_to "List computer groups", computer_groups_url(current_unit) %></li>
+							<li><%= link_to "Add computer group", new_computer_group_url(current_unit) %></li>
 						</ul>
 					</li>
 					<li class="dir<%= " current" if current_link?("Bundles") %>">
-					<%= link_to("Bundles", bundles_url) %>
+					<%= link_to "Bundles", bundles_url(current_unit) %>
 						<ul>
-							<li><%= link_to "List bundles", bundles_url %></li>
-							<li><%= link_to "Add bundle", new_bundle_url %></li>
+							<li><%= link_to "List bundles", bundles_url(current_unit) %></li>
+							<li><%= link_to "Add bundle", new_bundle_url(current_unit) %></li>
 						</ul>
 					</li>
 					<li class="dir<%= " current" if current_link?("Packages") %>">
-					<%= link_to("Packages", packages_url) %>
+					<%= link_to "Packages", packages_path(current_unit) %>
 						<ul>
-							<li><%= link_to "List packages", packages_url %></li>
-							<li><%= link_to "Add package", new_package_url %></li>
-							<li><%= link_to "Shared packages", shared_packages_path %></li>	
-							<li><%= link_to "Check for updates", check_for_updated_packages_url %></li>
+							<li><%= link_to "List packages", packages_path(current_unit) %></li>
+							<li><%= link_to "Add package", new_package_path(current_unit) %></li>
+							<li><%= link_to "Shared packages", shared_packages_path(current_unit) %></li>	
+							<li><%= link_to "Check for updates", check_for_package_updates_path(current_unit) %></li>
 						</ul>
 					</li>
 				</ul>
-			<% end -%>
+			<% end %>
 		</div>
 		<div class="span-16 prepend-1 append-bottom append-1">
 			<% flash.each do |key, msg| %>
@@ -131,7 +129,11 @@
 <div class="footer">
 	<div class="container">
 		<!-- <%= `echo $PATH` %> -->
-		<p class="span-8 last prepend-8 append-8">munki server <%= Munki::Application::VERSION %></p>
+		<p class="span-8 last prepend-8 append-8 text-center">
+			munki server <%= Munki::Application::VERSION %><br>
+			munki tools <%= Munki::Application::MUNKITOOLS_VERSION %>
+		</p>
+		
 		<%= image_tag 'footer_graphic.png', :id => "footer_graphic" %>
 	</div>
 	<script type="text/javascript">

@@ -5,27 +5,30 @@
 		<em>No description</em>
 	<% else %>
 		<%= @computer.description %>
-	<% end -%>
+	<% end %>
 </p>
 <div id="tabs">
 	<ul>
 		<li><a href="#packages_tab"><span>Packages</span></a></li>
 		<li><a href="#system_profile_tab"><span>System Profile</span></a></li>
 		<li><a href="#managed_install_reports_tab"><span>Managed Install Reports (<%= @computer.managed_install_reports.count %>)</span></a></li>
+		<li><a href="#warranty_tab"><span>Warranty</span></a></li>
 	</ul>
 	
 	<!-- First tab starts here -->
 	<div id="packages_tab">
-		<h4>Computer (<%= link_to "edit", edit_computer_url(@computer) %>)</h4>
+		<h4 style="display:inline;">Computer (<%= link_to "edit", edit_computer_url(@computer.unit, @computer) %>)</h4>
+		<%= link_to "Show effective items", "#effectiveItems", :id => "effectiveItemsLink"  %>
+		
 		<%= inventory(@computer,@computer) %>
 
 		<% unless @computer.computer_group.nil? %>
-			<h4>Computer Group (<%= link_to "edit", edit_computer_group_url(@computer.computer_group) %>)</h4>
+			<h4>Computer Group (<%= link_to "edit", edit_computer_group_url(@computer.computer_group.unit, @computer.computer_group) %>)</h4>
 			<%= inventory(@computer.computer_group,@computer) %>
 		<% else %>
 			<h4>Computer Group</h4>
 			<p><em>This computer is not a member of any computer group.</em></p>
-		<% end -%>
+		<% end %>
 	</div>
 	
 	<!-- Second tab starts here -->
@@ -37,17 +40,39 @@
 	<div id="managed_install_reports_tab">
 		<h3>Managed Install Reports</h3>
 		<div>
+			<%= form_tag(managed_install_reports_computers_path(current_unit), :id => "managed_install_reports_form", :method => 'get', :remote => true) do %>
 			View Report
-			<select id="managed_install_reports" name="managed_install_reports">
-				<% @computer.managed_install_reports.reverse.each do |report| %>
-					<option value="<%= report.id %>"><%= report.option_text %></option>
-				<% end -%>
-			</select>
+			<%= select_tag "managed_install_reports", options_from_collection_for_select(@computer.managed_install_reports.reverse, "id", "option_text")%>
+			
 			<img class="loading" src="/images/ajax-loader.gif" />
 			<%= helpful_info "* denotes a report with issues"%>
+			<% end %>
 		</div>
 		<div id="managed_install_report">
 			<em>No managed install report available</em>
 		</div>
 	</div>
+
+	<!-- Fourth tab starts here -->
+	<div id="warranty_tab">
+		<%= render :partial => "warranty" %>
+	</div>
+</div>
+
+<div id="effectiveItems">
+	<table class="packagePicker">
+		<thead>
+			<tr>
+				<th>Managed Installs</th>
+				<th>Managed Uninstalls</th>
+				<th>Optional Installs</th>
+			</tr>
+		</thead>
+		<tr>
+			<td><%= pkg_list(@computer.precedent_install_items, @computer) %></td>
+			<td><%= pkg_list(@computer.precedent_uninstall_items) %></td>
+			<td><%= pkg_list(@computer.precedent_optional_install_items, @computer) %></td>
+		</tr>
+	</table>
+	<p class="quiet"><span>✓</span> denotes item is installed</p>	
 </div>

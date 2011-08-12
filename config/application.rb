@@ -26,6 +26,7 @@ module Munki
         #{Rails.root}/app/models/magic_mixin
         #{Rails.root}/app/models/manifest
         #{Rails.root}/app/models/service
+        #{Rails.root}/lib
       )
 
     # Add custom mime types

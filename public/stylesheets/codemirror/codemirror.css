@@ -6,9 +6,8 @@
   font-size: 9pt;
   width: 587px; /* added for textarea fix */ 
 /*  overflow: hidden;*/
-  z-index: -1; /*fix for extra_info_box box to show top, move CodeMirror textarea back*/
   _position: relative; /* IE6 hack */
-  
+  resize:both; /* enable adjustable textarea */
 }
 .activeline {
   background: #f0fcff !important;
@@ -17,7 +16,11 @@
 .inactiveline{
  background: #fff;
 }
-
+/*.CodeMirror-scroll {
+   height: auto;
+   overflow-y: hidden;
+   overflow-x: auto;
+ }*/
 .CodeMirror-gutter {
   position: absolute; left: 0; top: 0;
   background-color: #f7f7f7;

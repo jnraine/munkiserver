@@ -1,7 +1,7 @@
 <h2>Computer groups</h2>
 
 <% if @computer_groups.length > 0 %>
-	<table>
+	<table class="zebra">
 		<thead>
 			<tr>
 				<th>Name</th>
@@ -13,21 +13,21 @@
 		</thead>
 		<% @computer_groups.each do |cg| %>
 		<tr>
-			<td><%= link_to cg.name, cg %></td>
+			<td><%= link_to cg.name, computer_group_path(cg.unit, cg) %></td>
 			<td><%= cg.description %></td>
 			<td><%= cg.computers.count %></td>
 			<td><%= cg.environment %></td>
 			<td>
-				<%= link_to 'Edit', edit_computer_group_path(cg) %> |
-				<%= link_to 'Destroy', cg, :confirm => "Are you sure you want to destroy #{cg}?", :method => :delete %> |
-				<%= link_to 'Manifest', computer_group_path(cg, :format => :manifest) %>
+				<%= link_to 'Edit', edit_computer_group_path(cg.unit, cg) %> |
+				<%= link_to 'Destroy', computer_group_url(current_unit, cg), :confirm => "Are you sure you want to destroy #{cg}?", :method => :delete %> |
+				<%= link_to 'Manifest', computer_group_path(cg.unit, cg, :format => :manifest) %>
 			</td>
 		</tr>
 		<% end -%>
 </table>
 <% else %>
 	<h5>There are no <%= params[:controller].humanize.downcase %> here!</h5>
-	<p>Why don't you add <%= link_to "one", new_computer_group_path %>?</p>
+	<p>Why don't you add <%= link_to "one", new_computer_group_path(current_unit) %>?</p>
 <% end %>
 
-<%= link_to 'New computer group', new_computer_group_path %>
+<%= link_to 'New computer group', new_computer_group_path(current_unit) %>

@@ -2,13 +2,13 @@
 	<h4>Recent packages</h4>
 		<div class="box">
 			<% pkgs.each do |pkg| %>
-				<%= pkg.to_s(:pretty_with_version) %>
-				[<%= link_to "show", pkg %>] [<%= link_to "edit", edit_package_path(pkg) %>]<br />
+				<%= link_to pkg.to_s(:pretty_with_version), package_path(pkg.to_params) %>
+				[<%= link_to "edit", edit_package_path(pkg.to_params) %>]<br />
 			<% end -%>
 			
 			<% shared_pkgs.each do |pkg| %>
 				<%= pkg.to_s(:pretty_with_version) %>
-				[<%= link_to "import", import_shared_package_path(pkg), {"data-confirm" => "Are you sure you want to import #{pkg.to_s(:pretty_with_version)} from #{pkg.unit} unit?"} %>]<br />
+				[<%= link_to "import", import_shared_package_path(pkg.unit,pkg), {"data-confirm" => "Are you sure you want to import #{pkg.to_s(:pretty_with_version)} from #{pkg.unit} unit?"} %>]<br />
 			<% end -%>
 	</div>
 <% end -%>

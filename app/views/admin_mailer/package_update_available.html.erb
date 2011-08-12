@@ -1,11 +1,24 @@
-<% macupdate_url = "http://www.macupdate.com/app/mac/" %>
-<% download_url = @package.package_branch.version_tracker.download_url %>
-<% macupdate_url = macupdate_url + @package.package_branch.version_tracker.web_id.to_s %>
+<h3>
+	<%= @package.to_s(:pretty) %> version <%= @version_tracker.version %> is now available!
+</h3>
 
-<h3><%= link_to "#{@package.name} #{@package.version}", package_url(@package)%> in <em><%= @package.unit.name %></em> has a newer version  <em><%= @package.package_branch.version_tracker.version %></em> available for update</h3>
+<p>The current version is <%= link_to @package.to_s(:pretty_with_version), package_url(@package.to_params)%></p>
 
-<p>Click <%= link_to "here to add", new_package_url %> the package</p>
+<p><%= link_to "Click here to add", new_package_url(@package.unit) %> to add a package to <%= @package.unit %> unit</p>
 
-<p>Click <%= link_to "here to download", download_url %> the package</p>
+<% if @package.package_branch.version_tracker.download_links.present? %>
+	<div>
+		<p><strong>Download Links</strong></p>
+		<div>
+			<ul>
+			<% @package.package_branch.version_tracker.download_links.each_with_index do |download_link,i| %>
+				<li>
+					<%= link_to "#{download_link.text}", download_link.url  , :target => "_blank" %> - <%= download_link.caption %>
+				</li>
+			<% end %>
+			</ul>
+		</div>
+	</div>
+<% end %>
 
-<p>For more details on this package please check <%= link_to macupdate_url, macupdate_url %></p>
+<p>For more details: <%= link_to @macupdate_url, @macupdate_url %></p>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  purchase_date: 2011-07-20 12:27:29
+  product_description: MyString
+  coverage_end_date: 2011-07-20 12:27:29
+  coverage_expired: false
+
+two:
+  purchase_date: 2011-07-20 12:27:29
+  product_description: MyString
+  coverage_end_date: 2011-07-20 12:27:29
+  coverage_expired: false

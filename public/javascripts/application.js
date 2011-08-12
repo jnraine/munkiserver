@@ -1,8 +1,6 @@
 $(document).ready(function() {
 	// Turn all multiple select tags into asmSelect tags
-	$("select[multiple]").asmSelect({
-	    animate: true
-	});
+	initializeAsmSelect(".asmSource");
 
 	// Hide loading graphic on load
 	$('#loading_graphic').hide();
@@ -65,19 +63,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	// Hide raw text area if raw_mode_id is 0 container
-	// if($('#package_raw_mode_id').val() == 0) {
-	// 	$('#package_raw_tags').hide();
-	// }
-	// // Flip visibility of raw tag text area
-	// $("#package_raw_mode_id").change(function() {
-	// 	if(this.value == 0) {
-	// 		$('#package_raw_tags').slideUp();
-	// 	} else {
-	// 		$('#package_raw_tags').slideDown();
-	// 	}
-	// });	
-	
 	// For USER views, enable/disable change password
 	if($('#change_password_checkbox').attr('checked') == false) {
 		$('#user_password').attr("disabled",true);
@@ -104,39 +89,59 @@ $(document).ready(function() {
 	});
 
 	// Field lock control method
-	$(".field-lock-control").click(function() {
-		$el = $("#" + $(this).attr("data-target-id"));
-		if($el.is(":disabled")) {
-			$el.attr("disabled",false).css("color","#000").focus();
-			$("#" + $el.attr('id') + "_control").html("lock");
-		} else {
-			$el.attr("disabled",true).css("color","#666");
-			$("#" + $el.attr('id') + "_control").html("unlock");
-		}
-		return false;
-	});
+	$(".field-lock-control")
+	  .click(function() {
+  		$el = $("#" + $(this).attr("data-target-id"));
+  		if($el.is(":disabled")) {
+  			$el.attr("disabled",false).css("color","#000").focus();
+  			$("#" + $el.attr('id') + "_control").html("lock");
+  		} else {
+  			$el.attr("disabled",true).css("color","#666");
+  			$("#" + $el.attr('id') + "_control").html("unlock");
+  		}
+  		return false;
+  	})
+  	.each(function() {
+  		var lockState = $(this).attr("data-lock-state");
+    	$el = $("#" + $(this).attr("data-target-id"));
+    	if(lockState == "unlocked") {
+  			$el.attr("disabled",false).css("color","#000");
+  			$("#" + $el.attr('id') + "_control").html("lock");
+  		} else {
+  			$el.attr("disabled",true).css("color","#666");
+  			$("#" + $el.attr('id') + "_control").html("unlock");
+  		}
+  	});
 	
-	// Load managed install report on change to drop down
-	$("select#managed_install_reports").change(function() {
-		$(".loading").show();
+	
+	// Get the changed environment ID, and reload the edit partical
+	// effected pages including ComputerGroup, Bundles, Packages
+	// animate during the ajax call
+	$("select.environment").live('change', function(){
+	  $form = $(this).parents("form");
+		$modifiedElements = $form.find(".change_with_environment");
+		
+	  function unhighlightModifiedElements() {
+			$modifiedElements.animate({backgroundColor: "#FFFFFF",opacity: 1.0}, 1000);
+		}
+		
+		// Highlight soon-to-be modified elements
+		$modifiedElements.animate({backgroundColor: "#FBEC5D", opacity: .9}, 'fast');
+		
+		// Load and execute environment change
 		$.ajax({
-		  url: "/managed_install_reports/" +$(this).val()+ ".js",
-		  complete: function(){
-		    $(".loading").hide();
-		  }
+			url: $form.attr("data-environment-change"),
+			data: {"environment_id":$(this).val()},
+			complete: unhighlightModifiedElements
 		});
 	});
-	$("select#managed_install_reports").change();
-	
 	
 	// add Codemirror with $ animation to highlight XML/plist/bash syntax in package list
-	$("textarea[data-format]").each(function () {
-		
+	$("textarea[data-format]").each(function () {	
 		var format = $(this).attr("data-format");
 		var toRefresh = function(){
 			editor.refresh();
 		}
-	
 		var editor = CodeMirror.fromTextArea(this, {
 					onFocus: function() {
 					    //$ animation goes here				
@@ -144,22 +149,19 @@ $(document).ready(function() {
 					        height: "300px"
 					    },
 					    400, "swing", toRefresh);
-	
-	
 					},
 					onBlur: function() {
 					    $(editor.getWrapperElement()).animate({
 					        height: "78px"
 					    },
 					    400, "swing", toRefresh);
-	
 					},
 					lineNumbers: true,
 					matchBrackets: true,
 					mode: format,
 					onCursorActivity: function() {
 					    editor.setLineClass(hlLine, null);
-					    hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
+					    hlLine = editor.setLineClass(editor.getWrapperElement().line, "activeline");
 					}
 		      });
 		var hlLine = editor.setLineClass(0, "activeline");	
@@ -178,7 +180,7 @@ $(document).ready(function() {
 		$("#package_uninstall_method").change(function (){
 			
 			if (this.value === val){
-				$(vid).parent().parent().show();								
+				$(vid).parent().parent().show();
 			}
 			else{
 				$(vid).parent().parent().hide();
@@ -192,8 +194,20 @@ $(document).ready(function() {
 	hideUninstallField("uninstall_script","#postinstall_script_container");
 	$("#package_uninstall_method").change();
 		
-	// Initialize tabs
-    $("#tabs").tabs();
+	// Initialize tabs	
+	$("#tabs").tabs();
+	initializeTabUrlParams();
+	// Load managed install report on change to drop down
+	$("select#managed_install_reports").change(function() {
+		$(".loading").show();
+		$.ajax({
+		  url: "managed_install_reports/" +$(this).val()+ ".js",
+		  complete: function(){
+		    $(".loading").hide();
+		  }
+		});
+	});
+	$("select#managed_install_reports").change();
 	
 	// client side validation $ animation
 	clientSideValidations.callbacks.element.fail = function(element, message, callback) {
@@ -216,6 +230,22 @@ $(document).ready(function() {
 		}else{
 			selectAll.attr("checked", true);
 		}
+	});
+	
+	// Clickable image to select the corresponding checkbox
+	$(".thumbnail").click(function(){
+		var package_branch_id = $(this).attr("data-package-branch-id");
+		var $checkbox = null;
+		if(package_branch_id != null) {
+			// Handle package table
+			css_class = "package_branch_" + package_branch_id;
+			$checkbox = $(this).parents("tbody").find("." + css_class + ":checkbox");
+		} else {
+			// Handle computer table
+			$checkbox = $(this).parents("tr").find(":checkbox");
+		}
+		$checkbox.attr("checked", !$checkbox.attr("checked"));
+		$checkbox.change();
 	});
 	
 	function addSubtleValue() {
@@ -251,6 +281,46 @@ $(document).ready(function() {
 	    $form.find("[data-subtle-value]").each(function() {
 	        removeSubtleValue(this);
 	    });
+	});
+	// trigger lightbox to show a list of install/uninstall/optional install items
+	$("#effectiveItems").hide();
+	$("#effectiveItemsLink").click(function(){
+		$("#effectiveItems").lightbox_me({
+			centered: true
+		})
+	})
+	
+	// trigger help message appear
+	$(".helpful_info").live('click', (function(e){
+		$helpful_info_message = $(this).find(".helpful_info_message");
+		$helpful_info_message.css({"display":"inline","position":"absolute","top":e.pageYOffset,"left":e.pageXOffset,"max-width":"250px","margin":"0 0 0 50px"});
+		$helpful_info_message.hide();
+		$helpful_info_message.fadeIn("fast");
+	}))
+	$(".helpful_info").live('mouseout', (function() {
+		$(this).find(".helpful_info_message").fadeOut("fast");
+	}));
+	
+	// Add zebra strips to tables
+	var odd = true;
+	var stateCount = 0;
+	$(".zebra tbody tr").each(function() {
+		// Reset state count if necessary
+		if(stateCount === 0) {
+			// Flip the state of the odd switch
+			if(odd) {
+				odd = false;
+			} else {
+				odd = true;
+			}
+			stateCount = $(this).find("td").first().attr("rowspan");
+		}
+		
+		// Set odd
+		if(odd) {
+			$(this).addClass("odd");
+		}
+		stateCount--;
 	});
 }); // end document ready function
 
@@ -435,3 +505,33 @@ function submit_auto_package(jq_id) {
 	return false;
 }
 
+function initializeAsmSelect(targetSelector) {
+	$(targetSelector).asmSelect({
+	    animate: true
+	});
+}
+
+// Get the url and takes all the params after ? into a hash
+function getParamsAsHash(){
+	var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+// Get the hash from URL params if exists, select the tab according to params
+// Select managed install reports if given in the params
+function initializeTabUrlParams(){
+	hash = getParamsAsHash();
+	// if there is params
+	if (hash.length != 0){
+		$("[href=#" + hash["tab"] + "]").click();
+		if (hash["report_id"] != undefined){
+			$("select#managed_install_reports").val(hash["report_id"]);
+		}
+	}
+}

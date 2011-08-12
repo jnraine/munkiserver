@@ -9,5 +9,12 @@
 		<li><%= member %></li>
 	<% end -%>
 </ul>
+<h3>Notification</h3>
+<p>Regular Events: <%= @unit.settings.regular_events ? "On" : "Off" %>
+</p>
+<p>Warning Events: <%= @unit.settings.warning_events ? "On" : "Off" %>
+</p>
+<p>Error Event: <%= @unit.settings.error_events ? "On" : "Off" %>
+</p>
 
 <%= link_to 'Edit', edit_unit_path(@unit) %>

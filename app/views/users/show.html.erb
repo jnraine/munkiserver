@@ -10,6 +10,9 @@
 		<td>Email: <%= @user.email %></td>
 	</tr>
 	<tr>
+		<td>Receive Email Notification :<%= @user.settings.receive_email_notifications? ? "Yes" : "No" %></td>
+	</tr>
+	<tr>
 		<td>Super user: <%= @user.super_user? ? "Yes" : "No" %></td>
 	</tr>
 </table>
@@ -22,12 +25,12 @@
 	<tr>
 		<td>This user has no access to any units.</td>
 	</tr>
-<% end -%>
+<% end %>
 <ul>
 	<% @user.units.each do |unit| %>
 	<tr>
 		<td><li><%= unit %></li></td>
-	<% end -%>
+	<% end %>
 	</tr>
 </ul>
 </table>

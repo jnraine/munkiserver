@@ -1,10 +1,10 @@
-<h2>Editing computer</h2>
-
-<%= render :partial => 'edit_computer_form', :locals => {:submit_button_string => "Update"} %>
-
+<h2>Editing <% @computer %></h2>
+<%= form_for(@computer, :validate => true, :url => computer_path(@computer.unit, @computer), :html => {:name => "edit_computer", "data-environment-change" => computer_environment_change_url(@computer.unit,@computer.id)}) do |form_builder| %>
+	<%= render :partial => 'form', :locals => {:f => form_builder, :submit_value => "Update"} %>
+<% end %>
 
 <% if @computer.errors.empty? %>
-	<%= link_to 'Show', @computer %>
+	<%= link_to 'Show', computer_path(@computer.unit, @computer) %>
 <% else %>
-	<%= link_to 'Show', computer_path(@computer.id) %>
+	<%= link_to 'Show', computers_path(current_unit) %>
 <% end %>

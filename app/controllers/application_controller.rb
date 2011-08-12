@@ -26,7 +26,17 @@ class ApplicationController < ActionController::Base
       end
     else
       flash[:warning] = "You must be logged in to view that page"
-      redirect_to login_path
+      redirect_to login_path(:redirect => request.request_uri)
+    end
+  end
+  
+  def require_valid_unit
+    begin
+      # raise Exception.new("You are not permitted this unit (#{current_unit})") unless current_user.member_of(current_unit)
+      current_unit
+    rescue Exception => e
+      flash[:error] = "The unit you requested (#{params[:unit_shortname]}) does not exist or you do not have permission to it!"
+      render :file => "#{Rails.root}/public/generic_error.html", :layout => false
     end
   end
   
@@ -51,6 +61,19 @@ class ApplicationController < ActionController::Base
   
   def fake_login
     session[:username] = "default"
+  end
+
+  def page_not_found
+    {:file => "#{Rails.root}/public/404.html", :layout => false, :status => 404}
+  end
+  
+  def error_page
+    {:file => "#{Rails.root}/public/generic_error.html", :layout => false}
+  end
+  
+  # Check if the given package has dependency issues if it's required by other packages
+  def is_required?(package)
+    RequireItem.where(:package_id => package.id).present?
   end
   
   protected

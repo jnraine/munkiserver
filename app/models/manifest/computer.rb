@@ -1,17 +1,18 @@
 class Computer < ActiveRecord::Base
   magic_mixin :manifest
-  magic_mixin :client_pref
+  # magic_mixin :client_pref
   
   belongs_to :computer_model
   belongs_to :computer_group
   
-  has_one :system_profile
-  
+  has_one :system_profile, :dependent => :destroy, :autosave => true
+  has_one :warranty, :dependent => :destroy, :autosave => true
   has_many :client_logs
   has_many :managed_install_reports
   
   # Validations
   validate :computer_model
+
   validates_presence_of :name, :hostname, :mac_address
   
   validates_format_of :hostname,
@@ -40,11 +41,33 @@ class Computer < ActiveRecord::Base
     model ||= ComputerModel.find(computer_model_id) if computer_model_id.present?
     model ||= ComputerModel.default
   end
+  
+  def computer_group_options_for_select(unit,environment_id = nil)
+    environment = Environment.where(:id => environment_id).first
+    environment ||= self.environment
+    environment ||= Environment.start
+    ComputerGroup.unit_and_environment(unit, environment).map {|cg| [cg.name,cg.id] }
+  end
 
   # Alias the computer_model icon to this computer
   def icon
     computer_model.icon
   end
+  
+  # Returns a hash representing the ManagedInstalls.plist
+    # that should be placed in /Library/Preferences on this client
+    def client_prefs
+      url = ActionMailer::Base.default_url_options[:host]
+      { :ClientIdentifier => client_identifier,
+        :DaysBetweenNotifications => 1,
+        :InstallAppleSoftwareUpdates => true,
+        :LogFile => "/Library/Managed Installs/Logs/ManagedSoftwareUpdate.log",
+        :LoggingLevel => 1,
+        :ManagedInstallsDir => "/Library/Managed Installs",
+        :ManifestURL => url,
+        :SoftwareRepoURL => url,
+        :UseClientCertificate => false }
+    end
   
   # For will_paginate gem.  Sets the default number of records per page.
   def self.per_page
@@ -72,22 +95,6 @@ class Computer < ActiveRecord::Base
     # (self.last_successful_run.nil? and self.created_at < self.class.dormant_interval) or (self.last_successful_run.created_at < self.class.dormant_interval)
     false
   end
-
-  # Make sure this computer is assigned a computer group
-  # if it isn't, assign the default computer group
-  # No longer used, instead, trying to not assume a computer has a group
-  def require_computer_group
-    self.computer_group_id = ComputerGroup.default(self.unit).id if self.computer_group_id.nil?
-  end
-
-  # Moved this method to unit_member so it was only in one place (also present in Package class)
-  # def catalogs
-  #   c = []
-  #   environments.each do |env|
-  #     c << "#{unit.id}_#{env.name}.plist"
-  #   end
-  #   c
-  # end
   
   # Extend manifest by removing name attribute and adding the catalogs
   def serialize_for_plist
@@ -98,16 +105,16 @@ class Computer < ActiveRecord::Base
   end
   
   # Extended from manifest magic_mixin, adds mac_address matching
-  def self.find_for_show(s)
-    record = find_for_show_super(s)
+  def self.find_for_show(unit, id)
+    record = find_for_show_super(unit, id)
     # For mac_address
-    record ||= self.where(:mac_address => s).first
+    record ||= self.where(:mac_address => id).first
     # Return record
     record
   end
 
   def client_identifier
-    self.class.to_s.tableize + "/" + mac_address + ".plist"
+    mac_address + ".plist"
   end
   
   # Validates the presence of a computer model
@@ -199,19 +206,107 @@ class Computer < ActiveRecord::Base
     end
     write_attribute(:mac_address,formatted.join(""))
   end
-  # bulk update 
-  def self.bulk_update_attributes(computers,p)
-    if (computers == nil || p == nil)
+  
+  # Bulk update
+  def self.bulk_update_attributes(computers,computer_attributes)
+    if computer_attributes.nil? or computers.empty? 
       raise ComputerError.new ("Nothing to update")
     else
       computers.each do |c|
-        c.update_attributes(p.reject {|k,v| v.blank?})
+        c.update_attributes(computer_attributes)
       end
     end
   end
-  # overwirte to_param so the name of the commputer can be displayed in the URL
-  def to_param
-    name
+  
+  def self.bulk_update_attributes(packages,package_attributes)
+    if package_attributes.nil? or packages.empty?
+      raise PackageError.new ("Nothing to update")
+    else
+      results = packages.map do |p|
+        p.update_attributes(package_attributes)
+      end
+      successes = results.map {|b| b == false }
+      failures = results.map {|b| b == true }
+      {:total => packages.count, :successes => successes.count, :failures => failures.count}
+    end
   end
-
+  
+  def serial_number
+    self.system_profile.serial_number if self.system_profile.present?
+  end
+  
+  # updates warranty, return true upon success
+  def update_warranty
+    if serial_number
+      warranty = Warranty.find_or_create_by_serial_number(serial_number)
+      warranty_hash = {}
+      begin
+        warranty_hash = Warranty.get_warranty_hash(serial_number)
+      rescue WarrantyException
+        # Just catch and return false for now
+        return false
+      end
+      # append computer_id into the hash
+      warranty_hash[:computer_id] = self.id
+      warranty_hash[:updated_at] = Time.now
+      result = warranty.update_attributes(warranty_hash)
+      if warranty_report_due? and result
+        AdminMailer.warranty_report(self).deliver
+        self.warranty.notifications.create
+      end
+      result ? true : false
+    end
+  end
+  
+  # Return true if warranty is about to expire in 30, 15, 5 days
+  def warranty_report_due?
+    if warranty.hw_coverage_end_date.present?
+      # if no notification send before and is less than 30 days untill expires
+      if warranty.notifications.nil? and (Time.now.to_date >= send_notifications_on.first)
+        return true
+      elsif notifications_not_sent.include?(true) 
+        return true
+      else
+        return false
+      end
+    else
+      # no hardware coverage found
+      return false
+    end
+  end
+  
+  # Return an array of booleans true if notifications not sent
+  def notifications_not_sent
+    results = []
+    send_dates = send_notifications_on
+    send_dates.each do |date|
+      results << (Time.now.to_date > date)
+    end
+    results
+  end
+  
+  # Return how many days until the warrany expires
+  def warranty_days_left
+    if warranty.hw_coverage_end_date.present?
+      diff = warranty.hw_coverage_end_date.to_date - Time.now.to_date
+      diff.to_i
+    end
+  end
+  
+  # Return the days since last notification send
+  def days_since_last_warranty_report
+    last_send_date = warranty.notifications.last.updated_at.to_date
+    days_apart = Time.now.to_date - last_send_date
+    days_apart.to_i
+  end
+  
+  # Return an array of real dates the notifications suppose to be send
+  def send_notifications_on
+    interval = [90,30,15,5]
+    notification_send_on = []
+    interval.each do |date|
+      notification_send_on << warranty.hw_coverage_end_date.to_date - date
+    end
+    notification_send_on
+  end
 end

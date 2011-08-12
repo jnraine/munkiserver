@@ -1,0 +1,25 @@
+<div class="record_header_img span-3">
+	<%= image_tag img.url(:medium) if img %>
+</div>
+
+<div class="record_header_text span-13 last">
+	<h3><%= title %></h3>
+	<p><em><%= soft_info %></em></p>
+	<% if packages.present? %>
+	<p>
+		<% packages.each do |p| %>
+			<% if p.version == bold_info %>
+				<strong><%= p.version %></strong>
+			<% else %>
+				<% if editable %>
+					<strong><%= link_to "#{p.version}", edit_package_path(p.to_params) %></strong>
+				<% else %>
+					<strong><%= link_to "#{p.version}", package_path(p.to_params) %></strong>
+				<% end %>
+			<% end %>
+		<% end %>
+	</p>
+	<% else %>
+	<p><strong><%= bold_info %></strong></p>
+	<% end %>
+</div>

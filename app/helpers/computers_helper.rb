@@ -19,7 +19,7 @@ module ComputersHelper
     unless computer_groups.empty?
       render :partial => 'computer_group_link', :collection => computer_groups
     else
-      render :text => "None", :layout => false
+      render :text => "None"
     end
   end
   
@@ -42,12 +42,5 @@ module ComputersHelper
   # Returns options tags for computer groups 
   def computer_group_options
     options_for_select(ComputerGroup.unit(current_unit).collect {|cg| [cg.name, cg.id] })
-  end
-  
-  # bulk update 
-  def bulk_update_attributes(computer)
-    computer.map do |computer|
-      computer.update_attributes(params[:computer].reject {|k,v| v.blank?})
-    end
   end
 end

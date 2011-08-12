@@ -2,8 +2,8 @@
 <div class="groupListItem">
 	<span>
 		<%= bundle %> 
-		<%= link_to "view", bundle_path(bundle) %> 
-		<%= link_to "edit", edit_bundle_path(bundle) %>
+		<%= link_to "view", bundle_path(bundle.unit, bundle) %> 
+		<%= link_to "edit", edit_bundle_path(bundle.unit, bundle) %>
 	</span>
 	
 	<% unless bundle.installs.empty? %>
@@ -14,6 +14,15 @@
 	<% unless bundle.uninstalls.empty? %>
 		<span class="groupListingContentsTitle">Uninstall</span>
 		<%= pkg_list(bundle.uninstall_items) %>
+	<% end %>
+
+	<% unless bundle.bundles.empty? %>
+		<span class="groupListingContentsTitle">Bundle</span>
+		<% bundle.bundles.each do |item| %>
+			<div class="packageListItem">
+				<span><%= link_to item, bundle_path(current_unit, item) %></span>
+			</div>
+		<% end %>
 	<% end %>
 </div>
 <% end %>

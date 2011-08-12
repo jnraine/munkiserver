@@ -2,8 +2,8 @@ class UnitService
   attr_accessor :unit, :unit_params
 
   def initialize(params)
-    @unit = Unit.find(params[:id])
-    @unit_params = params[:unit]
+    @unit = Unit.find_by_shortname(params[:id])
+    @unit_params = params[:unit_shortname]
   end
   
   # Returns the name of the unit in this service

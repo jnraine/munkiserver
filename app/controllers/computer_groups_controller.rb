@@ -1,4 +1,6 @@
 class ComputerGroupsController < ApplicationController
+  before_filter :require_valid_unit
+  
   def index
     @computer_groups = ComputerGroup.unit(current_unit)
     
@@ -14,16 +16,16 @@ class ComputerGroupsController < ApplicationController
     respond_to do |format|
       if @computer_group.save
         flash[:notice] = "Computer group successfully saved"
-        format.html { redirect_to computer_groups_path }
+        format.html { redirect_to computer_groups_path(@computer_group.unit) }
       else
         flash[:error] = "Computer group failed to save!"
-        format.html { render new_computer_group_path }
+        format.html { render new_computer_group_path(@computer_group.unit) }
       end
     end
   end
 
   def destroy
-    @computer_group = ComputerGroup.find_for_show(CGI::unescape(params[:id]))
+    @computer_group = ComputerGroup.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     
     begin
       if @computer_group.destroy
@@ -36,42 +38,59 @@ class ComputerGroupsController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to computer_groups_path }
+      format.html { redirect_to computer_groups_path(@computer_group.unit) }
     end
   end
 
   def edit
-    @computer_group = ComputerGroup.find_for_show(params[:id])
+    @computer_group = ComputerGroup.find_for_show(params[:unit_shortname], params[:id])
+    @environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update
-    @computer_group = ComputerGroup.unit(current_unit).find_for_show(CGI::unescape(params[:id]))
-    @manifest_service = ManifestService.new(@computer_group,params[:computer_group])
+    @computer_group = ComputerGroup.unit(current_unit).find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     
     respond_to do |format|
-      if @manifest_service.save
-        flash[:notice] = "Computer group was successfully updated."
-        format.html { redirect_to computer_group_path(@computer_group) }
-        format.xml { head :ok }
+      if @computer_group.update_attributes(params[:computer_group])
+        flash[:notice] = "#{@computer_group} was successfully updated."
+        format.html { redirect_to computer_group_path(@computer_group.unit, @computer_group) }
       else
         flash[:error] = "Could not update computer group!"
-        format.html { redirect_to edit_computer_group(@computer_group) }
-        format.xml { render :xml => @computer_group.errors, :status => :unprocessable_entity }
+        format.html { redirect_to edit_computer_group(@computer_group.unit, @computer_group) }
       end
     end
   end
 
   def new
     @computer_group = ComputerGroup.new
+    @computer_group.unit = current_unit
   end
 
   def show
-    @computer_group = ComputerGroup.find_for_show(params[:id])
+    @computer_group = ComputerGroup.find_for_show(params[:unit_shortname], params[:id])
     
     respond_to do |format|
-      format.html
-      format.manifest { render :text => @computer_group.to_plist }
-      format.plist { render :text => @computer_group.to_plist }
+      if @computer_group.present?
+        format.html
+        format.manifest { render :text => @computer_group.to_plist }
+        format.plist { render :text => @computer_group.to_plist }
+      else
+        format.html{ render :file => "#{Rails.root}/public/404.html", :layout => false }
+      end
+    end
+  end
+  
+  def environment_change
+    if params[:computer_group_id] == "new"
+      @computer_group = ComputerGroup.new({:unit_id => current_unit.id})
+    else
+      @computer_group = ComputerGroup.find(params[:computer_group_id])
+    end
+    
+    @environment_id = params[:environment_id] if params[:environment_id].present?
+    
+    respond_to do |format|
+      format.js
     end
   end
 end

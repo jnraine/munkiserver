@@ -1,0 +1,48 @@
+	<%= f.error_messages %>
+
+	<table class="form">
+		<tr>
+			<td>Name</td>
+			<td><%= f.text_field :name, :size => 18 %></td>
+		</tr>
+		<tr>
+			<td>Hostname</td>
+			<td><%= f.text_field :hostname, :size => 18 %></td>
+		</tr>
+		<tr>
+			<td>
+				MAC Address
+				<% unless @computer.new_record?%>
+					(<%= field_lock_control("computer_mac_address", true) %>)
+				<% end %>
+			</td>
+			<td><%= f.text_field :mac_address, :maxlength => 17, :size => 18 %></td>
+		</tr>
+		<tr>
+			<td>Environment</td>
+			<td><%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "environment"}%></td>
+		</tr>
+		<tr>
+			<td>
+				Model
+			</td>
+			<td>
+				 <%= f.collection_select :computer_model_id, ComputerModel.order('name ASC'), :id, :name %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Computer Group
+			</td>
+			<td id="computer_group_select_tag" class="change_with_environment">
+				<%= render :partial => 'computer_group_field', :locals => {:environment_id => @computer.environment_id} %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"><%= f.text_area :description, :size => "40x3" %></td>
+		</tr>
+	</table>
+	<div id="tabled_asm_select">
+		<%= tabled_asm_select(@computer) %>
+	</div>
+	<p><%= f.submit submit_value %></p>

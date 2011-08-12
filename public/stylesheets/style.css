@@ -153,6 +153,9 @@ html, body {
 	right:0px;
 }
 
+.footer p.text-center { text-align: center }
+
+
 /* Form styles */
 
 input[type=submit] {
@@ -222,7 +225,6 @@ textarea {
 	letter-spacing:3px;
 	padding-left:10px;
 }
-
 /* Tabs in Package Edit */
 
 
@@ -251,6 +253,14 @@ table.form {
 
 .toggle_container .CodeMirror{
 
+}
+
+table tbody .odd{
+	background: #F4F4F4;
+}
+
+tbody tr td img:hover{
+	cursor:pointer;
 }
 
 /* Message / notice box */
@@ -361,16 +371,6 @@ thead th a:hover,
 	
 }
 
-.extra_info_box {
-	margin-top:5px;
-	margin-left:-30px;
-	padding:10px;
-	color:#fff;
-	border:2px solid rgb(69, 173, 168);
-	background-color:#594F4F;
-	z-index: 1; /* fix for overlay CodeMirror textarea, always show top*/
-}
-
 .clean_list {
 	list-style-type:none;
 }
@@ -427,9 +427,13 @@ thead th a:hover,
 
 .installed-mark {
 	color: #594F4F;
-	font-size:1.6em;
+	font-size:1.5em;
 }
-
+/* hide the checkmark */
+.not-installed-mark{
+	font-size:1.5em;
+	visibility:hidden;
+}
 #managed_install_report {
 	border:#594F4F dashed 1px;
 /*	background-color:#f6fbfb;*/
@@ -442,7 +446,16 @@ thead th a:hover,
 	overflow:auto;
 }
 
-#lightbox_target{
+/* ============== */
+/* = Lightbox me = */
+/* ============== */
+
+#effectiveItemsLink{
+	float: right;
+	display: inline;
+}
+
+#lightbox_target, #effectiveItems{
 	text-align: center;
 	-moz-border-radius: 6px;
     background: #eef2f7;
@@ -451,7 +464,57 @@ thead th a:hover,
     -webkit-box-shadow: rgba(0,0,0,.6) 0px 2px 12px;
     -moz-box-shadow:  rgba(0,0,0,.6) 0px 2px 12px;;
     padding: 14px 22px;
-    width: 450px;
+    width: 500px;
     position: relative;
     display: none;
+}
+
+/* ============== */
+/* = Misc = */
+/* ============== */
+
+.helpful_info{
+	display: inline;
+	vertical-align:middle;
+	cursor:pointer;
+	height: 18px;
+	width: 18px;
+}
+.helpful_info div{
+	display: none;
+	margin-top:5px !important;
+	margin-left:5px !important;
+	padding:10px !important;
+	color:#fff;
+	border:2px solid rgb(69, 173, 168);
+	background-color:#594F4F;
+	z-index: 1; /* fix for overlay CodeMirror textarea, always show top*/
+}
+.centerize{
+	text-align: center;
+}
+
+/* ============ */
+/* = Warranty = */
+/* ============ */
+
+#warranty_tab .status {
+  padding-left: 50px;
+  min-height: 40px;
+  vertical-align:middle;
+  font-size:1.2em;
+  font-weight:bold;
+  line-height:40px;
+}
+
+#warranty_tab .green {
+  background: url(/images/warranty_status_green.png) no-repeat 5px 5px;
+}
+
+#warranty_tab .red {
+  background: url(/images/warranty_status_yellow.png) no-repeat 5px 5px;
+}
+
+#warranty_summary {
+  padding-bottom:15px;
 }

@@ -1,4 +1,4 @@
-<table class="<%= table_class %>">
+<table class="<%= table_class %> change_with_environment">
 	<% parameters.each_with_index do |section,i| %>
 		<% if i%3 == 0 %>
 			<thead>
@@ -22,7 +22,7 @@
 					<td>
 					<% p = parameters[i+offset] %>		
 					<%= hidden_field_tag("#{p[:model_name]}[#{p[:attribute_name]}][]",'') %>
-	 				<%= select_tag("#{p[:model_name]}[#{p[:attribute_name]}]", options_for_select(p[:options],p[:selected_options]), :multiple => true, :title => p[:select_title]) %>
+	 				<%= select_tag("#{p[:model_name]}[#{p[:attribute_name]}]", options_for_select(p[:options],p[:selected_options]), :multiple => true, :title => p[:select_title], :class=> "asmSource") %>
 	  				<%= autocomplete_asmselect(p[:title],p[:options].collect { |el| el[0] },"type a name...") %></td>
 					<% offset += 1 %>
 				<% end %>

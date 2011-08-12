@@ -1,0 +1,112 @@
+<div id="bulk_edit_packages">
+<h2>Bulk Edit Packages</h2>
+<% form_for(@packages, :url => edit_multiple_packages_path, :method => :put)  do |f| %>
+	<%= f.error_messages %>
+	<% for p in @packages %>
+	<tr>
+		<%= hidden_field_tag "selected_records[]", p.id %>
+
+	</tr>
+	<% end %>
+	 <p><em>Editing <%= @packages.count %> packages</em></p>
+	<table>	
+		<tr>
+			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>
+				Category
+			</td>
+			<td>
+				<%= f.collection_select :package_category_id, PackageCategory.all, :id, :name %>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>
+				OS
+			</td>
+			<td>
+				<%= select_tag "package[minimum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],p.minimum_os_version) %> to
+				<%= select_tag "package[maximum_os_version]", options_for_select(Package::FORM_OPTIONS[:os_versions],p.maximum_os_version) %>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>Environment</td>
+			<td><%= f.collection_select :environment_id, Environment.all, :id, :name %></td>
+		</tr>
+		<tr>
+			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>Supported Architectures</td>
+			<td>
+				<%= hidden_field_tag "package[supported_architectures][]", "" %>
+				<% Package::FORM_OPTIONS[:supported_architectures].each do |name| %>
+					<%= check_box_tag 'package[supported_architectures][]', name, p.supported_architectures.include?(name), :id => "package_supported_architectures_#{name.underscore.gsub(/ /,"_")}" %>
+					<%= label_tag "package_supported_architectures_#{name.underscore.gsub(/ /,"_")}", name %>
+				<% end %>
+				<%= helpful_info("Specifying a supported architecture will cause this package to only be installed on a computer with a matching architecture.  Only helpful if a package can not run on other architectures.") %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>Autoremove</td>
+			<td>
+				<%= f.check_box :autoremove %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>Uninstallable</td>
+			<td>
+				<%= f.check_box :uninstallable %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>Share with other units</td>
+			<td>
+				<%= f.check_box :shared %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= check_box_tag("accept", nil, nil, :class => "accept") %>
+			</td>
+			<td>
+				MacUpdate.com Web ID or URL
+			</td>
+			<td>
+				Remove Web ID
+				<%= hidden_field_tag "package[version_tracker_web_id]", nil %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				
+			</td>
+			<td>
+				
+			</td>
+			<td>
+				<%= f.submit "Update" %>
+				<a href="#" class="cancel">Cancel</a>
+			</td>
+		</tr>
+	</table>
+<% end %>
+</div>

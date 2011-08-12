@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110619085511) do
+ActiveRecord::Schema.define(:version => 20110808185913) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20110619085511) do
     t.text     "raw_mode",       :default => "f"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "shortname"
   end
 
   create_table "client_logs", :force => true do |t|
@@ -50,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20110619085511) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "configuration_id"
+    t.string   "shortname"
   end
 
   create_table "computer_models", :force => true do |t|
@@ -75,11 +77,21 @@ ActiveRecord::Schema.define(:version => 20110619085511) do
     t.datetime "updated_at"
     t.string   "hostname",             :default => ""
     t.integer  "configuration_id"
+    t.string   "shortname"
   end
 
   create_table "configurations", :force => true do |t|
     t.string   "configuration"
     t.boolean  "inherit",       :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "download_links", :force => true do |t|
+    t.string   "text"
+    t.string   "url"
+    t.string   "caption"
+    t.integer  "version_tracker_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -166,6 +178,13 @@ ActiveRecord::Schema.define(:version => 20110619085511) do
     t.string   "manifest_type"
     t.string   "identifier"
     t.string   "request_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "notifications", :force => true do |t|
+    t.integer  "notified_id"
+    t.string   "notified_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -320,6 +339,7 @@ ActiveRecord::Schema.define(:version => 20110619085511) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "configuration_id"
+    t.string   "shortname"
   end
 
   create_table "update_for_items", :force => true do |t|
@@ -384,6 +404,27 @@ ActiveRecord::Schema.define(:version => 20110619085511) do
     t.datetime "updated_at"
     t.integer  "icon_id"
     t.text     "description"
+  end
+
+  create_table "warranties", :force => true do |t|
+    t.string   "serial_number",           :default => ""
+    t.string   "product_description",     :default => ""
+    t.string   "product_type",            :default => ""
+    t.datetime "purchase_date"
+    t.datetime "hw_coverage_end_date"
+    t.datetime "phone_coverage_end_date"
+    t.boolean  "registered"
+    t.boolean  "hw_coverage_expired"
+    t.boolean  "phone_coverage_expired"
+    t.boolean  "app_registered"
+    t.boolean  "app_eligible"
+    t.string   "specs_url",               :default => ""
+    t.string   "hw_support_url",          :default => ""
+    t.string   "forum_url",               :default => ""
+    t.string   "phone_support_url",       :default => ""
+    t.integer  "computer_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

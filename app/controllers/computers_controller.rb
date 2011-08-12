@@ -1,4 +1,5 @@
 class ComputersController < ApplicationController
+  before_filter :require_valid_unit
   require 'cgi'
 
   def index
@@ -12,18 +13,21 @@ class ComputersController < ApplicationController
   end
 
   def new
-    @computer = Computer.new
+    @computer = Computer.new({:unit_id => current_unit.id})
+    
+    respond_to do |format|
+      format.html
+      format.js { render :action => "edit" }
+    end
   end
 
   def create
-    @computer = Computer.new(params[:computer])
-    @computer.unit = current_unit
+    @computer = Computer.new(params[:computer].merge({:unit_id => current_unit.id}))
     
     respond_to do |format|
       if @computer.save
         flash[:notice] = "#{@computer} was successfully created."
-        format.html { redirect_to(@computer) }
-        format.xml { render :xml => @computer, :status => :created }
+        format.html { redirect_to computer_path(@computer.unit, @computer) }
       else
         flash[:error] = "Failed to create #{@computer} computer object!"
         format.html { render :action => "new"}
@@ -32,7 +36,7 @@ class ComputersController < ApplicationController
   end
   
   def show
-    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     
     respond_to do |format|
       if @computer.present?
@@ -49,35 +53,32 @@ class ComputersController < ApplicationController
   end
 
   def edit
-    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
-    # @computer = Computer.unit(Unit.where(:name => params[:unit_id]).first).find_for_show(CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
   end
 
   def update
-    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
-    @computer_service = ComputerService.new(@computer,params[:computer])
+    @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
+    
     respond_to do |format|
-      if @computer_service.save
+      if @computer.update_attributes(params[:computer])
         flash[:notice] = "#{@computer.name} was successfully updated."
-        format.html { redirect_to(@computer) }
-        format.xml  { head :ok }
+        format.html { redirect_to computer_path(@computer.unit, @computer) }
       else
         flash[:error] = 'Could not update computer!'
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @computer.errors, :status => :unprocessable_entity }
       end
     end 
   end
 
   def destroy
-    @computer = Computer.find_for_show(CGI::unescape(params[:id]))
+    @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     
     if @computer.destroy
       flash[:notice] = "Computer was destroyed successfully"
     end
     
     respond_to do |format|
-      format.html { redirect_to computers_path }
+      format.html { redirect_to computers_path(current_unit) }
     end
   end
 
@@ -106,13 +107,13 @@ class ComputersController < ApplicationController
     respond_to do |format|
       if @computers.nil?
         flash[:error] = "There was a problem while parsing the plist: #{e}"
-        format.html { redirect_to import_new_computer_path }
+        format.html { redirect_to import_new_computer_path(current_unit) }
       elsif @computers.count > 0
         flash[:notice] = "#{@computers.count} of #{@total} computers imported into #{@computers.first.computer_group}"
-        format.html { redirect_to computers_path }
+        format.html { redirect_to computers_path(current_unit) }
       else
         flash[:warning] = "Zero computers were imported.  Did the ARD list have any members?"
-        format.html { redirect_to computers_path }
+        format.html { redirect_to computers_path(current_unit) }
       end
     end
   end
@@ -120,8 +121,7 @@ class ComputersController < ApplicationController
   # Allows a computer to checkin with the server, notifying it
   # of the last successful munki run.  May be extended in the future.
   def checkin
-    @computer = Computer.find_for_show(params[:id])
-    
+    @computer = Computer.find_for_show(nil, params[:id])
     if params[:managed_install_report_plist].present?
       report_hash = ManagedInstallReport.format_report_plist(params[:managed_install_report_plist]).merge({:ip => request.remote_ip})
       @computer.managed_install_reports.build(report_hash)
@@ -129,21 +129,29 @@ class ComputersController < ApplicationController
     
     if params[:system_profiler_plist].present?
       system_profile_hash = SystemProfile.format_system_profiler_plist(params[:system_profiler_plist])
-      @computer.build_system_profile(system_profile_hash)
+      sp = SystemProfile.find_or_create_by_computer_id(@computer.id)
+      @computer.system_profile.attributes = system_profile_hash
     end
     
     @computer.save
+    
+    @computer.warranty.destroy if @computer.serial_number != @computer.warranty.serial_number
     AdminMailer.computer_report(@computer).deliver if @computer.report_due?
     render :text => ''
   end
   
   
   # Allows multiple edits
-  def multiple_edit
+  def edit_multiple
     @computers = Computer.find(params[:selected_records])
+    @environment_id = params[:environment_id] if params[:environment_id].present?
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
   
-  def multiple_update
+  def update_multiple
     @computers = Computer.find(params[:selected_records])
     p = params[:computer]
     results = []
@@ -169,5 +177,30 @@ class ComputersController < ApplicationController
           format.html { redirect_to(:action => "index") }
         end
     end
+  end
+  
+  def environment_change
+    if params[:computer_id] == "new"
+      @computer = Computer.new({:unit_id => current_unit.id})
+    else
+      @computer = Computer.find(params[:computer_id])
+    end
+    
+    @environment_id = params[:environment_id] if params[:environment_id].present?
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  
+  def update_warranty
+    @computer = Computer.find_for_show(params[:unit_shortname], params[:computer_id])
+    if @computer.update_warranty
+      flash[:notice] = "#{@computer.name}'s warranty was successfully updated."
+    else
+      flash[:error] = "#{@computer.name}'s warranty could not be updated."
+    end
+    redirect_to computer_path(@computer.unit, @computer, anchor: 'warranty_tab')
   end
 end

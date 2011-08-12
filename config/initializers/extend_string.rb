@@ -4,7 +4,15 @@ class String
   end
   
   def from_plist
-    Plist.parse_xml(self)
+    begin
+      Plist.parse_xml(self)
+    rescue RuntimeError
+      return self #return nothign not a valide plist string
+    rescue NoMethodError
+      return self #return nothing invalide syntax or nil object
+    rescue Errno::EISDIR
+      return self #only happen if you have a string "test", not sure why
+    end
   end
   
   # Convert string from whatever encoding to UTF-8, covering corner cases
