@@ -163,6 +163,15 @@
 				</td>
 			</tr>
 			<tr>
+				<td>Force Install After Date</td>
+				<td>
+					<%= f.text_field(:force_install_after_date_string) %>
+					<%= helpful_info('Admins can designate installs/updates to forcefully logout and/or restart a machine in order to install a package requiring such. Given that this feature has the potential to forcefully restart a machine while a user is performing work or has unsaved work open, it should be used wisely and and admins should provide sufficient notice to their users. We recommend setting force datetimes at least 2 weeks in the future.
+					
+					See Force Install After Date documentation for more information.') %>
+				</td>
+			</tr>
+			<tr>
 				<td>Unattended Install</td>
 				<td>
 					<%= f.check_box :unattended_install %>
@@ -339,3 +348,13 @@
 		</table>
 	</div>
 </div>
+
+<script>
+$('#package_force_install_after_date_string').datetimepicker({
+	dateFormat: 'yy-mm-dd',
+	ampm: true,
+	timeFormat: 'hh:mm TT',
+	separator: ' ',
+	stepMinute: 15
+});
+</script>

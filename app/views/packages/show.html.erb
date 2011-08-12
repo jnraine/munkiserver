@@ -33,6 +33,10 @@
 				<td><%= @package.installer_type.present? ? @package.installer_type.titleize : "Package" %></td>
 			</tr>
 			<tr>
+				<td><strong>Force Install by</strong></td>
+				<td><%= @package.force_install_after_date.present? ? @package.force_install_after_date_string : nil %></td>
+			</tr>
+			<tr>
 				<td><strong>Uninstallable?</strong></td>
 				<td><%= @package.uninstallable ? "Yes" : "No" %></td>
 			</tr>
