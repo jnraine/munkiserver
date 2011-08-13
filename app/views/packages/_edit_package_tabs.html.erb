@@ -1,6 +1,7 @@
 <div id="tabs">	
 	<ul>
 		<li><a href="#basics"><span>Basics</span></a></li>
+		<li><a href="#advanced"><span>Advanced</span></a></li>
 		<li><a href="#plists"><span>Plists</span></a></li>
 		<li><a href="#scripts"><span>Scripts</span></a></li>
 		<li><a href="#tracker"><span>Web Version Tracker</span></a></li>
@@ -22,15 +23,6 @@
 					<%= f.text_field :display_name %>
 					<%= hidden_field_tag :original_display_name, @package.display_name %>
 					<%= helpful_info('Displayed to the user in Managed Software Update.app') %>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Name (<%= field_lock_control("package_name") %>)
-				</td>
-				<td>
-					<%= f.text_field :name, :disabled => true %>
-					<%= helpful_info('Identifies the package branch in manifest plists') %>
 				</td>
 			</tr>
 		
@@ -56,46 +48,7 @@
 					<%= helpful_info("Optionally, specify a version string used when comparing this package to the latest on macupdate.com") %>
 				</td>
 			</tr>
-			<tr>
-				<td>
-					Installer (<%= field_lock_control("package_installer_item_location") %>)
-				</td>
-				<td>
-					<%= f.text_field :installer_item_location, :disabled => true %>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Installer Size (<%= field_lock_control("package_installer_item_size") %>)
-				</td>
-				<td>
-					<%= f.text_field :installer_item_size, :disabled => true %>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Installed Size (<%= field_lock_control("package_installed_size") %>)
-				</td>
-				<td>
-					<%= f.text_field :installed_size, :disabled => true %>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Installer Type
-				</td>
-				<td>
-					<%= f.select :installer_type, options_for_select(Package::FORM_OPTIONS[:installer_types],@package.installer_type) %>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Custom Package Path (<%= field_lock_control("package_package_path") %>)
-				</td>
-				<td>
-					<%= f.text_field :package_path %>
-				</td>
-			</tr>
+
 			<tr> 
 				<td>
 					Icon
@@ -145,18 +98,6 @@
 				</td>
 			</tr>
 			<tr>
-				<td>Autoremove</td>
-				<td>
-					<%= f.check_box :autoremove %>
-				</td>
-			</tr>
-			<tr>
-				<td>Uninstallable</td>
-				<td>
-					<%= f.check_box :uninstallable %>
-				</td>
-			</tr>
-			<tr>
 				<td>Share with other units</td>
 				<td>
 					<%= f.check_box :shared %>
@@ -171,19 +112,83 @@
 					See Force Install After Date documentation for more information.') %>
 				</td>
 			</tr>
+
 			<tr>
-				<td>Unattended Install</td>
-				<td>
-					<%= f.check_box :unattended_install %>
+				<td colspan="2">
+					<h4>Description</h4>
+					<%= f.text_area :description, :size => "80x4" %>
 				</td>
 			</tr>
 			
+				<tr>
+					<td colspan="2">
+						<div id="tabled_asm_select">
+							<%= tabled_asm_select(@package) %>
+						</div>
+					</td>
+				</tr>
+		</table>
+	</div>
+
+	<!-- Second tab starts here -->
+	<div id="advanced">
+		<table class="form">
 			<tr>
-				<td>Unattended Uninstall</td>
-				<td>
-					<%= f.check_box :unattended_uninstall %>
+				<td colspan='2'>
+					<h4>Package Branch <%= helpful_info('Changes to these fields effect all packages in this branch') %></h4>
 				</td>
 			</tr>
+
+			<tr>
+				<td>
+					Name (<%= field_lock_control("package_name") %>)
+				</td>
+				<td>
+					<%= f.text_field :name, :disabled => true %>
+					<%= helpful_info('Identifies the package branch in manifest plists') %>
+				</td>
+			</tr>
+		
+			<tr>
+				<td colspan='2'>
+					<h4>Package <%= helpful_info('Changes to these fields effect only this package') %></h4>
+				</td>
+			</tr>
+
+
+			<tr>
+				<td>
+					Installer (<%= field_lock_control("package_installer_item_location") %>)
+				</td>
+				<td>
+					<%= f.text_field :installer_item_location, :disabled => true %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Installer Size (<%= field_lock_control("package_installer_item_size") %>)
+				</td>
+				<td>
+					<%= f.text_field :installer_item_size, :disabled => true %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Installed Size (<%= field_lock_control("package_installed_size") %>)
+				</td>
+				<td>
+					<%= f.text_field :installed_size, :disabled => true %>
+				</td>
+			</tr>
+ 			<tr>
+				<td>
+					Installer Type
+				</td>
+				<td>
+					<%= f.select :installer_type, options_for_select(Package::FORM_OPTIONS[:installer_types],@package.installer_type) %>
+				</td>
+			</tr>
+			
 			<tr>
 				<td>Uninstall Method</td>
 				<td>
@@ -213,26 +218,51 @@
 					</div>
 					<!-- <hr /> -->
 				</td>
+			</tr>			
+			<tr>
+				<td>
+					Custom Package Path (<%= field_lock_control("package_package_path") %>)
+				</td>
+				<td>
+					<%= f.text_field :package_path %>
+				</td>
 			</tr>
 			<tr>
-				<td colspan="2">
-					<h4>Description</h4>
-					<%= f.text_area :description, :size => "80x4" %>
+				<td>Autoremove</td>
+				<td>
+					<%= f.check_box :autoremove %>
+					<%= helpful_info("Checking this box, specifies that item should be automatically removed if they are not listed in a bundle or install or dependency relationship.") %>
+				</td>
+			</tr>
+			<tr>
+				<td>Uninstallable</td>
+				<td>
+					<%= f.check_box :uninstallable %>
+					<%= helpful_info("Checking this box, determines whether Munki can attempt to uninstall this item") %>
+				</td>
+			</tr>
 
+			<tr>
+				<td>Unattended Install</td>
+				<td>
+					<%= f.check_box :unattended_install %>
+					<%= helpful_info("Admins can designate installs/updates to occur silently and unattended before the user is notified of any remaining installs/updates/removals. This feature is very raw and should be used wisely only with packages the admin has thoroughly tested; given that this feature suppresses all notification to the user, installs may occur while the user is running the application being updated or removed.") %>
 				</td>
 			</tr>
 			
-				<tr>
-					<td colspan="2">
-						<div id="tabled_asm_select">
-							<%= tabled_asm_select(@package) %>
-						</div>
-					</td>
-				</tr>
+			<tr>
+				<td>Unattended Uninstall</td>
+				<td>
+					<%= f.check_box :unattended_uninstall %>
+					<%= helpful_info("Admins can designate uninstalls to occur silently and unattended before the user is notified of any remaining installs/updates/removals. This feature is very raw and should be used wisely only with packages the admin has thoroughly tested; given that this feature suppresses all notification to the user, installs may occur while the user is running the application being updated or removed.") %>
+				</td>
+			</tr>
+
+
 		</table>
-	</div>
+	</div>	
 	
-	<!-- Second tab starts here -->
+	<!-- Third tab starts here -->
 	<div id="plists">
 			<table class="form">
 				
@@ -273,7 +303,7 @@
 			</table>
 	</div>
 	
-	<!-- Third tab starts here -->
+	<!-- Fourth tab starts here -->
 	<div id="scripts">
 			<table class="form">
 
@@ -329,7 +359,7 @@
 			</table>
 	</div>
 	
-	<!-- Fourth tab starts here -->
+	<!-- Fifth tab starts here -->
 	<div id="tracker">
 		<table class="form">
 			<td colspan='2'>
