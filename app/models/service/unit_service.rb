@@ -3,7 +3,7 @@ class UnitService
 
   def initialize(params)
     @unit = Unit.find_by_shortname(params[:id])
-    @unit_params = params[:unit_shortname]
+    @unit_params = params[:unit]
   end
   
   # Returns the name of the unit in this service

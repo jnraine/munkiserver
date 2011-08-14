@@ -301,6 +301,18 @@ $(document).ready(function() {
 		$(this).find(".helpful_info_message").fadeOut("fast");
 	}));
 	
+	// Hover over Imported text show package name and version
+	$(".show_hidden_link").mouseover(function(){
+	    $(this).slideUp(300, function(){
+            $(this).parent().find(".hidden_link").slideDown(300, function(){
+                $(this).mouseleave(function(){
+                    $(this).slideUp(300);
+                    $(this).parent().find(".show_hidden_link").slideDown();
+                });
+            });
+	    });
+	});
+	
 	// Add zebra strips to tables
 	var odd = true;
 	var stateCount = 0;
@@ -347,7 +359,8 @@ function initializeBulkEdit() {
 	$("#bulk_edit").css({"visibility":"hidden"});
 	
 	$(".select_all").change(function() {
-		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
+	    // select all enabled checkboxes
+		$(this).parents("table").find(":checkbox:enabled").attr("checked",$(this).attr("checked"));
 	});
 	
 	// show bulk edit button when 2 or more checkbox is selected

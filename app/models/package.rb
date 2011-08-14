@@ -28,6 +28,7 @@ class Package < ActiveRecord::Base
   scope :shared, where(:shared => true)
   scope :from_other_unit, lambda {|p| where("unit_id != ?", p.unit_id)}
   scope :has_greater_version, lambda {|p| where("version > ?", p.version)}
+  scope :other, lambda{|p| where("id <> ?", p.id)}
   
   before_save :save_package_branch
   before_save :handle_environment_change
@@ -80,9 +81,11 @@ class Package < ActiveRecord::Base
   end
 
   # An hash of params to be used for linking to a package instance
-  def to_params
+  # takes an optional params to specify the target unit
+  def to_params(target_unit = nil)
+    target_unit ||= unit
     params = {}
-    params[:unit_shortname] = unit
+    params[:unit_shortname] = target_unit
     params[:package_branch] = package_branch
     params[:version] = version unless self.latest_in_unit?
     params
@@ -98,6 +101,7 @@ class Package < ActiveRecord::Base
     packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN (#{installer_item_locations.map {|e| "'#{e}'"}.join(",")})")
     # Delete packages that refer to an installer item used by another package in unit
     # packages.delete_if {|p| installer_item_locations.include?(p.installer_item_location)}
+
   end
   
   # Recent items from other units that are shared
@@ -301,6 +305,26 @@ class Package < ActiveRecord::Base
       # If icon is saved, assign it to the record
       self.icon = i if i.save
     end
+  end
+  
+  # Return the package id of a package if there exists 
+  def shared_installer_item_location(unit = nil)
+    if @installer_item_locations.nil?
+      @installer_item_locations = {}
+      
+      packages = nil
+      if unit.present?
+        packages = Package.other(self).where(:unit_id => unit.id)
+      else
+        packages = Package.other(self)
+      end
+      
+      packages.each do |package| 
+        @installer_item_locations[package.installer_item_location] ||= []
+        @installer_item_locations[package.installer_item_location] << package.id
+      end
+    end
+    @installer_item_locations[self.installer_item_location]
   end
   
   # Checks if the current package is the latest (newest version) 
@@ -644,6 +668,21 @@ class Package < ActiveRecord::Base
     validate_create_options(options)
     package_file = self.initialize_upload(options.delete(:package_file))
     package = process_package_file(package_file,options)
+  end
+  
+  # Import package from other units to current_unit
+  # new package will inherite most of the attributes from orginal
+  # except for the list of the attributes below
+  def self.import_package(unit, shared_package)
+    package = Package.new(shared_package.attributes)
+    # Do custom stuff to imported package
+    package.unit = unit
+    package.environment = Environment.start
+    package.update_for = []
+    package.requires = []
+    package.icon = shared_package.icon
+    package.shared = false
+    package
   end
   
   # over write the default get description, check if nil then get the description from version_trackers
