@@ -25,6 +25,6 @@
 	<%= form_tag edit_multiple_packages_path, :method => :get, :id => "bulk_edit_form", :remote => true do %>
 		<p><%= record_count(@packages) %><%= submit_tag "Multiple Edit", :id => "bulk_edit" %></p>
 	
-		<%= package_table(@packages) %> 
+		<%= package_table(@packages) %>
 	<% end %>
 <% end %>

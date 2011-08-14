@@ -67,6 +67,9 @@ Munki::Application.routes.draw do
     
     resources :shared_packages do
       get :import, :on => :member
+      collection do
+        get :import_multiple
+      end
     end
     
     resources :computer_groups do

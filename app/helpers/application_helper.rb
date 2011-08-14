@@ -231,5 +231,4 @@ module ApplicationHelper
     controller = "computers" unless included_controllers.include?(controller)
     {:controller => controller, :action => :index, :unit_shortname => unit.to_param}
   end
-  
 end
