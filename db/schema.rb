@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110808185913) do
+ActiveRecord::Schema.define(:version => 20110811185738) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -254,6 +254,7 @@ ActiveRecord::Schema.define(:version => 20110808185913) do
     t.text     "postuninstall_script"
     t.boolean  "unattended_install",        :default => false
     t.boolean  "unattended_uninstall",      :default => false
+    t.datetime "force_install_after_date"
   end
 
   create_table "require_items", :force => true do |t|
