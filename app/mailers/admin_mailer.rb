@@ -18,8 +18,6 @@ class AdminMailer < ActionMailer::Base
   
   def packages_update_available(packages, unit, email)
     @packages = packages
-    # @version_tracker = @package.package_branch.version_tracker
-    # @macupdate_url = VersionTracker::MAC_UPDATE_PACKAGE_URL + @version_tracker.web_id.to_s
     mail(:bcc => email, :subject => "[Munki Server] #{@packages.count} packages have update in #{unit.name}! ")
   end
   

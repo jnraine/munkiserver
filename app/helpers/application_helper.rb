@@ -232,7 +232,8 @@ module ApplicationHelper
     {:controller => controller, :action => :index, :unit_shortname => unit.to_param}
   end
   
+  # Return a macupdate.com URL for the given package
   def macupdate_url(package)
-    macupdate_url = VersionTracker::MAC_UPDATE_PACKAGE_URL + package.package_branch.version_tracker.web_id.to_s
+     VersionTracker::MAC_UPDATE_PACKAGE_URL + package.package_branch.version_tracker.web_id.to_s
   end
 end
