@@ -496,12 +496,13 @@ thead th a:hover,
 .centerize{
 	text-align: center;
 }
-.show_hidden_link{
-/*    display:none;*/
+
+li .imported{
 }
-.hidden_link{
-    display: none;
-/*    visibility:hidden;*/
+ul.imported_link li{
+    margin-left:-5px !important; /* fix for imported links*/
+    padding: 5px 5px;
+    width:100px;
 }
 /* ============ */
 /* = Warranty = */
