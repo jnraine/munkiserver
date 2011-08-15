@@ -456,18 +456,6 @@ class Package < ActiveRecord::Base
     end
   end
   
-  def force_install_after_date_string
-    self.force_install_after_date.localtime.strftime("%Y-%m-%d %I:%M %p") if self.force_install_after_date
-  end
-  
-  def force_install_after_date_string=(time_str)
-    if time_str == ""
-      self.force_install_after_date = nil
-    else
-      self.force_install_after_date = Time.parse(time_str)
-    end      
-  end
-  
   # Require icon
   def require_icon
     if self.icon == nil
