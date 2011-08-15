@@ -16,6 +16,13 @@ class AdminMailer < ActionMailer::Base
     mail(:bcc => recipients(@package), :subject => "[Munki Server] #{@package.to_s(:pretty)} has an update! ")
   end
   
+  def packages_update_available(packages, unit, email)
+    @packages = packages
+    # @version_tracker = @package.package_branch.version_tracker
+    # @macupdate_url = VersionTracker::MAC_UPDATE_PACKAGE_URL + @version_tracker.web_id.to_s
+    mail(:bcc => email, :subject => "[Munki Server] #{@packages.count} packages have update in #{unit.name}! ")
+  end
+  
   def warranty_report(computer)
     @computer = computer
     mail(:bcc => recipients(@computer), :subject => "[Munki Server] #{@computer}'s warranty will expire in #{@computer.warranty_days_left} days")

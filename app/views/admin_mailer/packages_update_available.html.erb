@@ -1,0 +1,26 @@
+<% @packages.each do |package| %>
+	<h3>
+		<%= package.to_s(:pretty) %> version <%= package.package_branch.version_tracker.version %> is now available!
+	</h3>
+
+	<p>The current version is <%= link_to package.to_s(:pretty_with_version), package_url(package.to_params)%></p>
+
+	<p><%= link_to "Click here to add", new_package_url(package.unit) %> to add a package to <%= package.unit %> unit</p>
+
+	<% if package.package_branch.version_tracker.download_links.present? %>
+		<div>
+			<p><strong>Download Links</strong></p>
+			<div>
+				<ul>
+				<% package.package_branch.version_tracker.download_links.each_with_index do |download_link,i| %>
+					<li>
+						<%= link_to "#{download_link.text}", download_link.url  , :target => "_blank" %> - <%= download_link.caption %>
+					</li>
+				<% end %>
+				</ul>
+			</div>
+		</div>
+	<% end %>
+
+<p>For more details: <%= link_to macupdate_url(package), macupdate_url(package) %></p>
+<% end %>

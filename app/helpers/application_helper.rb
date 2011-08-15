@@ -231,4 +231,8 @@ module ApplicationHelper
     controller = "computers" unless included_controllers.include?(controller)
     {:controller => controller, :action => :index, :unit_shortname => unit.to_param}
   end
+  
+  def macupdate_url(package)
+    macupdate_url = VersionTracker::MAC_UPDATE_PACKAGE_URL + package.package_branch.version_tracker.web_id.to_s
+  end
 end
