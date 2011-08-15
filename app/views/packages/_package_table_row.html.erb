@@ -1,17 +1,17 @@
 <tr>
-	<td rowspan="<%= package.versions.count %>"><%= image_tag(package.icon.url(:small), :class => "thumbnail", "data-package-branch-id" => package.package_branch_id) if package.icon %></td>
-	<td rowspan="<%= package.versions.count %>">
+	<td rowspan="<%= package.package.count %>"><%= image_tag(package.icon.url(:small), :class => "thumbnail", "data-package-branch-id" => package.package_branch_id) if package.icon %></td>
+	<td rowspan="<%= package.package.count %>">
 		<%= package.display_name %><br />
 		<em><%= package.name %></em>
 	</td>
-	<%= render :partial => 'package_version_column', :locals => {:pkg => package.versions.first} %>
-	<td rowspan="<%= package.versions.count %>" class="centerize">
+	<%= render :partial => 'package_version_column', :locals => {:pkg => package.package.first} %>
+	<td rowspan="<%= package.package.count %>" class="centerize">
 		<% unless package.has_dependencies? %>
 			<%= update_or_import(package) %>
 		<% end %>
 	</td>
 </tr>
-<% package.versions.each_with_index do |pkg,i| %>
+<% package.package.each_with_index do |pkg,i| %>
 	<% unless i == 0 %>
 		<tr>
 			<%= render :partial => 'package_version_column', :locals => {:pkg => pkg} %>
