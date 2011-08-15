@@ -44,13 +44,13 @@ module Manifest
       # Takes a name attribute and returns a valid shortname attribute
       def conform_name_to_shortname(name = nil)
         name ||= self.name
-        name.to_s.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-')
+        name.to_s.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-').gsub(/^-|-$/,'')
       end
       
       # Overwrite the default name setter to add shortname attribute when creating a name
       def name=(value)
         self.shortname = conform_name_to_shortname(value)
-        super
+        write_attribute(:name,value)
       end
       
       # Return all the environments visible to this object

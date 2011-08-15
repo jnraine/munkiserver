@@ -334,6 +334,7 @@ $(document).ready(function() {
 		}
 		stateCount--;
 	});
+    initializeDatePicker();
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field
@@ -372,6 +373,16 @@ function initializeBulkEdit() {
 		}
 	});
 	$(":checkbox").change();
+}
+
+function initializeDatePicker(){
+    $('#package_force_install_after_date_string').datetimepicker({
+    	dateFormat: 'yy-mm-dd',
+    	ampm: true,
+    	timeFormat: 'hh:mm TT',
+    	separator: ' ',
+    	stepMinute: 15
+    });
 }
 
 // AJAX hostname search/filter
