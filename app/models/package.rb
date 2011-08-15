@@ -42,8 +42,11 @@ class Package < ActiveRecord::Base
   validates :installs, :array => true
   validates :raw_tags, :hash => true
   validates :version, :uniqueness_in_unit => true
-  validates_format_of :force_install_after_date_string, :on => :update, :with => /\A^(""|\d{4}-\d{2}-\d{2} \d{2}:\d{2} (AM|PM))$\z/, :message => "is not in the form of YYYY-MM-DD HH:MM AM/PM"
-  
+  validates_format_of :force_install_after_date_string, 
+        :with => /\A^(""|\d{4}-\d{2}-\d{2} \d{2}:\d{2} (AM|PM))$\z/, 
+        :message => "is not in the form of YYYY-MM-DD HH:MM AM/PM",
+        :allow_blank => true  
+        
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0'],['10.7','10.7.0']],
                   :installer_types         => [['Package',''],
@@ -94,15 +97,11 @@ class Package < ActiveRecord::Base
   end
   
   def force_install_after_date_string
-    self.force_install_after_date.localtime.strftime("%Y-%m-%d %I:%M %p") if self.force_install_after_date
+    self.force_install_after_date.utc.strftime("%Y-%m-%d %I:%M %p") if self.force_install_after_date
   end
   
   def force_install_after_date_string=(time_str)
-    if time_str == ""
-      self.force_install_after_date = nil
-    else
-      self.force_install_after_date = Time.parse(time_str)
-    end      
+    self.force_install_after_date = ActiveSupport::TimeZone.new('UTC').parse(time_str)  
   end
   
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
