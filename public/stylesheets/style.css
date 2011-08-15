@@ -227,6 +227,9 @@ textarea {
 }
 /* Tabs in Package Edit */
 
+#multiple_import{
+    float: right;
+}
 
 /* GUI view table*/
 
@@ -493,7 +496,13 @@ thead th a:hover,
 .centerize{
 	text-align: center;
 }
-
+.show_hidden_link{
+/*    display:none;*/
+}
+.hidden_link{
+    display: none;
+/*    visibility:hidden;*/
+}
 /* ============ */
 /* = Warranty = */
 /* ============ */

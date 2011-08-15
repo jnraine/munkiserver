@@ -84,6 +84,11 @@ class PackageBranch < ActiveRecord::Base
     end
   end
   
+  # Return all the packages that are shared and from the given unit
+  def shared_packages_from_unit(unit)
+    Package.shared.where(:package_branch_id => id, :unit_id => unit.id).order("version DESC")
+  end
+  
   # Virtual attribute that retrieves the web ID from the version tracker
   # record associated to this package branch
   def version_tracker_web_id
