@@ -26,7 +26,7 @@ ul.dropdown ul {
 
 ul.dropdown {
  position: relative;
- z-index: 597;
+/* z-index: 597;*/
  float: left;
 }
 
@@ -40,7 +40,7 @@ ul.dropdown li {
 ul.dropdown li.hover,
 ul.dropdown li:hover {
  position: relative;
- z-index: 599;
+/* z-index: 599;*/
  cursor: default;
 }
 
@@ -49,7 +49,7 @@ ul.dropdown ul {
  position: absolute;
  top: 100%;
  left: 0;
- z-index: 598;
+/* z-index: 598;*/
  width: 100%;
 }
 
