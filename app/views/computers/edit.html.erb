@@ -1,5 +1,5 @@
 <h2>Editing <% @computer %></h2>
-<%= form_for(@computer, :validate => true, :url => computer_path(@computer.unit, @computer), :html => {:name => "edit_computer", "data-environment-change" => computer_environment_change_url(@computer.unit,@computer.id)}) do |form_builder| %>
+<%= form_for(@computer, :validate => true, :url => computer_path(@computer.unit, @computer), :html => {:name => "edit_computer", "data-environment-change" => computer_environment_change_url(@computer.unit,@computer.id), "data-unit-change" => computer_unit_change_url(@computer.unit, @computer.id)}) do |form_builder| %>
 	<%= render :partial => 'form', :locals => {:f => form_builder, :submit_value => "Update"} %>
 <% end %>
 

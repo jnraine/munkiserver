@@ -11,6 +11,17 @@
 		<table>
 		<tr>
 			<td>
+
+			</td>
+			<td>
+			<%= f.label :unit_id %>
+			</td>
+			<td>
+			<%= f.collection_select :unit_id, current_user.units, :id, :name, {}, {:class => "computer_unit_mult_edit"} %>
+			</td>
+		</tr>
+		<tr>
+			<td>
 				
 			</td>
 			<td>

@@ -183,10 +183,28 @@ class ComputersController < ApplicationController
     if params[:computer_id] == "new"
       @computer = Computer.new({:unit_id => current_unit.id})
     else
-      @computer = Computer.find(params[:computer_id])
+      @computer = Computer.find_for_show(params[:unit_shortname], params[:computer_id])
     end
-    
     @environment_id = params[:environment_id] if params[:environment_id].present?
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def unit_change
+    # make sure if the current user is eligible for the traget unit
+    if params[:unit_id] != current_unit.id and current_user.units.map(&:id).include?(params[:unit_id])
+      computer = Computer.find(params[:computer_id])
+      # tempoary assign the target unit id to computer
+      computer.unit_id = params[:unit_id]
+      @computer = computer
+      @unit = Unit.find(params[:unit_id])
+    else
+      @computer = Computer.find_for_show(params[:unit_shortname], params[:computer_id])
+      @unit = current_unit
+    end
+    @environment_id = current_environment.id
     
     respond_to do |format|
       format.js
