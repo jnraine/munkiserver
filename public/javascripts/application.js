@@ -301,18 +301,6 @@ $(document).ready(function() {
 		$(this).find(".helpful_info_message").fadeOut("fast");
 	}));
 	
-	// Hover over Imported text show package name and version
-	$(".show_hidden_link").mouseover(function(){
-	    $(this).slideUp(300, function(){
-            $(this).parent().find(".hidden_link").slideDown(300, function(){
-                $(this).mouseleave(function(){
-                    $(this).slideUp(300);
-                    $(this).parent().find(".show_hidden_link").slideDown();
-                });
-            });
-	    });
-	});
-	
 	// Add zebra strips to tables
 	var odd = true;
 	var stateCount = 0;
@@ -334,6 +322,13 @@ $(document).ready(function() {
 		}
 		stateCount--;
 	});
+	
+    initializeDatePicker();
+    
+    // Provent empty herf being clicked
+    $(".no_action").click(function(){
+        return false;
+    });
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field
@@ -372,6 +367,16 @@ function initializeBulkEdit() {
 		}
 	});
 	$(":checkbox").change();
+}
+
+function initializeDatePicker(){
+    $('#package_force_install_after_date_string').datetimepicker({
+    	dateFormat: 'yy-mm-dd',
+    	ampm: true,
+    	timeFormat: 'hh:mm TT',
+    	separator: ' ',
+    	stepMinute: 15
+    });
 }
 
 // AJAX hostname search/filter

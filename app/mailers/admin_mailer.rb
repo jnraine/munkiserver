@@ -11,9 +11,12 @@ class AdminMailer < ActionMailer::Base
   
   def package_update_available(package)
     @package = package
-    @version_tracker = @package.package_branch.version_tracker
-    @macupdate_url = VersionTracker::MAC_UPDATE_PACKAGE_URL + @version_tracker.web_id.to_s
     mail(:bcc => recipients(@package), :subject => "[Munki Server] #{@package.to_s(:pretty)} has an update! ")
+  end
+  
+  def available_updates_digest(unit)
+    @packages = PackageBranch.available_updates(unit)
+    mail(:bcc => recipients_for_unit(unit), :subject => "[Munki Server] #{@packages.count} packages have update in #{unit.name}! ")
   end
   
   def warranty_report(computer)
@@ -34,6 +37,15 @@ class AdminMailer < ActionMailer::Base
   def recipients(record)
     if record.present?
       members = record.unit.members if record.unit.present?
+      members.delete_if {|e| e.settings.receive_email_notifications == false }.map(&:email)
+    else
+      []
+    end
+  end
+  
+  def recipients_for_unit(unit)
+    if unit.present?
+      members = unit.members
       members.delete_if {|e| e.settings.receive_email_notifications == false }.map(&:email)
     else
       []

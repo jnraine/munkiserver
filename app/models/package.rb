@@ -43,7 +43,11 @@ class Package < ActiveRecord::Base
   validates :installs, :array => true
   validates :raw_tags, :hash => true
   validates :version, :uniqueness_in_unit => true
-  
+  validates_format_of :force_install_after_date_string, 
+        :with => /\A^(""|\d{4}-\d{2}-\d{2} \d{2}:\d{2} (AM|PM))$\z/, 
+        :message => "is not in the form of YYYY-MM-DD HH:MM AM/PM",
+        :allow_blank => true  
+        
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0'],['10.7','10.7.0']],
                   :installer_types         => [['Package',''],
@@ -91,6 +95,18 @@ class Package < ActiveRecord::Base
     params
   end
   
+  def force_install_after_date
+    self[:force_install_after_date]
+  end
+  
+  def force_install_after_date_string
+    self.force_install_after_date.utc.strftime("%Y-%m-%d %I:%M %p") if self.force_install_after_date
+  end
+  
+  def force_install_after_date_string=(time_str)
+    self.force_install_after_date = ActiveSupport::TimeZone.new('UTC').parse(time_str)  
+  end
+
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)
@@ -440,11 +456,6 @@ class Package < ActiveRecord::Base
     end
   end
   
-  # if package's description is nil, get scraped description from version tracker
-  # def get_descirption_from_version_tracker(package)
-  #  
-  # end
-  
   # Require icon
   def require_icon
     if self.icon == nil
@@ -589,7 +600,7 @@ class Package < ActiveRecord::Base
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
               :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method, :unattended_install, :unattended_uninstall,
               :preinstall_script, :postinstall_script, :uninstall_script, :preuninstall_script, :postuninstall_script,
-              :requires,:update_for,:catalogs,:version]
+              :requires,:update_for,:catalogs,:version, :force_install_after_date]
        
       keys.each do |key|
         h[key.to_s] = self.send(key) if self.send(key).present?
