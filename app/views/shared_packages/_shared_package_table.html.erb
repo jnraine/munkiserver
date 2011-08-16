@@ -1,3 +1,4 @@
+<% if packages.present? %>
 <table class="zebra">
 <thead>
 	<tr>
@@ -14,3 +15,6 @@
 		<%= render :partial => 'shared_package_table_row', :locals => {:packages => packages, :package_branch => package_branch, :unit => unit} %>
 	<% end %>
 </table>
+<% else %>
+<p><em>There are no shared packages from this Unit</em></p>
+<% end %>
