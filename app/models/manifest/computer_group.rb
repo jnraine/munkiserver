@@ -25,7 +25,13 @@ class ComputerGroup < ActiveRecord::Base
   # Reture a list of computer groups that are blong to the unit and environment
   def self.unit_and_environment(unit,environment_id)
     environment = Environment.find(environment_id)
-    ComputerGroup.unit(unit).environment(environment)
+    # if passed in unit id
+    if unit.instance_of?(Fixnum)
+      u = Unit.find(unit)
+      ComputerGroup.unit(u).environment(environment)
+    else
+      ComputerGroup.unit(unit).environment(environment)
+    end
   end
 end
 

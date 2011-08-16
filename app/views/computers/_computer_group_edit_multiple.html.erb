@@ -5,5 +5,5 @@
 	<%= label_tag "Computer Group"%>
 </td>
 <td>
-	<%= select "computer", "computer_group_id", ComputerGroup.unit_and_environment(current_unit, environment_id), {:include_blank => true} %>
+	<%= select "computer", "computer_group_id", ComputerGroup.unit_and_environment(unit_id, environment_id), {:include_blank => true} %>
 </td>
