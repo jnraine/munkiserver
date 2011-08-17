@@ -7,6 +7,4 @@ require 'rake'
 require 'rake/testtask'
 require 'rdoc/task'
 
-include Rake::DSL
-
 Munki::Application.load_tasks
