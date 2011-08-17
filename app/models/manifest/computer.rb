@@ -250,13 +250,13 @@ class Computer < ActiveRecord::Base
     end
   end
   
-  # Return true if warranty is about to expire in 30, 15, 5 days
+  # Return true if warranty is about to expire in 90, 30, 15, 5 days
   def warranty_report_due?
     if warranty.hw_coverage_end_date.present?
-      # if no notification send before and is less than 30 days untill expires
-      if warranty.notifications.nil? and (Time.now.to_date >= send_notifications_on.first)
+      # if no notification sent before and has passed any of the due days
+      if warranty.notifications.nil? and (Time.now.to_date >= sent_notifications_interval.first)
         return true
-      elsif notifications_not_sent.include?(true) 
+      elsif need_to_sent_notifications.include?(true) 
         return true
       else
         return false
@@ -267,11 +267,13 @@ class Computer < ActiveRecord::Base
     end
   end
   
-  # Return an array of booleans true if notifications not sent
-  def notifications_not_sent
+  # Return an array of booleans true if it's time for another email notifications
+  def need_to_sent_notifications
     results = []
-    send_dates = send_notifications_on
-    send_dates.each do |date|
+    sent_dates = sent_notifications_on
+    sent_dates.each do |date|
+      # check if current time is greater than any of the interveal time
+      # and the days since last warranty report due is greater than the
       results << (Time.now.to_date > date)
     end
     results
@@ -285,20 +287,34 @@ class Computer < ActiveRecord::Base
     end
   end
   
-  # Return the days since last notification send
+  # Return the days since last notification sent
   def days_since_last_warranty_report
-    last_send_date = warranty.notifications.last.updated_at.to_date
-    days_apart = Time.now.to_date - last_send_date
-    days_apart.to_i
+    if warranty.notifications.present?
+      last_notification_sent_on = warranty.notifications.last.updated_at.to_date
+      days_apart = Time.now.to_date - last_notification_sent_on
+      days_apart.to_i
+    else
+      nil
+    end
   end
   
-  # Return an array of real dates the notifications suppose to be send
-  def send_notifications_on
-    interval = [90,30,15,5]
-    notification_send_on = []
+  # Return an array of real dates the notifications suppose to be sent
+  def sent_notifications_interval
+    interval = [500,90,30,15,5]
+    dates_interval = []
     interval.each do |date|
-      notification_send_on << warranty.hw_coverage_end_date.to_date - date
+      dates_interval << warranty.hw_coverage_end_date.to_date - date
     end
-    notification_send_on
+    dates_interval
   end
+  
+  
+  # Gives an exact date when to send the next warranty report exact day
+  # if the current day is greater than the next warranty report send an email 
+  # update the next warranty report due day, if previous report was the last 
+  # notification. Then set the next warranty report due day to nil
+  def sent_notifications
+  end
+  
+  
 end
