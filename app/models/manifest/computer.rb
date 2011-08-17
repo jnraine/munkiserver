@@ -210,19 +210,6 @@ class Computer < ActiveRecord::Base
     end
   end
   
-  def self.bulk_update_attributes(packages,package_attributes)
-    if package_attributes.nil? or packages.empty?
-      raise PackageError.new ("Nothing to update")
-    else
-      results = packages.map do |p|
-        p.update_attributes(package_attributes)
-      end
-      successes = results.map {|b| b == false }
-      failures = results.map {|b| b == true }
-      {:total => packages.count, :successes => successes.count, :failures => failures.count}
-    end
-  end
-  
   def serial_number
     self.system_profile.serial_number if self.system_profile.present?
   end
@@ -241,80 +228,26 @@ class Computer < ActiveRecord::Base
       # append computer_id into the hash
       warranty_hash[:computer_id] = self.id
       warranty_hash[:updated_at] = Time.now
-      result = warranty.update_attributes(warranty_hash)
-      if warranty_report_due? and result
-        AdminMailer.warranty_report(self).deliver
-        self.warranty.notifications.create
+      update_successful = warranty.update_attributes(warranty_hash)
+      # Send notification, if due
+      if warranty_notification_due?
+        deliver_warranty_notification
       end
-      result ? true : false
+      update_successful
     end
   end
   
-  # Return true if warranty is about to expire in 90, 30, 15, 5 days
-  def warranty_report_due?
-    if warranty.hw_coverage_end_date.present?
-      # if no notification sent before and has passed any of the due days
-      if warranty.notifications.nil? and (Time.now.to_date >= sent_notifications_interval.first)
-        return true
-      elsif need_to_sent_notifications.include?(true) 
-        return true
-      else
-        return false
-      end
+  # Return true if warranty notification is due
+  def warranty_notification_due?
+    if warranty.present?
+      warranty.notification_due?
     else
-      # no hardware coverage found
-      return false
+      false
     end
   end
   
-  # Return an array of booleans true if it's time for another email notifications
-  def need_to_sent_notifications
-    results = []
-    sent_dates = sent_notifications_on
-    sent_dates.each do |date|
-      # check if current time is greater than any of the interveal time
-      # and the days since last warranty report due is greater than the
-      results << (Time.now.to_date > date)
-    end
-    results
+  def deliver_warranty_notification
+    AdminMailer.warranty_notification(self).deliver
+    self.warranty.notifications.create
   end
-  
-  # Return how many days until the warrany expires
-  def warranty_days_left
-    if warranty.hw_coverage_end_date.present?
-      diff = warranty.hw_coverage_end_date.to_date - Time.now.to_date
-      diff.to_i
-    end
-  end
-  
-  # Return the days since last notification sent
-  def days_since_last_warranty_report
-    if warranty.notifications.present?
-      last_notification_sent_on = warranty.notifications.last.updated_at.to_date
-      days_apart = Time.now.to_date - last_notification_sent_on
-      days_apart.to_i
-    else
-      nil
-    end
-  end
-  
-  # Return an array of real dates the notifications suppose to be sent
-  def sent_notifications_interval
-    interval = [500,90,30,15,5]
-    dates_interval = []
-    interval.each do |date|
-      dates_interval << warranty.hw_coverage_end_date.to_date - date
-    end
-    dates_interval
-  end
-  
-  
-  # Gives an exact date when to send the next warranty report exact day
-  # if the current day is greater than the next warranty report send an email 
-  # update the next warranty report due day, if previous report was the last 
-  # notification. Then set the next warranty report due day to nil
-  def sent_notifications
-  end
-  
-  
 end

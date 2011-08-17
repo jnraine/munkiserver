@@ -19,9 +19,9 @@ class AdminMailer < ActionMailer::Base
     mail(:bcc => recipients_for_unit(unit), :subject => "[Munki Server] #{@packages.count} packages have update in #{unit.name}! ")
   end
   
-  def warranty_report(computer)
+  def warranty_notification(computer)
     @computer = computer
-    mail(:bcc => recipients(@computer), :subject => "[Munki Server] #{@computer}'s warranty will expire in #{@computer.warranty_days_left} days")
+    mail(:bcc => recipients(@computer), :subject => "[Munki Server] #{@computer}'s warranty will expire in #{@computer.warranty.days_left} days")
   end
   # # A list of computers that are considered "dormant", including their
   # # last successful run, and their last run (if different than last
