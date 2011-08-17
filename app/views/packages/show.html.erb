@@ -33,10 +33,6 @@
 				<td><%= @package.installer_type.present? ? @package.installer_type.titleize : "Package" %></td>
 			</tr>
 			<tr>
-				<td><strong>Force Install by</strong></td>
-				<td><%= @package.force_install_after_date.present? ? @package.force_install_after_date_string : nil %></td>
-			</tr>
-			<tr>
 				<td><strong>Uninstallable?</strong></td>
 				<td><%= @package.uninstallable ? "Yes" : "No" %></td>
 			</tr>
@@ -48,6 +44,12 @@
 				<td><strong>Minimum OS</strong></td>
 				<td><%= @package.minimum_os_version %></td>
 			</tr>
+			<% if @package.force_install_after_date.present? %>
+				<tr>
+					<td><strong>Force Install by</strong></td>
+					<td><%= @package.force_install_after_date_string %></td>
+				</tr>
+			<% end %>
 			<% if @package.supported_architectures[0].present? %>
 				<tr>
 					<td><strong>Supported Architectures</strong></td>
@@ -62,7 +64,6 @@
 				<td><strong>Package size</strong></td>
 				<td><%= humanize_kilobytes(@package.installer_item_size) %></td>
 			</tr>
-
 			<% if !@package.installer_item_size == 0 or @package.installer_item_size < 0 %>
 				<tr>
 					<td><strong>Installed size</strong> </td>

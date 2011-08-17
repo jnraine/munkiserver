@@ -1,52 +1,20 @@
-<h3><%= title.capitalize %></h3>
-
-<% if packages.length == 0 %>
-	<h5>There are no shared packages</h5>
+<% if packages.present? %>
+<table class="zebra">
+<thead>
+	<tr>
+		<th><!-- Icon --></th>
+		<th>Display Name<br/><em>Branch</em></th>
+		<th><%= check_box_tag("selected_all", nil, false, :class => "select_all") %></th>
+		<th>Version</th>
+		<th>Update For</th>
+		<th>Requires</th>
+		<th>Actions</th>
+	</tr>
+</thead>
+	<% package_branches.each do |package_branch| %>
+		<%= render :partial => 'shared_package_table_row', :locals => {:packages => packages, :package_branch => package_branch, :unit => unit} %>
+	<% end %>
+</table>
 <% else %>
-	<p><%= record_count(packages) %></p>
-	<p><em>Dependencies (found in "Update For" and "Requires" columns) are not imported!</em></p>
-	<table>
-		<thead>
-			<tr>
-				<!-- <th> Checkbox</th> -->
-				<th><!-- Icon --></th>
-				<th>Branch</th>
-				<th>Display</th>
-				<th>Version</th>
-				<th>Update For</th>
-				<th>Requires</th>
-				<th>Unit</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<% packages.each do |package| %>
-			<tr>
-				<!-- <td>
-					<input type="checkbox" />
-				</td> -->
-				<td><%= image_tag package.icon.url(:tiny) if package.icon %></td>
-				<td><%= package.name %></td>
-				<td><%= package.display_name %></td>
-				<td><%= package.version %></td>
-				<td>
-					<% package.update_for.each do |uf| %>
-						<%= "#{uf.name} (#{uf.version})" %><br />
-					<% end -%>
-				</td>
-				<td>
-					<% package.requires.each do |r| %>
-						<%= "#{r.name} (#{r.version})" %><br />
-					<% end -%>
-				</td>
-				<td><%= package.unit %></td>
-				<td>
-					<% if package.has_dependencies? %>
-						<%= link_to "Import", import_shared_package_path(current_unit,package), {"data-confirm-message" => "Warning: This item has dependencies which will NOT be imported!"} %>
-					<% else %>
-						<%= link_to "Import", import_shared_package_path(current_unit,package) %>
-					<% end %>
-				</td>
-			</tr>
-		<% end -%>
-	</table>
+<p><em>There are no shared packages from this Unit</em></p>
 <% end %>

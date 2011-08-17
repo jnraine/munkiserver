@@ -6,7 +6,7 @@
 			<th><!-- Icon --></th>
 			<th>Display Name<br/><em>Branch</em></th>
 			<th><%= check_box_tag("selected_#{category_name.downcase}", nil, false, :class => "select_all") %></th> 
-			<th>Versions</th>
+			<th>package</th>
 			<th>Actions</th>
 			<th>
 				Update
@@ -16,5 +16,5 @@
 	</thead>
 	<% packages.each do |package| %>
 		<%= render :partial => 'package_table_row', :locals => {:package => package} %>
-	<% end -%>
+	<% end %>
 </table>

@@ -28,6 +28,7 @@ class Package < ActiveRecord::Base
   scope :shared, where(:shared => true)
   scope :from_other_unit, lambda {|p| where("unit_id != ?", p.unit_id)}
   scope :has_greater_version, lambda {|p| where("version > ?", p.version)}
+  scope :other, lambda{|p| where("id <> ?", p.id)}
   
   before_save :save_package_branch
   before_save :handle_environment_change
@@ -41,12 +42,8 @@ class Package < ActiveRecord::Base
   validates :receipts, :array => true
   validates :installs, :array => true
   validates :raw_tags, :hash => true
-  validates :version, :uniqueness_in_unit => true
-  
-  validates_format_of :force_install_after_date_string, 
-      :with => /\A^(""|\d{4}-\d{2}-\d{2} \d{2}:\d{2} (AM|PM))$\z/, 
-      :message => "is not in the form of YYYY-MM-DD HH:MM AM/PM",
-      :allow_blank => true
+  validates :version, :uniqueness_in_unit => true  
+  validates :force_install_after_date_string, :date_time => true, :allow_blank => true
   
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0'],['10.7','10.7.0']],
@@ -85,6 +82,7 @@ class Package < ActiveRecord::Base
   end
 
   # An hash of params to be used for linking to a package instance
+  # takes an optional params to specify the target unit
   def to_params
     params = {}
     params[:unit_shortname] = unit
@@ -102,9 +100,9 @@ class Package < ActiveRecord::Base
   end
   
   def force_install_after_date_string=(time_str)
-      self.force_install_after_date = ActiveSupport::TimeZone.new('UTC').parse(time_str)
+    self.force_install_after_date = ActiveSupport::TimeZone.new('UTC').parse(time_str)  
   end
-  
+
   # Returns array of packages shared to this unit that have not been imported yet.  This is 
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)
@@ -115,6 +113,7 @@ class Package < ActiveRecord::Base
     packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN (#{installer_item_locations.map {|e| "'#{e}'"}.join(",")})")
     # Delete packages that refer to an installer item used by another package in unit
     # packages.delete_if {|p| installer_item_locations.include?(p.installer_item_location)}
+
   end
   
   # Recent items from other units that are shared
@@ -278,7 +277,6 @@ class Package < ActiveRecord::Base
   # If package changed environment, remove all releations in install/uninstall/optional items
   def handle_environment_change
     if environment_id_changed?
-      
       # Handle references to this package
       self.optional_install_items.each(&:destroy)
       self.install_items.each(&:destroy)
@@ -286,9 +284,18 @@ class Package < ActiveRecord::Base
       # Handle references to the package branch
       num_of_packages = self.package_branch.packages.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was).count
       if num_of_packages == 1
-        self.package_branch.optional_install_items.each(&:destroy)
-        self.package_branch.install_items.each(&:destroy)
-        self.package_branch.uninstall_items.each(&:destroy)
+        # There is only one version of this package in the environment 
+        # and unit and we are about to move it.  Before doing so, destroy
+        # all install items within that scope.
+        computers = Computer.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was)
+        computer_groups = ComputerGroup.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was)
+        bundles = Bundle.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was)
+        manifests = computers + computer_groups + bundles
+        manifest_ids = manifests.map {|m| m.id }
+        # Destroy items belonging to manifests within the unit and old enviornmnet of the package
+        OptionalInstallItem.where(:manifest_id => manifest_ids, :package_branch_id => self.package_branch_id).each(&:destroy)
+        InstallItem.where(:manifest_id => manifest_ids, :package_branch_id => self.package_branch_id).each(&:destroy)
+        UninstallItem.where(:manifest_id => manifest_ids, :package_branch_id => self.package_branch_id).each(&:destroy)
       end
     end
   end
@@ -318,6 +325,21 @@ class Package < ActiveRecord::Base
       # If icon is saved, assign it to the record
       self.icon = i if i.save
     end
+  end
+  
+  # Return array of IDs of packages that share the same 
+  # installer item location.  Optionally, can pass a unit
+  # to scope the results to.
+  def shared_installer_item_location(unit = nil, reload = false)
+    unit_id = unit.present? ? unit.id : 0
+    @shared_installer_item_location_packages ||= []
+    if @shared_installer_item_location_packages[unit_id].blank? or reload
+        package_scope = Package.other(self)
+        package_scope = package_scope.where(:installer_item_location => self.installer_item_location)
+        package_scope = package_scope.where(:unit_id => unit.id) if unit.present?
+        @shared_installer_item_location_packages[unit_id] = package_scope.to_a
+      end
+      @shared_installer_item_location_packages[unit_id]
   end
   
   # Checks if the current package is the latest (newest version) 
@@ -432,11 +454,6 @@ class Package < ActiveRecord::Base
       package_branch.version_tracker.web_id = value.to_s.match('[0-9]+')[0].to_i    
     end
   end
-  
-  # if package's description is nil, get scraped description from version tracker
-  # def get_descirption_from_version_tracker(package)
-  #  
-  # end
   
   # Require icon
   def require_icon
@@ -661,6 +678,21 @@ class Package < ActiveRecord::Base
     validate_create_options(options)
     package_file = self.initialize_upload(options.delete(:package_file))
     package = process_package_file(package_file,options)
+  end
+  
+  # Import package from other units to current_unit
+  # new package will inherite most of the attributes from orginal
+  # except for the list of the attributes below
+  def self.import_package(unit, shared_package)
+    package = Package.new(shared_package.attributes)
+    # Do custom stuff to imported package
+    package.unit = unit
+    package.environment = Environment.start
+    package.update_for = []
+    package.requires = []
+    package.icon = shared_package.icon
+    package.shared = false
+    package
   end
   
   # over write the default get description, check if nil then get the description from version_trackers

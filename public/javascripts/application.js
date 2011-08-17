@@ -114,27 +114,38 @@ $(document).ready(function() {
   	});
 	
 	
-	// Get the changed environment ID, and reload the edit partical
-	// effected pages including ComputerGroup, Bundles, Packages
+	// Get the changed environment ID or Unit ID, and reload the edit partical
+	// effected pages including Computer, ComputerGroup, Bundles, Packages (only for environment ID)
+	// effect Computer only if change Unit ID
 	// animate during the ajax call
-	$("select.environment").live('change', function(){
+	$("select.environment, select.unit").live('change', function(){
 	  $form = $(this).parents("form");
-		$modifiedElements = $form.find(".change_with_environment");
-		
-	  function unhighlightModifiedElements() {
+	    if ($(this).attr("class") === "unit"){
+	        $modifiedElements = $form.find(".change_with_unit");
+	    }else{
+    	    $modifiedElements = $form.find(".change_with_environment");
+	    }
+	    function unhighlightModifiedElements() {
 			$modifiedElements.animate({backgroundColor: "#FFFFFF",opacity: 1.0}, 1000);
 		}
-		
 		// Highlight soon-to-be modified elements
 		$modifiedElements.animate({backgroundColor: "#FBEC5D", opacity: .9}, 'fast');
-		
 		// Load and execute environment change
-		$.ajax({
-			url: $form.attr("data-environment-change"),
-			data: {"environment_id":$(this).val()},
-			complete: unhighlightModifiedElements
-		});
+		if ($(this).attr("class") === "unit"){
+    		$.ajax({
+    			url: $form.attr("data-unit-change"),
+    			data: {"unit_id":$(this).val()},
+    			complete: unhighlightModifiedElements
+    		});
+		}else{
+		    $.ajax({
+    			url: $form.attr("data-environment-change"),
+    			data: {"environment_id":$(this).val()},
+    			complete: unhighlightModifiedElements
+    		});
+		}
 	});
+	
 	
 	// add Codemirror with $ animation to highlight XML/plist/bash syntax in package list
 	$("textarea[data-format]").each(function () {	
@@ -144,7 +155,7 @@ $(document).ready(function() {
 		}
 		var editor = CodeMirror.fromTextArea(this, {
 					onFocus: function() {
-					    //$ animation goes here				
+					    //$ animation goes here	
 					    $(editor.getWrapperElement()).animate({
 					        height: "300px"
 					    },
@@ -322,6 +333,13 @@ $(document).ready(function() {
 		}
 		stateCount--;
 	});
+	
+    initializeDatePicker();
+    
+    // Provent empty herf being clicked
+    $(".no_action").click(function(){
+        return false;
+    });
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field
@@ -347,7 +365,8 @@ function initializeBulkEdit() {
 	$("#bulk_edit").css({"visibility":"hidden"});
 	
 	$(".select_all").change(function() {
-		$(this).parents("table").find(":checkbox").attr("checked",$(this).attr("checked"));
+	    // select all enabled checkboxes
+		$(this).parents("table").find(":checkbox:enabled").attr("checked",$(this).attr("checked"));
 	});
 	
 	// show bulk edit button when 2 or more checkbox is selected
@@ -359,6 +378,16 @@ function initializeBulkEdit() {
 		}
 	});
 	$(":checkbox").change();
+}
+
+function initializeDatePicker(){
+    $('#package_force_install_after_date_string').datetimepicker({
+    	dateFormat: 'yy-mm-dd',
+    	ampm: true,
+    	timeFormat: 'hh:mm TT',
+    	separator: ' ',
+    	stepMinute: 15
+    });
 }
 
 // AJAX hostname search/filter

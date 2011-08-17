@@ -227,6 +227,9 @@ textarea {
 }
 /* Tabs in Package Edit */
 
+#multiple_import{
+    float: right;
+}
 
 /* GUI view table*/
 
@@ -343,6 +346,7 @@ ul.dropdown li.current a {
 ul.dropdown li.dir li, thead th, .box {
 	/* Box fill color */
 	background-color:#594F4F;
+	z-index:600;
 }
 
 ul.dropdown li.dir li,
@@ -493,7 +497,15 @@ thead th a:hover,
 .centerize{
 	text-align: center;
 }
-
+ul.imported_link li{
+    margin-left:0px !important; /* fix for imported links*/
+    padding: 5px 5px;
+    width:100px;
+    z-index:1 !important;
+}
+.no_action{
+    margin-left:-5px;
+}
 /* ============ */
 /* = Warranty = */
 /* ============ */

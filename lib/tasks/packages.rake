@@ -5,12 +5,22 @@ namespace :packages do
   end
   
   
-  desc "Check macupdate.com for available updates and notify Admins"
+  desc "Check macupdate.com for available updates and notify Admins (one email per package)"
   task :send_update_notifications => :environment do
-    VersionTracker.update_all
-    
+    VersionTracker.update_all    
     PackageBranch.available_updates.each do |package|
       AdminMailer.package_update_available(package).deliver
+    end
+  end
+  
+  desc "Send available package updates digest email"
+  task :send_available_update_digest => :environment do
+    VersionTracker.update_all
+    Unit.all.each do |unit|
+      # Send email notification only when there is more than one package available for update
+      if PackageBranch.available_updates(unit).count > 0
+        AdminMailer.available_updates_digest(unit).deliver
+      end
     end
   end
   

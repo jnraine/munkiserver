@@ -111,7 +111,7 @@ module PackagesHelper
     end
   end
   
-  # Determine to show import or update links based on the versions of the available import package and version tracker version
+  # Determine to show import or update links based on the package of the available import package and version tracker version
   def update_or_import(package)
     # if the package has other greather version shared packages and has newer version tracker version
     if import_package(package).present? and package.package_branch.new_version?

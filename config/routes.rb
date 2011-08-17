@@ -35,6 +35,7 @@ Munki::Application.routes.draw do
       get :import, :on => :new
       get 'managed_install_reports/:id' => 'managed_install_reports#show', :on => :collection, :as => "managed_install_reports"
       get 'environment_change(.:format)', :action => "environment_change", :as => 'environment_change'
+      get 'unit_change(.:format)', :action => "unit_change", :as => 'unit_change'
       get 'update_warranty', :action => "update_warranty", :as => 'update_warranty'
       
       collection do
@@ -67,6 +68,9 @@ Munki::Application.routes.draw do
     
     resources :shared_packages do
       get :import, :on => :member
+      collection do
+        get :import_multiple
+      end
     end
     
     resources :computer_groups do
