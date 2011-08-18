@@ -42,12 +42,9 @@ class Package < ActiveRecord::Base
   validates :receipts, :array => true
   validates :installs, :array => true
   validates :raw_tags, :hash => true
-  validates :version, :uniqueness_in_unit => true
-  validates_format_of :force_install_after_date_string, 
-        :with => /\A^(""|\d{4}-\d{2}-\d{2} \d{2}:\d{2} (AM|PM))$\z/, 
-        :message => "is not in the form of YYYY-MM-DD HH:MM AM/PM",
-        :allow_blank => true  
-        
+  validates :version, :uniqueness_in_unit => true  
+  validates :force_install_after_date_string, :date_time => true, :allow_blank => true
+  
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
                   :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0'],['10.7','10.7.0']],
                   :installer_types         => [['Package',''],
@@ -86,10 +83,9 @@ class Package < ActiveRecord::Base
 
   # An hash of params to be used for linking to a package instance
   # takes an optional params to specify the target unit
-  def to_params(target_unit = nil)
-    target_unit ||= unit
+  def to_params
     params = {}
-    params[:unit_shortname] = target_unit
+    params[:unit_shortname] = unit
     params[:package_branch] = package_branch
     params[:version] = version unless self.latest_in_unit?
     params
@@ -281,7 +277,6 @@ class Package < ActiveRecord::Base
   # If package changed environment, remove all releations in install/uninstall/optional items
   def handle_environment_change
     if environment_id_changed?
-      
       # Handle references to this package
       self.optional_install_items.each(&:destroy)
       self.install_items.each(&:destroy)
@@ -289,9 +284,18 @@ class Package < ActiveRecord::Base
       # Handle references to the package branch
       num_of_packages = self.package_branch.packages.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was).count
       if num_of_packages == 1
-        self.package_branch.optional_install_items.each(&:destroy)
-        self.package_branch.install_items.each(&:destroy)
-        self.package_branch.uninstall_items.each(&:destroy)
+        # There is only one version of this package in the environment 
+        # and unit and we are about to move it.  Before doing so, destroy
+        # all install items within that scope.
+        computers = Computer.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was)
+        computer_groups = ComputerGroup.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was)
+        bundles = Bundle.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was)
+        manifests = computers + computer_groups + bundles
+        manifest_ids = manifests.map {|m| m.id }
+        # Destroy items belonging to manifests within the unit and old enviornmnet of the package
+        OptionalInstallItem.where(:manifest_id => manifest_ids, :package_branch_id => self.package_branch_id).each(&:destroy)
+        InstallItem.where(:manifest_id => manifest_ids, :package_branch_id => self.package_branch_id).each(&:destroy)
+        UninstallItem.where(:manifest_id => manifest_ids, :package_branch_id => self.package_branch_id).each(&:destroy)
       end
     end
   end
@@ -323,24 +327,19 @@ class Package < ActiveRecord::Base
     end
   end
   
-  # Return the package id of a package if there exists 
-  def shared_installer_item_location(unit = nil)
-    if @installer_item_locations.nil?
-      @installer_item_locations = {}
-      
-      packages = nil
-      if unit.present?
-        packages = Package.other(self).where(:unit_id => unit.id)
-      else
-        packages = Package.other(self)
+  # Return array of IDs of packages that share the same 
+  # installer item location.  Optionally, can pass a unit
+  # to scope the results to.
+  def shared_installer_item_location(unit = nil, reload = false)
+    unit_id = unit.present? ? unit.id : 0
+    @shared_installer_item_location_packages ||= []
+    if @shared_installer_item_location_packages[unit_id].blank? or reload
+        package_scope = Package.other(self)
+        package_scope = package_scope.where(:installer_item_location => self.installer_item_location)
+        package_scope = package_scope.where(:unit_id => unit.id) if unit.present?
+        @shared_installer_item_location_packages[unit_id] = package_scope.to_a
       end
-      
-      packages.each do |package| 
-        @installer_item_locations[package.installer_item_location] ||= []
-        @installer_item_locations[package.installer_item_location] << package.id
-      end
-    end
-    @installer_item_locations[self.installer_item_location]
+      @shared_installer_item_location_packages[unit_id]
   end
   
   # Checks if the current package is the latest (newest version) 

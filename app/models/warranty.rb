@@ -96,4 +96,45 @@ class Warranty < ActiveRecord::Base
   def app_eligibility_status
     get_status(app_eligible)
   end
+  
+  # Return true if warranty is about to expire in 90, 30, 15, 5 days
+  def notification_due?
+    notification_due = false
+    if hw_coverage_end_date.present?
+      planned_notification_dates.each do |planned_notice|
+        if in_the_past(planned_notice) and last_notice_before(planned_notice)
+          notification_due = true
+          break
+        end
+      end
+    end
+    notification_due
+  end
+  
+  # Return how many days until the warrany expires
+  def days_left
+    if hw_coverage_end_date.present?
+      diff = hw_coverage_end_date.to_date - Time.now.to_date
+      diff.to_i
+    end
+  end
+  
+  # Return an array of real dates notifications suppose to be sent, starting with the earliest
+  def planned_notification_dates
+    interval = [90,30,15,5]
+    dates_interval = []
+    interval.each do |date|
+      dates_interval << hw_coverage_end_date.to_date - date
+    end
+    dates_interval.sort
+  end
+  
+  def in_the_past(date)
+    date < Time.now.to_date
+  end
+  
+  def last_notice_before(date)
+    @last_notice ||= notifications.map(&:created_at).sort.last
+    @last_notice.nil? or @last_notice < date
+  end
 end

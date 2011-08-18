@@ -18,6 +18,12 @@
 			</td>
 			<td><%= f.text_field :mac_address, :maxlength => 17, :size => 18 %></td>
 		</tr>
+		<% unless @computer.new_record? %>
+			<tr>
+				<td>Unit</td>
+				<td><%= f.collection_select :unit_id, current_user.units, :id, :name, {}, {:class => "unit"}%></td>
+			</tr>
+		<% end %>
 		<tr>
 			<td>Environment</td>
 			<td><%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "environment"}%></td>
@@ -34,7 +40,7 @@
 			<td>
 				Computer Group
 			</td>
-			<td id="computer_group_select_tag" class="change_with_environment">
+			<td id="computer_group_select_tag" class="change_with_environment change_with_unit">
 				<%= render :partial => 'computer_group_field', :locals => {:environment_id => @computer.environment_id} %>
 			</td>
 		</tr>

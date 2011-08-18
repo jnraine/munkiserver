@@ -11,6 +11,17 @@
 		<table>
 		<tr>
 			<td>
+
+			</td>
+			<td>
+			<%= f.label :unit_id %>
+			</td>
+			<td>
+			<%= f.collection_select :unit_id, current_user.units, :id, :name, {}, {:class => "computer_unit_mult_edit"} %>
+			</td>
+		</tr>
+		<tr>
+			<td>
 				
 			</td>
 			<td>
@@ -21,7 +32,7 @@
 			</td>
 		</tr>
 		<tr id="computer_group_multi_edit">
-			<%= render :partial => "computer_group_edit_multiple", :locals => {:environment_id => c.environment.id } %>
+			<%= render :partial => "computer_group_edit_multiple", :locals => {:environment_id => c.environment.id, :unit_id => current_unit.id } %>
 		</tr>
 		<tr>
 			<td>
@@ -41,27 +52,34 @@
 
 <script>
 // change the computer group dropdown list depending on the selected environment
-function switchEnvironemnt(environment_id){
+function switchEnvironemnt(environment_id, unit_id){
+	switch (unit_id){
+		<%  current_user.units.each do |unit| %>
+		case <%= unit.id %>:
 		switch (environment_id){
-			<% Environment.all.each do |env| %>
+		<% Environment.all.each do |env| %>
 			case <%= env.id %>:
-			$("#computer_group_multi_edit").html("<%= escape_javascript(render :partial => "computer_group_edit_multiple", :locals => {:environment_id => env.id}) %>");
+			$("#computer_group_multi_edit").html("<%= escape_javascript(render :partial => "computer_group_edit_multiple", :locals => {:environment_id => env.id, :unit_id => unit.id}) %>");
 			break;
-			<% end %>
+		<% end %>
 		}
+		break;
+	<% end %>
+	}
+
 }
-$("select.computer_environment_mult_edit").live('change', function(){
-	environment_id = parseInt($(this).val());
-	computerGroup = $(this).parents().find("#computer_group_multi_edit");
-	computerGroup.animate({
+$("select.computer_unit_mult_edit, select.computer_environment_mult_edit").live('change', function(){
+	unit_id = parseInt($(this).parents().find("select.computer_unit_mult_edit").val());
+	environment_id =  parseInt($(this).parents().find("select.computer_environment_mult_edit").val());
+	$computerGroup = $(this).parents().find("#computer_group_multi_edit");
+	$computerGroup.animate({
 		backgroundColor: "#FBEC5D",
 		opacity: .9
 	}, 'fast');
-	switchEnvironemnt(environment_id);
-	computerGroup.animate({
+	switchEnvironemnt(environment_id, unit_id);
+	$computerGroup.animate({
 		backgroundColor: "#eef2f7",
 		opacity: .9
 	}, 'fast');
-	
 })
 </script>

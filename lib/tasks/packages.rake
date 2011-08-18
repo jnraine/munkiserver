@@ -17,8 +17,10 @@ namespace :packages do
   task :send_available_update_digest => :environment do
     VersionTracker.update_all
     Unit.all.each do |unit|
-      # Find packages have updates in a given unit
-      AdminMailer.available_updates_digest(unit).deliver
+      # Send email notification only when there is more than one package available for update
+      if PackageBranch.available_updates(unit).count > 0
+        AdminMailer.available_updates_digest(unit).deliver
+      end
     end
   end
   

@@ -176,7 +176,7 @@ namespace :bootstrap do
   end
   
   desc "Load default unit"
-  task :unit, :name, :needs => :environment do |t, args|
+  task :unit, [:name] => :environment do |t, args|
     Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
     name = args.name
     name ||= "Default"
@@ -185,12 +185,29 @@ namespace :bootstrap do
     u.key = Unit.generate_key
     u.description = "Created by bootstrap"
     unless u.save
-      puts "Default unit failed to save: " + u.errors.inspect
+      puts "Default user failed to save: " + u.errors.inspect
+    end
+  end
+  
+  desc "Create default computer group"
+  task :computer_group, [:name] => :environment do |t, args|
+    # Makes we have a unit and an environment to assign
+    Rake::Task["bootstrap:unit"].invoke if Unit.count == 0
+    Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
+    name = args.name
+    name ||= "Default"
+    cg = ComputerGroup.find_or_create_by_name(name)
+    cg.description = "Created by bootstrap"
+    cg.unit = Unit.first
+    cg.environment = Environment.find_by_name("Production")
+    cg.environment = Environment.first if cg.environment.nil?
+    unless cg.save
+      puts "Default computer group failed to save: " + cg.errors.inspect
     end
   end
   
   desc "Create first user"
-  task :user, :name, :needs => :environment do |t, args|
+  task :user, [:name] => :environment do |t, args|
     if User.first.present?
       puts "First user (#{User.first.username}) already exists"
     else
