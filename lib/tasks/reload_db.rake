@@ -1,6 +1,6 @@
 namespace :db do
   desc "Destroys, re-creates, and loads the database with fixtures.  Optionally, pass environment."
-  task :reload, :needs => :environment do
+  task :reload => :environment do
     # puts "Destroying database..."
     # print `rake db:migrate VERSION=0 RAIL_ENV=#{ENV.environment}`
     # puts "Migrating database..."

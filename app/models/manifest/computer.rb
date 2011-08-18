@@ -12,9 +12,17 @@ class Computer < ActiveRecord::Base
   
   # Validations
   validate :computer_model
-  validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/
-  # validates_format_of :name, :with => /^[a-zA-Z0-9-]+$/, :message => "must only contain alphanumeric and hyphens characters"
-  validates_uniqueness_of :mac_address
+
+  validates_presence_of :name, :hostname, :mac_address
+  
+  validates_format_of :hostname,
+                      :with => /(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)/, 
+                      :message => "must only contain alphanumeric and hyphens characters" #This will match any valid DNS FQDN
+    
+  validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/ # mac_address attribute must look something like ff:12:ff:34:ff:56
+  validates_uniqueness_of :mac_address,:name, :hostname
+  
+  # before_save :require_computer_group
   
   # Maybe I shouldn't be doing this
   include ActionView::Helpers
@@ -210,19 +218,6 @@ class Computer < ActiveRecord::Base
     end
   end
   
-  def self.bulk_update_attributes(packages,package_attributes)
-    if package_attributes.nil? or packages.empty?
-      raise PackageError.new ("Nothing to update")
-    else
-      results = packages.map do |p|
-        p.update_attributes(package_attributes)
-      end
-      successes = results.map {|b| b == false }
-      failures = results.map {|b| b == true }
-      {:total => packages.count, :successes => successes.count, :failures => failures.count}
-    end
-  end
-  
   def serial_number
     self.system_profile.serial_number if self.system_profile.present?
   end
@@ -241,64 +236,26 @@ class Computer < ActiveRecord::Base
       # append computer_id into the hash
       warranty_hash[:computer_id] = self.id
       warranty_hash[:updated_at] = Time.now
-      result = warranty.update_attributes(warranty_hash)
-      if warranty_report_due? and result
-        AdminMailer.warranty_report(self).deliver
-        self.warranty.notifications.create
+      update_successful = warranty.update_attributes(warranty_hash)
+      # Send notification, if due
+      if warranty_notification_due?
+        deliver_warranty_notification
       end
-      result ? true : false
+      update_successful
     end
   end
   
-  # Return true if warranty is about to expire in 30, 15, 5 days
-  def warranty_report_due?
-    if warranty.hw_coverage_end_date.present?
-      # if no notification send before and is less than 30 days untill expires
-      if warranty.notifications.nil? and (Time.now.to_date >= send_notifications_on.first)
-        return true
-      elsif notifications_not_sent.include?(true) 
-        return true
-      else
-        return false
-      end
+  # Return true if warranty notification is due
+  def warranty_notification_due?
+    if warranty.present?
+      warranty.notification_due?
     else
-      # no hardware coverage found
-      return false
+      false
     end
   end
   
-  # Return an array of booleans true if notifications not sent
-  def notifications_not_sent
-    results = []
-    send_dates = send_notifications_on
-    send_dates.each do |date|
-      results << (Time.now.to_date > date)
-    end
-    results
-  end
-  
-  # Return how many days until the warrany expires
-  def warranty_days_left
-    if warranty.hw_coverage_end_date.present?
-      diff = warranty.hw_coverage_end_date.to_date - Time.now.to_date
-      diff.to_i
-    end
-  end
-  
-  # Return the days since last notification send
-  def days_since_last_warranty_report
-    last_send_date = warranty.notifications.last.updated_at.to_date
-    days_apart = Time.now.to_date - last_send_date
-    days_apart.to_i
-  end
-  
-  # Return an array of real dates the notifications suppose to be send
-  def send_notifications_on
-    interval = [90,30,15,5]
-    notification_send_on = []
-    interval.each do |date|
-      notification_send_on << warranty.hw_coverage_end_date.to_date - date
-    end
-    notification_send_on
+  def deliver_warranty_notification
+    AdminMailer.warranty_notification(self).deliver
+    self.warranty.notifications.create
   end
 end

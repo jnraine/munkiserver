@@ -8,7 +8,7 @@
 			<ul>
 				<% @other_units.each do |unit| %>
 					<li><a href="#<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab">
-						<span><%= unit.name %> (<%= package_count(@packages, unit)%>)</span></a></li>
+						<span><%= unit.name %> (<%= count_shared_packages(@packages, unit)%>)</span></a></li>
 				<% end %>
 			</ul>
 				<% @other_units.each do |unit| %>
