@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110811185738) do
+ActiveRecord::Schema.define(:version => 20110823222618) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -180,6 +180,7 @@ ActiveRecord::Schema.define(:version => 20110811185738) do
     t.string   "request_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "hostname"
   end
 
   create_table "notifications", :force => true do |t|

@@ -1,0 +1,18 @@
+<table>
+    <thead>
+        <th>Identifier</th>
+        <th>Manifest Type</th>
+        <th>Request IP</th>
+        <th>Hostname</th>
+        <th>Request Time</th>
+    </thead>
+    <% widget.missing_manifests.each do |missing_manifest| %>
+        <tr>
+            <td><%= missing_manifest.identifier %></td>
+            <td><%= missing_manifest.manifest_type %></td>
+            <td><%= missing_manifest.request_ip %></td>
+            <td><%= missing_manifest.hostname %></td>
+            <td><%= missing_manifest.request_time %></td>
+        </tr>
+    <% end %>s
+</table>

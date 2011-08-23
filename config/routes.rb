@@ -85,5 +85,7 @@ Munki::Application.routes.draw do
     match 'install_items/update_multiple' => 'install_items#update_multiple', :as => "update_multiple_install_items", :via => :put
   end
   
+  match 'dashboard' => "dashboard#index", :as => "dashboard"
+  
   root :to => redirect("/login")
 end

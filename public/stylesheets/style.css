@@ -104,6 +104,10 @@ a:hover {
 	background-repeat:no-repeat;
 }
 
+#units_submenu {
+  min-height:29px;
+}
+
 #loading_graphic {
 	position:absolute;
 	left:110px;

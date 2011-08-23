@@ -1,0 +1,8 @@
+<h2>Dashboard</h2>
+
+<% DashboardWidget.all.each do |widget| %>
+    <div class="widget <%= widget.css_class %>">
+        <h3><%= widget.title %></h3>
+        <%= widget.new(current_user).render %>
+    </div>
+<% end %>

@@ -22,12 +22,13 @@ module Munki
     # Add additional load paths for your own custom dirs
     # config.load_paths += %W( #{config.root}/extras )
     config.autoload_paths += %W(
+        #{Rails.root}/app/models/widgets  
         #{Rails.root}/app/models/join_models
         #{Rails.root}/app/models/magic_mixin
         #{Rails.root}/app/models/manifest
         #{Rails.root}/app/models/service
         #{Rails.root}/lib
-      )
+    )
 
     # Add custom mime types
     Mime::Type.register "text/plist", :plist
