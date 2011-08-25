@@ -1,8 +1,15 @@
 class DashboardWidget
+  module UrlHelpers
+    include Rails.application.routes.url_helpers
+  end
+  
+  @@action_view = ActionView::Base.new(Rails.configuration.paths.app.views.first)
+  @@action_view.extend UrlHelpers
+  
   attr_accessor :user
   
   def self.all
-    [MissingManifestsWidget]
+    [MissingManifestsWidget, RecentInstallErrorsAndWarningsWidget]
   end
 
   def self.css_class
@@ -20,7 +27,11 @@ class DashboardWidget
   end
   
   def render
-    ActionView::Base.new(Rails.configuration.paths.app.views.first).render(:partial => partial_name, :locals => {:widget => self, :user => self.user})
+    action_view.render(:partial => partial_name, :locals => {:widget => self, :user => self.user})
+  end
+  
+  def action_view
+    @@action_view
   end
   
   def partial_name

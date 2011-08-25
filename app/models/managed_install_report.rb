@@ -113,5 +113,15 @@ class ManagedInstallReport < ActiveRecord::Base
 		s += "*" if issues?
 		s
   end
+  
+  # Get the unit for this managed install report based on the computer
+  def unit
+    Unit.find(computer.unit_id) if computer.present?
+  end
+
+  # Get the computer this managed install report belong to
+  def computer
+    Computer.find_by_hostname(self.machine_info["hostname"]) if machine_info["hostname"].present?
+  end
 end
 

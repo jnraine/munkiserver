@@ -54,6 +54,7 @@ a:hover {
 
 #app-menu {
 	height:30px;
+	width: auto;
 	margin-bottom:6px;
 	color:#fff;
 	background-color:#594F4F;
@@ -131,10 +132,10 @@ html, body {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    margin: 0 auto -9em;
+    margin: 0 auto -9em !important;
 }
 .footer, .push {
-    height: 9em;
+    height: 9em !important;
 }
 
 .footer {

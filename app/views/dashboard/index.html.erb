@@ -1,8 +1,14 @@
-<h2>Dashboard</h2>
+<% content_for :widgets do %>
 
-<% DashboardWidget.all.each do |widget| %>
-    <div class="widget <%= widget.css_class %>">
-        <h3><%= widget.title %></h3>
-        <%= widget.new(current_user).render %>
-    </div>
+	<div class="span-20 prepend-1 append-bottom append-1">
+		<h2>Dashboard</h2>
+
+		<% @widgets.each do |widget| %>
+		    <div class="widget <%= widget.css_class %>">
+		        <h3><%= widget.title %></h3>
+		        <%= widget.new(current_user).render %>
+		    </div>
+		<% end %>
+	</div>
+
 <% end %>
