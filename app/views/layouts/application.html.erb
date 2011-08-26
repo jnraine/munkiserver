@@ -17,6 +17,7 @@
 
 	<%= javascript_include_tag "jquery.min", "jquery-ui.min", "rails.jquery", "application","jquery.asmselect", "jquery.autocomplete.min", "rails.validations", "jquery.lightbox_me", "jquery-ui-timepicker-addon"%>
 	<%= javascript_include_tag "codemirror/codemirror.js", "codemirror/clike.js", "codemirror/xml.js" %>
+	<%= javascript_include_tag "highcharts/highcharts.js" %>
 	
 	<%= csrf_meta_tag %>
 </head>
@@ -113,14 +114,13 @@
 				</ul>
 			<% end %>
 		</div>
+		<%= yield :widgets %>
 		<div class="span-16 prepend-1 append-bottom append-1">
 			<% flash.each do |key, msg| %>
 				<%= content_tag :div, msg, :class => "message #{key}" %>
 			<% end %>
 			<%= yield %>
 		</div>
-		
-		<%= yield :widgets %>
 	<div id="sidebar" class="span-6 last">
 		<%= render :partial => "shared/sidebar" %>
 		<%= yield :sidebar %>

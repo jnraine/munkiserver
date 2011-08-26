@@ -41,25 +41,6 @@
 			</tr>
 			<tr>
 				<td>
-					Version Tracker Version
-				</td>
-				<td>
-					<%= f.text_field :version_tracker_version %>
-					<%= helpful_info("Optionally, specify a version string used when comparing this package to the latest on macupdate.com") %>
-				</td>
-			</tr>
-
-			<tr> 
-				<td>
-					Icon
-				</td>
-				<td>
-					<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") if @package.icon %>
-					<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
-				</td>
-			</tr>
-			<tr>
-				<td>
 					Category
 				</td>
 				<td>
@@ -153,7 +134,15 @@
 					<h4>Package <%= helpful_info('Changes to these fields effect only this package') %></h4>
 				</td>
 			</tr>
-
+			<tr> 
+				<td>
+					Icon
+				</td>
+				<td>
+					<%= image_tag(@package.icon.url(:tiny), :style => "vertical-align:middle;") if @package.icon %>
+					<%= f.file_field :new_icon, :style => "vertical-align:middle;" %>
+				</td>
+			</tr>
 
 			<tr>
 				<td>

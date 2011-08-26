@@ -45,6 +45,7 @@ module Munki
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password
+    config.filter_parameters << :pass # Create session uses params[:pass]
     
     # puts "X-Sendfile header is: " + config.action_dispatch.x_sendfile_header
     # config.action_dispatch.x_sendfile_header = "X-Sendfile"

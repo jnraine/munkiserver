@@ -110,7 +110,7 @@ form.inline p {margin-bottom:0;}
 .span-8 {width:310px;}
 .span-9 {width:350px;}
 .span-10 {width:390px;}
-.span-11 {width:430px;}
+.span-11 {width:420px;}
 .span-12 {width:470px;}
 .span-13 {width:510px;}
 .span-14 {width:550px;}
@@ -149,6 +149,7 @@ input.span-21, textarea.span-21 {width:818px!important;}
 input.span-22, textarea.span-22 {width:858px!important;}
 input.span-23, textarea.span-23 {width:898px!important;}
 input.span-24, textarea.span-24 {width:938px!important;}
+.append-0 {padding-right:10px;}
 .append-1 {padding-right:40px;}
 .append-2 {padding-right:80px;}
 .append-3 {padding-right:120px;}
@@ -172,6 +173,7 @@ input.span-24, textarea.span-24 {width:938px!important;}
 .append-21 {padding-right:840px;}
 .append-22 {padding-right:880px;}
 .append-23 {padding-right:920px;}
+.prepend-0 {padding-left:10px}
 .prepend-1 {padding-left:40px;}
 .prepend-2 {padding-left:80px;}
 .prepend-3 {padding-left:120px;}

@@ -1,0 +1,26 @@
+<table>
+    <thead>
+        <th>Hostname</th>
+        <th>Request IP</th>
+        <th>Occurred Time</th>
+		<th>Error/Warning</th>
+    </thead>
+	<% if widget.recent_install_errors.present? or widget.recent_install_warnings.present? %>
+		<% widget.recent_install_errors.each do |error|%>
+	        <tr>
+	            <td><%= link_to error.machine_info["hostname"], computer_path(error.unit, error.computer) %></td>
+				<td><%= error.ip %></td>
+				<td><%= error.time_since_created_at_in_words %></td>
+				<td>Error</td>
+	        </tr>
+	    <% end %>
+		<% widget.recent_install_warnings.each do |warnings|%>
+	        <tr>
+	            <td><%= warnings.machine_info["hostname"] %></td>
+				<td><%= warnings.ip %></td>
+				<td><%= warnings.time_since_created_at_in_words %></td>
+				<td>Warnings</td>
+	        </tr>
+	    <% end %>
+	<% end %>
+</table>

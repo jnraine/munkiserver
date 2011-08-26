@@ -11,7 +11,19 @@ class DashboardWidget
   def self.all
     [MissingManifestsWidget, RecentInstallErrorsAndWarningsWidget]
   end
-
+  
+  def self.missing_manifests
+    MissingManifestsWidget
+  end
+  
+  def self.recent_activities
+    RecentInstallErrorsAndWarningsWidget
+  end
+  
+  def self.recent_checkins
+    RecentCheckinsWidget
+  end
+  
   def self.css_class
     name = self.to_s
     name = name.sub(/Widget$/,"")
