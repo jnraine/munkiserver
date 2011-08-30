@@ -3,4 +3,6 @@ class MissingManifestsWidget < DashboardWidget
   def missing_manifests
     MissingManifest.recent(7.days.ago,5)
   end
+  
+  
 end

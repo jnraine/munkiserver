@@ -4,70 +4,12 @@
 		<h2>Dashboard</h2>
 
 		<div id="left" class="span-11 append-bottom append-0">
-			<div class="widget append-bottom append-top">
-				<div class="widget_title">
-					<h4><%= @widget.recent_checkins.title %></h4>
-				</div>
-				<div class="widget-body">
-					<div id="container" style="width: 100%; height: 400px"></div>
-					<script>
-					var chart1; // globally available
-					$(document).ready(function() {
-					      chart1 = new Highcharts.Chart({
-					         chart: {
-					            renderTo: 'container',
-					            type: 'line'
-					         },
-					         title: {
-					            text: 'Computer Checked-in'
-					         },
-							credits:{
-								enabled: false
-							},
-					         xAxis: {
-					            categories:  <%= @widget.recent_checkins.recent_days(9) %>
-					         },
-					         yAxis: {
-					            title: {
-					               text: 'Computers'
-					            }
-					         },
-					         series: [{
-					            name: 'Computer checked',
-					            data: [34, 45, 44, 50, 10, 0, 23, 45, 55, 30]
-					         }]
-					      });
-					   });
-					</script>
-				</div>
-			</div>
-			<div class="widget append-bottom append-top">
-				<div class="widget_title">
-					<h4><%= @widget.missing_manifests.title %></h4>
-				</div>
-				<div class="widget-body">
-					Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-				</div>
-			</div>
-			<div class="widget append-bottom append-top">
-				<div class="widget_title">
-					<h4><%= @widget.missing_manifests.title %></h4>
-				</div>
-				<div class="widget-body">
-					Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-				</div>
-			</div>
+			<%= render :partial => 'widgets/recent_checkins'%>
+
 		</div>
 		
 		<div id="right" class="span-11 append-bottom">
-			<div class="widget append-bottom append-top">
-				<div class="widget_title">
-					<h4><%= @widget.recent_checkins.title %></h4>
-				</div>
-				<div class="widget-body">
-					Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-				</div>
-			</div>
+			<%= render :partial => 'widgets/missing_manifests'%>
 		</div>
 	</div>
 <% end %>
