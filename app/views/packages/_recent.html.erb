@@ -8,7 +8,7 @@
 			
 			<% shared_pkgs.each do |pkg| %>
 				<%= pkg.to_s(:pretty_with_version) %>
-				[<%= link_to "import", import_shared_package_path(pkg.unit,pkg), {"data-confirm" => "Are you sure you want to import #{pkg.to_s(:pretty_with_version)} from #{pkg.unit} unit?"} %>]<br />
+				[<%= link_to "import", import_shared_package_path(current_unit,pkg), {"data-confirm" => "Are you sure you want to import #{pkg.to_s(:pretty_with_version)} from #{pkg.unit} unit?"} %>]<br />
 			<% end -%>
 	</div>
 <% end -%>
