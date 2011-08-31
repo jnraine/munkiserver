@@ -9,7 +9,7 @@ class DashboardWidget
   attr_accessor :user
   
   def self.all
-    [MissingManifestsWidget, RecentInstallErrorsAndWarningsWidget]
+    [MissingManifestsWidget, RecentInstallErrorsAndWarningsWidget, RecentCheckinsWidget, RecentWarrantyExpireWidget]
   end
   
   def self.missing_manifests
@@ -22,6 +22,10 @@ class DashboardWidget
   
   def self.recent_checkins
     RecentCheckinsWidget
+  end
+  
+  def self.recent_warranty_expire
+    RecentWarrantyExpireWidget
   end
   
   def self.css_class
@@ -38,8 +42,10 @@ class DashboardWidget
     @user = user
   end
   
-  def render
-    action_view.render(:partial => partial_name, :locals => {:widget => self, :user => self.user})
+  def render(options = {})
+    default_locals = {:widget => self, :user => self.user}
+    options[:locals] = default_locals.merge(options[:locals])
+    action_view.render(:partial => partial_name, :locals => options[:locals])
   end
   
   def action_view

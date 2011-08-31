@@ -4,12 +4,15 @@
 		<h2>Dashboard</h2>
 
 		<div id="left" class="span-11 append-bottom append-0">
-			<%= render :partial => 'widgets/recent_checkins'%>
+			<!--set interval to show report from xx number ago till present -->
+			<%= render :partial => 'widgets/recent_checkins',:locals => {:interval => 10}%>
 
 		</div>
 		
 		<div id="right" class="span-11 append-bottom">
-			<%= render :partial => 'widgets/missing_manifests'%>
+			<%= render :partial => 'widgets/missing_manifests', :locals => {:interval => 7, :limit => 5}%>
+			<%= render :partial => 'widgets/recent_warranty_expire', :locals => {:interval => 90, :limit => 5}%>
+			<%= render :partial => 'widgets/recent_install_errors_and_warnings', :locals => {:interval => 90, :limit => 5}%>
 		</div>
 	</div>
 <% end %>

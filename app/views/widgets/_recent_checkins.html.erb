@@ -56,8 +56,8 @@
 		         series: [{
 		            name: 'Computer checked-in',
 					pointInterval: 24 * 3600 * 1000,
-					pointStart: Date.UTC(<%= 10.days.ago.year %>, <%= 10.days.ago.month %>-1 , <%= 10.days.ago.day %>),
-		            data: [55, 44, 43, 55, 32, 12, 12, 45, 55, 54]
+					pointStart: Date.UTC(<%= interval.days.ago.year %>, <%= interval.days.ago.month %>-1 , <%= interval.days.ago.day %>),
+		            data: <%= @widget.recent_checkins.recent_computer_checkins(interval-1) %>
 		         }]
 		      });
 		   });

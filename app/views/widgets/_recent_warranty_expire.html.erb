@@ -1,0 +1,16 @@
+<div class="widget append-bottom append-top">
+	<div class="widget_title">
+		<h4><%= @widget.recent_warranty_expire.title %>(<%= @widget.recent_warranty_expire.recent_warranty_expire(interval).count %>)</h4>
+	</div>
+	<div class="widget-body">
+		<% if @widget.recent_warranty_expire.recent_warranty_expire(interval).count == 0 %>
+			<div class="alert-message success">
+				<p>There will be no warranty expire for the next <%= interval%> days</p>
+			</div>
+		<% else %>
+			<% @widget.recent_warranty_expire.recent_warranty_expire(interval).each do |warranty| %>
+				<%= warranty.serial_number %>
+			<% end %>
+		<% end %>
+	</div>
+</div>
