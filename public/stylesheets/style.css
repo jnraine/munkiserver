@@ -579,7 +579,7 @@ ul.imported_link li{
     padding-top:10px;
     padding-left:10px;
 }
-.widget-body{
+.widget_body{
     padding-left:10px;
     padding-right:10px;
     padding-bottom:10px;
@@ -632,4 +632,13 @@ ul.imported_link li{
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+}
+.icon-trangle{
+    float: right; 
+    cursor:pointer;
+    margin-top:-25px;
+    margin-right:10px;
+}
+.icon-hidden{
+    visibility:hidden;
 }
