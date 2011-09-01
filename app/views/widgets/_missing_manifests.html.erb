@@ -1,28 +1,28 @@
 <div class="widget append-bottom append-top">
 	<div class="widget_title">
-		<h4><%= @widget.missing_manifests.title %>(<%= @widget.missing_manifests.missing_manifests(interval, limit).count %>)</h4>
+		<h4><%= @widget.missing_manifests.title %></h4>
 		<span class="icon-trangle icon-up"><%= image_tag("arrow-up.gif") %></span>
 		<span class="icon-trangle icon-down icon-hidden"><%= image_tag("arrow-down.gif") %></span>
 	</div>
 	<div class="widget_body">
-	<div class="alert-message">
-		<p>Test warning alert message</p>
-	</div>
-	    
-	        <th>Identifier</th>
-	        <th>Manifest Type</th>
-	        <th>Request IP</th>
-	        <th>Hostname</th>
-	        <th>Request Time</th>
-	    
-		<% @widget.missing_manifests.missing_manifests(interval, limit).each do |missing_manifest| %>
-		<tr>
-            <td><%= missing_manifest.identifier %></td>
-            <td><%= missing_manifest.manifest_type %></td>
-            <td><%= missing_manifest.request_ip %></td>
-            <td><%= missing_manifest.hostname %></td>
-            <td><%= missing_manifest.request_time %></td>
-        </tr>
+		<% if @widget.missing_manifests.missing_manifests(interval, limit).count > 0 %>
+			<% @widget.missing_manifests.missing_manifests(interval, limit).each do |missing_manifest|%>
+				<div class="alert-message">
+					<blockquote>
+						<p>	<% if missing_manifest.hostname.present? %>
+								<strong><%= missing_manifest.hostname %></strong>
+							<% else %>
+								<strong><%= missing_manifest.request_ip %></strong>
+							<% end %> request manifest for "<strong><%= missing_manifest.identifier %></strong>"
+							<small><%= missing_manifest.request_time %></small>
+						</p>
+					</blockquote>
+				</div>
+			<% end %>
+	    <% else %>
+			<div class="alert-message info">
+				<p>There is no missing manifests in the last <%= interval%> days</p>
+			</div>
 		<% end %>
 	</div>
 </div>

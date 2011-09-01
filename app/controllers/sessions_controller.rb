@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
       if params[:redirect].present?
         redirect_to params[:redirect]
       else
-        redirect_to computers_path(unit)
+        redirect_to dashboard_path
       end
     end
   end

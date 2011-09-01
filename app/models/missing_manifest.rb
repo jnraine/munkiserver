@@ -24,7 +24,7 @@ class MissingManifest < ActiveRecord::Base
   
   def request_time
     s = nil
-    if created_at > 12.hours.ago
+    if created_at > 5.days.ago
 			s = time_ago_in_words(created_at) + " ago"
 		else
 		  s = created_at.getlocal.to_s(:readable_detail)

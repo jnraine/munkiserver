@@ -1,6 +1,6 @@
 <div class="widget append-bottom append-top">
 	<div class="widget_title">
-		<h4><%= @widget.recent_checkins.title %></h4>
+		<h4><%= widget.class.title %></h4>
 	</div>
 	<div class="widget_body">
 		<div id="highcharts_graph" style="width: 100%; height: 400px"></div>
@@ -57,7 +57,7 @@
 		            name: 'Computer checked-in',
 					pointInterval: 24 * 3600 * 1000,
 					pointStart: Date.UTC(<%= interval.days.ago.year %>, <%= interval.days.ago.month %>-1 , <%= interval.days.ago.day %>),
-		            data: <%= @widget.recent_checkins.recent_computer_checkins(interval-1) %>
+		            data: <%= widget.recent_computer_checkins(interval-1) %>
 		         }]
 		      });
 		   });

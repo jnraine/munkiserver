@@ -347,6 +347,13 @@ $(document).ready(function() {
         $(this).parent().find(".icon-up").toggleClass("icon-hidden");
         $(this).parent().find(".icon-down").toggleClass("icon-hidden");
     });
+    
+    // Hide dashboard widget body when page loads
+    $(".alert-message").click(function(){
+        $(this).find(".alert-message-body").slideToggle("fast");
+        $(this).find(".icon-up").toggleClass("icon-hidden");
+        $(this).find(".icon-down").toggleClass("icon-hidden");
+    });
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field

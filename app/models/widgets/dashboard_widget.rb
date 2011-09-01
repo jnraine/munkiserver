@@ -3,10 +3,27 @@ class DashboardWidget
     include Rails.application.routes.url_helpers
   end
   
+  module AssetTagHelper
+    include ActionView::Helpers::AssetTagHelper
+  end
+  
   @@action_view = ActionView::Base.new(Rails.configuration.paths.app.views.first)
   @@action_view.extend UrlHelpers
+  @@user = nil
   
   attr_accessor :user
+  
+  def initialize(user)
+    @user = user
+  end
+  
+  def self.user
+    @@user
+  end
+  
+  def self.user=(user)
+    @@user = user
+  end
   
   def self.all
     [MissingManifestsWidget, RecentInstallErrorsAndWarningsWidget, RecentCheckinsWidget, RecentWarrantyExpireWidget]
@@ -38,10 +55,6 @@ class DashboardWidget
     css_class.titleize
   end
   
-  def initialize(user)
-    @user = user
-  end
-  
   def render(options = {})
     default_locals = {:widget => self, :user => self.user}
     options[:locals] = default_locals.merge(options[:locals])
@@ -55,4 +68,9 @@ class DashboardWidget
   def partial_name
     "widgets/#{self.class.css_class}"
   end
+  
+  def partial_path
+    partial_name
+  end
+
 end

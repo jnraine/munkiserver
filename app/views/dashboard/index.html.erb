@@ -5,13 +5,12 @@
 
 		<div id="left" class="span-11 append-bottom append-0">
 			<!--set interval to show report from xx number ago till present -->
-			<%= render :partial => 'widgets/recent_checkins',:locals => {:interval => 10}%>
-
+			<%= @widget.recent_checkins.new(current_user).render(:locals => {:interval => 10}) %>
 		</div>
 		
 		<div id="right" class="span-11 append-bottom">
 			<%= render :partial => 'widgets/missing_manifests', :locals => {:interval => 7, :limit => 5}%>
-			<%= render :partial => 'widgets/recent_warranty_expire', :locals => {:interval => 90, :limit => 5}%>
+			<%= render :partial => 'widgets/recent_warranty_expire', :locals => {:interval => 500, :limit => 5}%>
 			<%= render :partial => 'widgets/recent_install_errors_and_warnings', :locals => {:interval => 90, :limit => 5}%>
 		</div>
 	</div>
