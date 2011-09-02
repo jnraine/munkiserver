@@ -1,0 +1,10 @@
+<div class="widget append-bottom append-top">
+	<div class="widget_title">
+		<h4><%= @widget.title %></h4>
+		<span class="icon-trangle icon-up"><%= image_tag("arrow-up.gif") %></span>
+		<span class="icon-trangle icon-down icon-hidden"><%= image_tag("arrow-down.gif") %></span>
+	</div>
+	<div class="widget_body <%= @widget.css_class %>">
+		<%= yield %>
+	</div>
+</div>

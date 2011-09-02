@@ -1,0 +1,40 @@
+<%= f.error_messages %>
+Choose a .dmg
+<%= helpful_info("You cannot upload packages, applications, or Adobe installers without wrapping them in a disk image first!") %><br />
+<p><%= file_field_tag :package_file %></p>
+<% unless Munki::Application::MUNKI_TOOLS_AVAILABLE %>
+	<p>
+		Choose a pkginfo plist
+		<%= helpful_info("Generate a pkginfo plist using makepkginfo and upload it")%>
+	</p>
+	<p><%= file_field_tag :pkginfo_file %></p>
+<% end %>
+<h4><a id="options-link" href="#">OPTIONAL</a></h4>
+<div id="options">
+	<% if Munki::Application::MUNKI_TOOLS_AVAILABLE %>
+		Choose a pkginfo plist <%= helpful_info("Generate a pkginfo plist using makepkginfo and upload it")%><br />
+		<p><%= file_field_tag :pkginfo_file %></p>
+	<% end %>
+	<%= text_field_tag "makepkginfo_options[pkgname]" %> 
+	Package name
+	<%= helpful_info("From makepkginfo help page: If the upload is a disk image containing
+                         multiple packages, or the package to be installed
+                         is not at the root of the mounted disk image, this
+                         is a relative path from the root of the mounted
+                         disk image to the specific package to be installed.  
+                         If the upload is a disk image containing
+                         an Adobe CS4 Deployment Toolkit installation, pkgname
+                         is the name of an Adobe CS4 Deployment Toolkit
+                         installer package folder at the top level of the
+                         mounted dmg.
+                         If this flag is missing, the AdobeUber* files should
+                         be at the top level of the mounted dmg.") %><br />
+	<%= text_field_tag "makepkginfo_options[appname]" %> 
+	Application path
+	<%= helpful_info("From makepkginfo help page: If the upload is a disk image with a
+	                  drag-and-drop application, this is the name or
+	                  relative path of the application
+	                  to be installed. Useful if there
+	                  is more than one application at the root of the dmg") %><br />
+</div>
+<p><%= submit_tag 'Upload' %></p>

@@ -1,0 +1,17 @@
+<% @widget.recent_package_update_for_unit.each do |unit_packages| %>
+	<div class="alert-message">
+		<% if unit_packages[1].count > 0 %>			
+		<p>
+			<strong><%= unit_packages[0].to_s.gsub(/_/, " ") %></strong> has <strong><%= unit_packages[1].count %></strong> packages ready for update
+			<%= link_to "more", "#", {:class => "more_info"}%>
+		</p>
+		<% end %>
+		<blockquote>
+			<div class="alert-message-body">
+				<% unit_packages[1].each do |package| %>
+					<p><%= link_to "#{package.name.gsub(/_/, " ")}", package_path(package.to_params) %></p>
+				<% end %>
+			</div>
+		</blockquote>
+	</div>
+<% end %>
