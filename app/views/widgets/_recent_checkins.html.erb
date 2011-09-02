@@ -1,63 +1,29 @@
-<div class="widget append-bottom append-top">
-	<div class="widget_title">
-		<h4><%= widget.class.title %></h4>
-		<span class="icon-trangle icon-up"><img alt="Arrow-up" src="/images/arrow-up.gif" /></span>
-		<span class="icon-trangle icon-down icon-hidden"><img alt="Arrow-down" src="/images/arrow-down.gif" /></span>
-	</div>
-	<div class="widget_body">
-		<div id="highcharts_graph" style="width: 100%; height: 400px"></div>
-		<script>
-		var chart1;
-		$(document).ready(function() {
-		      chart1 = new Highcharts.Chart({
-		         chart: {
-		            renderTo: 'highcharts_graph',
-		            type: 'area'
-		         },
-		         title: {
-		            text: 'Computer Checked-in'
-		         },
-				credits:{
-					enabled: false
-				},
-		         xAxis: {
-					type: 'datetime'
-		         },
-		         yAxis: {
-		            title: {
-		               text: 'Computers'
-		            }
-		         },
-				plotOptions: {
-				         area: {
-				            fillColor: {
-				               linearGradient: [0, 0, 0, 300],
-				               stops: [
-				                  [0, 'rgb(69, 114, 167)'], //6 = light blue, 9 or above are black
-				                  [1, 'rgba(2,0,0,0)']
-				               ]
-				            },
-				            lineWidth: 2,
-				            marker: {
-				               enabled: false,
-				               states: {
-				                  hover: {
-				                     enabled: true,
-				                     radius: 5
-				                  }
-				               }
-				            },
-				            shadow: false,
-				            states: {
-				               hover: {
-				                  lineWidth: 2
-				               }
-				            }
-				         }
-				      },
-		         series: <%= widget.to_highcharts(interval) %>
-		      });
-		   });
-		</script>
-	</div>
+<div id="highcharts_graph" style="width: 100%; height: 200px"></div>
+<script>
+var chart1;
+$(document).ready(function() {
+      chart1 = new Highcharts.Chart({
+         chart: {
+            renderTo: 'highcharts_graph',
+            type: 'line'
+         },
+         title: {
+            text: false
+         },
+		credits:{
+			enabled: false
+		},
+         xAxis: {
+			type: 'datetime'
+         },
+         yAxis: {
+            title: {
+               text: 'Computers'
+            },
+			min: 0
+         },
+         series: <%= @widget.to_highcharts %>
+      });
+   });
+</script>
 </div>

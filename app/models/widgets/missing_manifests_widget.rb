@@ -4,7 +4,7 @@ class MissingManifestsWidget < DashboardWidget
     default_options = {:since_time => 7.days.ago, :limit => 5, :force_query => false}
     options = default_options.merge(options)
     if @missing_manifests.nil? or options[:force_query]
-      @missing_manifest = MissingManifest.recent(options)
+      @missing_manifests = MissingManifest.recent(options)
     end
     @missing_manifests
   end

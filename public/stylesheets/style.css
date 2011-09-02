@@ -585,16 +585,6 @@ ul.imported_link li{
     padding-bottom:10px;
     padding-top:10px;
 }
-.odd_widget{
-    
-}
-.even_widget{
-    
-}
-
-.widget-table{
-    
-}
 .alert-message{
 
 }
@@ -610,6 +600,21 @@ ul.imported_link li{
 .alert-message small:before{
     content:'\2014 \00A0';
 }
+/*
+blockquote {margin:1.5em;color:#666;font-style:italic;}*/
+.alert-message blockquote{
+    margin-bottom:18px;
+    border-left:5px solid #eee;
+    padding-left:15px;
+    font-style:normal;
+}
+.alert-message blockquote small{
+    display:block;
+    font-size:12px;
+    font-weight:300;
+    line-height:18px;
+    color:#bfbfbf;
+}
 .more_info:before{
     content:"...";
 }
@@ -622,6 +627,10 @@ a:hover.more_info {
 }
 .alert-message-body{
     display:none;
+}
+.alert-message-body img{
+    line-height:32px;
+    vertical-align:middle;
 }
 .alert-message.info{
     cursor:auto;

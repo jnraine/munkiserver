@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   skip_before_filter :require_login, :only => ['new','create','destroy']
   
   def new
-    redirect_to computers_path(current_user.units.first) if logged_in?
+    redirect_to dashboard_path if logged_in?
   end
   
   # Creates a new user session

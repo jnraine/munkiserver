@@ -62,14 +62,14 @@ class DashboardWidget
   end
   
   # Get all the units the user belongs to
-  def scoped_units(user)
-    ids = user.units.map(&:id)
+  def scoped_units
+    ids = @user.units.map(&:id)
     Unit.where(:id => ids)
   end
   
   # Get all the computers based on the unit the user belongs to
-  def scoped_computers(user, unit_id = nil)
-    unit_id ||= user.units
-    Computer.where(:unit_id => unit_id).map(&:id)
+  def scoped_computers(unit_id = nil)
+    unit_id ||= @user.units
+    Computer.where(:unit_id => unit_id)
   end
 end

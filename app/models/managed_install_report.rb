@@ -17,6 +17,9 @@ class ManagedInstallReport < ActiveRecord::Base
   serialize :managed_installs_list, Array
   serialize :managed_uninstalls_list, Array
   serialize :managed_updates_list, Array
+  
+  scope :since, lambda {|timestamp| where("created_at > ?", timestamp) }
+  scope :has_errors, where("munki_errors != ?", [].to_yaml)
 
   TABLE_ATTRIBUTES = ["items_to_install","items_to_remove","managed_installs"]
   LOG_ATTRIBUTES = ["munki_errors","munki_warnings","install_results", "removal_results"]
