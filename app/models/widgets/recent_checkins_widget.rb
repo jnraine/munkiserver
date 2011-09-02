@@ -1,21 +1,44 @@
 class RecentCheckinsWidget < DashboardWidget
-  # Return an array of number of checked in computer in the last 30 days
-  def recent_computer_checkins(intervel = nil)
-    checkins = []
-    intervel ||= 30
-    intervel.days.ago.to_date.step(Time.now.to_date, 1.day) do |d|
-      checkins << ManagedInstallReport.where(:computer_id => scope_to_user).where('created_at >= ? and created_at <= ?', d.beginning_of_day, d.end_of_day).map(&:manifest_name).compact.uniq.count
+  # Return a hash contains each unit's checkin
+  # key => Unit name
+  # value => an array of how many computers that have checked-in in the past "interval" days
+  # each index of an array represent how many computers checked-in on one day
+  def recent_computer_checkins_for_unit(interval = nil)
+    checkin_hash = {}
+    interval ||= 30
+    scoped_units.each do |unit|
+      checkin_array = []
+      interval.days.ago.to_date.step(Time.now.to_date, 1.day) do |d|
+        checkin_array << ManagedInstallReport.where(:computer_id => scoped_computers(unit.id)).where('created_at >= ? and created_at <= ?', d.beginning_of_day, d.end_of_day).map(&:manifest_name).compact.uniq.count
+      end
+      checkin_hash[unit.name.parameterize.underscore.to_sym] = checkin_array
     end
-    checkins
+    checkin_hash
   end
   
-  def self.last_weeks
+  # Add the key :total and the sum of all the array to the hash
+  def total_checkins(interval)
+    checkins_by_unit = recent_computer_checkins_for_unit(interval)
+    
+    checkins = checkins_by_unit.values
+    checkin_sums = []
+    checkins.each do |unit_checkin|
+     (interval+1).times do |i|
+       checkin_sums[i] ||= 0
+       checkin_sums[i] += unit_checkin[i]
+     end
+    end
+    checkins_by_unit[:total] = checkin_sums
+    checkins_by_unit
   end
-  
-  def self.last_month
-  end
-  
-  def scope_to_user
-    Computer.where(:unit_id => @user.units).map(&:id)
+
+  # Data parsed by highcharts library for rendering graphic charts
+  def to_highcharts(interval)
+    series = []
+    total_checkins(interval).each do |k, v|
+      series << {:name => k, :data => v, :pointStart => interval.days.ago.to_i * 1000, :pointInterval => 24 * 3600 * 1000}
+    end
+    # Ready parse by highcharts
+    series.to_json.html_safe
   end
 end

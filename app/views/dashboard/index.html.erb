@@ -1,17 +1,13 @@
-<% content_for :widgets do %>
+<% content_for :dashboard do %>
 	<div class="span-22 prepend-0 append-bottom append-0">
-		
 		<h2>Dashboard</h2>
-
 		<div id="left" class="span-11 append-bottom append-0">
-			<!--set interval to show report from xx number ago till present -->
-			<%= @widget.recent_checkins.new(current_user).render(:locals => {:interval => 10}) %>
+			<%= render_widget :missing_manifests %>
+			<%= render_widget :warranty %>
+			<%= render_widget :add_package %>
 		</div>
-		
 		<div id="right" class="span-11 append-bottom">
-			<%= render :partial => 'widgets/missing_manifests', :locals => {:interval => 7, :limit => 5}%>
-			<%= render :partial => 'widgets/recent_warranty_expire', :locals => {:interval => 500, :limit => 5}%>
-			<%= render :partial => 'widgets/recent_install_errors_and_warnings', :locals => {:interval => 90, :limit => 5}%>
+			
 		</div>
 	</div>
 <% end %>

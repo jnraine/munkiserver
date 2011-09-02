@@ -349,10 +349,15 @@ $(document).ready(function() {
     });
     
     // Hide dashboard widget body when page loads
-    $(".alert-message").click(function(){
-        $(this).find(".alert-message-body").slideToggle("fast");
-        $(this).find(".icon-up").toggleClass("icon-hidden");
-        $(this).find(".icon-down").toggleClass("icon-hidden");
+    $(".more_info").click(function(){
+        $(this).parent().parent().find(".alert-message-body").slideToggle("fast");
+        $(this).parent().parent().find(".icon-up").toggleClass("icon-hidden");
+        $(this).parent().parent().find(".icon-down").toggleClass("icon-hidden");
+        return false
+    });
+    
+    $("#unit-path-select").change(function() {
+        $("form#add_package_widget_form").attr("action",$(this).val());
     });
 }); // end document ready function
 

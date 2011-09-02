@@ -114,7 +114,7 @@
 				</ul>
 			<% end %>
 		</div>
-		<%= yield :widgets %>
+		<%= yield :dashboard %>
 		<div class="span-16 prepend-1 append-bottom append-1">
 			<% flash.each do |key, msg| %>
 				<%= content_tag :div, msg, :class => "message #{key}" %>

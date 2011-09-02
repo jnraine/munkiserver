@@ -601,6 +601,25 @@ ul.imported_link li{
 .alert-message p{
     padding-top:3px;
 }
+.alert-message small{
+    display:block;
+    color:#bfbfbf;
+    font-size:12px;
+    font-weight:300;
+}
+.alert-message small:before{
+    content:'\2014 \00A0';
+}
+.more_info:before{
+    content:"...";
+}
+.more_info{
+    color:#bfbfbf;
+}
+a:hover.more_info {
+    text-decoration: none;
+    color:#000;
+}
 .alert-message-body{
     display:none;
 }
@@ -616,24 +635,24 @@ ul.imported_link li{
 .icon-hidden{
     visibility:hidden;
 }
-.warranty-widget{
-    margin-right:30px ;
-    min-height: 30px;
+.widget .warranty .warranty-status {
+    margin-right:20px;
+    min-height: 32px;
     vertical-align:middle;
-    line-height:30px;
+    line-height:28px;
 }
-.warranty-widget .green{
+.widget .warranty .warranty-status .green {
     background: url(/images/warranty_status_green_small.png) no-repeat 5px 5px;
     padding-left: 30px;
 }
-.warranty-widget .red{
+.widget .warranty .warranty-status .red {
     background: url(/images/warranty_status_yellow_small.png) no-repeat 5px 5px;
     padding-left: 30px;
 }
-.warranty-small small:before{
+.widget .warranty small:before {
     content:none;
 }
-.warranty-small small{
+.widget .warranty small {
     margin-left:10px;
     display:inline;
     cursor:pointer;

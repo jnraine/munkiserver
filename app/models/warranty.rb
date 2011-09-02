@@ -20,6 +20,8 @@ class Warranty < ActiveRecord::Base
   has_many :notifications, :as => :notified
   
   validates_format_of :serial_number, :with => /^[a-zA-Z0-9]+$/
+  
+  scope :expire_before, lambda {|time| where("hw_coverage_end_date < ?", time)}
 
   # Creates a hash used to update or create a warranty object.  Raises WarrantyException
   def self.get_warranty_hash(serial = "")

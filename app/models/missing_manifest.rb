@@ -2,14 +2,14 @@ class MissingManifest < ActiveRecord::Base
   # Include helpers
   include ActionView::Helpers
 
-  scope :recent, lambda {|timestamp,limit| 
+  scope :recent, lambda {|options| 
     scope = MissingManifest.scoped
-    if timestamp.present?
-      scope = scope.where("created_at > ?", timestamp)
+    if options[:since_time].present?
+      scope = scope.where("created_at > ?", options[:since_time])
     else
       MissingManifest.where("created_at > ?", 7.days.ago)
     end
-    scope = scope.limit(limit) if limit.present?
+    scope = scope.limit(options[:limit]) if options[:limit].present?
     scope.order("created_at DESC")
   }
   
@@ -30,6 +30,14 @@ class MissingManifest < ActiveRecord::Base
 		  s = created_at.getlocal.to_s(:readable_detail)
 		end
 		s
+  end
+  
+  def to_s
+    if hostname.present?
+      hostname
+    else
+      request_ip
+    end
   end
 end
 
