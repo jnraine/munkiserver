@@ -1,4 +1,3 @@
-
 <%= computer_header(@computer) %>
 <p>
 	<% if @computer.description.blank? %>
@@ -55,7 +54,7 @@
 
 	<!-- Fourth tab starts here -->
 	<div id="warranty_tab">
-		<%= render :partial => "warranty" %>
+		<%= render :partial => "warranty", :locals => {:warranty => @computer.warranty} %>
 	</div>
 </div>
 

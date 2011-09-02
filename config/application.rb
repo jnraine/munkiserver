@@ -22,12 +22,13 @@ module Munki
     # Add additional load paths for your own custom dirs
     # config.load_paths += %W( #{config.root}/extras )
     config.autoload_paths += %W(
+        #{Rails.root}/app/models/widgets  
         #{Rails.root}/app/models/join_models
         #{Rails.root}/app/models/magic_mixin
         #{Rails.root}/app/models/manifest
         #{Rails.root}/app/models/service
         #{Rails.root}/lib
-      )
+    )
 
     # Add custom mime types
     Mime::Type.register "text/plist", :plist
@@ -44,6 +45,7 @@ module Munki
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password
+    config.filter_parameters << :pass # Create session uses params[:pass]
     
     # puts "X-Sendfile header is: " + config.action_dispatch.x_sendfile_header
     # config.action_dispatch.x_sendfile_header = "X-Sendfile"

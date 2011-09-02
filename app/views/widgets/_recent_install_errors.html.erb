@@ -1,0 +1,22 @@
+<% @widget.reports.each do |computer_name,reports| %>
+	<div class="alert-message">
+		<p>
+			<strong><%= computer_name %></strong> has <strong><%= reports.count %></strong> install errors in the past <%= time_ago_in_words(@widget.time_period) %>
+			<%= link_to "more", "#", {:class => "more_info"}%>
+		</p>
+		<blockquote>
+			<div class="alert-message-body">
+				<% reports.each do |report| %>
+					<p title="<%= report.munki_errors.join("\n") %>">
+						<%= report.munki_errors.first[0..42] %>... 
+						<small>
+							<%= time_ago_in_words(report.created_at) %> ago
+							<%= link_to "details", "#{computer_url(report.computer.unit,report.computer)}\?tab=managed_install_reports_tab&report_id=#{report.id}", :target => "_blank" %>
+						</small>
+						
+					</p>
+				<% end %>
+			</div>
+		</blockquote>
+	</div>
+<% end %>

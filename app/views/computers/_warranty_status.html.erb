@@ -1,0 +1,33 @@
+<div class="status <%= warranty.registered_status %>">
+    <% if warranty.registered %>
+        Registered
+    <% else %>
+        Not Registered
+    <% end %>
+</div>
+
+<% unless warranty.app_registered %>
+<div class="status <%= warranty.app_eligibility_status %>">
+    <% if warranty.app_eligible %>
+        Eligible for AppleCare Protection Plan (until <%= warranty.hw_coverage_end_date.present? ? warranty.hw_coverage_end_date.to_s(:readable_date) : "unknown" %>)
+    <% else %>
+        Not Eligible for AppleCare Protection Plan
+    <% end %>
+</div>
+<% end %>
+
+<div class="status <%= warranty.hw_coverage_status %>">
+    <% unless warranty.hw_coverage_expired %>
+        Repairs and service: Covered (until <%= warranty.hw_coverage_end_date.present? ? warranty.hw_coverage_end_date.to_s(:readable_date) : "unknown" %>)
+    <% else %>
+        Repairs and service: Expired
+    <% end %>
+</div>
+
+<div class="status <%= warranty.phone_coverage_status %>">
+    <% unless warranty.phone_coverage_expired %>
+        Technical phone support: Covered (until <%= warranty.phone_coverage_end_date.present? ? warranty.phone_coverage_end_date.to_s(:readable_date) : "unknown" %>)
+    <% else %>
+        Technical phone support: Expired
+    <% end %>
+</div>

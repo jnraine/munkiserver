@@ -1,0 +1,18 @@
+<% content_for :dashboard do %>
+	<div class="span-21 append-bottom">
+		<h2>Dashboard</h2>
+		
+		<div class="span-21">
+			<%= render_widget :recent_checkins %>
+		</div>
+		<div class="span-10 append-bottom append-1">
+			<%= render_widget :missing_manifests %>
+			<%= render_widget :warranty %>
+			<%= render_widget :add_package %>
+		</div>
+		<div class="span-10 append-bottom">
+			<%= render_widget :available_package_updates %>
+			<%= render_widget :recent_install_errors %>
+		</div>
+	</div>
+<% end %>

@@ -17,6 +17,7 @@
 
 	<%= javascript_include_tag "jquery.min", "jquery-ui.min", "rails.jquery", "application","jquery.asmselect", "jquery.autocomplete.min", "rails.validations", "jquery.lightbox_me", "jquery-ui-timepicker-addon"%>
 	<%= javascript_include_tag "codemirror/codemirror.js", "codemirror/clike.js", "codemirror/xml.js" %>
+	<%= javascript_include_tag "highcharts/highcharts.js" %>
 	
 	<%= csrf_meta_tag %>
 </head>
@@ -54,7 +55,10 @@
 
 						</ul>
 					</li> -->
-				<% end -%>
+				<% end %>
+				<li class="dir">
+				<%= link_to "Dashboard", dashboard_path %>
+				</li>
 				<% if logged_in? %>					
 					<li><%= link_to("Logout", logout_path) %> (<%= current_user.username %>)</li>
 				<% end %>
@@ -110,6 +114,7 @@
 				</ul>
 			<% end %>
 		</div>
+		<%= yield :dashboard %>
 		<div class="span-16 prepend-1 append-bottom append-1">
 			<% flash.each do |key, msg| %>
 				<%= content_tag :div, msg, :class => "message #{key}" %>
@@ -119,6 +124,8 @@
 	<div id="sidebar" class="span-6 last">
 		<%= render :partial => "shared/sidebar" %>
 		<%= yield :sidebar %>
+	</div>
+	
 	</div>
 	<div class="push"></div>
 </div>

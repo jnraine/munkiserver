@@ -340,6 +340,25 @@ $(document).ready(function() {
     $(".no_action").click(function(){
         return false;
     });
+    
+    // Collapse and Expand for dashboard widgets
+    $(".widget_title").click(function(){
+        $(this).parent().find(".widget_body").slideToggle("fast");
+        $(this).parent().find(".icon-up").toggleClass("icon-hidden");
+        $(this).parent().find(".icon-down").toggleClass("icon-hidden");
+    });
+    
+    // Hide dashboard widget body when page loads
+    $(".more_info").click(function(){
+        $(this).parent().parent().find(".alert-message-body").slideToggle("fast");
+        $(this).parent().parent().find(".icon-up").toggleClass("icon-hidden");
+        $(this).parent().parent().find(".icon-down").toggleClass("icon-hidden");
+        return false
+    });
+    
+    $("#unit-path-select").change(function() {
+        $("form#add_package_widget_form").attr("action",$(this).val());
+    });
 }); // end document ready function
 
 // disable input and select field onload, click to enable the field

@@ -1,0 +1,29 @@
+<div id="highcharts_graph" style="width: 100%; height: 200px"></div>
+<script>
+var chart1;
+$(document).ready(function() {
+      chart1 = new Highcharts.Chart({
+         chart: {
+            renderTo: 'highcharts_graph',
+            type: 'line'
+         },
+         title: {
+            text: false
+         },
+		credits:{
+			enabled: false
+		},
+         xAxis: {
+			type: 'datetime'
+         },
+         yAxis: {
+            title: {
+               text: 'Computers'
+            },
+			min: 0
+         },
+         series: <%= @widget.to_highcharts %>
+      });
+   });
+</script>
+</div>

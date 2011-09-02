@@ -1,0 +1,18 @@
+<% @widget.package_hash.each do |unit_name,packages| %>
+	<div class="alert-message">
+		<p>
+			<strong><%= unit_name %></strong> has <strong><%= packages.count %></strong> available updates
+			<%= link_to "more", "#", {:class => "more_info"}%>
+		</p>
+		<blockquote>
+			<div class="alert-message-body">
+				<% packages.each do |package| %>
+					<p>
+						<%= image_tag(package.icon.url(:tiny), :class => "thumbnail", "data-package-branch-id" => package.package_branch_id) if package.icon %>
+						<%= link_to "#{package.name}", package_path(package.to_params) %> version <%= link_to package.package_branch.version_tracker.version, macupdate_url(package) %> is now available!
+					</p>
+				<% end %>
+			</div>
+		</blockquote>
+	</div>
+<% end %>

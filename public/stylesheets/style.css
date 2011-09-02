@@ -54,6 +54,7 @@ a:hover {
 
 #app-menu {
 	height:30px;
+	width: auto;
 	margin-bottom:6px;
 	color:#fff;
 	background-color:#594F4F;
@@ -104,6 +105,10 @@ a:hover {
 	background-repeat:no-repeat;
 }
 
+#units_submenu {
+  min-height:29px;
+}
+
 #loading_graphic {
 	position:absolute;
 	left:110px;
@@ -127,10 +132,10 @@ html, body {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    margin: 0 auto -9em;
+    margin: 0 auto -9em !important;
 }
 .footer, .push {
-    height: 9em;
+    height: 9em !important;
 }
 
 .footer {
@@ -519,14 +524,145 @@ ul.imported_link li{
   line-height:40px;
 }
 
-#warranty_tab .green {
+#warranty_tab .green{
   background: url(/images/warranty_status_green.png) no-repeat 5px 5px;
 }
 
-#warranty_tab .red {
+#warranty_tab .red{
   background: url(/images/warranty_status_yellow.png) no-repeat 5px 5px;
 }
 
 #warranty_summary {
   padding-bottom:15px;
+}
+
+
+/* ============== */
+/* = Widgets = */
+/* ============== */
+
+#left{
+    float:left;
+}
+#right{
+    float:right;
+}
+.widget{
+    height:auto;
+    border: 1px solid #AAA;
+    -webkit-border-top-left-radius: 8px;
+    -webkit-border-top-right-radius: 8px;
+    -moz-border-radius-topleft: 8px;
+    -moz-border-radius-topright: 8px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.widget_title{
+    height:30px;
+    width:auto;
+    background: rgb(242,245,246); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(242,245,246,1) 0%, rgba(230,230,230,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(242,245,246,1)), color-stop(100%,rgba(230,230,230,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(242,245,246,1) 0%,rgba(230,230,230,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(242,245,246,1) 0%,rgba(230,230,230,1) 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, rgba(242,245,246,1) 0%,rgba(230,230,230,1) 100%); /* IE10+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#e6e6e6',GradientType=0 ); /* IE6-9 */
+    background: linear-gradient(top, rgba(242,245,246,1) 0%,rgba(230,230,230,1) 100%); /* W3C */
+    -webkit-border-top-left-radius: 8px;
+    -webkit-border-top-right-radius: 8px;
+    -moz-border-radius-topleft: 8px;
+    -moz-border-radius-topright: 8px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.widget_title h4{
+    padding-top:10px;
+    padding-left:10px;
+}
+.widget_body{
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:10px;
+    padding-top:10px;
+}
+.alert-message{
+
+}
+.alert-message p{
+    padding-top:3px;
+}
+.alert-message small{
+    display:block;
+    color:#bfbfbf;
+    font-size:12px;
+    font-weight:300;
+}
+.alert-message small:before{
+    content:'\2014 \00A0';
+}
+/*
+blockquote {margin:1.5em;color:#666;font-style:italic;}*/
+.alert-message blockquote{
+    margin-bottom:18px;
+    border-left:5px solid #eee;
+    padding-left:15px;
+    font-style:normal;
+}
+.alert-message blockquote small{
+    display:block;
+    font-size:12px;
+    font-weight:300;
+    line-height:18px;
+    color:#bfbfbf;
+}
+.more_info:before{
+    content:"...";
+}
+.more_info{
+    color:#bfbfbf;
+}
+a:hover.more_info {
+    text-decoration: none;
+    color:#000;
+}
+.alert-message-body{
+    display:none;
+}
+.alert-message-body img{
+    line-height:32px;
+    vertical-align:middle;
+}
+.alert-message.info{
+    cursor:auto;
+}
+.icon-trangle{
+    float: right; 
+    cursor:pointer;
+    margin-top:-25px;
+    margin-right:10px;
+}
+.icon-hidden{
+    visibility:hidden;
+}
+.widget .warranty .warranty-status {
+    margin-right:20px;
+    min-height: 32px;
+    vertical-align:middle;
+    line-height:28px;
+}
+.widget .warranty .warranty-status .green {
+    background: url(/images/warranty_status_green_small.png) no-repeat 5px 5px;
+    padding-left: 30px;
+}
+.widget .warranty .warranty-status .red {
+    background: url(/images/warranty_status_yellow_small.png) no-repeat 5px 5px;
+    padding-left: 30px;
+}
+.widget .warranty small:before {
+    content:none;
+}
+.widget .warranty small {
+    margin-left:10px;
+    display:inline;
+    cursor:pointer;
 }

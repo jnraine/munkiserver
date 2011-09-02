@@ -1,0 +1,14 @@
+<% if @widget.missing_manifests.present? %>
+	<% @widget.missing_manifests.each do |missing_manifest|%>
+		<div class="alert-message">
+			<p>
+				<strong><%= missing_manifest %></strong> request manifest for "<strong><%= missing_manifest.identifier %></strong>"
+				<small><%= missing_manifest.request_time %></small>
+			</p>
+		</div>
+	<% end %>
+<% else %>
+	<div class="alert-message info">
+		<p><em>There are no missing manifests.</em></p>
+	</div>
+<% end %>

@@ -45,7 +45,9 @@ class ComputersController < ApplicationController
         format.plist { render :text => @computer.to_plist}
         format.client_prefs { render :text => @computer.client_prefs.to_plist }
       else
-        MissingManifest.new({:manifest_type => Computer.to_s, :identifier => params[:id], :request_ip => request.remote_ip}).save
+        debugger
+        MissingManifest.find_or_create_by_manifest_type_and_identifier_and_request_ip(
+        {:manifest_type => Computer.to_s, :identifier => params[:id], :request_ip => request.remote_ip})
         format.manifest { render :file => "public/404.html", :status => 404, :layout => false}
         format.html { render :file => "public/404.html", :status => 404, :layout => false }
       end
