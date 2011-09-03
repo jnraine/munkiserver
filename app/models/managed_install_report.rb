@@ -28,6 +28,11 @@ class ManagedInstallReport < ActiveRecord::Base
   # Include helpers
   include ActionView::Helpers
   
+  # Returns the number of computers that checked in on a specific date
+  def self.checkins_on_date(date)
+    ManagedInstallReport.where('created_at >= ? and created_at <= ?', date.beginning_of_day, date.end_of_day).select("DISTINCT(computer_id)").count
+  end
+  
   # Creates a ManagedInstallReport object based on a plist file
   def self.import_plist(file)
     xml_string = file.read if file.present?
@@ -120,11 +125,6 @@ class ManagedInstallReport < ActiveRecord::Base
   # Get the unit for this managed install report based on the computer
   def unit
     Unit.find(computer.unit_id) if computer.present?
-  end
-
-  # Get the computer this managed install report belong to
-  def computer
-    Computer.find_by_hostname(self.machine_info["hostname"]) if machine_info["hostname"].present?
   end
 end
 
