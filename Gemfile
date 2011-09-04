@@ -10,6 +10,7 @@ gem "paperclip"
 gem "client_side_validations"
 gem "whenever"
 gem "plist"
+gem "cancan"
 
 group :development do
   gem "ruby-debug19" , :require => "ruby-debug"

@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110823222618) do
+ActiveRecord::Schema.define(:version => 20110904192733) do
+
+  create_table "assignments", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "role_id"
+    t.integer  "unit_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -151,30 +159,6 @@ ActiveRecord::Schema.define(:version => 20110823222618) do
     t.datetime "updated_at"
   end
 
-  create_table "memberships", :force => true do |t|
-    t.integer  "unit_id"
-    t.integer  "user_id"
-    t.boolean  "create_computer",        :default => true
-    t.boolean  "read_computer",          :default => true
-    t.boolean  "edit_computer",          :default => true
-    t.boolean  "destroy_computer",       :default => true
-    t.boolean  "create_bundle",          :default => true
-    t.boolean  "read_bundle",            :default => true
-    t.boolean  "edit_bundle",            :default => true
-    t.boolean  "destroy_bundle",         :default => true
-    t.boolean  "create_computer_group",  :default => true
-    t.boolean  "read_computer_group",    :default => true
-    t.boolean  "edit_computer_group",    :default => true
-    t.boolean  "destroy_computer_group", :default => true
-    t.boolean  "create_package",         :default => true
-    t.boolean  "read_package",           :default => true
-    t.boolean  "edit_package",           :default => true
-    t.boolean  "destroy_package",        :default => true
-    t.boolean  "edit_unit",              :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "missing_manifests", :force => true do |t|
     t.string   "manifest_type"
     t.string   "identifier"
@@ -259,11 +243,33 @@ ActiveRecord::Schema.define(:version => 20110823222618) do
     t.datetime "force_install_after_date"
   end
 
+  create_table "permissions", :force => true do |t|
+    t.integer  "principal_id"
+    t.string   "principal_type"
+    t.integer  "unit_id"
+    t.integer  "privilege_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "privileges", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "require_items", :force => true do |t|
     t.integer  "package_branch_id"
     t.integer  "package_id"
     t.integer  "manifest_id"
     t.string   "manifest_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -363,6 +369,21 @@ ActiveRecord::Schema.define(:version => 20110823222618) do
     t.datetime "updated_at"
   end
 
+  create_table "user_group_memberships", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "user_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_groups", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "unit_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "user_install_items", :force => true do |t|
     t.integer  "package_branch_id"
     t.integer  "package_id"
@@ -393,7 +414,6 @@ ActiveRecord::Schema.define(:version => 20110823222618) do
     t.string   "hashed_password"
     t.string   "email"
     t.string   "salt"
-    t.boolean  "super_user",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
