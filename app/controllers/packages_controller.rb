@@ -1,5 +1,9 @@
 class PackagesController < ApplicationController
   before_filter :require_valid_unit
+  before_filter :find_package_where_params, :only => [:show, :edit, :update, :destroy]
+  
+  load_and_authorize_resource
+  
   def index
     # TO-DO This query can be rethought because of the way the view uses this list of packages
     # it might be better to grab all the package branches from this environment and then iterate
@@ -12,7 +16,7 @@ class PackagesController < ApplicationController
   end
 
     def show
-      @package = Package.find_where_params(params)
+      # @package = Package.find_where_params(params)
       respond_to do |format|
         if @package.present?
           format.html
@@ -25,12 +29,12 @@ class PackagesController < ApplicationController
     end
 
   def edit
-    @package = Package.find_where_params(params)
+    # @package = Package.find_where_params(params)
     @package.environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update
-    @package = Package.find_where_params(params)
+    # @package = Package.find_where_params(params)
     
     respond_to do |format|
       if @package.update_attributes(params[:package])
@@ -76,12 +80,8 @@ class PackagesController < ApplicationController
   end
 
   def destroy
-    @package = Package.find_where_params(params)
-    # if RequireItem.where(:package_id => @package.id).present?
-    #   RequireItem.where(:package_id => @package.id).first.destroy
-    #   @package.destroy
-    #   flash[:notice] = "Package and it's dependency were destroyed successfully"
-    # els
+    # @package = Package.find_where_params(params)
+    
     if @package.destroy
         flash[:notice] = "Package was destroyed successfully"
     end
@@ -148,5 +148,10 @@ class PackagesController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+  
+  private
+  def find_package_where_params
+    @package = Package.find_where_params(params)
   end
 end
