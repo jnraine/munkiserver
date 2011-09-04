@@ -1,0 +1,6 @@
+<%= image_tag "loading_graphic.gif" %>
+<script>
+    $(document).ready(function() {
+        $.getScript("<%= widget_path(@widget) %>");
+    });
+</script>

@@ -349,17 +349,19 @@ $(document).ready(function() {
     });
     
     // Hide dashboard widget body when page loads
-    $(".more_info").click(function(){
-        $(this).parent().parent().find(".alert-message-body").slideToggle("fast");
-        $(this).parent().parent().find(".icon-up").toggleClass("icon-hidden");
-        $(this).parent().parent().find(".icon-down").toggleClass("icon-hidden");
-        return false
-    });
+    activateMoreInfoLinks();
     
     $("#unit-path-select").change(function() {
         $("form#add_package_widget_form").attr("action",$(this).val());
     });
 }); // end document ready function
+
+function activateMoreInfoLinks() {
+  $(".more_info").click(function(){
+      $(this).parent().parent().find(".alert-message-body").slideToggle("fast");
+      return false
+  });
+}
 
 // disable input and select field onload, click to enable the field
 function selectToEdit(){

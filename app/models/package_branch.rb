@@ -217,6 +217,12 @@ class PackageBranch < ActiveRecord::Base
     packages_with_updates
   end
   
+  def self.cached_available_updates(unit = nil)
+    Rails.cache.fetch("available-updates-for-unit-id-#{unit.id}", :expires_in => 4.hours) do
+      self.available_updates(unit)
+    end
+  end
+  
   # Return the package branches available to a given unit member
   # Doesn't return an ActiveRecord::Relation (search cannot be 
   # done using only SQL)

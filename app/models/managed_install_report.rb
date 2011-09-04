@@ -29,8 +29,87 @@ class ManagedInstallReport < ActiveRecord::Base
   include ActionView::Helpers
   
   # Returns the number of computers that checked in on a specific date
-  def self.checkins_on_date(date)
-    ManagedInstallReport.where('created_at >= ? and created_at <= ?', date.beginning_of_day, date.end_of_day).select("DISTINCT(computer_id)").count
+  def self.checkins(opts)
+    default_opts = {:date => nil, :unit => nil, :start_date => nil, :end_date => nil}
+    opts = default_opts.merge(opts)
+    
+    if opts[:date]
+      checkins_on_date(opts)
+    elsif opts[:start_date] and opts[:end_date]
+      checkins_between(opts)
+    end
+  end
+  
+  def self.checkins_between(opts)
+    default_opts = {:unit => nil, :start_date => nil, :end_date => nil}
+    opts = default_opts.merge(opts)
+    
+    checkins_by_day = {}
+    opts[:start_date].step(opts[:end_date],1) do |date|
+      checkins_by_day[date.to_s] = cached_checkins_on_date(:date => date, :unit => opts[:unit])
+    end
+    checkins_by_day.values
+  end
+  
+  # Returns an array of checkin values – one for each day
+  #  DON'T CALL THIS -- IT IS BROKEN!
+  # def self.checkins_between(opts)
+  #   default_opts = {:unit => nil, :start_date => nil, :end_date => nil}
+  #   opts = default_opts.merge(opts)
+  # 
+  #   scope = ManagedInstallReport.scoped
+  #   scope = scope.where(:computer_id => opts[:unit].computers.map(&:id)) if opts[:unit].present?
+  #   scope = scope.where('created_at >= ? and created_at <= ?', opts[:start_date].beginning_of_day, opts[:end_date].end_of_day)
+  #   scope = scope.select("created_at, computer_id")
+  #   scope = scope.joins("RIGHT JOIN (SELECT DISTINCT computer_id FROM managed_install_reports)")
+  # 
+  #   checkins_by_day = {}
+  #   # Setup hash with days
+  #   opts[:start_date].step(opts[:end_date],1) do |date|
+  #     checkins_by_day[date.to_s] = 0
+  #   end
+  #   # Add each checkin to the proper day
+  #   scope.each do |report|
+  #     checkins_by_day[report.created_at.to_date.to_s] += 1
+  #   end
+  #   
+  #   # Get the checkin numbers as an array
+  #   checkins_by_day.values
+  # end
+  
+  def self.cached_checkins_between(opts = {})
+    default_opts = {:unit => nil, :start_date => nil, :end_date => nil}
+    opts = default_opts.merge(opts)
+    
+    Rails.cache.fetch("checkins-for-unit-#{opts[:unit].id}-from-#{opts[:start_date]}-to-#{opts[:end_date]}", :expires_in => 15.minutes) do
+      ManagedInstallReport.checkins_between(:start_date => opts[:start_date], :end_date => opts[:end_date], :unit => opts[:unit])
+    end
+  end
+  
+  # Fetch cached result for checkins.  Never cache today's
+  # checkins.
+  def self.cached_checkins_on_date(opts)
+    default_opts = {:date => nil, :unit => nil}
+    opts = default_opts.merge(opts)
+
+    if opts[:date] ==  Date.today
+      checkins_on_date(opts)
+    else
+      Rails.cache.fetch("checkins-for-unit-id-#{opts[:unit].id}-from-#{opts[:date]}") do
+        checkins_on_date(opts)
+      end
+    end
+  end
+
+  def self.checkins_on_date(opts)
+    default_opts = {:date => nil, :unit => nil}
+    opts = default_opts.merge(opts)
+
+    scope = ManagedInstallReport.scoped
+    scope = scope.where(:computer_id => opts[:unit].computers.map(&:id)) if opts[:unit].present?
+    scope = scope.where('created_at >= ? and created_at <= ?', opts[:date].beginning_of_day, opts[:date].end_of_day)
+    scope = scope.select("DISTINCT(computer_id)")
+    scope.count
   end
   
   # Creates a ManagedInstallReport object based on a plist file

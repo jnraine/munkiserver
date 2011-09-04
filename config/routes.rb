@@ -86,6 +86,7 @@ Munki::Application.routes.draw do
   end
   
   match 'dashboard' => "dashboard#index", :as => "dashboard"
+  match 'dashboard/widget/:name' => 'dashboard#widget', :as => "widget"
   
   root :to => redirect("/login")
 end

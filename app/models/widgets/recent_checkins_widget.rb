@@ -3,15 +3,24 @@ class RecentCheckinsWidget < DashboardWidget
   # key => Unit name
   # value => an array of how many computers that have checked-in in the past "interval" days
   # each index of an array represent how many computers checked-in on one day
-  def checkins(interval = nil)
-    checkin_hash = {}
-    interval ||= 30
-    checkin_array = []
-    interval.days.ago.to_date.step(Time.now.to_date, 1.day) do |d|
-      checkin_array << ManagedInstallReport.checkins_on_date(d)
+  def checkins_by_unit(start_date)
+    
+    checkins_by_unit = {}
+    user_units.each do |unit|
+      checkins_by_unit[unit.to_s] = ManagedInstallReport.cached_checkins_between(:start_date => start_date, :end_date => Date.today, :unit => unit)
     end
-    checkin_hash["Total"] = checkin_array
-    checkin_hash
+    
+    # Add total for all units
+    total_checkins = []
+    checkins_by_unit.each do |unit_name,checkins|
+      checkins.each_with_index do |checkin_count,i|
+        total_checkins[i] ||= 0
+        total_checkins[i] += checkin_count
+      end
+    end
+
+    checkins_by_unit["Total"] = total_checkins
+    checkins_by_unit
   end
   
   def checked_in?(computer,date)
@@ -34,13 +43,17 @@ class RecentCheckinsWidget < DashboardWidget
   # end
 
   # Data parsed by highcharts library for rendering graphic charts
-  def to_highcharts(interval = nil)
-    interval ||= 30
+  def to_highcharts(start_date = nil)
+    start_date ||= 60.days.ago.to_date
     series = []
-    checkins(interval).each do |k, v|
-      series << {:name => k, :data => v, :pointStart => interval.days.ago.to_i * 1000, :pointInterval => 1.day * 1000}
+    checkins_by_unit(start_date).each do |unit_name, checkins|
+      series << {:name => unit_name, :data => checkins, :pointStart => start_date.to_time.to_i*1000, :pointInterval => 1.day * 1000}
     end
     # Ready parse by highcharts
     series.to_json.html_safe
+  end
+  
+  def lazy_loading?
+    true
   end
 end

@@ -1,8 +1,10 @@
 module DashboardHelper
   def render_widget(name)
     @widget = "#{name.to_s.camelize}Widget".constantize.new(current_user)
-    render :layout => "widgets/wrapper" do
-      render :partial => @widget.partial_name
+    if @widget.lazy_loading?
+      render :partial => "widgets/lazy_load", :layout => "widgets/wrapper"
+    else
+      render :partial => @widget.partial_name, :layout => "widgets/wrapper"
     end
   end
   
