@@ -1,25 +1,8 @@
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
-  
-  @@password_constraints = {:pass_len => "must be between 5-24 characters",
-    :pass_nums => "must contain at least one number",
-    :pass_upper => "must contain at least one upper case character",
-    :pass_lower => "must contain at least one lower case character"}
-
   validates_length_of :username, :within => 3..40
-  # ensure password has enough letters, but not too many
-  validates_length_of :password, :in => 5..24, :if => :password_changed?,
-    :message => @@password_constraints[:pass_len]
-  # ensure password contains at least one number
-  # validates_format_of :password, :with => /[0-9]/, :if => :password_changed?,
-  #   :message => @@password_constraints[:pass_nums]
-  # ensure password contains at least one upper case  
-  # validates_format_of :password, :with => /[A-Z]/, :if => :password_changed?,
-  #   :message => @@password_constraints[:pass_upper]
-  # ensure password contains at least one lower case  
-  # validates_format_of :password, :with => /[a-z]/, :if => :password_changed?,
-  #   :message => @@password_constraints[:pass_lower]
+  validates_length_of :password, :in => 5..24, :if => :password_changed?, :message => "must be between 5-24 characters"
   validates_presence_of :username, :email
   validates_presence_of :salt, :message => "is missing. New users require a password."
   validates_presence_of :password, :password_confirmation, :if => :password_changed?
@@ -32,14 +15,14 @@ class User < ActiveRecord::Base
 
   has_many :memberships
   has_many :units, :through => :memberships
-  
+  has_many :user_group_memberships
+  has_many :user_groups, :through => :user_group_memberships
+  has_many :permissions, :as => :principal
+  has_many :privileges, :through => :permissions
+  has_many :units, :through => :permissions
   has_one :settings, :dependent => :destroy, :class_name => "UserSetting", :autosave => true
 
   before_save :check_settings
-  
-  def self.password_constraints
-    @@password_constraints.values
-  end
   
   # Generate a random string consisting of strings and digits
   # with a length of up to len characters

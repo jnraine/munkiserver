@@ -290,6 +290,13 @@ namespace :bootstrap do
       `mkdir #{assets_dir}`
     end
   end
+  
+  desc "Create privilege database records"
+  task :privileges => :environment do
+    [:read_packages, :modify_packages, :create_packages, :destroy_packages].each do |privilege_name|
+      Privilege.find_or_create_by_name(:name => privilege_name)
+    end
+  end
 end
 
 private
