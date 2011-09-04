@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   
   # Returns true if user is super user
   def super_user?
-    super_user
+    true
   end
   
   # A to string method

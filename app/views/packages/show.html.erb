@@ -1,3 +1,8 @@
+<% if can? :read, @package %>
+    <h4>You <span style="color:lime">can</span> read this package</h4>
+<% else %>
+    <h4>You <span style="color:red">cannot</span> read this package</h4>
+<% end %>
 <%= package_header(@package) %>
 
 <% if !@package.description.blank? %>
