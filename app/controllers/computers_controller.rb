@@ -1,6 +1,7 @@
+require 'cgi'
+
 class ComputersController < ApplicationController
   before_filter :require_valid_unit
-  require 'cgi'
 
   def index
     # Set environment at view layer
@@ -197,7 +198,7 @@ class ComputersController < ApplicationController
     # make sure if the current user is eligible for the traget unit
     if params[:unit_id] != current_unit.id and current_user.units.map(&:id).include?(params[:unit_id])
       computer = Computer.find(params[:computer_id])
-      # tempoary assign the target unit id to computer
+      # temporarily assign the target unit id to computer
       computer.unit_id = params[:unit_id]
       @computer = computer
       @unit = Unit.find(params[:unit_id])

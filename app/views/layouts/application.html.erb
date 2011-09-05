@@ -59,7 +59,7 @@
 				<li class="dir">
 				<%= link_to "Dashboard", dashboard_path %>
 				</li>
-				<% if logged_in? %>					
+				<% if logged_in? %>
 					<li><%= link_to("Logout", logout_path) %> (<%= current_user.username %>)</li>
 				<% end %>
 			</ul>

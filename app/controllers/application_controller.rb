@@ -3,9 +3,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery :except => [:checkin]
   
   before_filter :require_login
+  before_filter :load_singular_resource
+  before_filter :authorize_resource
   
   private
-  
   include ApplicationHelper
   
   # Run a rake task in the background
@@ -58,10 +59,6 @@ class ApplicationController < ActionController::Base
     end
     excluded
   end
-  
-  def fake_login
-    session[:username] = "default"
-  end
 
   def page_not_found
     {:file => "#{Rails.root}/public/404.html", :layout => false, :status => 404}
@@ -71,16 +68,13 @@ class ApplicationController < ActionController::Base
     {:file => "#{Rails.root}/public/generic_error.html", :layout => false}
   end
   
-  # Check if the given package has dependency issues if it's required by other packages
-  def is_required?(package)
-    RequireItem.where(:package_id => package.id).present?
+  protected
+  # Load a singular resource into @package for all actions
+  def load_singular_resource
+    raise Exception("Unale to load singular resource for #{action} action in #{params[:controller]} controller.")
   end
   
-  protected
-  
-  # Sets the Authorization.current_user to the current_user
-  # This is required by the declarative_authorization gem
-  def set_current_user_for_auth
-    Authorization.current_user = current_user
+  def authorize_resource
+    authorize! params[:action].to_sym, instance_variable_get("@#{params[:controller].singularize}")
   end
 end
