@@ -1,6 +1,4 @@
 class PackagesController < ApplicationController
-  before_filter :require_valid_unit
-  
   def index
     # TO-DO This query can be rethought because of the way the view uses this list of packages
     # it might be better to grab all the package branches from this environment and then iterate
@@ -150,7 +148,7 @@ class PackagesController < ApplicationController
     elsif [:environment_change].include?(action)      
       @package = Package.find(params[:package_id])
     else
-      raise Exception("Unale to load singular resource for #{action} action in #{params[:controller]} controller.")
+      raise Exception("Unable to load singular resource for #{action} action in #{params[:controller]} controller.")
     end
   end
 end
