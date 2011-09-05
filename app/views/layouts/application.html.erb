@@ -71,9 +71,9 @@
 					<% end %> -->
 		</div>
 	
-		<div id="units_menu" class="span-24 last">
+		<div id="unit_menu" class="span-24 last">
 			<ul>
-				<%= units_menu %>
+				<%= unit_menu %>
 			</ul>
 		</div>
 	
@@ -114,13 +114,13 @@
 				</ul>
 			<% end %>
 		</div>
-		<%= yield :dashboard %>
 		<div class="span-16 prepend-1 append-bottom append-1">
 			<% flash.each do |key, msg| %>
 				<%= content_tag :div, msg, :class => "message #{key}" %>
 			<% end %>
 			<%= yield %>
 		</div>
+		<%= yield :dashboard %>
 	<div id="sidebar" class="span-6 last">
 		<%= render :partial => "shared/sidebar" %>
 		<%= yield :sidebar %>

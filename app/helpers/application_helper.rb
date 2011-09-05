@@ -131,9 +131,9 @@ module ApplicationHelper
   end
   
   # Build units menu for currently logged in user
-  def units_menu
+  def unit_menu
     units = current_user.units
-    render :partial => "shared/units_menu", :locals => {:units => units, :current_unit => current_unit}
+    render :partial => "shared/unit_menu", :locals => {:units => units, :current_unit => current_unit}
   end
   
   # Creates auto-complete text field for ASM select

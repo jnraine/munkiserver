@@ -1,4 +1,8 @@
-<%= form_for(Package.new, :url => packages_path(current_user.units.first), :html => {:multipart => true, :id => "add_package_widget_form"}) do |f| %>
-	<p><%= select_tag :unit, new_package_unit_options(current_user.units), :id => "unit-path-select" %></p>
-	<%= render :partial => 'packages/add_package_form_contents', :locals => {:f => f} %>
+<% if current_user.units.present? %>
+    <%= form_for(Package.new, :url => packages_path(current_user.units.first), :html => {:multipart => true, :id => "add_package_widget_form"}) do |f| %>
+    	<p><%= select_tag :unit, new_package_unit_options(current_user.units), :id => "unit-path-select" %></p>
+    	<%= render :partial => 'packages/add_package_form_contents', :locals => {:f => f} %>
+    <% end %>
+<% else %>
+    <em>You are not permitted to any units!</em>
 <% end %>
