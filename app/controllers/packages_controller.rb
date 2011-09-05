@@ -1,8 +1,5 @@
 class PackagesController < ApplicationController
   before_filter :require_valid_unit
-  before_filter :find_package_where_params, :only => [:show, :edit, :update, :destroy]
-  
-  load_and_authorize_resource
   
   def index
     # TO-DO This query can be rethought because of the way the view uses this list of packages
@@ -15,27 +12,23 @@ class PackagesController < ApplicationController
     end
   end
 
-    def show
-      # @package = Package.find_where_params(params)
-      respond_to do |format|
-        if @package.present?
-          format.html
-          format.plist { render :text => @package.to_plist }
-        else
-          format.html { render page_not_found }
-          format.plist { render page_not_found }
-        end
+  def show
+    respond_to do |format|
+      if @package.present?
+        format.html
+        format.plist { render :text => @package.to_plist }
+      else
+        format.html { render page_not_found }
+        format.plist { render page_not_found }
       end
     end
+  end
 
   def edit
-    # @package = Package.find_where_params(params)
     @package.environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update
-    # @package = Package.find_where_params(params)
-    
     respond_to do |format|
       if @package.update_attributes(params[:package])
         flash[:notice] = "Package was successfully updated."
@@ -50,7 +43,6 @@ class PackagesController < ApplicationController
   end
 
   def new
-    @package = Package.new
   end
 
   def create
@@ -61,7 +53,6 @@ class PackagesController < ApplicationController
                                 :makepkginfo_options => params[:makepkginfo_options],
                                 :special_attributes => {:unit_id => current_unit.id})
     rescue PackageError => e
-      @package = Package.new
       exceptionMessage = e.to_s
     end
 
@@ -80,8 +71,6 @@ class PackagesController < ApplicationController
   end
 
   def destroy
-    # @package = Package.find_where_params(params)
-    
     if @package.destroy
         flash[:notice] = "Package was destroyed successfully"
     end
@@ -125,7 +114,6 @@ class PackagesController < ApplicationController
   
   # Used to download the actual package (typically a .dmg)
   def download
-    @package = Package.find(params[:id])
     if @package.present?
       send_file Munki::Application::PACKAGE_DIR + @package.installer_item_location, :filename => @package.to_s(:download_filename)
       fresh_when :etag => @package, :last_modified => @package.created_at.utc, :public => true
@@ -142,7 +130,6 @@ class PackagesController < ApplicationController
   end
   
   def environment_change
-    @package = Package.find(params[:package_id])
     @environment_id = params[:environment_id] if params[:environment_id].present?
     
     respond_to do |format|
@@ -151,7 +138,19 @@ class PackagesController < ApplicationController
   end
   
   private
-  def find_package_where_params
-    @package = Package.find_where_params(params)
+  # Load a singular resource into @package for all actions
+  def load_singular_resource
+    action = params[:action].to_sym
+    if [:show, :edit, :update, :destroy].include?(action)
+      @package = Package.find_where_params(params)
+    elsif [:index, :new, :create, :edit_multiple, :update_multiple, :check_for_updates].include?(action)
+      @package = Package.new(:unit_id => current_unit.id)
+    elsif [:download].include?(action)      
+      @package = Package.find(params[:id])
+    elsif [:environment_change].include?(action)      
+      @package = Package.find(params[:package_id])
+    else
+      raise Exception("Unale to load singular resource for #{action} action in #{params[:controller]} controller.")
+    end
   end
 end

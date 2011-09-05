@@ -14,12 +14,11 @@ class User < ActiveRecord::Base
   attr_accessor :password
 
   has_many :memberships
-  has_many :units, :through => :memberships
   has_many :user_group_memberships
   has_many :user_groups, :through => :user_group_memberships
   has_many :permissions, :as => :principal
   has_many :privileges, :through => :permissions
-  has_many :units, :through => :permissions
+  # has_many :units, :through => :permissions, :finder_sql => 'SELECT DISTINCT \'units\'.* FROM \'units\' INNER JOIN \'permissions\' ON \'units\'.id = \'permissions\'.unit_id WHERE ((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = \'#{self.class.to_s}\'))'
   has_one :settings, :dependent => :destroy, :class_name => "UserSetting", :autosave => true
 
   before_save :check_settings
@@ -96,5 +95,15 @@ class User < ActiveRecord::Base
   # over write default to_param use name in the routing instead of id
   def to_param
     username
+  end
+  
+  def all_permissions
+    user_groups.map(&:permissions) + permissions
+  end
+  
+  # Returns units through permission association.  Couldn't get finder_sql
+  # to work, so I added a custom method instead.
+  def units
+    Unit.find_by_sql("SELECT DISTINCT \'units\'.* FROM \'units\' INNER JOIN \'permissions\' ON \'units\'.id = \'permissions\'.unit_id WHERE ((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = '#{self.class.to_s}'))")
   end
 end
