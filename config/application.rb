@@ -27,6 +27,7 @@ module Munki
         #{Rails.root}/app/models/magic_mixin
         #{Rails.root}/app/models/manifest
         #{Rails.root}/app/models/service
+        #{Rails.root}/app/models/privilege_granters
         #{Rails.root}/lib
     )
 
