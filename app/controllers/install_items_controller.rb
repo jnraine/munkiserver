@@ -1,5 +1,4 @@
 class InstallItemsController < ApplicationController
-  before_filter :require_valid_unit
   def edit_multiple
     begin
       @computer = Computer.unit(current_unit).find(params[:computer_id])

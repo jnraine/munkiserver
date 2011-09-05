@@ -78,17 +78,17 @@ a:hover {
 	font-size:16px;
 }
 
-#units_menu {
+#unit_menu {
 	height:36px;
 }
 
-#units_menu ul {
+#unit_menu ul {
 	/* Unit menu UL */
 	height:13px;
 	padding-top:5px;
 }
 
-#units_menu li {
+#unit_menu li {
 	/* Units menu items */
 	list-style-type:none;
 	display:inline;
@@ -98,7 +98,7 @@ a:hover {
 	font-size:16px;
 }
 
-#units_menu li.current {
+#unit_menu li.current {
 	/* Currently selected unit */
 	background-image:url("../images/current_unit.png");
 	background-position:bottom center;

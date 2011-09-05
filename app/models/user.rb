@@ -106,4 +106,9 @@ class User < ActiveRecord::Base
   def units
     Unit.find_by_sql("SELECT DISTINCT \'units\'.* FROM \'units\' INNER JOIN \'permissions\' ON \'units\'.id = \'permissions\'.unit_id WHERE ((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = '#{self.class.to_s}'))")
   end
+  
+  # Could be refactored to be more efficient
+  def unit_ids
+    units.map(&:id)
+  end
 end

@@ -1,4 +1,2 @@
-class AddPackageWidget < DashboardWidget
-  # Get missing manifests for display in the widget
-  
+class AddPackageWidget < DashboardWidget  
 end
