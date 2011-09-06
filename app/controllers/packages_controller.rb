@@ -134,6 +134,56 @@ class PackagesController < ApplicationController
       format.js
     end
   end
+
+  def index_shared
+    @packages = Package.shared.where("unit_id != #{current_unit.id}")
+    pb_ids = []
+    @packages.each do |p|
+      pb_ids << p.package_branch_id
+    end
+    @package_branches = PackageBranch.find(pb_ids.uniq)
+    @other_units = Unit.from_other_unit(current_unit)
+  end
+  
+  # Updates the shared package resource by adding a new instance of that package
+  # to the current unit.  This is very basic and gets complicated when that package
+  # has dependencies.  This still needs to be sorted out.
+  def import_shared
+    shared_package = Package.shared.where("unit_id != #{current_unit.id}").find(params[:id])
+    imported_package = Package.import_package(current_unit, shared_package)
+    
+    respond_to do |format|
+      if imported_package.save
+        flash[:notice] = "Successfully imported #{shared_package.display_name} (#{shared_package.version})"
+        format.html { redirect_to edit_package_path(imported_package.to_params) }
+      else
+        flash[:error] = "Unable to import #{shared_package.display_name} (#{shared_package.version})"
+        format.html { redirect_to shared_packages_path(current_unit) }
+      end
+    end
+  end
+  
+  # Import two or more packages from other units,
+  # after import default to staging enviroment, and package shared status to false
+  def import_multiple_shared
+    shared_packages = Package.shared.where("unit_id != #{current_unit.id}").find(params[:selected_records])
+    results = []
+    shared_packages.each do |shared_package|
+      package = Package.import_package(current_unit, shared_package)
+      results << package.save
+    end
+    respond_to do |format|
+      if results.include?(false)
+        flash[:error] = "Failed to import packages"
+        format.html { redirect_to shared_packages_path(current_unit) }
+      else
+        flash[:notice] = "Successfully imported packages"
+        # upon success redirect to staging package index page, change current_environment
+        params[:eid] = 1
+        format.html { redirect_to packages_path(current_unit) }
+      end
+    end
+  end
   
   private
   # Load a singular resource into @package for all actions
@@ -141,14 +191,14 @@ class PackagesController < ApplicationController
     action = params[:action].to_sym
     if [:show, :edit, :update, :destroy].include?(action)
       @package = Package.find_where_params(params)
-    elsif [:index, :new, :create, :edit_multiple, :update_multiple, :check_for_updates].include?(action)
+    elsif [:index, :new, :create, :edit_multiple, :update_multiple, :check_for_updates, :index_shared, :import_shared, :import_multiple_shared].include?(action)
       @package = Package.new(:unit_id => current_unit.id)
     elsif [:download].include?(action)      
       @package = Package.find(params[:id])
     elsif [:environment_change].include?(action)      
       @package = Package.find(params[:package_id])
     else
-      raise Exception("Unable to load singular resource for #{action} action in #{params[:controller]} controller.")
+      raise Exception.new("Unable to load singular resource for #{action} action in #{params[:controller]} controller.")
     end
   end
 end

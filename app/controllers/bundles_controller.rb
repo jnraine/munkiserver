@@ -9,12 +9,12 @@ class BundlesController < ApplicationController
 
   def create
     respond_to do |format|
-      if @bundle.save
+      if @bundle.update_attributes(params[:bundle])
         flash[:notice] = "Bundle successfully saved"
         format.html { redirect_to bundles_path }
       else
         flash[:error] = "Bundle failed to save!"
-        format.html { render new_bundle_path }
+        format.html { render new_bundle_path(current_unit) }
       end
     end
   end
@@ -55,7 +55,7 @@ class BundlesController < ApplicationController
         format.manifest { render :text => @bundle.to_plist }
         format.plist { render :text => @bundle.to_plist }
       else
-        format.html{ render :file => "#{Rails.root}/public/404.html", :layout => false }
+        format.html{ render page_not_found }
       end
     end
   end

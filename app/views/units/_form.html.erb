@@ -1,0 +1,6 @@
+<%= form_for(@unit, :validate => true) do |f| %>
+    <%= f.error_messages %>
+    <p><%= f.text_field :name %></p>
+    <p><%= f.text_area :description, :size => "30x3" %></p>
+    <p><%= f.submit 'Update' %></p>
+<% end %>
