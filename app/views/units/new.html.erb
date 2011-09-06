@@ -1,15 +1,2 @@
 <h2>New unit</h2>
-
-<%= form_for(@unit, :validate => true) do |f| %>
-	<%= f.error_messages %>
-	<p>
-		<%= f.text_field :name %>
-		<%= subtle_value(@unit,:name)%>
-	</p>
-	<p>
-		<%= f.text_area :description, :size => "30x3" %>
-		<%= subtle_value(@unit,:description)%>
-	</p>
-	<%= render :partial => 'edit_members' %>
-	<p><%= f.submit 'Create' %></p>
-<% end %>
+<%= render :partial => 'form', :locals => {:submit_text => "Create"} %>

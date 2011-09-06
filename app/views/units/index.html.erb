@@ -9,7 +9,7 @@
 
 <% @units.each do |unit| %>
   <tr>
-    <td><%= link_to unit.name, unit %></td>
+    <td><%= unit.name %></td>
 	<td><%= unit.description %></td>
     <td>
 		<%= link_to 'Edit', edit_unit_path(unit) %> 

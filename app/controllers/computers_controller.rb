@@ -1,7 +1,6 @@
 require 'cgi'
 
 class ComputersController < ApplicationController
-  skip_before_filter :require_valid_unit # the work is done in the find_for_show method
   
   def index
     # Set environment at view layer

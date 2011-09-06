@@ -6,20 +6,13 @@ class Unit < ActiveRecord::Base
   has_many :computer_groups, :dependent => :destroy
   has_many :bundles, :dependent => :destroy
   has_many :packages, :dependent => :destroy
-  
-  has_many :memberships, :dependent => :destroy
-  has_many :users, :through => :memberships
-  
-  has_one :settings, :dependent => :destroy, :class_name => "UnitSetting", :autosave => true
-  accepts_nested_attributes_for :settings, :allow_destroy => true
+  has_many :principals, :through => :permissions
   
   scope :from_other_unit, lambda {|u| where("id != ?", u.id)}
   
   validates :name, :presence => true, :unique_as_shortname => true
   validates :description, :presence => true
   validates :shortname, :presence => true, :format => {:with => /^[a-z0-9-]+$/}
-  
-  before_save :check_settings
   
   # Takes a name attribute and returns a valid shortname attribute
   def conform_name_to_shortname(name = nil)
@@ -61,18 +54,6 @@ class Unit < ActiveRecord::Base
       :select_title => "Select a new member",
       :options =>  User.all.collect {|u| [u.username, u.id] },
       :selected_options => user_ids}]
-  end
-  
-  # Checks if a unit has a settings association
-  # and creates on if it doesn't
-  def check_settings
-    init_settings if settings.nil?
-  end
-  
-  # Initialize default settings
-  def init_settings
-    us = UnitSetting.new
-    self.settings = us
   end
 
   def to_s

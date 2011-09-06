@@ -8,9 +8,6 @@ class ComputerGroupsController < ApplicationController
   end
 
   def create
-    @computer_group = ComputerGroup.new(params[:computer_group])
-    @computer_group.unit = current_unit
-    
     respond_to do |format|
       if @computer_group.save
         flash[:notice] = "Computer group successfully saved"
@@ -23,8 +20,6 @@ class ComputerGroupsController < ApplicationController
   end
 
   def destroy
-    @computer_group = ComputerGroup.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
-    
     begin
       if @computer_group.destroy
         flash[:notice] = "Computer group was destroyed successfully"
@@ -41,13 +36,10 @@ class ComputerGroupsController < ApplicationController
   end
 
   def edit
-    @computer_group = ComputerGroup.find_for_show(params[:unit_shortname], params[:id])
     @environment_id = params[:environment_id] if params[:environment_id].present?
   end
 
   def update
-    @computer_group = ComputerGroup.unit(current_unit).find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
-    
     respond_to do |format|
       if @computer_group.update_attributes(params[:computer_group])
         flash[:notice] = "#{@computer_group} was successfully updated."
@@ -60,13 +52,9 @@ class ComputerGroupsController < ApplicationController
   end
 
   def new
-    @computer_group = ComputerGroup.new
-    @computer_group.unit = current_unit
   end
 
   def show
-    @computer_group = ComputerGroup.find_for_show(params[:unit_shortname], params[:id])
-    
     respond_to do |format|
       if @computer_group.present?
         format.html
@@ -78,17 +66,27 @@ class ComputerGroupsController < ApplicationController
     end
   end
   
-  def environment_change
-    if params[:computer_group_id] == "new"
-      @computer_group = ComputerGroup.new({:unit_id => current_unit.id})
-    else
-      @computer_group = ComputerGroup.find(params[:computer_group_id])
-    end
-    
+  def environment_change    
     @environment_id = params[:environment_id] if params[:environment_id].present?
     
     respond_to do |format|
       format.js
+    end
+  end
+  
+  private
+  def load_singular_resource
+    action = params[:action].to_sym
+    if [:show, :edit, :update, :destroy].include?(action)      
+      @computer_group = ComputerGroup.unit(current_unit).find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
+    elsif [:index, :new, :create].include?(action)      
+      @computer_group = ComputerGroup.new({:unit_id => current_unit.id})
+    elsif [:environment_change].include?(action)      
+      if params[:computer_group_id] == "new"
+        @computer_group = ComputerGroup.new({:unit_id => current_unit.id})
+      else
+        @computer_group = ComputerGroup.find(params[:computer_group_id])
+      end
     end
   end
 end

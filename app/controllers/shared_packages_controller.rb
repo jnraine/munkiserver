@@ -1,7 +1,5 @@
 class SharedPackagesController < ApplicationController
   def index
-    # @packages = Package.shared_to_unit_and_imported(current_unit)
-    
     @packages = Package.shared.where("unit_id != #{current_unit.id}")
     pb_ids = []
     @packages.each do |p|
@@ -50,4 +48,18 @@ class SharedPackagesController < ApplicationController
       end
     end
   end
+  
+  private
+  # This controller is a bit of an oddball -- it actually edits Package records,
+  # so it authorizes based on a Package instance.  We just grab the first 
+  # package from this unit and see if we can act upon it -- we use a record 
+  # instead of the Package class to give unit context.
+  def load_singular_resource
+    @shared_package = Package.where(:unit_id => current_unit.id).limit(1).first
+  end
+  
+  def authorize_resource
+    authorize! params[:action], @shared_package
+  end
+  
 end

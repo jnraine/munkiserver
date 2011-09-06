@@ -60,7 +60,7 @@ module PrivilegeGranter
   # = Packages =
   # ============
   def read_packages(unit_ids)
-    can [:read, :download, :check_for_updates], Package, :unit_id => unit_ids
+    can [:read, :download, :check_for_updates, :index_shared], Package, :unit_id => unit_ids
   end
 
   def modify_packages(unit_ids)
@@ -68,7 +68,7 @@ module PrivilegeGranter
   end
 
   def create_packages(unit_ids)
-    can :create, Package, :unit_id => unit_ids
+    can [:create, :import_shared, :import_multiple_shared], Package, :unit_id => unit_ids
   end
 
   def destroy_packages(unit_ids)

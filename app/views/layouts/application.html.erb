@@ -107,7 +107,7 @@
 						<ul>
 							<li><%= link_to "List packages", packages_path(current_unit) %></li>
 							<li><%= link_to "Add package", new_package_path(current_unit) %></li>
-							<li><%= link_to "Shared packages", shared_packages_path(current_unit, :imported => false) %></li>	
+							<li><%= link_to "Shared packages", shared_packages_path(current_unit) %></li>	
 							<li><%= link_to "Check for updates", check_for_package_updates_path(current_unit) %></li>
 						</ul>
 					</li>
