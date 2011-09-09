@@ -97,8 +97,16 @@ class VersionTracker < ActiveRecord::Base
         icon_url = info_doc.at_css("#appiconinfo")[:src]
         # Grab all the download links available
         get_download_links(info_doc)
-        
-        latest_version = info_doc.at_css("#appversinfo").text
+        latest_version = nil
+        # If there exists a download link that contains the stable version number
+        # Get latest version number from the download link
+        download_links.each do |downloadlink|
+          if downloadlink.caption.include?("Stable")
+            match = downloadlink.text.match(/[0-9.]+/) if downloadlink.text.present?
+            latest_version = match[0] if match.present?
+          end
+        end
+        latest_version ||= info_doc.at_css("#appversinfo").text
         # Grab the description of the package
         description = info_doc.at_css("#desc").text
       rescue NoMethodError => e
