@@ -18,5 +18,6 @@ end
 if path.nil?
   puts "Unable to determine the path to image magick.  If Paperclip errors, set the path manually in config/initializers/paperclip.rb"
 else
-  Paperclip.options[:image_magick_path] = path
+  # Paperclip.options[:image_magick_path] = path
+  Paperclip.options[:command_path] = path
 end
