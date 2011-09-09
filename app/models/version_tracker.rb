@@ -98,12 +98,12 @@ class VersionTracker < ActiveRecord::Base
         # Grab all the download links available
         get_download_links(info_doc)
         latest_version = nil
-        # If there are more than one download links
-        if download_links.length > 1
-          download_links.each do |downloadlink|
-            if downloadlink.caption.include?("Stable")
-              latest_version = downloadlink.text.match(/[0-9.]+/)[0].to_s if downloadlink.text.present?
-            end
+        # If there exists a download link that contains the stable version number
+        # Get latest version number from the download link
+        download_links.each do |downloadlink|
+          if downloadlink.caption.include?("Stable")
+            match = downloadlink.text.match(/[0-9.]+/) if downloadlink.text.present?
+            latest_version = match[0] if match.present?
           end
         end
         latest_version ||= info_doc.at_css("#appversinfo").text
