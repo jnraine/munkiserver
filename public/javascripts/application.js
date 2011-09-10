@@ -354,6 +354,14 @@ $(document).ready(function() {
     $("#unit-path-select").change(function() {
         $("form#add_package_widget_form").attr("action",$(this).val());
     });
+    
+    // Remove membership links
+    $(".remove_membership").click(function() {
+      var $membership_container = $(this).parents(".principal-wrapper");
+      $membership_container.children("[name*='_destroy']").val("true"); // Mark for destruction
+      $membership_container.children(".principal-stub").remove(); // Remove visible elements
+      return false;
+    })
 }); // end document ready function
 
 function activateMoreInfoLinks() {

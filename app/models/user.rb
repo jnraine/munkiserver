@@ -13,9 +13,8 @@ class User < ActiveRecord::Base
   attr_protected :id, :salt
   attr_accessor :password
 
-  has_many :memberships
-  has_many :user_group_memberships
-  has_many :user_groups, :through => :user_group_memberships
+  has_many :user_group_memberships, :as => :principal
+  has_many :groups, :through => :user_group_memberships, :source => :user_group
   has_many :permissions, :as => :principal
   has_many :privileges, :through => :permissions
   # has_many :units, :through => :permissions, :finder_sql => 'SELECT DISTINCT \'units\'.* FROM \'units\' INNER JOIN \'permissions\' ON \'units\'.id = \'permissions\'.unit_id WHERE ((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = \'#{self.class.to_s}\'))'
@@ -98,7 +97,7 @@ class User < ActiveRecord::Base
   end
   
   def all_permissions
-    user_groups.map(&:permissions) + permissions
+    groups.map(&:permissions).flatten(1) + permissions
   end
   
   # Returns units through permission association.  Couldn't get finder_sql
@@ -110,5 +109,14 @@ class User < ActiveRecord::Base
   # Could be refactored to be more efficient
   def unit_ids
     units.map(&:id)
+  end
+  
+  def name
+    username
+  end
+  
+  # For nested association deletion, default to false
+  def _destroy
+    false
   end
 end

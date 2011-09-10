@@ -1,0 +1,21 @@
+<h2>Listing user group</h2>
+
+<table class="zebra">
+	<thead>
+		<th>Name</th>
+		<th>Description</th>
+		<th>Actions</th>
+	<thead>
+
+<% @user_groups.each do |user_group| %>
+  <tr>
+    <td><%= user_group.name %></td>
+	<td><%= user_group.description %></td>
+    <td>
+		<%= link_to 'Edit', edit_user_group_path(user_group.unit, user_group) %> 
+		<%= link_to 'Remove', user_group_path(user_group.unit, user_group), :confirm => 'Are you sure?', :method => :delete %>
+	</td>
+  </tr>
+<% end %>
+</table>
+<p><%= link_to 'New user group', new_user_group_path(current_unit) %></p>

@@ -9,7 +9,7 @@ class ComputerGroupsController < ApplicationController
 
   def create
     respond_to do |format|
-      if @computer_group.save
+      if @computer_group.update_attributes(params[:computer_group])
         flash[:notice] = "Computer group successfully saved"
         format.html { redirect_to computer_groups_path(@computer_group.unit) }
       else
