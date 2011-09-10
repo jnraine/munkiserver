@@ -370,7 +370,8 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
   end
 
   create_table "user_group_memberships", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "principal_id"
+    t.string   "principal_type"
     t.integer  "user_group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -378,6 +379,7 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
 
   create_table "user_groups", :force => true do |t|
     t.string   "name"
+    t.string   "shortname"
     t.text     "description"
     t.integer  "unit_id"
     t.datetime "created_at"

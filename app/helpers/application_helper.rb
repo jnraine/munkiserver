@@ -154,6 +154,8 @@ module ApplicationHelper
       bool = (params[:controller] == "computers")
     when "Computer Groups"
       bool = (params[:controller] == "computer_groups")
+    when "User Groups"
+      bool = (params[:controller] == "user_groups")
     when "Bundles"
       bool = (params[:controller] == "groups")
     when "Packages"

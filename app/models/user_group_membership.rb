@@ -1,7 +1,8 @@
 class UserGroupMembership < ActiveRecord::Base
-  validates :user_id, :presence => true
+  validates :principal_id, :presence => true
+  validates :principal_type, :presence => true
   validates :user_group_id, :presence => true
   
-  belongs_to :user
+  belongs_to :principal, :polymorphic => :true
   belongs_to :user_group
 end
