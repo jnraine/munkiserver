@@ -95,6 +95,13 @@
 							<li><%= link_to "Add computer group", new_computer_group_url(current_unit) %></li>
 						</ul>
 					</li>
+					<li class="dir<%= " current" if current_link?("User Groups") %>">
+						<%= link_to "User Groups", user_groups_path(current_unit) %>
+						<ul>
+							<li><%= link_to "List user groups", user_groups_path(current_unit) %></li>
+							<li><%= link_to "Add user group", new_user_group_path(current_unit) %></li>
+						</ul>
+					</li>
 					<li class="dir<%= " current" if current_link?("Bundles") %>">
 					<%= link_to "Bundles", bundles_url(current_unit) %>
 						<ul>

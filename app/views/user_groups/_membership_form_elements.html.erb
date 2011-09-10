@@ -1,0 +1,11 @@
+<p class="principal-wrapper">
+    <span class="principal-stub">
+        <%= f.object.principal %>
+        [<%= link_to "x", "#", :class => "remove_membership" %>]
+    </span>
+    <%= f.hidden_field :id %>
+    <%= f.hidden_field :principal_id %>
+    <%= f.hidden_field :principal_type %>
+    <%= f.hidden_field :user_group_id %>
+    <%= f.hidden_field :_destroy %>
+</p>

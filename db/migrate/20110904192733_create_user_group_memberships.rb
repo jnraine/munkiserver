@@ -1,8 +1,8 @@
 class CreateUserGroupMemberships < ActiveRecord::Migration
   def self.up
     create_table :user_group_memberships do |t|
-      t.integer :user_id
-      t.integer :user_group_id
+      t.references :principal, :null => false, :polymorphic => true
+      t.references :user_group, :null => false
       t.timestamps
     end
   end

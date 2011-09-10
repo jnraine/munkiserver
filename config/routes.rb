@@ -69,6 +69,8 @@ Munki::Application.routes.draw do
       end
     end
     
+    resources :user_groups, :except => :show
+    
     resources :computer_groups do
       get 'environment_change(.:format)', :action => "environment_change", :as => 'environment_change'
     end

@@ -1,0 +1,11 @@
+<%= form_for(@user_group, :validate => true, :url => user_group_path(@user_group.unit, @user_group)) do |f| %>
+    <%= f.error_messages %>
+    <p><%= f.text_field :name %></p>
+    <p><%= f.text_area :description, :size => "30x3" %></p>
+    <div>
+        <% f.fields_for :principal_memberships do |membership_fields| %>
+            <%= render :partial => 'membership_form_elements', :locals => {:f => membership_fields} %>
+        <% end %>
+    </div>
+    <p><%= f.submit 'Update' %></p>
+<% end %>
