@@ -5,10 +5,13 @@
 <% else %>
 	<% @widget.expiring.each do |warranty| %>
 		<div class="alert-message">
-			<p><strong><%= link_to "#{warranty.computer.name}", 
+			<p>
+				<strong><%= link_to "#{warranty.computer.name}", 
 			"#{computer_path(warranty.computer.unit, warranty.computer)}\?tab=warranty_tab", :target => "_blank" %></strong>'s 
-			warranty will expire in <strong><%= warranty.days_left %> days </strong>
-			<%= link_to "more", "#", {:class => "more_info"}%></p>
+			warranty will expire in <strong><%= warranty.days_left %> days
+				</strong>
+				<%= link_to "more", "#", {:class => "more_info"}%>
+			</p>
 			<blockquote>
 				<div class="alert-message-body">
 					<div class="warranty-status">
