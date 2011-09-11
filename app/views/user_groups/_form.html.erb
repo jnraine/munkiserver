@@ -4,7 +4,7 @@
     <p><%= f.text_area :description, :size => "30x3" %></p>
     <div class="span-6">
         <h4>Principals</h4>
-        <div id="all-principal-container" class="principal-container well">
+        <div id="all-principals" class="principal-container well">
             <ul>
                 <% (User.all + UserGroup.where_unit(current_unit)).sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |principal| %>
                     <li class="<%= principal.css_class %> ">
@@ -16,7 +16,7 @@
     </div>
     <div class="span-6">
         <h4>Members</h4>
-        <div id="member-principal-container" class="principal-container well">
+        <div id="member-principals" class="principal-container well">
             <ul>
                 <% f.fields_for :principal_memberships do |membership_fields| %>
                     <li class="<%= membership_fields.object.principal.css_class %>">

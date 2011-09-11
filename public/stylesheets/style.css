@@ -707,7 +707,13 @@ a:hover.more_info {
 
 .principal-container ul {
   list-style-type:none;
+  height:100%;
+  width:100%;
   margin:0;
+}
+
+#all-principals li {
+  cursor:pointer;
 }
 
 .user-principal, .user-group-principal {
@@ -716,6 +722,7 @@ a:hover.more_info {
   padding-top:5px;
   background-position:left center;
   background-repeat:no-repeat;
+  list-style-type:none;
 }
 
 .user-principal {
