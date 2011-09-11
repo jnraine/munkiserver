@@ -81,4 +81,9 @@ class UserGroup < ActiveRecord::Base
   def css_class
     self.class.to_s.underscore.gsub("_","-") + "-principal"
   end
+  
+  # Returns a unique principal ID for this principal
+  def principal_id
+    self.class.to_s.underscore.gsub("_","-") + "-#{id}"
+  end
 end
