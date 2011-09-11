@@ -666,3 +666,73 @@ a:hover.more_info {
     display:inline;
     cursor:pointer;
 }
+
+/* Stolen from Twitter Bootstrap framework */
+.well {
+  background-color: whiteSmoke;
+  margin-bottom: 20px;
+  padding: 19px;
+  min-height: 20px;
+  border: 1px solid #EEE;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+/* Stolen from Twitter Bootstrap framework */
+.well {
+  background-color: whiteSmoke;
+  margin-bottom: 20px;
+  padding: 19px;
+  min-height: 20px;
+  border: 1px solid #EEE;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+
+.principal-container {
+  height:200px;
+  overflow:scroll;
+}
+
+.principal-container ul {
+  list-style-type:none;
+  margin:0;
+}
+
+.user-principal, .user-group-principal {
+  height:16px;
+  padding-left:20px;
+  padding-top:5px;
+  background-position:left center;
+  background-repeat:no-repeat;
+}
+
+.user-principal {
+  background-image:url('/images/user.png');
+}
+
+.user-group-principal {
+  background-image:url('/images/user-group.png');
+}
+
+
+
+
+
+
+
+
+
+
+

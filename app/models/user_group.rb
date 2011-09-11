@@ -77,4 +77,8 @@ class UserGroup < ActiveRecord::Base
   def _destroy
     false
   end
+  
+  def css_class
+    self.class.to_s.underscore.gsub("_","-") + "-principal"
+  end
 end
