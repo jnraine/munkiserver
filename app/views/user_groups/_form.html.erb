@@ -2,10 +2,23 @@
     <%= f.error_messages %>
     <p><%= f.text_field :name %></p>
     <p><%= f.text_area :description, :size => "30x3" %></p>
+    <h4>Members</h4>
     <div>
-        <% f.fields_for :principal_memberships do |membership_fields| %>
-            <%= render :partial => 'membership_form_elements', :locals => {:f => membership_fields} %>
-        <% end %>
+        <div class="members-container">
+            <% f.fields_for :principal_memberships do |membership_fields| %>
+                <%= render :partial => 'membership_form_elements', :locals => {:f => membership_fields} %>
+            <% end %>
+        </div>
+        <%= link_to "Add random member", "#", :class => "add_random_member" %>
+        <script>
+            $(document).ready(function() {
+                $(".add_random_member").click(function() {
+                    <% f.fields_for :principal_memberships, @user_group.principal_memberships.build({:principal => User.first}) do |membership_fields| %>
+                        $(".members-container").append("<%= escape_javascript(render(:partial => 'membership_form_elements', :locals => {:f => membership_fields})) %>");
+                    <% end %>
+                });
+            });
+        </script>
     </div>
     <p><%= f.submit 'Update' %></p>
 <% end %>
