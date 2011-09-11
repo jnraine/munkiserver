@@ -373,8 +373,18 @@ $(document).ready(function() {
     $("#member-principals ul").droppable({
       activeClass: "ui-state-default",
       hoverClass: "ui-state-hover",
+      accept: function($ui) {
+        // Return true if there are no matching data-principal-id values within droppable space
+        var principalId = $ui.attr("data-principal-id")
+        ,   $duplicatePrincipals = $(this).find("[data-principal-id=" + principalId + "]");
+        return ($duplicatePrincipals.size() == 0);
+      },
       drop: function(event, ui) {
-          $( "<li><\/li>" ).html(ui.draggable.html()).addClass(ui.draggable.attr("class")).appendTo(this);
+          $("<li><\/li>")
+            .html(ui.draggable.html())
+            .addClass(ui.draggable.attr("class"))
+            .attr("data-principal-id",ui.draggable.attr("data-principal-id"))
+            .appendTo(this);
       }
     });
 }); // end document ready function
