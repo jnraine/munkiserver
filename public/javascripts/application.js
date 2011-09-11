@@ -357,10 +357,10 @@ $(document).ready(function() {
 }); // end document ready function
 
 function activateMoreInfoLinks() {
-  $(".more_info").click(function(){
+  $(".more_info").live('click', (function(){
       $(this).parent().parent().find(".alert-message-body").slideToggle("fast");
-      return false
-  });
+      return false;
+  }));
 }
 
 // disable input and select field onload, click to enable the field
