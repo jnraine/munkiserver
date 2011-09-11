@@ -8,7 +8,7 @@ namespace :chore do
   end
 
   desc "Validates all models stored in the database"
-  task :validate_models, :needs => :environment do |t, args|
+  task :validate_models, [:validate_models] => :environment do |t, args|
     #Force load all models
     Dir[Rails.root + 'app/models/**/*.rb'].each do |path|
       require path
@@ -40,7 +40,7 @@ namespace :chore do
   
   
   desc "If missing, create shortname attribute from name attribute for appropriate models"
-  task :generate_shortnames, :needs => :environment do
+  task :generate_shortnames, [:generate_shortnames] => :environment do
     records = Unit.all + Computer.all + Bundle.all + ComputerGroup.all
     records.each do |record|
       if record.shortname.blank?
