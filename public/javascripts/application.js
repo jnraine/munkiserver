@@ -362,6 +362,21 @@ $(document).ready(function() {
       $membership_container.children(".principal-stub").remove(); // Remove visible elements
       return false;
     })
+    
+    // Make principals draggable
+    $( "#all-principals li" ).draggable({
+        appendTo: "body",
+        helper: "clone",
+        cursor: "pointer"
+    });
+    // Make principals droppable
+    $("#member-principals ul").droppable({
+      activeClass: "ui-state-default",
+      hoverClass: "ui-state-hover",
+      drop: function(event, ui) {
+          $( "<li><\/li>" ).html(ui.draggable.html()).addClass(ui.draggable.attr("class")).appendTo(this);
+      }
+    });
 }); // end document ready function
 
 function activateMoreInfoLinks() {
