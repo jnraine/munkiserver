@@ -2,12 +2,28 @@
     <%= f.error_messages %>
     <p><%= f.text_field :name %></p>
     <p><%= f.text_area :description, :size => "30x3" %></p>
-    <h4>Members</h4>
-    <div>
-        <div class="members-container">
-            <% f.fields_for :principal_memberships do |membership_fields| %>
-                <%= render :partial => 'membership_form_elements', :locals => {:f => membership_fields} %>
-            <% end %>
+    <div class="span-6">
+        <h4>Principals</h4>
+        <div id="all-principal-container" class="principal-container well">
+            <ul>
+                <% (User.all + UserGroup.where_unit(current_unit)).sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |principal| %>
+                    <li class="<%= principal.css_class %> ">
+                        <%= principal %>
+                    </li>
+                <% end %>
+            </ul>
+        </div>
+    </div>
+    <div class="span-6">
+        <h4>Members</h4>
+        <div id="member-principal-container" class="principal-container well">
+            <ul>
+                <% f.fields_for :principal_memberships do |membership_fields| %>
+                    <li class="<%= membership_fields.object.principal.css_class %>">
+                        <%= render :partial => 'membership_form_elements', :locals => {:f => membership_fields} %>
+                    </li>
+                <% end %>
+            </ul>
         </div>
         <%= link_to "Add random member", "#", :class => "add_random_member" %>
         <script>
@@ -20,5 +36,6 @@
             });
         </script>
     </div>
+    <div class="clear"></div>
     <p><%= f.submit 'Update' %></p>
 <% end %>
