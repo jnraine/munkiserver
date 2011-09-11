@@ -1,9 +1,11 @@
 <span class="principal-stub">
-    <%= f.object.principal %>
+    <span class="principal-name">
+        <%= f.object.principal %>
+    </span>
     [<%= link_to "x", "#", :class => "remove_membership" %>]
 </span>
-<%= f.hidden_field :id %>
-<%= f.hidden_field :principal_id %>
-<%= f.hidden_field :principal_type %>
-<%= f.hidden_field :user_group_id %>
-<%= f.hidden_field :_destroy %>
+<%= f.hidden_field :id, :class => "user-group-membership-id" unless f.object.new_record? %>
+<%= f.hidden_field :principal_id, :class => "principal-id" %>
+<%= f.hidden_field :principal_type, :class => "principal-type" %>
+<%= f.hidden_field :user_group_id, :class => "user-group-id" %>
+<%= f.hidden_field :_destroy, :class => "destroy-flag" %>
