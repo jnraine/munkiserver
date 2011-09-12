@@ -1,0 +1,11 @@
+<li class="<%= principal.css_class %> membership-container" data-principal-id="<%= principal.principal_id %>">
+    <span class="principal-name">
+        <%= principal %>
+    </span>
+    <% if disabled %>
+        <a class="remove-membership disabled" href="#">[ x ]</a>
+    <% else %>
+        <a class="remove-membership" href="#">[ x ]</a>
+    <% end %>
+    <%= hidden_field_tag "user_group[principal_ids][]", principal.principal_id, :disabled => disabled %>
+</li>
