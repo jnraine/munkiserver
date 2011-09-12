@@ -18,6 +18,7 @@ class UserGroup < ActiveRecord::Base
   validates :shortname, :presence => true, :format => {:with => /^[a-z0-9-]+$/}
   
   scope :where_unit, lambda {|u| where(:unit_id => u.id) }
+  scope :not, lambda {|ug| where("id <> ?", ug.id) }
   
   include Principal
   
@@ -135,6 +136,6 @@ class UserGroup < ActiveRecord::Base
   # All principals, including all users and all user groups within self.unit.  Return records
   # sorted alphabetically.
   def all_principals
-    (User.all + UserGroup.where_unit(self.unit)).sort {|a,b| a.name.downcase <=> b.name.downcase}
+    (User.all + UserGroup.where_unit(self.unit).not(self)).sort {|a,b| a.name.downcase <=> b.name.downcase}
   end
 end
