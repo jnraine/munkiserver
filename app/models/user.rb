@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
 
   before_save :check_settings
   
+  include Principal
+  
   # Generate a random string consisting of strings and digits
   # with a length of up to len characters
   def self.random_string(len)
@@ -113,19 +115,5 @@ class User < ActiveRecord::Base
   
   def name
     username
-  end
-  
-  # For nested association deletion, default to false
-  def _destroy
-    false
-  end
-  
-  def css_class
-    self.class.to_s.underscore.gsub("_","-") + "-principal"
-  end
-  
-  # Returns a unique principal ID for this principal
-  def principal_id
-    self.class.to_s.underscore.gsub("_","-") + "-#{id}"
   end
 end
