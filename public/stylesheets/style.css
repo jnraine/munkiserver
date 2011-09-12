@@ -718,11 +718,16 @@ a:hover.more_info {
 
 .user-principal, .user-group-principal {
   height:16px;
+  margin-top:-1px;
   padding-left:20px;
   padding-top:5px;
+  padding-bottom:5px;
   background-position:left center;
   background-repeat:no-repeat;
   list-style-type:none;
+  border-top:1px #ccc solid;
+  border-bottom:1px #ccc solid;
+  line-height:16px;
 }
 
 .user-principal {
@@ -733,6 +738,9 @@ a:hover.more_info {
   background-image:url('/images/user-group.png');
 }
 
+.remove-membership {
+  float:right;
+}
 
 
 

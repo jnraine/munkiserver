@@ -356,12 +356,16 @@ $(document).ready(function() {
     });
     
     // Remove membership links
-    $(".remove_membership").click(function() {
-      var $membership_container = $(this).parents(".membership-container").first();
-      $membership_container.children("[name*='_destroy']").val("true"); // Mark for destruction
-      $membership_container.children(".principal-stub").remove(); // Remove visible elements
+    $(".remove-membership").live("click",function() {
+      $(this).parents(".membership-container").first().remove();
+      toggleMembershipPlaceholder();
       return false;
     })
+    // Hide disabled remove membership links
+    $(".remove-membership.disabled").hide();
+    
+    // Toggle membership placeholder
+    toggleMembershipPlaceholder();
     
     // Make principals draggable
     $( "#all-principals li" ).draggable({
@@ -380,33 +384,23 @@ $(document).ready(function() {
         return ($duplicatePrincipals.size() == 0);
       },
       drop: function(event, ui) {
-          // $("<li><\/li>")
-          //   .html(ui.draggable.html())
-          //   .addClass(ui.draggable.attr("class"))
-          //   .attr("data-principal-id",ui.draggable.attr("data-principal-id"))
-          //   .appendTo(this);
-          var principal = { pId: ui.draggable.attr("data-principal-id")
-                          , pName: ui.draggable.text() };
-          addUserGroupMember("#member-principals ul", principal);
+        // Clone the draggable, enable the hidden field, add remove link, and append to the droppable
+        ui.draggable.clone()
+          .find("[name='user_group[principal_ids][]']").removeAttr("disabled").end()
+          .find(".remove-membership").show().end()
+          .appendTo(this);
+          toggleMembershipPlaceholder();
       }
     });
 }); // end document ready function
 
-// Add a principal to a given membership well.  Principal must contain
-// the following attributes: pId, pName
-// Needs some refactoring!
-function addUserGroupMember(membershipWellSelector, principal) {
-  var memberIndex = 1001;
-  var match = principal.pId.match(/(.+)-(\d+$)/);
-  var principalType = match[1];
-  var recordId = match[2];
-  $emptyMembership = $("#empty-membership").clone();
-  $emptyMembership.find("li").removeClass("user-principal").addClass(principalType + "-principal");
-  $emptyMembership.find("[data-principal-id]").attr("data-principal-id", principal.pId);
-  $emptyMembership.find(".principal-name").html(principal.pName);
-  $emptyMembership.find(".principal-id").val(recordId).attr("name","user_group[principal_memberships_attributes][" + memberIndex + "][principal_id]");
-  $emptyMembership.find(".principal-type").val(principalType).attr("name","user_group[principal_memberships_attributes][" + memberIndex + "][principal_type]");
-  $emptyMembership.children("li").appendTo($(membershipWellSelector));
+function toggleMembershipPlaceholder() {
+  // If there are no members, show the placeholder
+  if($("#member-principals li").length == 1) {
+    $("#member-principals .placeholder").show();
+  } else {
+    $("#member-principals .placeholder").hide();
+  }
 }
 
 function activateMoreInfoLinks() {

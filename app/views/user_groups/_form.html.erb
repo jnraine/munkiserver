@@ -6,10 +6,8 @@
         <h4>Principals</h4>
         <div id="all-principals" class="principal-container well">
             <ul>
-                <% (User.all + UserGroup.where_unit(current_unit)).sort {|a,b| a.name.downcase <=> b.name.downcase}.each do |principal| %>
-                    <li class="<%= principal.css_class %> " data-principal-id="<%= principal.principal_id %>">
-                        <%= principal %>
-                    </li>
+                <% @user_group.all_principals.each do |principal| %>
+                    <%= principal_list_item(principal, :disabled => true) %>
                 <% end %>
             </ul>
         </div>
@@ -18,17 +16,15 @@
         <h4>Members</h4>
         <div id="member-principals" class="principal-container well">
             <ul>
-                <% f.fields_for :principal_memberships do |membership_fields| %>
-                    <%= render :partial => 'membership_list_item', :locals => {:membership_fields => membership_fields} %>
+                <% @user_group.sorted_members.each do |principal| %>
+                    <%= principal_list_item(principal, :disabled => false) %>
                 <% end %>
+                <li class="placeholder"><em>No members</em></li>
             </ul>
         </div>
-        <div id="empty-membership"></div>
         <script>
             $(document).ready(function() {
-                <% f.fields_for :principal_memberships, @user_group.principal_memberships.build({:principal => User.first}) do |membership_fields| %>
-                    $("#empty-membership").hide().append("<%= escape_javascript(render(:partial => 'membership_list_item', :locals => {:membership_fields => membership_fields})) %>");
-                <% end %>
+                $("<div id='empty-membership'></div>").hide().append("<%= escape_javascript(principal_list_item(User.new)) %>").appendTo("body");
             });
         </script>
     </div>

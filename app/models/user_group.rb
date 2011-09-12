@@ -5,7 +5,7 @@ class UserGroup < ActiveRecord::Base
   has_many :permissions, :as => :principal
   has_many :privileges, :through => :permissions
   has_many :units, :through => :permissions
-  has_many :principal_memberships, :class_name => "UserGroupMembership", :dependent => :destroy, :include => :principal
+  has_many :principal_memberships, :class_name => "UserGroupMembership", :dependent => :destroy
   has_many :principals, :through => :principal_memberships
   has_many :group_memberships, :class_name => "UserGroupMembership", :as => :principal
   has_many :groups, :through => :group_memberships, :source => :user_group
@@ -19,8 +19,14 @@ class UserGroup < ActiveRecord::Base
   
   scope :where_unit, lambda {|u| where(:unit_id => u.id) }
   
+  include Principal
+  
   def members
     principal_memberships.map(&:principal)
+  end
+  
+  def sorted_members
+    members.sort {|a,b| a.name.downcase <=> b.name.downcase}
   end
   
   # Returns an array of tas option hashes
@@ -73,17 +79,62 @@ class UserGroup < ActiveRecord::Base
     record
   end
   
-  # For nested association deletion, default to false
-  def _destroy
-    false
+  def principal_ids=(principal_ids)
+    # Get existing memberships
+    existing_memberships = self.principal_memberships
+    # Get principals
+    principals = parse_principal_ids(principal_ids)
+    # Generate principal membership array
+    memberships = []
+    principals.each do |principal|
+      memberships << find_or_retrieve_membership(principal)
+    end
+    # Write membership array to principal memberships attribute
+    self.principal_memberships = memberships
   end
   
-  def css_class
-    self.class.to_s.underscore.gsub("_","-") + "-principal"
+  def parse_principal_ids(principal_ids)
+    principal_ids.map do |principal_id|
+      get_principal(principal_id)
+    end
   end
   
-  # Returns a unique principal ID for this principal
-  def principal_id
-    self.class.to_s.underscore.gsub("_","-") + "-#{id}"
+  def find_or_retrieve_membership(principal)
+    membership = nil
+    # Retrieve existing membership for principal
+    self.principal_memberships.each do |existing_membership|
+      if existing_membership.principal_id == principal.id and existing_membership.principal_type == principal.class.to_s
+        membership = existing_membership
+        break
+      end
+    end
+    
+    # If we didn't find a membership yet, build one
+    if membership.nil?
+      membership = self.principal_memberships.build(:principal => principal)
+    end
+    
+    # Return membership
+    membership
+  end
+  
+  # Give a principal ID and return a principal record
+  def get_principal(principal_id)
+    principal = nil
+    if p_match = principal_id.match(/(.+)-(\d+)/)
+      if $1.classify == UserGroup.to_s
+        principal = UserGroup.find($2) 
+      elsif $1.classify == User.to_s
+        principal = User.find($2)
+      else
+        Exception.new("Invalid principal type passed: #{$1}.  Must be UserGroup or User.")
+      end
+    end
+  end
+  
+  # All principals, including all users and all user groups within self.unit.  Return records
+  # sorted alphabetically.
+  def all_principals
+    (User.all + UserGroup.where_unit(self.unit)).sort {|a,b| a.name.downcase <=> b.name.downcase}
   end
 end
