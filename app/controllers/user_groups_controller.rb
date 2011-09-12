@@ -41,7 +41,7 @@ class UserGroupsController < ApplicationController
         format.html { redirect_to edit_user_group_path(@user_group.unit, @user_group) }
       else
         flash[:error] = "Could not update computer group!"
-        format.html { redirect_to edit_user_group(@user_group.unit, @user_group) }
+        format.html { render :action => :edit }
       end
     end
   end
