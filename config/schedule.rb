@@ -5,4 +5,5 @@
 every 1.day, :at => '11:00pm' do  
   rake "packages:send_available_update_digest"
   rake "warranties:update_all"
+  rake "chore:inactive_primary_user_email_notification"
 end

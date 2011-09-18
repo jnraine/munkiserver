@@ -8,7 +8,7 @@ namespace :chore do
   end
 
   desc "Validates all models stored in the database"
-  task :validate_models, [:validate_models] => :environment do |t, args|
+  task :validate_models => :environment do |t, args|
     #Force load all models
     Dir[Rails.root + 'app/models/**/*.rb'].each do |path|
       require path
@@ -51,6 +51,19 @@ namespace :chore do
         else
           puts "error: #{record.errors.inspect}"
         end
+      end
+    end
+  end
+  
+  desc "Send email notifications to the primary user of a computer that have no checked-in to MuniServer for the past 30 days "
+  task :inactive_primary_user_email_notification => :environment do
+    Computer.all.each do |computer|
+      if computer.last_report.present?
+        # Find the computer that have no checked-in for the past 30 days
+        if computer.last_report.created_at < 30.days.ago
+          puts "Sending email to #{computer.name} primary user #{computer.primary_user}"
+          AdminMailer.inactive_primary_user_notification(computer).deliver
+        end 
       end
     end
   end
