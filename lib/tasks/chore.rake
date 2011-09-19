@@ -55,8 +55,8 @@ namespace :chore do
     end
   end
   
-  desc "Send email notifications to the primary user of a computer that have no checked-in to MuniServer for the past 30 days"
-  task :inactive_primary_user_notification, [:unit] => :environment do |t, args|
+  desc "Send email to the primary user of a computer that have no checked-in to MuniServer for the past 30 days"
+  task :inactive_computer_primary_user_notification, [:unit] => :environment do |t, args|
     unit = Unit.where(:name => args.unit).first if args.unit.present?
     if unit.present?
       puts "Found unit #{unit.name}"
