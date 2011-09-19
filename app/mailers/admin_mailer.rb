@@ -77,7 +77,6 @@ class AdminMailer < ActionMailer::Base
       
       recipients << computer.unit.users.map(&:email)
       # add IT admins to the recipients list
-      debugger
       recipients.flatten
     else
       []

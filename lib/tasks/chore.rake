@@ -40,7 +40,7 @@ namespace :chore do
   
   
   desc "If missing, create shortname attribute from name attribute for appropriate models"
-  task :generate_shortnames, [:generate_shortnames] => :environment do
+  task :generate_shortnames => :environment do
     records = Unit.all + Computer.all + Bundle.all + ComputerGroup.all
     records.each do |record|
       if record.shortname.blank?
@@ -55,16 +55,30 @@ namespace :chore do
     end
   end
   
-  desc "Send email notifications to the primary user of a computer that have no checked-in to MuniServer for the past 30 days "
-  task :inactive_primary_user_email_notification => :environment do
-    Computer.all.each do |computer|
-      if computer.last_report.present?
-        # Find the computer that have no checked-in for the past 30 days
-        if computer.last_report.created_at < 30.days.ago
-          puts "Sending email to #{computer.name} primary user #{computer.primary_user}"
-          AdminMailer.inactive_primary_user_notification(computer).deliver
-        end 
+  desc "Send email notifications to the primary user of a computer that have no checked-in to MuniServer for the past 30 days"
+  task :inactive_primary_user_notification, [:unit] => :environment do |t, args|
+    unit = Unit.where(:name => args.unit).first if args.unit.present?
+    if unit.present?
+      puts "Found unit #{unit.name}"
+      unit.computers.each do |computer|
+        send_primary_user_notification(computer)
+      end
+    else
+      puts "No unit found, default checking all computers"
+      Computer.all.each do |computer|
+        send_primary_user_notification(computer)
       end
     end
   end
 end
+
+private
+def send_primary_user_notification(computer)
+   if computer.last_report.present?
+  # Find the computer that have not checked-in for the past 30 days
+    if computer.last_report.created_at < 30.days.ago
+      puts "Sending email to #{computer.name} primary user #{computer.primary_user}"
+      # AdminMailer.inactive_primary_user_notification(computer).deliver
+    end
+  end
+end 

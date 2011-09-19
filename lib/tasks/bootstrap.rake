@@ -235,7 +235,7 @@ namespace :bootstrap do
   end
   
   desc "create a new settings.yaml file optional arguments rake setup:create[hostname] default localhost:3000"
-  task :settings, [:settings, :hostname] => :environment do |t, args|
+  task [:settings, :hostname] => :environment do |t, args|
     if File.exists?("config/settings.yaml")
       puts "settings.yaml file is already exists"
     else
