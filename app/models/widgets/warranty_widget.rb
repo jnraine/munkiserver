@@ -3,7 +3,8 @@ class WarrantyWidget < DashboardWidget
     default_options = {:expire_before => 90.days.from_now, :limit => 20, :force_query => false}
     options = default_options.merge(options)
     if @expiring.nil? or options[:force_query]
-      @expiring = Warranty.expire_before(options[:expire_before])
+      # Find all the warranty that belong to all the units of the current user
+      @expiring = Warranty.belong_to_unit(user_units).expire_before(options[:expire_before])
     end
     @expiring
   end
