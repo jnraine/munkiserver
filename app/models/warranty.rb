@@ -22,6 +22,7 @@ class Warranty < ActiveRecord::Base
   validates_format_of :serial_number, :with => /^[a-zA-Z0-9]+$/
   
   scope :expire_before, lambda {|time| where("hw_coverage_end_date < ?", time)}
+  scope :belong_to_unit, lambda {|unit| where(:computer_id => Computer.where(:unit_id => unit))}
 
   # Creates a hash used to update or create a warranty object.  Raises WarrantyException
   def self.get_warranty_hash(serial = "")
@@ -138,5 +139,9 @@ class Warranty < ActiveRecord::Base
   def last_notice_before(date)
     @last_notice ||= notifications.map(&:created_at).sort.last
     @last_notice.nil? or @last_notice < date
+  end
+  
+  def self.unit_id
+    self.computer.unit_id
   end
 end
