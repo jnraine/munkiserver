@@ -8,7 +8,7 @@ namespace :chore do
   end
 
   desc "Validates all models stored in the database"
-  task :validate_models, :needs => :environment do |t, args|
+  task :validate_models => :environment do |t, args|
     #Force load all models
     Dir[Rails.root + 'app/models/**/*.rb'].each do |path|
       require path
@@ -40,7 +40,7 @@ namespace :chore do
   
   
   desc "If missing, create shortname attribute from name attribute for appropriate models"
-  task :generate_shortnames, :needs => :environment do
+  task :generate_shortnames => :environment do
     records = Unit.all + Computer.all + Bundle.all + ComputerGroup.all
     records.each do |record|
       if record.shortname.blank?
@@ -54,4 +54,31 @@ namespace :chore do
       end
     end
   end
+  
+  desc "Send email to the primary user of a computer that have no checked-in to MuniServer for the past 30 days"
+  task :inactive_computer_primary_user_notification, [:unit] => :environment do |t, args|
+    unit = Unit.where(:name => args.unit).first if args.unit.present?
+    if unit.present?
+      puts "Found unit #{unit.name}"
+      unit.computers.each do |computer|
+        send_primary_user_notification(computer)
+      end
+    else
+      puts "No unit found, default checking all computers"
+      Computer.all.each do |computer|
+        send_primary_user_notification(computer)
+      end
+    end
+  end
 end
+
+private
+def send_primary_user_notification(computer)
+   if computer.last_report.present?
+  # Find the computer that have not checked-in for the past 30 days
+    if computer.last_report.created_at < 30.days.ago
+      puts "Sending email to #{computer.name} primary user #{computer.primary_user}"
+      # AdminMailer.inactive_primary_user_notification(computer).deliver
+    end
+  end
+end 

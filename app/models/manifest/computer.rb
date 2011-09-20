@@ -258,4 +258,19 @@ class Computer < ActiveRecord::Base
     AdminMailer.warranty_notification(self).deliver
     self.warranty.notifications.create
   end
+  
+  # Return the most frequent user of the computer as the primary user
+  def primary_user
+    users = self.managed_install_reports.map(&:console_user).compact.delete_if{|u| u == "<None>"}
+    # find the primary user based on the most frequent user of this computer
+    most_common_value(users) if users.present?
+  end
+  
+  private
+  # Return the most frequent item for an array
+  def most_common_value(a)
+    a.group_by do |e|
+      e
+    end.values.max_by(&:size).first
+  end
 end
