@@ -141,7 +141,4 @@ class Warranty < ActiveRecord::Base
     @last_notice.nil? or @last_notice < date
   end
   
-  def self.unit_id
-    self.computer.unit_id
-  end
 end
