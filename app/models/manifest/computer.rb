@@ -16,8 +16,8 @@ class Computer < ActiveRecord::Base
   validates_presence_of :name, :hostname, :mac_address
   
   validates_format_of :hostname,
-                      :with => /(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)/, 
-                      :message => "must only contain alphanumeric and hyphens characters" #This will match any valid DNS FQDN
+                      :with => ^(([a-z]|[a-z][a-z0-9\-]*[a-z0-9])\.)*([a-z]|[a-z][a-z0-9\-]*[a-z0-9])$,
+                      :message => "must only contain alphanumeric and hyphens characters"
     
   validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/ # mac_address attribute must look something like ff:12:ff:34:ff:56
   validates_uniqueness_of :mac_address,:name, :hostname
