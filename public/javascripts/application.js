@@ -392,6 +392,44 @@ $(document).ready(function() {
           toggleMembershipPlaceholder();
       }
     });
+    
+    // Setup client-side filtering functionality
+    $(".user-group-filter-wrapper input[type='search']").bind("keyup search", function() {
+      var $searchField = $(this);
+      var filterString = $searchField.val();
+
+      // Run filter if filter string has 1 or more characters
+      if(filterString.length >= 1) {
+        var $principalWell = $searchField.parent().parent();
+        $principalWell.find(".membership-container").each(function() {
+          $principal = $(this);
+          // Get principal name from special attribute, defaults to "" if there are none
+          var principalName = $principal.attr("data-principal-name");
+          if(principalName === undefined) {
+            // This should never happen...
+            principalName = "";
+          }
+          // Hide/show if principal name contains filter string (ignore case)
+          if(principalName.toLowerCase().indexOf(filterString.toLowerCase()) != -1) {
+            $principal.show();
+          } else {
+            $principal.hide();
+          }
+        });
+      } else if (filterString.length == 0) {
+        // Show all principals when there is no filter string
+        var $principalWell = $searchField.parent().parent();
+        $principalWell.find(".membership-container").each(function() {
+          $principal = $(this);
+          $principal.show();
+        });
+      }
+    }).keypress(function(keyEvent) {
+      // Ignore any enter/return events
+      if(keyEvent.charCode == 13) {
+        return false;
+      }
+    })
 }); // end document ready function
 
 function toggleMembershipPlaceholder() {
