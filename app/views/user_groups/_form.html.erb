@@ -4,6 +4,9 @@
     <p><%= f.text_area :description, :size => "30x3" %></p>
     <div class="span-6">
         <h4>Principals</h4>
+        <div class="user-group-filter-wrapper">
+            <input type="search" results="5" autosave="user-group-search" placeholder="Filter..."/>
+        </div>
         <div id="all-principals" class="principal-container well">
             <ul>
                 <% @user_group.all_principals.each do |principal| %>
@@ -14,6 +17,9 @@
     </div>
     <div class="span-6">
         <h4>Members</h4>
+        <div class="user-group-filter-wrapper">
+            <input type="search" results="5" autosave="user-group-search" placeholder="Filter..."/>
+        </div>
         <div id="member-principals" class="principal-container well">
             <ul>
                 <% @user_group.sorted_members.each do |principal| %>

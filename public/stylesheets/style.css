@@ -742,7 +742,9 @@ a:hover.more_info {
   float:right;
 }
 
-
+.user-group-filter-wrapper {
+  padding-bottom:10px;
+}
 
 
 
