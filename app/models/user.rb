@@ -116,4 +116,16 @@ class User < ActiveRecord::Base
   def name
     username
   end
+  
+  # Returns an array of unit IDs that the user has permission to read.
+  # Used to retrieve the unit records for the PermissionsController index.
+  def permission_unit_ids
+    # The privilege ID for the read_permissions privilege
+    priv_id = Privilege.where(:name => :read_permissions).first.id
+    unit_ids = []
+    self.all_permissions.each do |permission|
+      unit_ids << permission.unit_id if permission.privilege_id == priv_id
+    end
+    unit_ids
+  end
 end
