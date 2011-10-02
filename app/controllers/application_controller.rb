@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
     {:file => "#{Rails.root}/public/generic_error.html", :layout => false}
   end
   
-  # Load a singular resource into @package for all actions
+  # Stub for controllers to override
   def load_singular_resource
     raise Exception.new("Unable to load singular resource for #{params[:action]} action of #{params[:controller]} controller.")
   end
