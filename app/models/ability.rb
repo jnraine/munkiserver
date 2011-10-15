@@ -14,6 +14,11 @@ class Ability
     @user.all_permissions.group_by(&:privilege_id).each do |privilege_id,permissions|
       grant_privilege(Privilege.find(privilege_id),permissions.map(&:unit_id))
     end
+    
+    # Give "admin" user the keys to the house
+    if @user.is_root?
+      can :manage, :all
+    end
   end
   
   def grant_privilege(privilege,unit)

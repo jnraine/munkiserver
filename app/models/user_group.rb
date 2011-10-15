@@ -138,4 +138,10 @@ class UserGroup < ActiveRecord::Base
   def all_principals
     (User.all + UserGroup.where_unit(self.unit).not(self)).sort {|a,b| a.name.downcase <=> b.name.downcase}
   end
+  
+  # Instatiates a new object, belonging to unit.  Caches for future calls.
+  def self.new_for_can(unit)
+    @new_for_can ||= []
+    @new_for_can[unit.id] ||= self.new(:unit => unit)
+  end
 end
