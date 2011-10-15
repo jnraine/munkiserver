@@ -716,7 +716,11 @@ a:hover.more_info {
   cursor:pointer;
 }
 
-.user-principal, .user-group-principal {
+.row-list {
+	margin:0;
+}
+
+li.row {
   height:16px;
   margin-top:-1px;
   padding-left:20px;
@@ -728,6 +732,7 @@ a:hover.more_info {
   border-top:1px #ccc solid;
   border-bottom:1px #ccc solid;
   line-height:16px;
+  cursor:pointer;
 }
 
 .user-principal {
@@ -742,10 +747,9 @@ a:hover.more_info {
   float:right;
 }
 
-.user-group-filter-wrapper {
+.list-filter-wrapper {
   padding-bottom:10px;
 }
-
 
 
 

@@ -1,1 +1,42 @@
 <h2>Permissions</h2>
+<div class="permission-ui">
+	<div class="units-wrapper">
+		<h3>Units</h3>
+		<div class="list-filter-wrapper">
+	        <input class="list-filter" type="search" placeholder="Filter..."/>
+			<img class="loading" src="images/ajax-loader.gif"/>
+	    </div>
+		<div class="unit-container well">
+			<ul class="row-list filterable">
+				<% @units.each do |unit| %>
+					<li class="row selected" data-unit-id="<%= unit.id %>">
+						<%= unit %>
+					</li>
+				<% end %>
+				<li class="no-results"><em>No units</em></li>
+			</ul>
+		</div>
+	</div>
+	
+
+	<div class="principals-wrapper">
+		<h3>Principals</h3>
+	    <div class="list-filter-wrapper">
+	        <input class="list-filter" type="search" placeholder="Filter..."/>
+			<img class="loading" src="images/ajax-loader.gif"/>
+	    </div>
+	    <div id="all-principals" class="principal-container well">
+	        <ul class="row-list filterable">
+	            <% @principals.each do |principal| %>
+	                <%= principal_list_item(principal, :disabled => true) %>
+	            <% end %>
+				<li class="no-results"><em>No principals</em></li>
+	        </ul>
+	    </div>
+	</div>
+	
+	<div class="permissions-wrapper">
+		<h3>Permissions</h3>
+		<p><em>Choose a unit and principal</em></p>
+	</div>
+</div>
