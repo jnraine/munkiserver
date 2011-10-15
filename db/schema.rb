@@ -255,6 +255,7 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
   create_table "privileges", :force => true do |t|
     t.string   "name"
     t.text     "description"
+    t.boolean  "unit_specific", :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

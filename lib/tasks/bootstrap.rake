@@ -293,8 +293,18 @@ namespace :bootstrap do
   
   desc "Create privilege database records"
   task :privileges => :environment do
+    # Create privilege records using name
     PrivilegeGranter.instance_methods.each do |privilege_name|
       Privilege.find_or_create_by_name(:name => privilege_name)
+    end
+    # Flag unit-specific privileges
+    Privilege.all.each do |privilege|
+      PrivilegeGranter.unit_specific_privilege_groups.each do |privilege_group_name|
+        if privilege.name.match(/[a-zA-Z]+_#{privilege_group_name}$/)
+          privilege.unit_specific = true
+          privilege.save
+        end
+      end
     end
   end
 end
