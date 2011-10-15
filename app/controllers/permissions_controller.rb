@@ -26,7 +26,7 @@ class PermissionsController < ApplicationController
   end
   
   def update
-    
+    debugger
     respond_to do |format|
       format.js { render :partial => "shared/flash" }
     end
