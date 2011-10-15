@@ -3,6 +3,7 @@ class CreatePrivileges < ActiveRecord::Migration
     create_table :privileges do |t|
       t.string :name
       t.text :description
+      t.boolean :unit_specific, :default => false
       t.timestamps
     end
   end
