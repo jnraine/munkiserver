@@ -98,12 +98,20 @@ class User < ActiveRecord::Base
   # Returns units through permission association.  Couldn't get finder_sql
   # to work, so I added a custom method instead.
   def units
-    Unit.find_by_sql("SELECT DISTINCT \'units\'.* FROM \'units\' INNER JOIN \'permissions\' ON \'units\'.id = \'permissions\'.unit_id WHERE ((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = '#{self.class.to_s}'))")
+    if is_root?
+      Unit.all
+    else
+      Unit.find_by_sql("SELECT DISTINCT \'units\'.* FROM \'units\' INNER JOIN \'permissions\' ON \'units\'.id = \'permissions\'.unit_id WHERE ((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = '#{self.class.to_s}'))")
+    end
   end
   
   # Could be refactored to be more efficient
   def unit_ids
     units.map(&:id)
+  end
+  
+  def is_root?
+    username == "root"
   end
   
   def name
@@ -116,8 +124,12 @@ class User < ActiveRecord::Base
     # The privilege ID for the read_permissions privilege
     priv_id = Privilege.where(:name => :read_permissions).first.id
     unit_ids = []
-    self.all_permissions.each do |permission|
-      unit_ids << permission.unit_id if permission.privilege_id == priv_id
+    if is_root?
+      unit_ids = Unit.all.map(&:id)
+    else
+      self.all_permissions.each do |permission|
+        unit_ids << permission.unit_id if permission.privilege_id == priv_id
+      end
     end
     unit_ids
   end
