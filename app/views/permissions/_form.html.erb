@@ -1,0 +1,14 @@
+<%= form_for "something" do %>
+	<% @grouped_permissions.each do |group_name, permissions| %>
+		<dl class="permission-group">
+			<dt class="permission-group-name"><%= group_name.titleize %></dt>
+				<% permissions.each do |permission| %>
+					<dd class="permission-check-box">
+						<%= check_box_tag permission.privilege.action.capitalize, 1, !permission.new_record? %>
+						<%= permission.privilege.action.capitalize %>
+					</dd>
+				<% end %>
+			</dt>
+		</dl>
+	<% end %>
+<% end %>
