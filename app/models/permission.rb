@@ -7,11 +7,13 @@ class Permission < ActiveRecord::Base
   belongs_to :unit
   belongs_to :privilege
   
-  # Group by the privilege name suffix
-  def self.retrieve_by_group(opts = {})
-    retrieve(opts).group_by do |permission|
+  # Group by the privilege name suffix.  Return a hash, keyed by the privilege
+  # group string.
+  def self.retrieve_in_privilege_groups(opts = {})
+    grouped_permissions = retrieve(opts).group_by do |permission|
       permission.privilege.action_target
-    end.sort
+    end
+    Hash[grouped_permissions.sort]
   end
   
   # Return all records pertaining to a given principal_pointer and unit_id.  If unit
