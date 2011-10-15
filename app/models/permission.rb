@@ -22,6 +22,39 @@ class Permission < ActiveRecord::Base
     end
   end
   
+  def self.save_permission_set(p_field_hash)
+    results = {:saved_records => [], :unsaved_records => [], :destroyed_records => [], :total => 0, :failed => 0, :new_records => 0}
+    p_field_hash.values.each do |p_fields|
+      p = nil
+      if p_fields[:retain].present?
+        # Retain records
+        if p_fields[:id].present?
+          # Retrieve saved record
+          p = Permission.find(p_fields[:id])
+        else
+          # Save records that are new
+          p = Permission.new(:principal_id => p_fields[:principal_id], :principal_type => p_fields[:principal_type], :privilege_id => p_fields[:privilege_id], :unit_id => p_fields[:unit_id])
+          if p.save
+            results[:new_records] += 1
+          else
+            results[:failed] += 1
+          end
+        end
+        results[:saved_records] << p
+      elsif p_fields[:id].present?
+        # Delete saved permissions that aren't set to retain
+        p = Permission.find(p_fields[:id])
+        p.destroy
+        results[:destroyed_records] << p
+      else
+        # Don't do anything with unsaved records - let them pass away
+        results[:unsaved_records] << p_fields
+      end
+      results[:total] += 1
+    end
+    results
+  end
+  
   # Return all records pertaining to a given principal_pointer and unit_id.  If unit
   # ID is nil, retrieve non-unit-specific permission records.  principal_pointer is
   # not an integer, but instead a string in this format: "#{principal_type}-#{principal_id}",
