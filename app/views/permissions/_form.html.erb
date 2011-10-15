@@ -1,14 +1,24 @@
-<%= form_for permissions_path, :method => :put, :remote => true do %>
+<%= form_tag permissions_path, :method => :put, :remote => true do %>
+	<% i = 0 %>
 	<% @grouped_permissions.each do |group_name, permissions| %>
 		<dl class="permission-group">
 			<dt class="permission-group-name"><%= group_name.titleize %></dt>
 				<% permissions.each do |permission| %>
 					<dd class="permission-check-box">
-						<%= check_box_tag permission.privilege.action.capitalize, 1, !permission.new_record? %>
+						<%= hidden_field_tag "permissions[#{i}][principal_type]", permission.principal_type %>
+						<%= hidden_field_tag "permissions[#{i}][principal_id]", permission.principal_id %>
+						<%= hidden_field_tag "permissions[#{i}][privilege_id]", permission.privilege_id %>
+						<%= hidden_field_tag "permissions[#{i}][unit_id]", permission.unit_id %>
+						<% unless permission.new_record? %>
+							<%= hidden_field_tag "permissions[#{i}][id]", permission.id %>
+						<% end %>
+						<%= check_box_tag "permissions[#{i}][retain]", 1, !permission.new_record? %>
 						<%= permission.privilege.action.capitalize %>
+						<% i += 1 %>
 					</dd>
 				<% end %>
 			</dt>
 		</dl>
 	<% end %>
+	<%= submit_tag "Save" %>
 <% end %>
