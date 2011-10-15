@@ -16,6 +16,12 @@ class Permission < ActiveRecord::Base
     Hash[grouped_permissions.sort]
   end
   
+  def self.check_principal_existence(model,id)
+    unless model.constantize.where(:id => id).first
+      raise ArgumentError.new("The provided principal (#{model}, #{id}) is not valid!")
+    end
+  end
+  
   # Return all records pertaining to a given principal_pointer and unit_id.  If unit
   # ID is nil, retrieve non-unit-specific permission records.  principal_pointer is
   # not an integer, but instead a string in this format: "#{principal_type}-#{principal_id}",
@@ -26,6 +32,8 @@ class Permission < ActiveRecord::Base
     unit = Unit.where(:id => opts[:unit_id]).first
     principal_type = opts[:principal_pointer].match(/(.+)-(.+)/)[1]
     principal_id = opts[:principal_pointer].match(/(.+)-(.+)/)[2]
+    
+    check_principal_existence(principal_type,principal_id)
     
     privilege_ids = nil
     if unit
