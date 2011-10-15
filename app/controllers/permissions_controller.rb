@@ -17,7 +17,7 @@ class PermissionsController < ApplicationController
     respond_to do |format|
       if flash[:error].present?
         format.html { redirect_to permissions_path }
-        format.js { render :partial => "shared/flash" }
+        format.js { render :partial => "shared/flash", :locals => {:flash => flash} }
       else
         format.html
         format.js
@@ -26,9 +26,16 @@ class PermissionsController < ApplicationController
   end
   
   def update
-    debugger
+    results = Permission.save_permission_set(params[:permissions])
+    
+    if results[:failed] > 0
+      flash[:error] = "An error occurred: failed to save #{results[:failed].length} out of #{results[:total_records]} permissions!"
+    elsif
+      flash[:notice] = "Successfully saved permissions"
+    end
+    
     respond_to do |format|
-      format.js { render :partial => "shared/flash" }
+      format.js { render :partial => "shared/flash", :locals => {:flash => flash} }
     end
   end
   
