@@ -368,13 +368,13 @@ $(document).ready(function() {
     toggleMembershipPlaceholder();
     
     // Make principals draggable
-    $( "#all-principals li" ).draggable({
+    $( "user-group-form #all-principals li" ).draggable({
         appendTo: "body",
         helper: "clone",
         cursor: "pointer"
     });
     // Make principals droppable
-    $("#member-principals ul").droppable({
+    $("user-group-form #member-principals ul").droppable({
       activeClass: "ui-state-default",
       hoverClass: "ui-state-hover",
       accept: function($ui) {
@@ -389,47 +389,114 @@ $(document).ready(function() {
           .find("[name='user_group[principal_ids][]']").removeAttr("disabled").end()
           .find(".remove-membership").show().end()
           .appendTo(this);
-          toggleMembershipPlaceholder();
+        toggleMembershipPlaceholder();
       }
     });
     
-    // Setup client-side filtering functionality
-    $(".user-group-filter-wrapper input[type='search']").bind("keyup search", function() {
-      var $searchField = $(this);
-      var filterString = $searchField.val();
+    // // Setup client-side filtering functionality
+    // $(".user-group-filter-wrapper input[type='search']").bind("keyup search", function() {
+    //   var $searchField = $(this);
+    //   var filterString = $searchField.val();
+    // 
+    //   // Run filter if filter string has 1 or more characters
+    //   if(filterString.length >= 1) {
+    //     var $principalWell = $searchField.parent().parent();
+    //     $principalWell.find(".membership-container").each(function() {
+    //       $principal = $(this);
+    //       // Get principal name from special attribute, defaults to "" if there are none
+    //       var principalName = $principal.attr("data-principal-name");
+    //       if(principalName === undefined) {
+    //         // This should never happen...
+    //         principalName = "";
+    //       }
+    //       // Hide/show if principal name contains filter string (ignore case)
+    //       if(principalName.toLowerCase().indexOf(filterString.toLowerCase()) != -1) {
+    //         $principal.show();
+    //       } else {
+    //         $principal.hide();
+    //       }
+    //     });
+    //   } else if (filterString.length == 0) {
+    //     // Show all principals when there is no filter string
+    //     var $principalWell = $searchField.parent().parent();
+    //     $principalWell.find(".membership-container").each(function() {
+    //       $principal = $(this);
+    //       $principal.show();
+    //     });
+    //   }
+    // }).keypress(function(keyEvent) {
+    //   // Ignore any enter/return events
+    //   if(keyEvent.charCode == 13) {
+    //     return false;
+    //   }
+    // });
 
+    // Setup generic client-side filtering functionality
+    // This should be turned into an ajax thing...it blocks the browser
+    $(".list-filter-wrapper input[type='search']").bind("search", function() {
+      console.log(new Date());
+      var $searchField = $(this);
+      var filterString = $searchField.val();      
+      var $list = $searchField.parent().parent().find(".filterable");
+      
+      // Display progress image
+      $(this).parent().children(".loading").show();
+      
       // Run filter if filter string has 1 or more characters
       if(filterString.length >= 1) {
-        var $principalWell = $searchField.parent().parent();
-        $principalWell.find(".membership-container").each(function() {
-          $principal = $(this);
-          // Get principal name from special attribute, defaults to "" if there are none
-          var principalName = $principal.attr("data-principal-name");
-          if(principalName === undefined) {
-            // This should never happen...
-            principalName = "";
+        var hiddenElements = 0;
+        $list.find("li").each(function() {
+          $listItem = $(this);
+          // Get principal name from special attribute, or list item text
+          var filterableString;
+          if($listItem.attr("data-filterable-string")) {
+            filterableString = $listItem.attr("data-filterable-string");
+          } else {
+            filterableString = $listItem.text();
           }
           // Hide/show if principal name contains filter string (ignore case)
-          if(principalName.toLowerCase().indexOf(filterString.toLowerCase()) != -1) {
-            $principal.show();
+          if(filterableString.toLowerCase().indexOf(filterString.toLowerCase()) != -1) {
+            $listItem.show();
           } else {
-            $principal.hide();
+            $listItem.hide();
+            hiddenElements++;
+          }
+          // Check if there are no results and show placeholder
+          if(hiddenElements == $list.find("li").length) {
+            $list.find("li.no-results").show();
+          } else {
+            $list.find("li.no-results").hide();
           }
         });
-      } else if (filterString.length == 0) {
-        // Show all principals when there is no filter string
-        var $principalWell = $searchField.parent().parent();
-        $principalWell.find(".membership-container").each(function() {
-          $principal = $(this);
-          $principal.show();
+      } else {
+        // Show all list items when there is no filter string
+        $list.find("li").each(function() {
+          $(this).show();
         });
+        $list.find("li.no-results").hide();
       }
+      console.log(new Date());
+      
+      // Remove progress image
+      $(this).parent().children(".loading").hide();
     }).keypress(function(keyEvent) {
       // Ignore any enter/return events
-      if(keyEvent.charCode == 13) {
-        return false;
-      }
-    })
+      // if(keyEvent.charCode == 13) {
+      //   $(this).search();
+      //   return false;
+      // }
+    });
+    $("li.no-results").hide()
+    
+    $(".permission-ui li.row").click(function() {
+      $(this)
+        .parent()
+          .children("li.row")
+            .removeClass("highlight")
+          .end()
+        .end()
+        .addClass("highlight");
+    });
 }); // end document ready function
 
 function toggleMembershipPlaceholder() {
