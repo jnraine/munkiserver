@@ -86,7 +86,9 @@ Munki::Application.routes.draw do
   match 'dashboard' => "dashboard#index", :as => "dashboard"
   match 'dashboard/widget/:name' => 'dashboard#widget', :as => "widget"
   
-  resources :permissions, :only => [:edit,:update,:index]
+  match "permissions" => "permissions#index", :as => "permissions", :via => "GET"
+  match "permissions/edit/:principal_pointer(/:unit_id)" => "permissions#edit", :as => "edit_permissions", :via => "GET"
+  match "permissions" => "permissions#update", :as => "update_permissions", :via => "PUT"
   
   root :to => redirect("/login")
 end

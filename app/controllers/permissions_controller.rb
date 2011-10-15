@@ -8,16 +8,27 @@ class PermissionsController < ApplicationController
   end
   
   def edit
-    @grouped_permissions = Permission.retrieve_in_privilege_groups(:principal_pointer => params[:principal_pointer], :unit_id => params[:unit_id])
+    begin
+      @grouped_permissions = Permission.retrieve_in_privilege_groups(:principal_pointer => params[:principal_pointer], :unit_id => params[:unit_id])
+    rescue ArgumentError => e
+      flash[:error] = e.message
+    end
+    
     respond_to do |format|
-      format.html
-      format.js
+      if flash[:error].present?
+        format.html { redirect_to permissions_path }
+        format.js { render :partial => "shared/flash" }
+      else
+        format.html
+        format.js
+      end
     end
   end
   
   def update
+    
     respond_to do |format|
-      format.js
+      format.js { render :partial => "shared/flash" }
     end
   end
   
