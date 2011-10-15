@@ -1,4 +1,4 @@
-<%= form_for "something" do %>
+<%= form_for permissions_path, :method => :put, :remote => true do %>
 	<% @grouped_permissions.each do |group_name, permissions| %>
 		<dl class="permission-group">
 			<dt class="permission-group-name"><%= group_name.titleize %></dt>

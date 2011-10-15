@@ -121,7 +121,7 @@
 				</ul>
 			<% end %>
 		</div>
-		<div class="span-16 prepend-1 append-bottom append-1">
+		<div id="main-content" class="span-16 prepend-1 append-bottom append-1">
 			<% flash.each do |key, msg| %>
 				<%= content_tag :div, msg, :class => "message #{key}" %>
 			<% end %>
