@@ -8,7 +8,7 @@ class PermissionsController < ApplicationController
   end
   
   def edit
-    @grouped_permissions = Permission.retrieve_by_group(:principal_pointer => params[:principal_pointer], :unit_id => params[:unit_id])
+    @grouped_permissions = Permission.retrieve_in_privilege_groups(:principal_pointer => params[:principal_pointer], :unit_id => params[:unit_id])
     respond_to do |format|
       format.html
       format.js
