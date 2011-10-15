@@ -10,6 +10,6 @@ module Principal
   
   # Returns a unique principal ID for this principal
   def principal_id
-    self.class.to_s.underscore + "-#{id}"
+    self.class.to_s + "-#{id}"
   end
 end

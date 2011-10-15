@@ -497,6 +497,15 @@ $(document).ready(function() {
         .end()
         .addClass("highlight");
     });
+    
+  // Load permission edit for upon principal and unit selection
+  $(".permission-ui li.row").click(function() {
+    var principalPointer = $("#all-principals").find(".row.highlight").attr("data-principal-id");
+    var unitId = $(".unit-container").find(".row.highlight").attr("data-unit-id");
+    if(principalPointer != undefined) {
+      $.getScript("/permissions/edit/" + principalPointer + "/" + unitId); 
+    }
+  });
 }); // end document ready function
 
 function toggleMembershipPlaceholder() {

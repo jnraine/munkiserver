@@ -33,7 +33,7 @@ class Permission < ActiveRecord::Base
           p = Permission.find(p_fields[:id])
         else
           # Save records that are new
-          p = Permission.new(:principal_id => p_fields[:principal_id], :principal_type => p_fields[:principal_type], :privilege_id => p_fields[:privilege_id], :unit_id => p_fields[:unit_id])
+          p = Permission.new(:principal_id => p_fields[:principal_id], :principal_type => p_fields[:principal_type].camelcase, :privilege_id => p_fields[:privilege_id], :unit_id => p_fields[:unit_id])
           if p.save
             results[:new_records] += 1
           else
