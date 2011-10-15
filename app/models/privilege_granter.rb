@@ -1,4 +1,8 @@
 module PrivilegeGranter
+  def self.unit_specific_privilege_groups
+    [:computers, :computer_groups, :bundles, :user_groups, :packages, :permissions]
+  end
+  
   # ===================
   # = Computer Groups =
   # ===================
