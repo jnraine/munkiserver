@@ -86,13 +86,6 @@ class User < ActiveRecord::Base
     us = UserSetting.new
     self.settings = us
   end
-  
-  # Roles used by this application.  This is required by
-  # the declarative_authorization gem
-  def role_symbols
-    [:admin,:developer,:support_person]
-  end
-  
   # over write default to_param use name in the routing instead of id
   def to_param
     username
