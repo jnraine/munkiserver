@@ -3,5 +3,3 @@
 <%= form_for(@computer_group, :validate => true, :html => {"data-environment-change" => computer_group_environment_change_url(@computer_group.unit,"new")}) do |f| %>
 	<%= render :partial => 'form', :locals => {:f => f, :submit_value => "Add"} %>
 <% end %>
-
-<%= link_to 'Back', computer_groups_path(current_unit) %>
