@@ -1,18 +1,18 @@
 <% content_for :sidebar do %>
-<% end -%>
+<% end %>
 
 <h2>Import ARD plist</h2>
 
 <p>Select an ARD export plist file and a destination computer group.</p>
 
 <div>
-<%= form_tag(create_import_computers_path(current_unit), :multipart => true) do %>
-	<p>
-		Computer group 
-		<%= select_tag "computer[computer_group_id]", options_for_select([["(Automatic)", 0]] + ComputerGroup.unit(current_unit).collect {|e| [e.name,e.id]}) %>
-		<%= helpful_info("Select a group to import into, or let automatic mode determine the group name from the plist")%><br />
-	</p>
-	<p><%= file_field_tag 'computer[plist]' %></p>
-	<p><%= submit_tag 'Import' %></p>
-<% end %>
+	<%= form_tag(create_import_computers_path(current_unit), :multipart => true) do %>
+		<p>
+			Computer group 
+			<%= select_tag "computer[computer_group_id]", options_for_select([["(Automatic)", 0]] + ComputerGroup.unit(current_unit).collect {|e| [e.name,e.id]}) %>
+			<%= helpful_info("Select a group to import into, or let automatic mode determine the group name from the plist")%><br />
+		</p>
+		<p><%= file_field_tag 'computer[plist]' %></p>
+		<p><%= submit_tag 'Import' %></p>
+	<% end %>
 </div>
