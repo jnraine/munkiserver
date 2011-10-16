@@ -18,9 +18,13 @@
 			<td><%= b.description %></td>
 			<td><%= b.environment %></td>
 		    <td>
-				<%= link_to 'Edit', edit_bundle_path(b.unit, b) %> |
-				<%= link_to 'Destroy', bundle_path(current_unit, b), :confirm => "Are you sure you want to destroy #{b}?", :method => :delete %> |
-				<%= link_to 'Manfest', bundle_path(b.unit, b, :format => :manifest) %>
+				<% if can? :update, b %>
+					<%= link_to 'Edit', edit_bundle_path(b.unit, b) %> |
+				<% end %>
+				<% if can? :destroy, b %>
+					<%= link_to 'Destroy', bundle_path(current_unit, b), :confirm => "Are you sure you want to destroy #{b}?", :method => :delete %> |
+				<% end %>
+				<%= link_to 'Manifest', bundle_path(b.unit, b, :format => :manifest) %>
 			</td>
 		  </tr>
 		<% end %>
@@ -29,4 +33,6 @@
 	<h5>There are no <%= params[:controller].humanize.downcase %> here!</h5>
 	<p>Why don't you add <%= link_to "one", new_bundle_path(current_unit) %>?</p>
 <% end %>
-<%= link_to "New bundle", new_bundle_path(current_unit) %>
+<% if can? :create, Bundle.new_for_can(current_unit) %>
+	<%= link_to "New bundle", new_bundle_path(current_unit) %>
+<% end %>

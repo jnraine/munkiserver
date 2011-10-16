@@ -228,6 +228,7 @@ module ApplicationHelper
     render "shared/hash_checkboxes", :locals => {:options => options, :h => h}
   end
   
+  # Should be refactored to be more efficient
   def unit_link(unit, controller)
     known = {"computers" => Computer,"packages" => Package,"computer_groups" => ComputerGroup,"bundles" => Bundle,"shared_packages" => Package,"user_groups" => UserGroup}
     controller = known.keys.first unless known.keys.include?(controller)
