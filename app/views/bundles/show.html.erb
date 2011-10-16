@@ -9,4 +9,6 @@
 
 <%= inventory(@bundle,true) %>
 
-<%= link_to 'Edit', edit_bundle_path(@bundle.unit, @bundle) %>
+<% if can? :update, @bundle %>
+	<%= link_to 'Edit', edit_bundle_path(@bundle.unit, @bundle) %>
+<% end %>
