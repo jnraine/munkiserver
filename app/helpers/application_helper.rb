@@ -159,7 +159,7 @@ module ApplicationHelper
     when "Bundles"
       bool = (params[:controller] == "groups")
     when "Packages"
-      bool = (params[:controller] == "pkgsinfo")
+      bool = (params[:controller] == "packages")
     end
     bool
   end
@@ -229,8 +229,18 @@ module ApplicationHelper
   end
   
   def unit_link(unit, controller)
-    included_controllers = ["computers","packages","computer_groups","bundles","shared_packages","install_items"]
-    controller = "computers" unless included_controllers.include?(controller)
+    known = {"computers" => Computer,"packages" => Package,"computer_groups" => ComputerGroup,"bundles" => Bundle,"shared_packages" => Package,"user_groups" => UserGroup}
+    controller = known.keys.first unless known.keys.include?(controller)
+    authorized = false
+    # Try to authorize for a specific controller ahead of time
+    while not authorized and known.present?
+      if can? :read, known.delete(controller).new_for_can(unit)
+        authorized = true
+      else
+        controller = known.keys.first
+      end
+    end
+    Rails.logger.error("#{current_user} does is not authorized to any read actions within the known controllers!") if not authorized
     {:controller => controller, :action => :index, :unit_shortname => unit.to_param}
   end
   
