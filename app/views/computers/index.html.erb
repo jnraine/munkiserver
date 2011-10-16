@@ -1,10 +1,12 @@
 <% content_for :sidebar do %>
-	<h4>Computer Groups</h4>
-	<div class="box">
-		<%= computer_group_links %>
-		<hr />
-		<%= link_to "View All", computer_groups_url(current_unit) %><br />
-	</div>
+	<% if can? :read, ComputerGroup.new_for_can(current_unit) %>
+		<h4>Computer Groups</h4>
+		<div class="box">
+			<%= computer_group_links %>
+			<hr />
+			<%= link_to "View All", computer_groups_url(current_unit) %><br />
+		</div>
+	<% end %>
 	<h4>Filter</h4>
 	<div class="box">
 		Quickly find the computer you are looking for by filtering the hostname.
@@ -15,4 +17,6 @@
 
 <%= render :partial => 'computer_listing' %>
 
-<p><%= link_to 'Add computer', new_computer_path(current_unit) %></p>
+<% if can? :create, Computer.new_for_can(current_unit) %>
+	<p><%= link_to 'Add computer', new_computer_path(current_unit) %></p>
+<% end %>
