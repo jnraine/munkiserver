@@ -35,6 +35,7 @@ module UnitMember
       
       # Instatiates a new object, belonging to unit.  Caches for future calls.
       def self.new_for_can(unit)
+        raise ArgumentError.new("Unit passed to new_for_can is nil") if unit.nil?
         @new_for_can ||= []
         @new_for_can[unit.id] ||= self.new(:unit => unit)
       end
