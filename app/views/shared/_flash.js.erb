@@ -1,0 +1,18 @@
+<% flash.each do |type, msg| %>
+  // Find existing flash message
+	var $flashEl = $(".message.<%= type %>");
+	// Or, create one, if it doesn't exist
+	if($flashEl.length == 0) {
+	  $flashEl = $("<div></div>")
+	  $flashEl
+	    .addClass("message <%= type %>")
+	    .hide()
+	    .prependTo("#main-content");
+	}
+	// Make it appear, then disappear
+	$flashEl
+	  .slideUp()
+	  .html("<%= escape_javascript(msg) %>")
+	  .slideDown()
+	  .delay(1500).slideUp();
+<% end %>
