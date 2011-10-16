@@ -49,9 +49,9 @@
 		</tr>
 	</table>
 
-	<p><em><%= link_to "Refresh warranty", computer_update_warranty_path(@computer.unit, @computer) %></em></p>
+	<p><em><%= link_to "Refresh warranty information", computer_update_warranty_path(@computer.unit, @computer) %></em></p>
 
 <% else %>
 	<p><em>No warranty available</em></p>
-	<p><em><%= link_to "Find warranty", computer_update_warranty_path(@computer.unit, @computer) %></em></p>
+	<p><em><%= link_to "Refresh warranty information", computer_update_warranty_path(@computer.unit, @computer) %></em></p>
 <% end %>

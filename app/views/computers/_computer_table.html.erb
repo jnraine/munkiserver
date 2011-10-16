@@ -10,12 +10,8 @@
 		<p>
 			<%= record_count(computers) %> 	<%= submit_tag "Multiple Edit", :id => "bulk_edit" %>
 		</p>
-		
 		<%= will_paginate computers %>
-		
 	<% end %>
-	
-
 	<% if computers.length > 0 %>
 		<table class="zebra">
 			<thead>
@@ -38,31 +34,36 @@
 				</tr>
 			</thead>
 
-		<% computers.each do |c| %>
-		  <tr>
-			<% if bulk_edit %>
-				<td><%= check_box_tag("selected_records[]",c.id, false, :class => "bulk_edit_checkbox") %></td>
-			<% end %>
+			<% computers.each do |c| %>
+			  <tr>
+				<% if bulk_edit %>
+					<td><%= check_box_tag("selected_records[]",c.id, false, :class => "bulk_edit_checkbox") %></td>
+				<% end %>
 		
-			<td><%= image_tag c.icon.url(:small), :class => "thumbnail" if c.icon %></td>
-			<td><%= link_to c.name, computer_url(c.unit, c) %></td>    
-		    <td><%= link_to c.hostname, computer_url(c.unit, c) %></td>
-			<td><%= c.mac_address %></td>
-			<td><%= c.time_since_last_report %></td>
-		    <td>
-				<%= link_to 'Edit', edit_computer_path(c.unit, c) %> |
-				<%= link_to 'Destroy', computer_path(c.unit, c) , :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %><br />
-				<%= link_to 'Manifest', computer_path(c.unit, c, :format => :manifest) %> |
-				<%= link_to 'Client Prefs', computer_path(c.unit, c, :format => :client_prefs) %>
-			</td>
-		  </tr>
-		<% end %>
+				<td><%= image_tag c.icon.url(:small), :class => "thumbnail" if c.icon %></td>
+				<td><%= link_to c.name, computer_url(c.unit, c) %></td>    
+			    <td><%= link_to c.hostname, computer_url(c.unit, c) %></td>
+				<td><%= c.mac_address %></td>
+				<td><%= c.time_since_last_report %></td>
+			    <td>
+					<% if can? :update, c %>
+						<%= link_to 'Edit', edit_computer_path(c.unit, c) %> |
+					<% end %>
+					<% if can? :destroy, c %>
+						<%= link_to 'Destroy', computer_path(c.unit, c) , :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %><br />
+					<% end %>
+					<%= link_to 'Manifest', computer_path(c.unit, c, :format => :manifest) %> |
+					<%= link_to 'Client Prefs', computer_path(c.unit, c, :format => :client_prefs) %>
+				</td>
+			  </tr>
+			<% end %>
 		</table>
-			
-				<br /><br />
+		<br /><br />
 	<% else %>
 		<h5>There are no computers here!</h5>
-		<p>Why don't you add <%= link_to "one", new_computer_path(current_unit) %> or <%= link_to "a few", import_new_computer_path(current_unit) %>?</p>
+		<% if can? :create, Computer.new_for_can(current_unit) %>
+			<p>Why don't you add <%= link_to "one", new_computer_path(current_unit) %> or <%= link_to "a few", import_new_computer_path(current_unit) %>?</p>
+		<% end %>
 	<% end %>
 	<%= will_paginate computers if paginate %>
 </div>
