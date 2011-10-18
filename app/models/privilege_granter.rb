@@ -89,6 +89,14 @@ module PrivilegeGranter
   def modify_permissions(unit_ids)
     can [:update, :destroy], Permission, :unit_id => unit_ids
   end
+  
+  def read_system_permissions(unit_ids)
+    can [:read, :edit], Permission, :unit_id => nil
+  end
+  
+  def modify_system_permissions(unit_ids)
+    can [:update, :destroy], Permission, :unit_id => nil
+  end
 
   # =========
   # = Users =
