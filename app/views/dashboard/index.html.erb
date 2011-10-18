@@ -11,6 +11,8 @@
 	</div>
 	<div class="span-11">
 		<%= render_widget :available_package_updates %>
-		<%= render_widget :add_package %>
+		<% if can? :create, Package %>
+			<%= render_widget :add_package %>
+		<% end %>
 	</div>
 <% end %>
