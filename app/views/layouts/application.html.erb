@@ -65,8 +65,13 @@
 					</li> -->
 				<% end %>
 				<li class="dir">
-				<%= link_to "Dashboard", dashboard_path %>
+					<%= link_to "Dashboard", dashboard_path %>
 				</li>
+				<% if can? :read, Permission %>
+					<li class="dir">
+						<%= link_to "Permissions", permissions_path %>
+					</li>
+				<% end %>
 				<% if logged_in? %>
 					<li><%= link_to("Logout", logout_path) %> (<%= current_user.username %>)</li>
 				<% end %>
