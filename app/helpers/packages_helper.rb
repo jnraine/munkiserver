@@ -114,7 +114,9 @@ module PackagesHelper
   # Determine to show import or update links based on the package of the available import package and version tracker version
   def update_or_import(package)
     # if the package has other greather version shared packages and has newer version tracker version
-    if import_package(package).present? and package.package_branch.new_version?
+    if cannot? :create, Package.new_for_can(current_unit)
+      # Don't show anything
+    elsif import_package(package).present? and package.package_branch.new_version?
       # if the version tracker has higher version than the shared package
       if package.package_branch.version_tracker.version > import_package(package).version
         render :partial => 'update_available_link', :locals => {:package => package }
