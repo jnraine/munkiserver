@@ -11,7 +11,7 @@ module DashboardHelper
   def new_package_unit_options(units)
     options_array = []
     units.each do |unit|
-      options_array << [unit.to_s,packages_path(unit)]
+      options_array << [unit.to_s,packages_path(unit)] if can? :create, Package.new_for_can(unit)
     end
     options_for_select(options_array)
   end
