@@ -10,6 +10,7 @@ class PermissionsController < ApplicationController
   def edit
     begin
       @grouped_permissions = Permission.retrieve_in_privilege_groups(:principal_pointer => params[:principal_pointer], :unit_id => params[:unit_id])
+      @can_update = (can? :update, @grouped_permissions.values.first)
     rescue ArgumentError => e
       flash[:error] = e.message
     end
