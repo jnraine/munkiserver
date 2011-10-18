@@ -230,7 +230,8 @@ module ApplicationHelper
   
   # Should be refactored to be more efficient
   def unit_link(unit, controller)
-    known = {"computers" => Computer,"packages" => Package,"computer_groups" => ComputerGroup,"bundles" => Bundle,"shared_packages" => Package,"user_groups" => UserGroup}
+    raise ArgumentError.new("Unit passed to unit_link method was nil") if unit.nil?
+    known = {"computers" => Computer,"packages" => Package,"computer_groups" => ComputerGroup,"bundles" => Bundle,"shared_packages" => Package,"user_groups" => UserGroup, "permissions" => Permission}
     controller = known.keys.first unless known.keys.include?(controller)
     authorized = false
     # Try to authorize for a specific controller ahead of time
@@ -241,7 +242,7 @@ module ApplicationHelper
         controller = known.keys.first
       end
     end
-    Rails.logger.error("#{current_user} does is not authorized to any read actions within the known controllers!") if not authorized
+    raise RuntimException.new("#{current_user} does is not authorized to any read actions within the known controllers!") if not authorized
     {:controller => controller, :action => :index, :unit_shortname => unit.to_param}
   end
   

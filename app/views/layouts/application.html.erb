@@ -26,12 +26,12 @@
 <%= image_tag 'loading_graphic.gif', :id => "loading_graphic" %>
 <div class="wrapper">
 	<div class="container">
-		<div id="words_header" class="span-8 prepend-2 append-5">
+		<div id="words_header" class="span-7 prepend-2 append-5">
 			<p id="site_motto">Manage your <span class="jump_text">macs</span></p>
 			<h1 id="site_title">Munki Server</h1>
 		</div>
 	
-		<div id="app-menu" class="span-6 last">
+		<div id="app-menu" class="span-7 last">
 			<ul class="dropdown dropdown-horizontal">
 				<% if super_user? %>
 					<% if can? :read, User.new %>

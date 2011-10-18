@@ -506,6 +506,11 @@ $(document).ready(function() {
       $.getScript("/permissions/edit/" + principalPointer + "/" + unitId); 
     }
   });
+  
+  // So permission checkboxes aren't greyed out.  Wasn't working yet.
+  // $(".unclickable").click(function() {
+  //   return false;
+  // });
 }); // end document ready function
 
 function toggleMembershipPlaceholder() {

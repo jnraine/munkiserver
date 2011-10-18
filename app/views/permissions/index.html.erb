@@ -8,9 +8,11 @@
 	    </div>
 		<div class="unit-container well">
 			<ul class="row-list filterable">
-				<li class="row" data-unit-id="">
-					<em>Non unit permissions</em>
-				</li>
+				<% if can? :read, Permission.new(:unit_id => nil) %>
+					<li class="row" data-unit-id="">
+						<em>System</em>
+					</li>
+				<% end %>
 				<% @units.each do |unit| %>
 					<li class="row" data-unit-id="<%= unit.id %>">
 						<%= unit %>
