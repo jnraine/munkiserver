@@ -300,7 +300,7 @@ namespace :bootstrap do
     # Flag unit-specific privileges
     Privilege.all.each do |privilege|
       PrivilegeGranter.unit_specific_privilege_groups.each do |privilege_group_name|
-        if privilege.name.match(/[a-zA-Z]+_#{privilege_group_name}$/)
+        if privilege.name.match(/^[a-zA-Z]+_#{privilege_group_name}$/)
           privilege.unit_specific = true
           privilege.save
         end
