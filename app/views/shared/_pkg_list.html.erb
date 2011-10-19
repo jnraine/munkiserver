@@ -7,9 +7,17 @@
 		<% end %>
 		<%= image_tag item.package.icon.url(:tiny) if item.package.icon %>
 		<% if item.package_id.blank? %>
-			<span><%= link_to item.package, package_path(item.package.to_params) %></span>
+			<% if can? :read, item.package %>
+				<span><%= link_to item.package, package_path(item.package.to_params) %></span>
+			<% else %>
+				<span><%= item.package %></span>	  
+			<% end %>
 		<% else %>
-			<span><%= link_to item.package.to_s(:pretty_with_version), package_path(item.package.to_params) %></span>
+			<% if can? :read, item.package %>
+				<span><%= link_to item.package.to_s(:pretty_with_version), package_path(item.package.to_params) %></span>
+			<% else %>
+				<span><%= item.package.to_s(:pretty_with_version) %></span>	  
+			<% end %>
 		<% end %>
 	</div>
 <% end %>
