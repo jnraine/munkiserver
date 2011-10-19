@@ -35,4 +35,6 @@
 </ul>
 </table>
 
-<%= link_to "Edit", edit_user_path(@user) %> | <%= link_to "Back", users_path %>
+<% if can? :update, @user %>
+	<%= link_to "Edit", edit_user_path(@user) %>
+<% end %>

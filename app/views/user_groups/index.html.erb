@@ -12,10 +12,17 @@
     <td><%= user_group.name %></td>
 	<td><%= user_group.description %></td>
     <td>
-		<%= link_to 'Edit', edit_user_group_path(user_group.unit, user_group) %> 
-		<%= link_to 'Remove', user_group_path(user_group.unit, user_group), :confirm => 'Are you sure?', :method => :delete %>
+		<% if can? :update, user_group %>
+			<%= link_to 'Edit', edit_user_group_path(user_group.unit, user_group) %> 
+		<% end %>
+		<% if can? :destroy, user_group %>
+			<%= link_to 'Remove', user_group_path(user_group.unit, user_group), :confirm => 'Are you sure?', :method => :delete %>
+		<% end %>
 	</td>
   </tr>
 <% end %>
 </table>
-<p><%= link_to 'New user group', new_user_group_path(current_unit) %></p>
+
+<% if can? :create, UserGroup.new_for_can(current_unit) %>
+	<p><%= link_to 'New user group', new_user_group_path(current_unit) %></p>
+<% end %>

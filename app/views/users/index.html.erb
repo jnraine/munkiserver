@@ -20,4 +20,6 @@
 	<% end %>
 </table>
 
-<p><%= link_to "Add user", new_user_path %></p>
+<% if can? :create, User %>
+	<p><%= link_to "Add user", new_user_path %></p>
+<% end %>
