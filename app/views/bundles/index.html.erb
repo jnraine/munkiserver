@@ -31,7 +31,9 @@
 	</table>
 <% else %>
 	<h5>There are no <%= params[:controller].humanize.downcase %> here!</h5>
-	<p>Why don't you add <%= link_to "one", new_bundle_path(current_unit) %>?</p>
+	<% if can? :create, Bundle.new_for_can(current_unit) %>
+		<p>Why don't you add <%= link_to "one", new_bundle_path(current_unit) %>?</p>
+	<% end %>
 <% end %>
 <% if can? :create, Bundle.new_for_can(current_unit) %>
 	<%= link_to "New bundle", new_bundle_path(current_unit) %>
