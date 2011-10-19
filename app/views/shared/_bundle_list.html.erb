@@ -1,28 +1,37 @@
 <% bundle_list.each do |bundle| %>
-<div class="groupListItem">
-	<span>
-		<%= bundle %> 
-		<%= link_to "view", bundle_path(bundle.unit, bundle) %> 
-		<%= link_to "edit", edit_bundle_path(bundle.unit, bundle) %>
-	</span>
+	<div class="groupListItem">
+		<span>
+			<% if can? :read, bundle %>
+				<%= link_to bundle, bundle_path(bundle.unit, bundle) %> 
+			<% else %>
+				<%= bundle %>
+			<% end %>
+			<% if can? :update, bundle %>
+				<%= link_to "edit", edit_bundle_path(bundle.unit, bundle) %>
+			<% end %>
+		</span>
 	
-	<% unless bundle.installs.empty? %>
-		<span class="groupListingContentsTitle">Install</span>
-		<%= pkg_list(bundle.install_items,target) %>
-	<% end %>
-
-	<% unless bundle.uninstalls.empty? %>
-		<span class="groupListingContentsTitle">Uninstall</span>
-		<%= pkg_list(bundle.uninstall_items) %>
-	<% end %>
-
-	<% unless bundle.bundles.empty? %>
-		<span class="groupListingContentsTitle">Bundle</span>
-		<% bundle.bundles.each do |item| %>
-			<div class="packageListItem">
-				<span><%= link_to item, bundle_path(current_unit, item) %></span>
-			</div>
+		<% unless bundle.installs.empty? %>
+			<span class="groupListingContentsTitle">Install</span>
+			<%= pkg_list(bundle.install_items,target) %>
 		<% end %>
-	<% end %>
-</div>
+
+		<% unless bundle.uninstalls.empty? %>
+			<span class="groupListingContentsTitle">Uninstall</span>
+			<%= pkg_list(bundle.uninstall_items) %>
+		<% end %>
+
+		<% unless bundle.bundles.empty? %>
+			<span class="groupListingContentsTitle">Bundle</span>
+			<% bundle.bundles.each do |item| %>
+				<div class="packageListItem">
+					<% if can? :read, item %>
+						<span><%= link_to item, bundle_path(current_unit, item) %></span>
+					<% else %>
+						<span><%= span %></span>
+					<% end %>
+				</div>
+			<% end %>
+		<% end %>
+	</div>
 <% end %>
