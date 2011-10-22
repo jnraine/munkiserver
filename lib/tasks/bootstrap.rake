@@ -175,20 +175,19 @@ namespace :bootstrap do
     end
   end
   
-  desc "Load default unit"
+  desc "Create default unit, if none exist"
   task :unit, [:name] => :environment do |t, args|
-    Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
-    name = args.name
-    name ||= "Default"
-    u = Unit.find_or_create_by_name(name)
-    u.shortname = u.conform_name_to_shortname
-    u.key = Unit.generate_key
-    u.description = "Created by bootstrap"
-    unless u.save
-      puts "Default user failed to save: " + u.errors.inspect
+    if Unit.count == 0
+      Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
+      name = args.name
+      name ||= "Default"
+      u = Unit.new(:name => name, :shortname => u.conform_name_to_shortname, :description => "Created by bootstrap")
+      unless u.save
+        puts "Default unit failed to save: " + u.errors.inspect
+      end
     end
   end
-  
+    
   desc "Create default computer group"
   task :computer_group, [:name] => :environment do |t, args|
     # Makes we have a unit and an environment to assign
@@ -206,30 +205,17 @@ namespace :bootstrap do
     end
   end
   
-  desc "Create first user"
-  task :user, [:name] => :environment do |t, args|
-    if User.first.present?
-      puts "First user (#{User.first.username}) already exists"
-    else
-      puts "Generating a new user"    
-      # Make sure we have a unit to assign
-      Rake::Task["bootstrap:unit"].invoke unless Unit.count
-      username = args.name
-      unless username
-        print "Username: "
-        username = STDIN.gets.chomp
-      end
-      u = User.new(:username => username)
-      print "Email: "
-      u.email = STDIN.gets.chomp
+  desc "Create root user"
+  task :root_user => :environment do |t, args|
+    if User.where(:username => "root").first.blank?
+      puts "Generating a root user"
+      u = User.new(:username => "root", :email => "root@localhost.local")
       print "Password: "
       u.password = STDIN.gets.chomp
       print "Confirm password: "
       u.password_confirmation = STDIN.gets.chomp
-      u.super_user = true
-      u.units << Unit.first
       unless u.save
-        puts "Default user failed to save: " + u.errors.inspect
+        puts "Failed to save root user: " + u.errors.inspect
       end
     end
   end
