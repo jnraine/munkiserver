@@ -14,4 +14,5 @@ gem "plist"
 group :development do
   gem "ruby-debug19" , :require => "ruby-debug"
   gem "rails-erd"
+  gem "highline"
 end
