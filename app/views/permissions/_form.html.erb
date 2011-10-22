@@ -14,10 +14,11 @@
 								<%= hidden_field_tag "permissions[#{i}][id]", permission.id %>
 							<% end %>
 							<%= check_box_tag "permissions[#{i}][retain]", 1, !permission.new_record? %>
+							<%= label_tag "permissions_#{i}_retain", permission.privilege.action.capitalize %>
 						<% else %>
 							<%= check_box_tag "permissions[#{i}][retain]", 1, !permission.new_record?, :disabled => true %>
+							<%= permission.privilege.action.capitalize %>
 						<% end %>
-						<%= permission.privilege.action.capitalize %>
 						<% i += 1 %>
 					</dd>
 				<% end %>
