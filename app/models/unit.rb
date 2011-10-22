@@ -26,26 +26,6 @@ class Unit < ActiveRecord::Base
     write_attribute(:name,value)
   end
   
-  # Returns the membership that self and user share
-  def membership(user)
-    memberships.find_by_user_id(user.id)
-  end
-  
-  # Ensures user is a valid member of this unit
-  def member?(user)
-    user_ids.include?(user.id)
-  end
-  
-  # Alias to user association getter
-  def members
-    users
-  end
-  
-  # Alias to user association setter
-  def members=(value)
-    self.users = value
-  end
-  
   # Returns an array of tas option hashes
   def tas_params(environment_id = nil)
     [{:title => "Users",
@@ -58,11 +38,6 @@ class Unit < ActiveRecord::Base
 
   def to_s
     name
-  end
-  
-  # Generate key using the User.random_string method
-  def self.generate_key
-    User.random_string(30)
   end
   
   def self.dormant_computers_mailers
