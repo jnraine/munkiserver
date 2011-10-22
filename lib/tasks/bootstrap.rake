@@ -187,23 +187,6 @@ namespace :bootstrap do
       end
     end
   end
-    
-  desc "Create default computer group"
-  task :computer_group, [:name] => :environment do |t, args|
-    # Makes we have a unit and an environment to assign
-    Rake::Task["bootstrap:unit"].invoke if Unit.count == 0
-    Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
-    name = args.name
-    name ||= "Default"
-    cg = ComputerGroup.find_or_create_by_name(name)
-    cg.description = "Created by bootstrap"
-    cg.unit = Unit.first
-    cg.environment = Environment.find_by_name("Production")
-    cg.environment = Environment.first if cg.environment.nil?
-    unless cg.save
-      puts "Default computer group failed to save: " + cg.errors.inspect
-    end
-  end
   
   desc "Create root user"
   task :root_user => :environment do |t, args|
@@ -220,12 +203,9 @@ namespace :bootstrap do
     end
   end
   
-  desc "create a new settings.yaml file optional arguments rake setup:create[hostname] default localhost:3000"
+  desc "Create a settings.yaml file, if missing"
   task :settings, [:settings, :hostname] => :environment do |t, args|
-    if File.exists?("config/settings.yaml")
-      puts "settings.yaml file is already exists"
-    else
-      #if settings.yaml file doesn't exists
+    unless File.exists?("config/settings.yaml")
       hostname = args.hostame
       puts "Grenerating settings.yaml file, if blank default to \"localhost:3000\""
       print "Hostname: "
@@ -235,33 +215,27 @@ namespace :bootstrap do
       end
        h = {}
         File.open( "config/settings.yaml", "w" ) do |file|
-         h[:action_mailer] = {:host => "#{hostname}" }
-         file.write(h.to_yaml)
+          h[:action_mailer] = {:host => "#{hostname}" }
+          file.write(h.to_yaml)
         end
     end
   end
   
-  desc "Load base environments"
+  desc "Create base environments"
   task :environments do |t, args|
-    #Build the staging environment
+    # Build the staging environment
     e = Environment.find_or_create_by_name("Staging")
     e.description = "Created by bootstrap"
     unless e.save
       puts "Staging environment failed to save: " + e.errors.inspect
     end
     
-    #Build the production environment
+    # Build the production environment
     e = Environment.find_or_create_by_name("Production")
     e.description = "Created by bootstrap"
     unless e.save
       puts "Production environment failed to save: " + e.errors.inspect
     end
-  end
-  
-  desc "Generate preflight script"
-  task :prelight_script do |t, args|
-    # Build a preflight script dependant 
-    
   end
   
   desc "Generate crontab jobs passing rails current environment"
