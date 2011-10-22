@@ -368,14 +368,14 @@ $(document).ready(function() {
     toggleMembershipPlaceholder();
     
     // Make principals draggable
-    $( ".edit_user_group #all-principals li" ).draggable({
+    $( ".user-group-form #all-principals li" ).draggable({
         appendTo: "body",
         helper: "clone",
         cursor: "pointer"
     });
     
     // Make principals droppable
-    $(".edit_user_group #member-principals ul").droppable({
+    $(".user-group-form #member-principals ul").droppable({
       activeClass: "ui-state-default",
       hoverClass: "ui-state-hover",
       accept: function($ui) {

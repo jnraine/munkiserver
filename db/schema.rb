@@ -13,14 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20110904192733) do
 
-  create_table "assignments", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "role_id"
-    t.integer  "unit_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
     t.string   "manifest_type"
@@ -159,6 +151,30 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.datetime "updated_at"
   end
 
+  create_table "memberships", :force => true do |t|
+    t.integer  "unit_id"
+    t.integer  "user_id"
+    t.boolean  "create_computer",        :default => true
+    t.boolean  "read_computer",          :default => true
+    t.boolean  "edit_computer",          :default => true
+    t.boolean  "destroy_computer",       :default => true
+    t.boolean  "create_bundle",          :default => true
+    t.boolean  "read_bundle",            :default => true
+    t.boolean  "edit_bundle",            :default => true
+    t.boolean  "destroy_bundle",         :default => true
+    t.boolean  "create_computer_group",  :default => true
+    t.boolean  "read_computer_group",    :default => true
+    t.boolean  "edit_computer_group",    :default => true
+    t.boolean  "destroy_computer_group", :default => true
+    t.boolean  "create_package",         :default => true
+    t.boolean  "read_package",           :default => true
+    t.boolean  "edit_package",           :default => true
+    t.boolean  "destroy_package",        :default => true
+    t.boolean  "edit_unit",              :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "missing_manifests", :force => true do |t|
     t.string   "manifest_type"
     t.string   "identifier"
@@ -269,12 +285,6 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.datetime "updated_at"
   end
 
-  create_table "roles", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "sp_printers", :force => true do |t|
     t.string   "name"
     t.string   "cupsversion"
@@ -371,9 +381,9 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
   end
 
   create_table "user_group_memberships", :force => true do |t|
-    t.integer  "principal_id"
-    t.string   "principal_type"
-    t.integer  "user_group_id"
+    t.integer  "principal_id",   :null => false
+    t.string   "principal_type", :null => false
+    t.integer  "user_group_id",  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -417,6 +427,7 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.string   "hashed_password"
     t.string   "email"
     t.string   "salt"
+    t.boolean  "super_user",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

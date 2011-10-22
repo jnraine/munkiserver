@@ -95,13 +95,26 @@ class User < ActiveRecord::Base
     groups.map(&:permissions).flatten(1) + permissions
   end
   
+  
+  
   # Returns units through permission association.  Couldn't get finder_sql
   # to work, so I added a custom method instead.
   def units
     if is_root?
       Unit.all
     else
-      Unit.find_by_sql("SELECT DISTINCT \'units\'.* FROM \'units\' INNER JOIN \'permissions\' ON \'units\'.id = \'permissions\'.unit_id WHERE ((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = '#{self.class.to_s}'))")
+      # Unit.find_by_sql("SELECT DISTINCT \'units\'.* FROM \'units\' INNER JOIN \'permissions\' ON \'units\'.id = \'permissions\'.unit_id WHERE (((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = '#{self.class.to_s}')) OR ((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = '#{self.class.to_s}')))")
+      Unit.find_by_sql("SELECT DISTINCT 'units'.* FROM 'units' 
+                        INNER JOIN 'permissions' ON 'units'.id = 'permissions'.unit_id 
+                        WHERE (
+                          (
+                            ('permissions'.principal_id = #{id}) AND ('permissions'.principal_type = '#{self.class.to_s}')
+                          )
+                          OR (
+                            ('permissions'.principal_id IN (#{group_ids.join(", ")})) AND ('permissions'.principal_type = 'UserGroup')
+                          )
+                        )
+      ")
     end
   end
   
