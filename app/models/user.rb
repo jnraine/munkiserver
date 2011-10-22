@@ -56,15 +56,6 @@ class User < ActiveRecord::Base
     return u if (u != nil) and (User.encrypt(pass, u.salt) == u.hashed_password)
   end
   
-  def member_of(unit)
-    unit_ids.include?(unit.id)
-  end
-  
-  # Returns membership that self and unit share
-  def membership(unit)
-    unit.membership(self)
-  end
-  
   # Returns true if user is super user
   def super_user?
     true
@@ -94,8 +85,6 @@ class User < ActiveRecord::Base
   def all_permissions
     groups.map(&:permissions).flatten(1) + permissions
   end
-  
-  
   
   # Returns units through permission association.  Couldn't get finder_sql
   # to work, so I added a custom method instead.
