@@ -1,27 +1,34 @@
 <h2>Listing user group</h2>
 
-<table class="zebra">
-	<thead>
-		<th>Name</th>
-		<th>Description</th>
-		<th>Actions</th>
-	<thead>
+<% if @user_groups.present? %>
+	<table class="zebra">
+		<thead>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Actions</th>
+		<thead>
 
-<% @user_groups.each do |user_group| %>
-  <tr>
-    <td><%= user_group.name %></td>
-	<td><%= user_group.description %></td>
-    <td>
-		<% if can? :update, user_group %>
-			<%= link_to 'Edit', edit_user_group_path(user_group.unit, user_group) %> 
-		<% end %>
-		<% if can? :destroy, user_group %>
-			<%= link_to 'Remove', user_group_path(user_group.unit, user_group), :confirm => 'Are you sure?', :method => :delete %>
-		<% end %>
-	</td>
-  </tr>
+	<% @user_groups.each do |user_group| %>
+	  <tr>
+	    <td><%= user_group.name %></td>
+		<td><%= user_group.description %></td>
+	    <td>
+			<% if can? :update, user_group %>
+				<%= link_to 'Edit', edit_user_group_path(user_group.unit, user_group) %> 
+			<% end %>
+			<% if can? :destroy, user_group %>
+				<%= link_to 'Remove', user_group_path(user_group.unit, user_group), :confirm => 'Are you sure?', :method => :delete %>
+			<% end %>
+		</td>
+	  </tr>
+	<% end %>
+	</table>
+<% else %>
+  	<h5>There are no <%= params[:controller].humanize.downcase %> here!</h5>
+	<% if can? :create, UserGroup.new_for_can(current_unit) %>
+		<p>Why don't you add <%= link_to "one", new_user_group_path(current_unit) %>?</p>
+	<% end %>
 <% end %>
-</table>
 
 <% if can? :create, UserGroup.new_for_can(current_unit) %>
 	<p><%= link_to 'New user group', new_user_group_path(current_unit) %></p>

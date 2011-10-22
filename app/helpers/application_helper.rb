@@ -157,7 +157,7 @@ module ApplicationHelper
     when "User Groups"
       bool = (params[:controller] == "user_groups")
     when "Bundles"
-      bool = (params[:controller] == "groups")
+      bool = (params[:controller] == "bundles")
     when "Packages"
       bool = (params[:controller] == "packages")
     end
