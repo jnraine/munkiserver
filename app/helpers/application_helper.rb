@@ -250,4 +250,8 @@ module ApplicationHelper
   def macupdate_url(package)
      VersionTracker::MAC_UPDATE_PACKAGE_URL + package.package_branch.version_tracker.web_id.to_s
   end
+  
+  def principal_list_item(principal, opts={})
+    render :partial => 'shared/principal_list_item', :locals => {:principal => principal, :disabled => opts[:disabled]}
+  end
 end

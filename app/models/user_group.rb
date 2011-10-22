@@ -63,8 +63,13 @@ class UserGroup < ActiveRecord::Base
     write_attribute(:name, value)
   end
   
-  def to_s
-    name
+  def to_s(style = nil)
+    case style.to_s
+    when "long"
+      "#{name} (#{unit})"
+    else
+      name
+    end
   end
   
   def to_param
