@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
   end
   
   # A to string method
-  def to_s
+  def to_s(style = nil)
     username
   end
   
