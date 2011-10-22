@@ -15,4 +15,5 @@ group :development do
   gem "ruby-debug19" , :require => "ruby-debug"
   gem "rails-erd"
   gem "highline"
+  gem "textmate_backtracer"
 end
