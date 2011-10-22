@@ -687,7 +687,7 @@ a:hover.more_info {
   min-height:200px;
 }
 
-.principal-container {
+.principal-container, .unit-container {
   height:200px;
   overflow:scroll;
 }
@@ -708,7 +708,7 @@ a:hover.more_info {
 }
 
 .well .highlight {
-  background-color: #EEE5E5E5;
+  background-color: #E5E5E5;
 }
 
 li.row {

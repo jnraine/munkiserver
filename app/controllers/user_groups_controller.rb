@@ -14,7 +14,7 @@ class UserGroupsController < ApplicationController
         format.html { redirect_to user_groups_path(@user_group.unit) }
       else
         flash[:error] = "Computer group failed to save!"
-        format.html { render new_user_group_path(@user_group.unit) }
+        format.html { render :action => "new" }
       end
     end
   end
@@ -47,6 +47,7 @@ class UserGroupsController < ApplicationController
   end
 
   def new
+    @user_group = UserGroup.new(:unit => current_unit)
   end
   
   private

@@ -1,39 +1,39 @@
-<%= form_for(@user_group, :validate => true, :url => user_group_path(@user_group.unit, @user_group)) do |f| %>
-    <%= f.error_messages %>
-    <p><%= f.text_field :name %></p>
-    <p><%= f.text_area :description, :size => "30x3" %></p>
-    <div class="span-6">
-        <h4>Principals</h4>
-        <div class="list-filter-wrapper">
-            <input class="list-filter" type="search" placeholder="Filter..."/>
-        </div>
-        <div id="all-principals" class="principal-container well">
-            <ul>
-                <% @user_group.all_principals.each do |principal| %>
-                    <%= principal_list_item(principal, :disabled => true) %>
-                <% end %>
-            </ul>
-        </div>
-    </div>
-    <div class="span-6">
-        <h4>Members</h4>
-        <div class="list-filter-wrapper">
-            <input type="search" placeholder="Filter..."/>
-        </div>
-        <div id="member-principals" class="principal-container well">
-            <ul>
-                <% @user_group.sorted_members.each do |principal| %>
-                    <%= principal_list_item(principal, :disabled => false) %>
-                <% end %>
-                <li class="placeholder"><em>No members</em></li>
-            </ul>
-        </div>
-        <script>
-            $(document).ready(function() {
-                $("<div id='empty-membership'></div>").hide().append("<%= escape_javascript(principal_list_item(User.new)) %>").appendTo("body");
-            });
-        </script>
-    </div>
-    <div class="clear"></div>
-    <p><%= f.submit 'Update' %></p>
+<%= f.error_messages %>
+<p><%= f.text_field :name, :placeholder => "Name" %></p>
+<p><%= f.text_area :description, :size => "30x3", :placeholder => "Description" %></p>
+<% unless @user_group.new_record? %>
+	<div class="span-6">
+	    <h4>Principals</h4>
+	    <div class="list-filter-wrapper">
+	        <input class="list-filter" type="search" placeholder="Filter..."/>
+	    </div>
+	    <div id="all-principals" class="principal-container well">
+	        <ul>
+	            <% @user_group.all_principals.each do |principal| %>
+	                <%= principal_list_item(principal, :disabled => true) %>
+	            <% end %>
+	        </ul>
+	    </div>
+	</div>
+	<div class="span-6">
+	    <h4>Members</h4>
+	    <div class="list-filter-wrapper">
+	        <input type="search" placeholder="Filter..."/>
+	    </div>
+	    <div id="member-principals" class="principal-container well">
+	        <ul>
+	            <% @user_group.sorted_members.each do |principal| %>
+	                <%= principal_list_item(principal, :disabled => false) %>
+	            <% end %>
+	            <li class="placeholder"><em>No members</em></li>
+	        </ul>
+	    </div>
+	    <script>
+	        $(document).ready(function() {
+	            $("<div id='empty-membership'></div>").hide().append("<%= escape_javascript(principal_list_item(User.new)) %>").appendTo("body");
+	        });
+	    </script>
+	</div>
 <% end %>
+<div class="clear"></div>
+<p><%= f.submit 'Update' %></p>
