@@ -16,8 +16,8 @@ class Computer < ActiveRecord::Base
   validates_presence_of :name, :hostname, :mac_address
   
   validates_format_of :hostname,
-                      :with => /^(([a-z]|[a-z][a-z0-9\-]*[a-z0-9])\.)*([a-z]|[a-z][a-z0-9\-]*[a-z0-9])$/,
-                      :message => "must only contain alphanumeric and hyphens characters"
+                      :with => /^[a-zA-Z-\.]$/,
+                      :message => "must only contain alphanumeric characters, hyphens, and periods"
     
   validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/ # mac_address attribute must look something like ff:12:ff:34:ff:56
   validates_uniqueness_of :mac_address,:name, :hostname
