@@ -190,7 +190,6 @@ namespace :bootstrap do
     end
   end
   
-<<<<<<< HEAD
   desc "Create root user"
   task :root_user => :environment do |t, args|
     if User.where(:username => "root").first.blank?
@@ -201,9 +200,9 @@ namespace :bootstrap do
       password = nil
       password_confirmation = nil
       console = HighLine.new
-      until (password == password_confirmation && not password.blank?) do
-        password = console.ask("Enter your password:  ") { |q| q.echo = false }
-        password_confirmation = console.ask("Confirm your password:  ") { |q| q.echo = false }
+      until (password.present? and password == password_confirmation) do
+        password = console.ask("Enter your password: ") { |q| q.echo = false }
+        password_confirmation = console.ask("Confirm your password: ") { |q| q.echo = false }
         puts "Passwords did not match, please try again." unless password == password_confirmation
         puts ""
       end
