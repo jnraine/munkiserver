@@ -22,7 +22,8 @@ class ComputersController < ApplicationController
   end
 
   def create
-    @computer = Computer.new(params[:computer].merge({:unit_id => current_unit.id}))
+    params[:computer][:unit_id] ||= current_unit.id
+    @computer = Computer.new(params[:computer])
     
     respond_to do |format|
       if @computer.save

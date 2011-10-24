@@ -1,5 +1,8 @@
 class PackagesController < ApplicationController
+  cache_sweeper :package_sweeper, :only => [:create, :edit, :destroy]
+  
   before_filter :require_valid_unit
+
   def index
     # TO-DO This query can be rethought because of the way the view uses this list of packages
     # it might be better to grab all the package branches from this environment and then iterate

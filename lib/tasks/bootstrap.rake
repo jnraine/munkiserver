@@ -1,3 +1,5 @@
+require 'highline'
+
 namespace :bootstrap do
   desc "Executing Munkiserver bootstrap tasks"
   task :all do
@@ -222,13 +224,24 @@ namespace :bootstrap do
       u = User.new(:username => username)
       print "Email: "
       u.email = STDIN.gets.chomp
-      print "Password: "
-      u.password = STDIN.gets.chomp
-      print "Confirm password: "
-      u.password_confirmation = STDIN.gets.chomp
+      
+      #Ask for password/password_confirmation and hide the characters
+      console = HighLine.new
+      password, password_confirmation = ""
+      until (password == password_confirmation && password != "") do
+        password = console.ask("Enter your password:  ") { |q| q.echo = false }
+        password_confirmation = console.ask("Confirm your password:  ") { |q| q.echo = false }
+        puts "Passwords did not match, please try again." unless password == password_confirmation
+        puts ""
+      end
+      
+      u.password = password
+      u.password_confirmation = password_confirmation
       u.super_user = true
       u.units << Unit.first
-      unless u.save
+      if u.save
+        puts "#{u.username} has been created!"
+      else 
         puts "Default user failed to save: " + u.errors.inspect
       end
     end

@@ -1,0 +1,3 @@
+<%= form_for(Computer.new, :url => computers_path(current_user.units.first), :html => {:multipart => true, :id => "add_computer_widget_form"}) do |f| %>
+	<%= render :partial => 'computers/add_computer_short_form', :locals => {:f => f, :computer => Computer.new, :submit_value => "Add"} %>
+<% end %>
