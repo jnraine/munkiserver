@@ -657,7 +657,9 @@ class Package < ActiveRecord::Base
 
   # Converts serialized object into plist string
   def to_plist
-    serialize_for_plist.to_plist
+    plist = serialize_for_plist.to_plist
+    # Fix ^M encoding CR issue
+    plist.gsub(/\r\n?/, "\n")
   end
   
   # If the package branch's version tracker "looks_good", returns true
