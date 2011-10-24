@@ -626,6 +626,8 @@ class Package < ActiveRecord::Base
   # Turns the package into a string and then converts
   # that string into a plist node using the Plist gem
   def to_plist_node
+    # debugger
+    # Looks like this method never gets called by any other 
     Plist::Emit.plist_node(self.to_s)
   end
   
@@ -657,7 +659,8 @@ class Package < ActiveRecord::Base
 
   # Converts serialized object into plist string
   def to_plist
-    serialize_for_plist.to_plist
+    plist = serialize_for_plist.to_plist
+    plist.gsub(/\r\n?/, "\n") #fix ^M encoding CR issue
   end
   
   # If the package branch's version tracker "looks_good", returns true

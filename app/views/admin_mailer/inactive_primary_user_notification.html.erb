@@ -1,0 +1,5 @@
+<h3>Warning: <%= @computer %> (<%= @computer.hostname%>) - have not checked-in to MunkiServer for over 30 days !</h3>
+<p>As a primary user on computer <strong><em><%= @computer.name %></em></strong> please contact your corresponding IT Admins for assistances.</p>
+
+<br />
+<%= link_to "Click here to check the last computer checkin status", "#{computer_url(@computer.unit,@computer)}\?tab=managed_install_reports_tab", :target => "_blank" %>
