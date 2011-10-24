@@ -1,4 +1,6 @@
 class UnitsController < ApplicationController
+  cache_sweeper :unit_sweeper, :only => [:edit, :destroy]
+  
   def index
     @units = Unit.all
   end

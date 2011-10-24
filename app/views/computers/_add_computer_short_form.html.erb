@@ -1,0 +1,37 @@
+<%= f.error_messages %>
+
+<table class="form">
+	<tr>
+		<td>Name</td>
+		<td><%= f.text_field :name, :size => 18 %></td>
+	</tr>
+	<tr>
+		<td>Hostname</td>
+		<td><%= f.text_field :hostname, :size => 18 %></td>
+	</tr>
+	<tr>
+		<td>
+			MAC Address
+		</td>
+		<td><%= f.text_field :mac_address, :maxlength => 17, :size => 18 %></td>
+	</tr>
+	<tr>
+		<td>Unit</td>
+		<td><%= f.collection_select :unit_id, current_user.units, :id, :name, {}, {:class => "unit"}%></td>
+	</tr>
+
+	<tr>
+		<td>Environment</td>
+		<td><%= f.collection_select :environment_id, Environment.all, :id, :name, {}, {:class => "environment"} %></td>
+	</tr>
+	<tr>
+		<td>
+			Model
+		</td>
+		<td>
+			 <%= f.collection_select :computer_model_id, ComputerModel.order('name ASC'), :id, :name %>
+		</td>
+	</tr>
+</table>
+
+<p><%= f.submit submit_value %></p>

@@ -1,3 +1,5 @@
+require 'highline'
+
 namespace :bootstrap do
   desc "Executing Munkiserver bootstrap tasks"
   task :all do
@@ -188,15 +190,27 @@ namespace :bootstrap do
     end
   end
   
+<<<<<<< HEAD
   desc "Create root user"
   task :root_user => :environment do |t, args|
     if User.where(:username => "root").first.blank?
       puts "Generating a root user"
       u = User.new(:username => "root", :email => "root@localhost.local")
-      print "Password: "
-      u.password = STDIN.gets.chomp
-      print "Confirm password: "
-      u.password_confirmation = STDIN.gets.chomp
+      
+      # Ask for password/password_confirmation and hide the characters
+      password = nil
+      password_confirmation = nil
+      console = HighLine.new
+      until (password == password_confirmation && not password.blank?) do
+        password = console.ask("Enter your password:  ") { |q| q.echo = false }
+        password_confirmation = console.ask("Confirm your password:  ") { |q| q.echo = false }
+        puts "Passwords did not match, please try again." unless password == password_confirmation
+        puts ""
+      end
+      
+      u.password = password
+      u.password_confirmation = password_confirmation
+      
       unless u.save
         puts "Failed to save root user: " + u.errors.inspect
       end
