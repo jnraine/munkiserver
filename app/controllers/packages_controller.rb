@@ -1,5 +1,5 @@
 class PackagesController < ApplicationController
-  cache_sweeper :package_sweeper, :only => [:edit, :destroy]
+  cache_sweeper :package_sweeper, :only => [:create, :edit, :destroy]
   
   before_filter :require_valid_unit
 
