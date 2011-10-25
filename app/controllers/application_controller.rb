@@ -18,10 +18,9 @@ class ApplicationController < ActionController::Base
     system "rake #{task} #{args.join(' ')} --trace >> #{Rails.root}/log/rake.log &"
   end
   
-  # Redirects user to login path if logged_in returns false.
+  # Redirects user to login path if client logged in or the action is authorized
   def require_login
-    # If client logged in or the action is authorized
-   if logged_in? or munki_client_request?
+    if logged_in? or authorized?
       # Let them pass
     else
       flash[:warning] = "You must be logged in to view that page"
@@ -35,11 +34,6 @@ class ApplicationController < ActionController::Base
       flash[:error] = "The unit you requested (\"#{params[:unit_shortname]}\") does not exist."
       render :file => "#{Rails.root}/public/generic_error.html", :layout => false
     end
-  end
-  
-  # Does this request look like it is from a munki client?
-  def munki_client_request?
-    (authorized? and params[:format] == "plist")
   end
   
   def authorized?
