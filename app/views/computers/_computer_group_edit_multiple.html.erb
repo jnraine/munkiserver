@@ -2,8 +2,8 @@
 	
 </td>
 <td>
-	<%= label_tag "Computer Group"%>
+	<%= label_tag "Computer Group" %>
 </td>
 <td>
-	<%= select "computer", "computer_group_id", ComputerGroup.unit_and_environment(unit_id, environment_id), {:include_blank => true} %>
+	<%= select "computer", "computer_group_id", options_for_select(ComputerGroup.unit_and_environment(unit_id, environment_id).map {|cg| [cg,cg.id]}), {:include_blank => true} %>
 </td>

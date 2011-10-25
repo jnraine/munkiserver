@@ -542,7 +542,7 @@ function selectToEdit(){
 // trigger lightbox popup
 function initalizeLightBoxMe(){
 	$('#lightbox_target').lightbox_me({
-	        centered: true, 
+	    centered: true, 
 			closeSelector: ".cancel",
 			destroyOnClose: true,
 			onLoad: selectToEdit() });	
@@ -550,7 +550,7 @@ function initalizeLightBoxMe(){
 // uncheck all the checkbox and hide the submit button
 function initializeBulkEdit() {
 	
-	$("#bulk_edit").css({"visibility":"hidden"});
+	$("#bulk_edit").attr("disabled",true);
 	
 	$(".select_all").change(function() {
 	    // select all enabled checkboxes
@@ -559,10 +559,10 @@ function initializeBulkEdit() {
 	
 	// show bulk edit button when 2 or more checkbox is selected
 	$(":checkbox").change(function(){
-		if ($(".bulk_edit_checkbox:checked").length > 1) {
-			$("#bulk_edit").css({"visibility":"visible"});
+		if ($(".bulk_edit_checkbox:checked").length > 0) {
+			$("#bulk_edit").attr("disabled",false);
 		} else{
-			$("#bulk_edit").css({"visibility":"hidden"});
+			$("#bulk_edit").attr("disabled",true);
 		}
 	});
 	$(":checkbox").change();

@@ -61,5 +61,4 @@ class SharedPackagesController < ApplicationController
   def authorize_resource
     authorize! params[:action], @shared_package
   end
-  
 end

@@ -31,10 +31,6 @@
 			</li>
 		</ul>
 	<% else %>
-		<% if package.has_dependencies? %>
-			<%= link_to "Import", import_shared_package_path(current_unit,package), {"data-confirm-message" => "Warning: This item has dependencies which will NOT be imported!"} %>
-		<% else %>
-			<%= link_to "Import", import_shared_package_path(current_unit,package) %>
-		<% end %>
+		Not Imported
 	<% end %>
 </td>
