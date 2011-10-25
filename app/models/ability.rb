@@ -27,6 +27,8 @@ class Ability
   
   # Permit certain things to all requests
   def permit_unprotected_actions
+    # Allow clients to download packages
+    can :download, Package
     # Allow client computer requests
     can :checkin, Computer
     can :show, Computer
