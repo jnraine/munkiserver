@@ -8,7 +8,9 @@
 	<div class="span-11">
 		<%= render_widget :warranty %>
 		<%= render_widget :missing_manifests %>
-		<%= render_widget :add_computer %>
+		<% if can? :create, Computer %>
+			<%= render_widget :add_computer %>
+		<% end %>
 	</div>
 	<div class="span-11">
 		<%= render_widget :available_package_updates %>
