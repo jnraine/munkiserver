@@ -38,6 +38,7 @@ class UserGroup < ActiveRecord::Base
         raise UserGroupException.new("While retrieving users from a user group (#{self}), found a member that was not a User or UserGroup record!")
       end
     end
+    users.uniq {|e| e.id }
   end
   
   def sorted_members

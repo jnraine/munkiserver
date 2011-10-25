@@ -48,7 +48,7 @@ class AdminMailer < ActionMailer::Base
   
   def recipients_for_unit(unit,model_name)
     if unit.present?
-      users = unit.users_who_can_read(model_name)
+      users = unit.users_who_can_read(model_name.to_s.tableize)
       users.delete_if {|e| e.settings.receive_email_notifications == false }.map(&:email)
     else
       []
