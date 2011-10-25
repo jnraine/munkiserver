@@ -12,3 +12,6 @@ end
 
 class WarrantyException < Exception
 end
+
+class UserGroupException < Exception
+end

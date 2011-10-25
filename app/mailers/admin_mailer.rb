@@ -16,13 +16,14 @@ class AdminMailer < ActionMailer::Base
   
   def available_updates_digest(unit)
     @packages = PackageBranch.available_updates(unit)
-    mail(:bcc => recipients_for_unit(unit), :subject => "[Munki Server] #{@packages.count} packages have update in #{unit.name}! ")
+    mail(:bcc => recipients_for_unit(unit,:package), :subject => "[Munki Server] #{@packages.count} packages have update in #{unit.name}! ")
   end
   
   def warranty_notification(computer)
     @computer = computer
     mail(:bcc => recipients(@computer), :subject => "[Munki Server] #{@computer}'s warranty will expire in #{@computer.warranty.days_left} days")
   end
+  
   # # A list of computers that are considered "dormant", including their
   # # last successful run, and their last run (if different than last
   # # successful run).  List should contain units from only one unit!
@@ -34,19 +35,21 @@ class AdminMailer < ActionMailer::Base
   # end
   
   private
+  # Obain the email addresses as an array for a given model.  This uses the model
+  # name and the model unit to determine the list of users.  Users who can read
+  # the model type in the specific unit are returned.
   def recipients(record)
     if record.present?
-      members = record.unit.members if record.unit.present?
-      members.delete_if {|e| e.settings.receive_email_notifications == false }.map(&:email)
+      recipients_for_unit(record.unit,record.class.to_s)
     else
       []
     end
   end
   
-  def recipients_for_unit(unit)
+  def recipients_for_unit(unit,model_name)
     if unit.present?
-      members = unit.members
-      members.delete_if {|e| e.settings.receive_email_notifications == false }.map(&:email)
+      users = unit.users_who_can_read(model_name)
+      users.delete_if {|e| e.settings.receive_email_notifications == false }.map(&:email)
     else
       []
     end

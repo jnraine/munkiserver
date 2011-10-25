@@ -26,6 +26,20 @@ class UserGroup < ActiveRecord::Base
     principal_memberships.map(&:principal)
   end
   
+  # Get users from all membership (including nested user groups)
+  def users
+    users = []
+    members.each do |member|
+      if member.is_a? User
+        users << member
+      elsif member.is_a? UserGroup
+        users + member.users
+      else
+        raise UserGroupException.new("While retrieving users from a user group (#{self}), found a member that was not a User or UserGroup record!")
+      end
+    end
+  end
+  
   def sorted_members
     members.sort {|a,b| a.name.downcase <=> b.name.downcase}
   end
