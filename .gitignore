@@ -1,5 +1,6 @@
 .bundle
 config/settings.yaml
+config/database.yml
 *.DS_Store
 packages/
 # Don't ignore app/views/packages
