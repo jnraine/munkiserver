@@ -183,7 +183,7 @@ namespace :bootstrap do
       Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
       name = args.name
       name ||= "Default"
-      u = Unit.new(:name => name, :shortname => u.conform_name_to_shortname, :description => "Created by bootstrap")
+      u = Unit.new(:name => name, :description => "Created by bootstrap")
       unless u.save
         puts "Default unit failed to save: " + u.errors.inspect
       end
