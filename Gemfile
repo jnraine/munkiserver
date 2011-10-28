@@ -12,6 +12,7 @@ gem "whenever"
 gem "plist"
 gem "cancan"
 gem "highline"
+gem "newrelic_rpm"
 
 group :development do
   gem "ruby-debug19" , :require => "ruby-debug"
