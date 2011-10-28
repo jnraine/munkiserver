@@ -21,6 +21,7 @@ class Warranty < ActiveRecord::Base
   
   validates_format_of :serial_number, :with => /^[a-zA-Z0-9]+$/
   
+  scope :expire_after, lambda {|time| where("hw_coverage_end_date > ?", time)}
   scope :expire_before, lambda {|time| where("hw_coverage_end_date < ?", time)}
   scope :belong_to_unit, lambda {|unit| where(:computer_id => Computer.where(:unit_id => unit))}
 

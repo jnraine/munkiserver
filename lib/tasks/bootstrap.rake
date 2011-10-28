@@ -110,9 +110,9 @@ namespace :bootstrap do
              {:name => "iMac5,1",:icon_path => "#{path}/com.apple.imac-iSight-20.png"},
              {:name => "iMac6,1",:icon_path => "#{path}/com.apple.imac-iSight-24.png"},
              {:name => "iMac10,1",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
-             {:name => "iMac11,2",:icon_path => "#{path}/com.apple.imac-unibody-21.png"},
              {:name => "iMac11,1",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
              {:name => "iMac11,2",:icon_path => "#{path}/com.apple.imac-unibody-21.png"},
+             {:name => "iMac11,3",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
              {:name => "iMac12,1",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
              {:name => "iMac12,2",:icon_path => "#{path}/com.apple.imac-unibody-27.png"},
              {:name => "MacBook1,1",:icon_path => "#{path}/com.apple.macbook-white.png"},
@@ -183,7 +183,7 @@ namespace :bootstrap do
       Rake::Task["bootstrap:environments"].invoke if Environment.count == 0
       name = args.name
       name ||= "Default"
-      u = Unit.new(:name => name, :shortname => u.conform_name_to_shortname, :description => "Created by bootstrap")
+      u = Unit.new(:name => name, :description => "Created by bootstrap")
       unless u.save
         puts "Default unit failed to save: " + u.errors.inspect
       end
