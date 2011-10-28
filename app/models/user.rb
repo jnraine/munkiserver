@@ -77,6 +77,7 @@ class User < ActiveRecord::Base
     us = UserSetting.new
     self.settings = us
   end
+  
   # over write default to_param use name in the routing instead of id
   def to_param
     username
@@ -118,6 +119,21 @@ class User < ActiveRecord::Base
   
   def name
     username
+  end
+  
+  # Virtual attribute to settings
+  def email_notifications
+    if settings.present?
+      settings.receive_email_notifications.present?
+    else
+      false
+    end
+  end
+  
+  # Virtual attribute to settings
+  def email_notifications=(value)
+    check_settings
+    settings.receive_email_notifications = value
   end
   
   # Returns an array of unit IDs that the user has permission to read.

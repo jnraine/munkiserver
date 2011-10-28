@@ -6,12 +6,7 @@ Munki::Application.routes.draw do
     end
   end
   
-  resources :users do
-    member do
-      get 'settings/edit' => 'user_settings#edit'
-      put 'settings' => 'user_settings#update'
-    end
-  end
+  resources :users, :except => [:show]
   
   # Session
   match '/login' => "sessions#new"

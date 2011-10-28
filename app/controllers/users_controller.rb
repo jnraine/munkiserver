@@ -18,9 +18,6 @@ class UsersController < ApplicationController
     end
   end
   
-  def show
-  end
-  
   def edit
   end
   
@@ -28,7 +25,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update_attributes(params[:user])
         flash[:notice] = "#{@user.username} was successfully updated."
-        format.html { redirect_to(@user) }
+        format.html { redirect_to edit_user_path(@user) }
         format.xml  { head :ok }
       else
         flash[:error] = 'Could not update user!'

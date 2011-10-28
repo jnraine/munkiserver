@@ -11,16 +11,20 @@
 			<td><%= f.text_field :email %></td>
 			<td><%= helpful_info("Requires a valid email address.") %></td>
 		</tr>
-		<tr>
+		<tr class="password-wrapper">
 			<td>Password</td>
-			<td><%= f.password_field :password %></td>
+			<td><%= f.password_field :password, :validate => false %></td>
+		</tr>
+		<tr class="password-wrapper">
+			<td>Verify</td>
+			<td><%= f.password_field :password_confirmation, :validate => false %></td>
 		</tr>
 		<tr>
-			<td>Verify</td>
-			<td><%= f.password_field :password_confirmation %></td>
+			<td>Email Notifications</td>
+			<td><%= f.check_box :email_notifications %></td>
 		</tr>
 	</table>
 	<p>
-	<%= f.submit 'Submit' %>
+	<%= f.submit 'Save' %>
 	</p>
 <% end %>

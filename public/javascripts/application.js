@@ -512,6 +512,17 @@ $(document).ready(function() {
   // $(".unclickable").click(function() {
   //   return false;
   // });
+  
+  $("form.edit_user").submit(function() {
+    $(this).find(".password-wrapper input").each(function() {
+      var $field = $(this);
+      if($field.val() == "") {
+        console.log("disabling input: ");
+        console.log($field);
+        $field.attr("disabled",true);
+      }
+    });
+  });
 }); // end document ready function
 
 function toggleMembershipPlaceholder() {

@@ -39,7 +39,6 @@
 							<%= link_to("Users", users_path)%>
 							<ul>
 								<li><%= link_to "List users", users_path %></li>
-								<li><%= link_to "Edit user settings", settings_edit_user_path(current_user.settings) %></li>
 								<% if can? :create, User %>
 									<li><%= link_to "Create user", new_user_path %></li>
 								<% end %>
@@ -73,7 +72,7 @@
 					</li>
 				<% end %>
 				<% if logged_in? %>
-					<li><%= link_to("Logout", logout_path) %> (<%= current_user.username %>)</li>
+					<li><%= link_to("Logout", logout_path) %> (<%= link_to current_user, edit_user_path(current_user) %>)</li>
 				<% end %>
 			</ul>
 		</div>
