@@ -258,4 +258,12 @@ class Computer < ActiveRecord::Base
     AdminMailer.warranty_notification(self).deliver
     self.warranty.notifications.create
   end
+  
+  def warranty_expiry_date
+    if warranty.present? and warranty.hw_coverage_end_date.present?
+      warranty.hw_coverage_end_date.to_s(:readable_date)
+    else
+      "unknown"
+    end
+  end
 end

@@ -1,4 +1,4 @@
-<h3><%= @computer %> - hardware warranty will expire on <%= @computer.warranty.hw_coverage_end_date.to_s(:readable_date) %></h3>
+<h3><%= @computer %> - hardware warranty will expire on <%= @computer.warranty_expiry_date %></h3>
 <% if @computer.warranty.app_eligible %>
 	<p><em>This computer is eligible for AppleCare Protection Plan until <%= @computer.warranty.hw_coverage_end_date.to_s(:readable_date) %>.</em></p>
 <% elsif @computer.warranty.app_registered %>
