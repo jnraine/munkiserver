@@ -33,36 +33,34 @@
 	
 		<div id="app-menu" class="span-7 last">
 			<ul class="dropdown dropdown-horizontal">
-				<% if super_user? %>
-					<% if can? :read, User.new %>
-						<li class="dir">
-							<%= link_to("Users", users_path)%>
-							<ul>
-								<li><%= link_to "List users", users_path %></li>
-								<% if can? :create, User %>
-									<li><%= link_to "Create user", new_user_path %></li>
-								<% end %>
-							</ul>
-						</li>
-					<% end %>
-					<% if can? :read, Unit %>
-						<li class="dir">
-							<%= link_to("Units", units_url)%>
-							<ul>
-								<li><%= link_to "List units", units_path %></li>
-								<% if can? :create, Unit %>
-									<li><%= link_to "Add unit", new_unit_path %></li>
-								<% end %>
-							</ul>
-						</li>
-					<% end %>
-					<!-- ><li class="dir">
-						<%= link_to "Settings", "..." %>
+				<% if can? :read, User.new %>
+					<li class="dir">
+						<%= link_to("Users", users_path)%>
 						<ul>
-
+							<li><%= link_to "List users", users_path %></li>
+							<% if can? :create, User %>
+								<li><%= link_to "Create user", new_user_path %></li>
+							<% end %>
 						</ul>
-					</li> -->
+					</li>
 				<% end %>
+				<% if can? :read, Unit %>
+					<li class="dir">
+						<%= link_to("Units", units_url)%>
+						<ul>
+							<li><%= link_to "List units", units_path %></li>
+							<% if can? :create, Unit %>
+								<li><%= link_to "Add unit", new_unit_path %></li>
+							<% end %>
+						</ul>
+					</li>
+				<% end %>
+				<!-- ><li class="dir">
+					<%= link_to "Settings", "..." %>
+					<ul>
+
+					</ul>
+				</li> -->
 				<li class="dir">
 					<%= link_to "Dashboard", dashboard_path %>
 				</li>

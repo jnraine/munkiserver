@@ -3,14 +3,12 @@
 <table class="zebra">
 	<thead>
 		<th>Username</th>
-		<th>Superuser</th>
 		<th>Email</th>
 		<th>Actions
 	</thead>
 	<% @users.each do |user| %>
 		<tr>
 			<td><%= link_to user.username, edit_user_path(user) %></td>
-			<td><%= "&#10003;".html_safe if user.super_user?  %></td>
 			<td><%= user.email %></td>
 			<td>
 				<%= link_to "Edit", edit_user_path(user) %>

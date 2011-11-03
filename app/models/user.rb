@@ -56,11 +56,6 @@ class User < ActiveRecord::Base
     return u if (u != nil) and (User.encrypt(pass, u.salt) == u.hashed_password)
   end
   
-  # Returns true if user is super user
-  def super_user?
-    true
-  end
-  
   # A to string method
   def to_s(style = nil)
     username

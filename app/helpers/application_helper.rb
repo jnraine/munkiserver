@@ -101,10 +101,6 @@ module ApplicationHelper
     @current_environment ||= Environment.default_view
   end
   
-  def super_user?
-    current_user.super_user?
-  end
-  
   def current_unit
     @current_unit ||= Unit.where(:shortname => params[:unit_shortname]).first
   end
