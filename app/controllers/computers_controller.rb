@@ -126,7 +126,10 @@ class ComputersController < ApplicationController
     
     @computer.save
     
-    @computer.warranty.destroy if @computer.serial_number != @computer.warranty.serial_number
+    if @computer.warranty.present? and @computer.serial_number != @computer.warranty.serial_number
+      @computer.warranty.destroy
+    end
+    
     AdminMailer.computer_report(@computer).deliver if @computer.report_due?
     render :text => ''
   end
