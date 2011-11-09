@@ -13,11 +13,11 @@
 		</thead>
 		<% @computer_groups.each do |cg| %>
 		<tr>
-			<td><%= link_to cg.name, computer_group_path(cg.unit, cg) %></td>
+			<td width="120px"><%= link_to cg.name, computer_group_path(cg.unit, cg) %></td>
 			<td><%= cg.description %></td>
 			<td><%= cg.computers.count %></td>
 			<td><%= cg.environment %></td>
-			<td>
+			<td width="150px">
 				<% if can? :update, cg %>
 					<%= link_to 'Edit', edit_computer_group_path(cg.unit, cg) %> |
 				<% end %>
