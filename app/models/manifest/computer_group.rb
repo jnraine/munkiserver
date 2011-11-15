@@ -4,6 +4,8 @@ class ComputerGroup < ActiveRecord::Base
   
   has_many :computers
   
+  scope :order_alphabetical, order("name, environment_id")
+  
   # Tabled ASM select hash for adding computers to the group
   def computers_tas(environment_id = nil)
     # Get all the package branches associated with this unit and environment
