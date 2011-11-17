@@ -1,6 +1,6 @@
 class ComputerGroupsController < ApplicationController
   def index
-    @computer_groups = ComputerGroup.unit(current_unit)
+    @computer_groups = ComputerGroup.unit(current_unit).order_alphabetical
     
     respond_to do |format|
       format.html
