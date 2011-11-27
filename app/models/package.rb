@@ -1,4 +1,5 @@
 require 'digest'
+require 'os_range_helper'
 
 class Package < ActiveRecord::Base
   magic_mixin :unit_member
@@ -46,7 +47,7 @@ class Package < ActiveRecord::Base
   validates :force_install_after_date_string, :date_time => true, :allow_blank => true
   
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
-                  :os_versions             => [['Any',''],['10.4','10.4.0'],['10.5','10.5.0'],['10.6','10.6.0'],['10.7','10.7.0']],
+                  :os_versions             => [[['Any','']], os_range(10,7,0..2), os_range(10,6,0..8), os_range(10,5,0..11)].flatten(1),
                   :installer_types         => [['Package',''],
                                                ['Copy From DMG', 'copy_from_dmg'],
                                                ['App DMG','appdmg'],
@@ -948,4 +949,5 @@ class Package < ActiveRecord::Base
     def self.uniquify_name(name)
       Time.now.to_s(:ordered_numeric) + rand(10001).to_s + "_" + name
     end
+
 end
