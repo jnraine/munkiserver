@@ -81,9 +81,8 @@ class ComputerService
     params[:order] ||= "asc"
 
     case params[:col]
-      #ToDo: actually impliment this in a non-CPU intensive way
       when "last_report"
-        computers
+        computers = computers.order("last_report_at #{params[:order]}")
       else
         computers = computers.order("#{params[:col]} #{params[:order]}")
     end
