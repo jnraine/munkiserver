@@ -20,16 +20,10 @@
 						<th><%= check_box_tag("select_all", nil, nil, :class => "select_all") %></th>
 					<% end %>
 					<th><!-- icon header --></th>
-					<th>
-						<%= link_to 'Name', {:action => "index", :col => "name", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
-					</th>
-					<th>
-						<%= link_to 'Hostname', {:action => "index", :col => "hostname", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
-					</th>
-					<th>
-						<%= link_to 'MAC Address', {:action => "index", :col => "mac_address", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
-					</th>
-					<th>Last Report</th>
+					<th><%= sortable 'name' %></th>
+					<th><%= sortable 'hostname' %></th>
+					<th><%= sortable 'mac_address', 'MAC Address' %></th>
+					<th><%= sortable 'last_report_at', 'Last Report' %></th>
 					<th>Actions</th>
 				</tr>
 			</thead>
