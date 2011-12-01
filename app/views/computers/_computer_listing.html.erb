@@ -17,7 +17,7 @@
 		<%= hidden_field_tag :sort, params[:sort] %>
 		<%= hidden_field_tag :direction, params[:direction] %>
 		<%= text_field_tag "name", params['name'] %>
-		<%= submit_tag "Filter" %>
+		<%= submit_tag "Filter", :name => nil %>
 	<% end %>
 	</div>
 	<%= form_tag edit_multiple_computers_path(current_unit), :id => "bulk_edit_form", :method => 'GET', :remote => true do %>
