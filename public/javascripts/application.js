@@ -599,6 +599,13 @@ function initializeDatePicker(){
 // 	return false;
 // });
 
+$(function() {
+  $("#computer_listing th a, #computer_listing .pagination a").live("click", function() {
+    $.getScript(this.href);
+    return false;
+  });
+});
+
 // Text field default message
 $.fn.extend({
 	subtle_value: function(original_value) {
