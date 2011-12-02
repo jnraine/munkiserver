@@ -15,7 +15,7 @@ class CatalogsController < ApplicationController
       format.plist { render :text => Rails.cache.fetch(cache_key) {
           Rails.logger.info "CACHE: Geneterating catalog for #{cache_key}"
           @catalog = Catalog.generate(params[:unit_id], environment_id)
-          @catalog.to_plist
+          @catalog.to_plist.gsub(/\r\n?/, "\n")
         }
       }
     end
