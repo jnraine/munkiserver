@@ -1,10 +1,20 @@
 require 'cgi'
 
 class ComputersController < ApplicationController
+  helper_method :sort_column, :sort_direction
   
   def index
-    # Set environment at view layer
-    @computers = ComputerService.collect(params,current_unit,current_environment)
+    # Scope computers to unit/environment and then order by relevent column and direction
+    @computers = Computer.unit_and_environment(current_unit, current_environment)
+    @computers = @computers.order(sort_column + ' ' + sort_direction)
+    
+    #Search for value on name attribute
+    @computers = @computers.search(:name, params[:name])
+    
+    # Add pagination using will_paginate gem
+    per_page = params[:per_page]
+    per_page ||= Computer.per_page
+    @computers = @computers.paginate(:page => params[:page], :per_page => per_page)
     
     respond_to do |format|
       format.html # index.html
@@ -226,4 +236,16 @@ class ComputersController < ApplicationController
       raise Exception("Unable to load singular resource for #{action} action in #{params[:controller]} controller.")
     end
   end
+  
+  private
+  
+  #Helper method to minimize errors and SQL injection attacks
+  def sort_column
+    %w[name hostname mac_address last_report_at].include?(params[:sort]) ? params[:sort] : "name"
+  end
+  
+  #Helper method to minimize errors and SQL injection attacks  
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+  end  
 end

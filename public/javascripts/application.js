@@ -599,6 +599,22 @@ function initializeDatePicker(){
 // 	return false;
 // });
 
+// AJAX name search/filter, sorting, and pagination
+$(function() {
+  $("#computer_listing th a, #computer_listing .pagination a").live("click", function() {
+    $.getScript(this.href);
+    return false;
+  });
+  $("#filter_form input").submit(function() {
+	// Show the loading graphic while request is made
+	$("#loading_graphic").show();
+	// Grab the script and execute it
+    $.get($("#filter_form").attr("action"), $("#filter_form").serialize(), null, "script");
+	// 	// Return false so the form isn't submitted
+    return false;
+  });
+});
+
 // Text field default message
 $.fn.extend({
 	subtle_value: function(original_value) {

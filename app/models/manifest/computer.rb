@@ -22,6 +22,8 @@ class Computer < ActiveRecord::Base
   validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/ # mac_address attribute must look something like ff:12:ff:34:ff:56
   validates_uniqueness_of :mac_address,:name, :hostname
   
+  scope :search, lambda{|column, term|where(["#{column.to_s} LIKE ?", "%#{term}%"]) unless term.blank? or column.blank?}
+  
   # before_save :require_computer_group
   
   # Maybe I shouldn't be doing this
@@ -131,9 +133,9 @@ class Computer < ActiveRecord::Base
   end
   
   # Returns, in words, the time since last run
-  def time_since_last_report
-    if last_report.present?
-      time_ago_in_words(last_report.created_at) + " ago"
+  def last_report_at_time
+    if last_report_at.present?
+      time_ago_in_words(last_report_at) + " ago"
     else
       "never"
     end

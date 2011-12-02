@@ -1,5 +1,5 @@
 class ManagedInstallReport < ActiveRecord::Base
-  belongs_to :computer
+  belongs_to :computer, :touch => :last_report_at
 
   scope :error_free, where(:munki_errors => [].to_yaml)
 
