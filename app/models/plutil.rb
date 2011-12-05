@@ -3,7 +3,8 @@
 module Plutil
   extend self
   
-  require 'FileUtils'
+#  require 'FileUtils'
+  require 'fileutils'
   
   PLUTIL = "/usr/bin/plutil"
   
