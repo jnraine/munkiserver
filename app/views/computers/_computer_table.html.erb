@@ -20,16 +20,10 @@
 						<th><%= check_box_tag("select_all", nil, nil, :class => "select_all") %></th>
 					<% end %>
 					<th><!-- icon header --></th>
-					<th>
-						<%= link_to 'Name', {:action => "index", :col => "name", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
-					</th>
-					<th>
-						<%= link_to 'Hostname', {:action => "index", :col => "hostname", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
-					</th>
-					<th>
-						<%= link_to 'MAC Address', {:action => "index", :col => "mac_address", :order => "asc",:gid => params[:gid], :page => params[:page] } %>
-					</th>
-					<th>Last Report</th>
+					<th><%= sortable 'name' %></th>
+					<th><%= sortable 'hostname' %></th>
+					<th><%= sortable 'mac_address', 'MAC Address' %></th>
+					<th><%= sortable 'last_report_at', 'Last Report' %></th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -44,7 +38,7 @@
 				<td><%= link_to c.name, computer_url(c.unit, c) %></td>    
 			    <td><%= link_to c.hostname, computer_url(c.unit, c) %></td>
 				<td><%= c.mac_address %></td>
-				<td><%= c.time_since_last_report %></td>
+				<td><%= c.last_report_at_time %></td>
 			    <td>
 					<% if can? :update, c %>
 						<%= link_to 'Edit', edit_computer_path(c.unit, c) %> |

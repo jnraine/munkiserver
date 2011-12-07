@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110904192733) do
+ActiveRecord::Schema.define(:version => 20111130134407) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.string   "hostname",             :default => ""
     t.integer  "configuration_id"
     t.string   "shortname"
+    t.datetime "last_report_at"
   end
 
   create_table "configurations", :force => true do |t|
