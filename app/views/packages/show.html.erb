@@ -50,7 +50,7 @@
 					<td><%= @package.force_install_after_date_string %></td>
 				</tr>
 			<% end %>
-			<% if @package.supported_architectures[0].present? %>
+			<% if @package.supported_architectures.kind_of?(Array) %>
 				<tr>
 					<td><strong>Supported Architectures</strong></td>
 					<td>

@@ -36,11 +36,14 @@ class Package < ActiveRecord::Base
   validates :version, :presence => true
   validates :installer_item_location, :presence => true
   validates :package_branch_id, :presence => true
-  validates :receipts_plist, :plist => true
-  validates :installs_plist, :plist => true
+  # For now have to allow nil as these fields both receipts and installs aren't
+  # required together.  This facilitates MySQL usage where
+  # Text/Blobs can't have default values
+  validates :receipts_plist, :plist => true, :allow_nil => true
+  validates :installs_plist, :plist => true, :allow_nil => true
   validates :raw_tags_plist, :plist => true
-  validates :receipts, :array => true
-  validates :installs, :array => true
+  validates :receipts, :array => true, :allow_nil => true
+  validates :installs, :array => true, :allow_nil => true
   validates :raw_tags, :hash => true
   validates :version, :uniqueness_in_unit => true  
   validates :force_install_after_date_string, :date_time => true, :allow_blank => true

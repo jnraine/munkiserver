@@ -1,2 +1,4 @@
-<%= check_box_tag 'package[supported_architectures][]', name, @package.supported_architectures.include?(name), :id => "package_supported_architectures_#{name.underscore.gsub(/ /,"_")}" %>
+<%= check_box_tag 'package[supported_architectures][]', name, 
+  @package.supported_architectures != nil && @package.supported_architectures.include?(name), 
+  :id => "package_supported_architectures_#{name.underscore.gsub(/ /,"_")}" %>
 <%= label_tag "package_supported_architectures_#{name.underscore.gsub(/ /,"_")}", name %>
