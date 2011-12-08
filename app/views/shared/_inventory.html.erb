@@ -20,10 +20,12 @@
 	
 	<thead>
 		<tr>
+			<th>Managed Updates</th>
 			<th>Optional Install</th>
 		</tr>
 	</thead>
 	<tr>
+		<td><%= pkg_list(model_obj.managed_update_items) %></td>
 		<td><%= pkg_list(model_obj.optional_install_items) %></td>
 	</tr>
 </table>

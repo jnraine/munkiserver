@@ -190,6 +190,14 @@ module PackagesHelper
                                                      :bundles => @bundles}
   end
   
+  # Get a list of Computers, Computer Groups and Bundles that have this package set as managed update
+  def get_effected_managed_update(package)
+    get_effected_items(package, "ManagedUpdateItem")
+    render :partial => 'effected_items', :locals => {:computers => @computers, 
+                                                     :computer_groups => @computer_groups, 
+                                                     :bundles => @bundles}
+  end
+  
   # Get a list of Computers, Computer Groups and Bundles that have this package set as optional install
   def get_effected_optional_install(package)
     get_effected_items(package, "OptionalInstallItem")
