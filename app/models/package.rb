@@ -23,6 +23,8 @@ class Package < ActiveRecord::Base
   serialize :receipts
   serialize :supported_architectures, Array
   serialize :raw_tags
+
+  after_initialize :init
   
   scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u.id) }
   scope :shared, where(:shared => true)
@@ -39,11 +41,11 @@ class Package < ActiveRecord::Base
   # For now have to allow nil as these fields both receipts and installs aren't
   # required together.  This facilitates MySQL usage where
   # Text/Blobs can't have default values
-  validates :receipts_plist, :plist => true, :if => "installs_plist.nil?"
-  validates :installs_plist, :plist => true, :if => "receipts_plist.nil?"
+  validates :receipts_plist, :plist => true
+  validates :installs_plist, :plist => true
   validates :raw_tags_plist, :plist => true
-  validates :receipts, :array => true, :if => "installs_plist.nil?"
-  validates :installs, :array => true, :if => "receipts_plist.nil?"
+  validates :receipts, :array => true
+  validates :installs, :array => true
   validates :raw_tags, :hash => true
   validates :version, :uniqueness_in_unit => true  
   validates :force_install_after_date_string, :date_time => true, :allow_blank => true
@@ -82,6 +84,11 @@ class Package < ActiveRecord::Base
       relation = relation.where(:version => params[:version]) if params[:version].present?
       relation.first
     end
+  end
+
+  def init
+    self.receipts ||= [].to_yaml
+    self.installs ||= [].to_yaml
   end
 
   # An hash of params to be used for linking to a package instance
