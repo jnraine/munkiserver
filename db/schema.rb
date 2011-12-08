@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.integer  "unit_id"
     t.integer  "environment_id"
     t.text     "raw_tags"
-    t.text     "raw_mode",       :default => "f"
+    t.text     "raw_mode"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "shortname"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.integer  "unit_id"
     t.integer  "environment_id"
     t.text     "raw_tags"
-    t.text     "raw_mode",         :default => "f"
+    t.text     "raw_mode"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "configuration_id"
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.integer  "unit_id"
     t.integer  "environment_id"
     t.text     "raw_tags"
-    t.text     "raw_mode",             :default => "f"
+    t.text     "raw_mode"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "hostname",             :default => ""
@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
   create_table "environments", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.text     "environment_ids", :default => "--- []"
+    t.text     "environment_ids"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -151,30 +151,6 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.datetime "updated_at"
   end
 
-  create_table "memberships", :force => true do |t|
-    t.integer  "unit_id"
-    t.integer  "user_id"
-    t.boolean  "create_computer",        :default => true
-    t.boolean  "read_computer",          :default => true
-    t.boolean  "edit_computer",          :default => true
-    t.boolean  "destroy_computer",       :default => true
-    t.boolean  "create_bundle",          :default => true
-    t.boolean  "read_bundle",            :default => true
-    t.boolean  "edit_bundle",            :default => true
-    t.boolean  "destroy_bundle",         :default => true
-    t.boolean  "create_computer_group",  :default => true
-    t.boolean  "read_computer_group",    :default => true
-    t.boolean  "edit_computer_group",    :default => true
-    t.boolean  "destroy_computer_group", :default => true
-    t.boolean  "create_package",         :default => true
-    t.boolean  "read_package",           :default => true
-    t.boolean  "edit_package",           :default => true
-    t.boolean  "destroy_package",        :default => true
-    t.boolean  "edit_unit",              :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "missing_manifests", :force => true do |t|
     t.string   "manifest_type"
     t.string   "identifier"
@@ -221,14 +197,14 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.integer  "unit_id"
     t.integer  "environment_id"
     t.integer  "package_category_id"
-    t.text     "receipts",                  :default => "--- []"
+    t.text     "receipts"
     t.text     "description"
     t.integer  "icon_id"
     t.string   "filename"
-    t.text     "supported_architectures",   :default => "--- []"
+    t.text     "supported_architectures"
     t.text     "minimum_os_version"
     t.text     "maximum_os_version"
-    t.text     "installs",                  :default => "--- []"
+    t.text     "installs"
     t.string   "RestartAction"
     t.string   "package_path"
     t.boolean  "autoremove",                :default => false
@@ -245,7 +221,7 @@ ActiveRecord::Schema.define(:version => 20110904192733) do
     t.integer  "uninstaller_item_size"
     t.boolean  "uninstallable",             :default => true
     t.string   "installer_item_checksum"
-    t.text     "raw_tags",                  :default => "--- {}"
+    t.text     "raw_tags"
     t.integer  "raw_mode_id",               :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
