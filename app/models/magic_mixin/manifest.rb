@@ -6,7 +6,7 @@ module Manifest
   
   # swith to use let Munki sort items or
   # let Munki server sort out the list of items to
-  # install/uninstall/optional install
+  # install/uninstall/managed_update/optional install
   USING_PRECEDENT_ITEMS = true
   
   def self.extend_class(k)
@@ -74,7 +74,7 @@ module Manifest
       end
 
       def precedent_managed_update_items
-        exclusion_items_hash = create_item_hash(self.managed_updates)
+        exclusion_items_hash = create_item_hash(self.precedent_install_items).merge(create_item_hash(self.precedent_uninstall_items))
         precedent_items("managed_update_items",exclusion_items_hash)
       end
       
@@ -137,15 +137,15 @@ module Manifest
       end
       
       # Same as managed_installs and managed_uninstalls
-      # optional_installs virtual attribute let user to choose a list of items to install
-      def managed_optional_installs
-        USING_PRECEDENT_ITEMS ? create_item_array("optional_install_items") : create_item_array("optional_install_items", false)
+      # managed_updates virtual attribute update items only if already installed
+      def managed_updates
+        USING_PRECEDENT_ITEMS ? create_item_array("managed_update_items") : create_item_array("managed_update_items", false)
       end
       
       # Same as managed_installs and managed_uninstalls
-      # managed_updates virtual attribute update items only if already installed
-      def managed_managed_updates
-        USING_PRECEDENT_ITEMS ? create_item_array("managed_update_items") : create_item_array("managed_update_items", false)
+      # optional_installs virtual attribute let user to choose a list of items to install
+      def managed_optional_installs
+        USING_PRECEDENT_ITEMS ? create_item_array("optional_install_items") : create_item_array("optional_install_items", false)
       end
       
       # Pass a package object or package ID to append the package to this record
@@ -304,6 +304,19 @@ module Manifest
         user_uninstall_items.collect(&:package_branch).uniq.collect(&:id)
       end
       
+     # Gets the packages that belong to this manifests managed_update virtual attribute
+      def updates
+        managed_update_items.collect(&:package)
+      end
+
+      # Pass a list of Package or PackageBranch records and managed_update_items associations will be built
+      def updates=(list)
+        build_package_association_assignment(:managed_update_items,list)
+      end
+
+      def updates_package_branch_ids
+        managed_update_items.collect(&:package_branch).uniq.collect(&:id)
+      end
       
      # Gets the packages that belong to this manifests optional_installs virtual attribute
       def optional_installs
@@ -317,20 +330,6 @@ module Manifest
 
       def optional_installs_package_branch_ids
         optional_install_items.collect(&:package_branch).uniq.collect(&:id)
-      end
-      
-     # Gets the packages that belong to this manifests managed_update virtual attribute
-      def managed_updates
-        managed_update_items.collect(&:package)
-      end
-
-      # Pass a list of Package or PackageBranch records and managed_update_items associations will be built
-      def managed_updates=(list)
-        build_package_association_assignment(:managed_update_items,list)
-      end
-
-      def managed_updates_package_branch_ids
-        managed_update_items.collect(&:package_branch).uniq.collect(&:id)
       end
       
       def bundle_ids
@@ -365,20 +364,20 @@ module Manifest
         self.uninstalls = PackageBranch.where(:id => value).to_a
       end
       
+      def updates_package_branch_ids
+        managed_update_items.map(&:package_branch).map(&:id)
+      end
+      
+      def updates_package_branch_ids=(value)
+        self.updates = PackageBranch.where(:id => value).to_a
+      end
+      
       def optional_installs_package_branch_ids
         optional_install_items.map(&:package_branch).map(&:id)
       end
       
       def optional_installs_package_branch_ids=(value)
         self.optional_installs = PackageBranch.where(:id => value).to_a
-      end
-      
-      def managed_updates_package_branch_ids
-        managed_update_items.map(&:package_branch).map(&:id)
-      end
-      
-      def managed_updates_package_branch_ids=(value)
-        self.managed_updates = PackageBranch.where(:id => value).to_a
       end
       
       # Returns all package_branches that belongs to the unit and the environment
@@ -419,6 +418,7 @@ module Manifest
         h[:included_manifests] = included_manifests unless USING_PRECEDENT_ITEMS
         h[:managed_installs] = managed_installs
         h[:managed_uninstalls] = managed_uninstalls
+        h[:managed_updates] = managed_updates
         h[:optional_installs] = managed_optional_installs
         h
       end
