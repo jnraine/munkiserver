@@ -77,12 +77,14 @@
 			<tr>
 				<th>Managed Installs</th>
 				<th>Managed Uninstalls</th>
+        <th>Managed Updates</th>
 				<th>Optional Installs</th>
 			</tr>
 		</thead>
 		<tr>
 			<td><%= pkg_list(@computer.precedent_install_items, @computer) %></td>
 			<td><%= pkg_list(@computer.precedent_uninstall_items) %></td>
+			<td><%= pkg_list(@computer.precedent_managed_update_items, @computer) %></td>
 			<td><%= pkg_list(@computer.precedent_optional_install_items, @computer) %></td>
 		</tr>
 	</table>

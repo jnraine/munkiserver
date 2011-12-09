@@ -135,6 +135,7 @@
 				<tr>
 					<th>Installs</th>
 					<th>Uninstalls</th>
+					<th>Managed Updates</th>
 					<th>Optional Installs</th>
 				</tr>
 			</thead>
@@ -142,6 +143,7 @@
 			<tr>
 				<td><%= get_effected_install(@package)%></td>
 				<td><%= get_effected_uninstall(@package)%></td>
+				<td><%= get_effected_managed_update(@package)%></td>
 				<td><%= get_effected_optional_install(@package)%></td>
 			</tr>
 

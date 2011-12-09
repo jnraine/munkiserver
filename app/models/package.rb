@@ -16,6 +16,7 @@ class Package < ActiveRecord::Base
   has_many :install_items, :dependent => :destroy
   has_many :uninstall_items, :dependent => :destroy
   has_many :optional_install_items, :dependent => :destroy
+  has_many :managed_update_items, :dependent => :destroy
   has_many :user_install_items, :dependent => :destroy
   has_many :user_uninstall_items, :dependent => :destroy
   has_many :user_allowed_items, :dependent => :destroy
@@ -282,6 +283,7 @@ class Package < ActiveRecord::Base
       self.optional_install_items.each(&:destroy)
       self.install_items.each(&:destroy)
       self.uninstall_items.each(&:destroy)
+      self.managed_update_items.each(&:destroy)
       # Handle references to the package branch
       num_of_packages = self.package_branch.packages.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was).count
       if num_of_packages == 1
@@ -949,5 +951,4 @@ class Package < ActiveRecord::Base
     def self.uniquify_name(name)
       Time.now.to_s(:ordered_numeric) + rand(10001).to_s + "_" + name
     end
-
 end

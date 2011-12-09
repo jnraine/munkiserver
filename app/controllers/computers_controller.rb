@@ -8,7 +8,7 @@ class ComputersController < ApplicationController
     @computers = Computer.unit_and_environment(current_unit, current_environment)
     @computers = @computers.order(sort_column + ' ' + sort_direction)
     
-    #Search for value on name attribute
+    # Search for value on name attribute
     @computers = @computers.search(:name, params[:name])
     
     # Add pagination using will_paginate gem
@@ -237,14 +237,12 @@ class ComputersController < ApplicationController
     end
   end
   
-  private
-  
-  #Helper method to minimize errors and SQL injection attacks
+  # Helper method to minimize errors and SQL injection attacks
   def sort_column
     %w[name hostname mac_address last_report_at].include?(params[:sort]) ? params[:sort] : "name"
   end
   
-  #Helper method to minimize errors and SQL injection attacks  
+  # Helper method to minimize errors and SQL injection attacks  
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end  
