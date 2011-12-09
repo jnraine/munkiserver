@@ -38,11 +38,14 @@ class Package < ActiveRecord::Base
   validates :version, :presence => true
   validates :installer_item_location, :presence => true
   validates :package_branch_id, :presence => true
-  validates :receipts_plist, :plist => true
-  validates :installs_plist, :plist => true
+  # For now have to allow nil as these fields both receipts and installs aren't
+  # required together.  This facilitates MySQL usage where
+  # Text/Blobs can't have default values
+  validates :receipts_plist, :plist => true, :if => "installs_plist.nil?"
+  validates :installs_plist, :plist => true, :if => "receipts_plist.nil?"
   validates :raw_tags_plist, :plist => true
-  validates :receipts, :array => true
-  validates :installs, :array => true
+  validates :receipts, :array => true, :if => "installs_plist.nil?"
+  validates :installs, :array => true, :if => "receipts_plist.nil?"
   validates :raw_tags, :hash => true
   validates :version, :uniqueness_in_unit => true  
   validates :force_install_after_date_string, :date_time => true, :allow_blank => true
@@ -109,10 +112,11 @@ class Package < ActiveRecord::Base
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)
     # Installer item locations from unit
-    installer_item_locations = Package.where("unit_id == #{unit.id}").map(&:installer_item_location)
+    installer_item_locations = Package.where(:unit_id => unit.id).map(&:installer_item_location)
+    # Set Null value if no item locations yet defined as MySQL must have a value for NOT IN()
+    installer_item_locations = (installer_item_locations.map {|e| "'#{e}'"}.join(",")).nil? || "NULL" 
     # Packages shared from other units
-    # TO-DO at the time of writing this there didn't seem to be a nice way to complete "NOT IN" sql statement so I hand coded it...possible sql injection security hole
-    packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN (#{installer_item_locations.map {|e| "'#{e}'"}.join(",")})")
+    packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN(#{installer_item_locations})")
     # Delete packages that refer to an installer item used by another package in unit
     # packages.delete_if {|p| installer_item_locations.include?(p.installer_item_location)}
 
@@ -127,7 +131,7 @@ class Package < ActiveRecord::Base
   # installer_item_location value
   def self.shared_to_unit_and_imported(unit)
     # Installer item locations from unit
-    installer_item_locations = Package.where("unit_id == #{unit.id}").map(&:installer_item_location)
+    installer_item_locations = Package.where(:unit_id => unit.id).map(&:installer_item_location)
     # Packages shared from other units
     Package.shared.where("unit_id != #{unit.id}").where(:installer_item_location => installer_item_locations)
   end
@@ -870,7 +874,7 @@ class Package < ActiveRecord::Base
       pkginfo_hash.each do |k,v|
         unless known_attributes.include?(k)
           # Add non-attribute tag to raw_tags
-          package.raw_tags = package.raw_tags.merge({k => v})
+          package.raw_tags = (package.raw_tags || {}).merge({k => v})
           # Remove non-attribute from hash
           pkginfo_hash.delete(k)
           # Change raw_mode to append
