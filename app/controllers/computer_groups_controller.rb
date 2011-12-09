@@ -1,4 +1,6 @@
 class ComputerGroupsController < ApplicationController
+  helper_method :sort_column, :sort_direction
+
   def index
     @computer_groups = ComputerGroup.unit(current_unit).order_alphabetical
     
@@ -88,5 +90,15 @@ class ComputerGroupsController < ApplicationController
         @computer_group = ComputerGroup.find(params[:computer_group_id])
       end
     end
+  end
+  
+  # Helper method to minimize errors and SQL injection attacks
+  def sort_column
+    %w[name hostname mac_address last_report_at].include?(params[:sort]) ? params[:sort] : "name"
+  end
+  
+  # Helper method to minimize errors and SQL injection attacks  
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
 end
