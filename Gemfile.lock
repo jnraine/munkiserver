@@ -48,7 +48,6 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
-    mysql2 (0.2.17)
     newrelic_rpm (3.2.0)
     nokogiri (1.5.0)
     paperclip (2.4.1)
@@ -115,7 +114,6 @@ DEPENDENCIES
   cancan
   client_side_validations
   highline
-  mysql2 (< 0.3)
   newrelic_rpm
   nokogiri
   paperclip
