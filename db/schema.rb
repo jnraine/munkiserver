@@ -11,11 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(:version => 20111130134407) do
-=======
 ActiveRecord::Schema.define(:version => 20111208121600) do
->>>>>>> trey/managed_updates
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -161,6 +157,30 @@ ActiveRecord::Schema.define(:version => 20111208121600) do
     t.integer  "package_id"
     t.integer  "manifest_id"
     t.string   "manifest_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "memberships", :force => true do |t|
+    t.integer  "unit_id"
+    t.integer  "user_id"
+    t.boolean  "create_computer",        :default => true
+    t.boolean  "read_computer",          :default => true
+    t.boolean  "edit_computer",          :default => true
+    t.boolean  "destroy_computer",       :default => true
+    t.boolean  "create_bundle",          :default => true
+    t.boolean  "read_bundle",            :default => true
+    t.boolean  "edit_bundle",            :default => true
+    t.boolean  "destroy_bundle",         :default => true
+    t.boolean  "create_computer_group",  :default => true
+    t.boolean  "read_computer_group",    :default => true
+    t.boolean  "edit_computer_group",    :default => true
+    t.boolean  "destroy_computer_group", :default => true
+    t.boolean  "create_package",         :default => true
+    t.boolean  "read_package",           :default => true
+    t.boolean  "edit_package",           :default => true
+    t.boolean  "destroy_package",        :default => true
+    t.boolean  "edit_unit",              :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
