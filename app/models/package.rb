@@ -38,9 +38,6 @@ class Package < ActiveRecord::Base
   validates :version, :presence => true
   validates :installer_item_location, :presence => true
   validates :package_branch_id, :presence => true
-  # For now have to allow nil as these fields both receipts and installs aren't
-  # required together.  This facilitates MySQL usage where
-  # Text/Blobs can't have default values
   validates :receipts_plist, :plist => true
   validates :installs_plist, :plist => true
   validates :raw_tags_plist, :plist => true
@@ -86,9 +83,11 @@ class Package < ActiveRecord::Base
     end
   end
 
+  # Initialize serialized data
   def init
     self.receipts ||= [].to_yaml
     self.installs ||= [].to_yaml
+    self.raw_tags ||= [].to_yaml
   end
 
   # An hash of params to be used for linking to a package instance
@@ -878,7 +877,7 @@ class Package < ActiveRecord::Base
       pkginfo_hash.each do |k,v|
         unless known_attributes.include?(k)
           # Add non-attribute tag to raw_tags
-          package.raw_tags = (package.raw_tags || {}).merge({k => v})
+          package.raw_tags = package.raw_tags.merge({k => v})
           # Remove non-attribute from hash
           pkginfo_hash.delete(k)
           # Change raw_mode to append
