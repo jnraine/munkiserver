@@ -1,3 +1,12 @@
+/*
+*= require jquery
+*= require jquery_ujs
+*= require rails.validations
+*= require_self
+*= require_tree ./codemirror
+*= require_tree ./highcharts
+*/
+
 $(document).ready(function() {
 	// Turn all multiple select tags into asmSelect tags
 	initializeAsmSelect(".asmSource");
