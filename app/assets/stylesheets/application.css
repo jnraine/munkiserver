@@ -1,4 +1,15 @@
 /*
 *= require_self
-*= require_tree .
+*= require blueprint/screen.css
+*= require blueprint/print.css
+*= jquery.asmselect
+*= jquery.autocomplete
+*= jqueryTabs
+*= dropdown/styles
+*= dropdown/theme
+*= style
+*= jquery-ui-timepicker-addon
+*= codemirror/codemirror
+*= codemirror/clike
+*= codemirror/xml
 */
