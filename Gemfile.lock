@@ -50,6 +50,8 @@ GEM
     erubis (2.7.0)
     execjs (1.2.12)
       multi_json (~> 1.0)
+    highcharts-rails (2.1.9)
+      railties (~> 3.1)
     highline (1.6.8)
     hike (1.2.1)
     i18n (0.6.0)
@@ -152,6 +154,7 @@ DEPENDENCIES
   cancan
   client_side_validations
   coffee-rails
+  highcharts-rails (~> 2.1.9)
   highline
   jquery-rails
   newrelic_rpm
