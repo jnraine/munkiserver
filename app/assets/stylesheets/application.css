@@ -1,25 +1,14 @@
 /*
 *= require blueprint
-*= require dropdown/styles
-*= require dropdown/theme
 *= require jquery.asmselect
 *= require jquery.autocomplete
 *= require jqueryTabs
 *= require jquery-ui-timepicker-addon
+*= require dropdown/styles
+*= require dropdown/theme
 *= require style
 *= require codemirror/codemirror
 *= require codemirror/clike
 *= require codemirror/xml
 *= require_self
 */
-
-body {
-	background-image:url("/assets/login_bg.jpg");
-	background-color:#222;
-}
-.notice {
-	background-color:#fff;
-}
-.warning {
-	background-color:#fff;
-}
