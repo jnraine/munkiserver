@@ -1,5 +1,5 @@
 body {
-	background-image:url("../images/bg.png");
+	background-image:url("/assets/bg.png");
 	background-repeat:repeat-x;
 	background-position:top;
 	color:#000;
@@ -100,7 +100,7 @@ a:hover {
 
 #unit_menu li.current {
 	/* Currently selected unit */
-	background-image:url("../images/current_unit.png");
+	background-image:url("/assets/current_unit.png");
 	background-position:bottom center;
 	background-repeat:no-repeat;
 }
@@ -139,7 +139,7 @@ html, body {
 }
 
 .footer {
-	background-image:url("../images/footerbg.png");
+	background-image:url("/assets/footerbg.png");
 	background-position:bottom center;
 	background-repeat:repeat-x;
 	font-variant:none;
@@ -283,7 +283,7 @@ tbody tr td img:hover{
 }
 
 .error {
-	background-image:url("../images/error_icon.png");
+	background-image:url("/assets/error_icon.png");
 	background-repeat:no-repeat;
 	background-position:center left;
 	border-left:none;
@@ -306,13 +306,13 @@ tbody tr td img:hover{
 }
 
 .warning {
-	background-image:url("../images/warning_icon.png");
+	background-image:url("/assets/warning_icon.png");
 	background-repeat:no-repeat;
 	background-position:center left;
 }
 .notice {
 	background:none;
-	background-image:url("../images/success_icon.png");
+	background-image:url("/assets/success_icon.png");
 	background-repeat:no-repeat;
 	background-position:center left;
 	border-left:none;
@@ -525,11 +525,11 @@ ul.imported_link li{
 }
 
 #warranty_tab .green{
-  background: url(/images/warranty_status_green.png) no-repeat 5px 5px;
+  background: url(/assets/warranty_status_green.png) no-repeat 5px 5px;
 }
 
 #warranty_tab .red{
-  background: url(/images/warranty_status_yellow.png) no-repeat 5px 5px;
+  background: url(/assets/warranty_status_yellow.png) no-repeat 5px 5px;
 }
 
 #warranty_summary {
@@ -651,11 +651,11 @@ a:hover.more_info {
     line-height:28px;
 }
 .widget .warranty .warranty-status .green {
-    background: url(/images/warranty_status_green_small.png) no-repeat 5px 5px;
+    background: url(/assets/warranty_status_green_small.png) no-repeat 5px 5px;
     padding-left: 30px;
 }
 .widget .warranty .warranty-status .red {
-    background: url(/images/warranty_status_yellow_small.png) no-repeat 5px 5px;
+    background: url(/assets/warranty_status_yellow_small.png) no-repeat 5px 5px;
     padding-left: 30px;
 }
 .widget .warranty small:before {
@@ -727,11 +727,11 @@ li.row {
 }
 
 .user-principal {
-  background-image:url('/images/user.png');
+  background-image:url(/assets/user.png);
 }
 
 .user-group-principal {
-  background-image:url('/images/user-group.png');
+  background-image:url(/assets/user-group.png);
 }
 
 .remove-membership {
@@ -755,11 +755,11 @@ dd.permission-check-box {
   background-position: right center;
 }
 .zebra th .asc { 
-  background-image: url(/images/up_arrow.gif);
+  background-image: url(/assets/up_arrow.gif);
 }
 
 .zebra th .desc { 
-  background-image: url(/images/down_arrow.gif); 
+  background-image: url(/assets/down_arrow.gif); 
 }
 
 

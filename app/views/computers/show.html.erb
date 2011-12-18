@@ -55,8 +55,7 @@
 			<%= form_tag(managed_install_reports_computers_path(current_unit), :id => "managed_install_reports_form", :method => 'get', :remote => true) do %>
 			View Report
 			<%= select_tag "managed_install_reports", options_from_collection_for_select(@computer.managed_install_reports.reverse, "id", "option_text")%>
-			
-			<img class="loading" src="/images/ajax-loader.gif" />
+			<%= img_tag "ajax-loader.gif", :class => "loading" %>
 			<%= helpful_info "* denotes a report with issues"%>
 			<% end %>
 		</div>
