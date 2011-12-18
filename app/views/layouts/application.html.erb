@@ -13,9 +13,6 @@
 	<![endif]-->
 
 	<%= javascript_include_tag 'application' %>
-	<%# javascript_include_tag "jquery.min", "jquery-ui.min", "rails.jquery", "application","jquery.asmselect", "jquery.autocomplete.min", "rails.validations", "jquery.lightbox_me", "jquery-ui-timepicker-addon"%>
-	<%# javascript_include_tag "codemirror/codemirror.js", "codemirror/clike.js", "codemirror/xml.js" %>
-	<%# javascript_include_tag "highcharts/highcharts.js" %>
 	
 	<%= csrf_meta_tag %>
 </head>
@@ -161,7 +158,6 @@
 
 <div class="footer">
 	<div class="container">
-		<!-- <%= `echo $PATH` %> -->
 		<p class="span-8 last prepend-8 append-8 text-center">
 			munki server <%= Munki::Application::VERSION %><br>
 			munki tools <%= Munki::Application::MUNKITOOLS_VERSION %>
@@ -169,11 +165,6 @@
 		
 		<%= image_tag 'footer_graphic.png', :id => "footer_graphic" %>
 	</div>
-	<script type="text/javascript">
-
-	var x = document.getElementById("site_title");
-	console.log(x.innerHTML);
-	</script>
 </div>
 </body>
 </html>
