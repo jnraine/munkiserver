@@ -7,12 +7,14 @@
 	<title>Munki Server: <%= controller.action_name %></title>
 	
 	<%= stylesheet_link_tag "application" %>
-		
+	
 	<!--[if lt IE 8]>
 		<%= stylesheet_link_tag "blueprint/ie.css", :media => "screen, projection" %>
 	<![endif]-->
 
 	<%= javascript_include_tag 'application' %>
+	
+	<%= content_for :head %>
 	
 	<%= csrf_meta_tag %>
 </head>

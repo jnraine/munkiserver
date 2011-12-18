@@ -1,3 +1,16 @@
+<% content_for :head do %>
+	body {
+		background-image:url("/assets/login_bg.jpg");
+		background-color:#222;
+	}
+	.notice {
+		background-color:#fff;
+	}
+	.warning {
+		background-color:#fff;
+	}
+<% end %>
+
 <div id="login_form">
 	<%= form_tag "/create_session" do %>
 		<%= text_field_tag "username" %>
