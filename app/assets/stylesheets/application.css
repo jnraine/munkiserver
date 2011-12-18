@@ -1,15 +1,26 @@
 /*
+*= require style
+*= require blueprint/screen
+*= require blueprint/print
+*= require jquery.asmselect
+*= require jquery.autocomplete
+*= require jqueryTabs
+*= require dropdown/styles
+*= require dropdown/theme
+*= require jquery-ui-timepicker-addon
+*= require codemirror/codemirror
+*= require codemirror/clike
+*= require codemirror/xml
 *= require_self
-*= require blueprint/screen.css
-*= require blueprint/print.css
-*= jquery.asmselect
-*= jquery.autocomplete
-*= jqueryTabs
-*= dropdown/styles
-*= dropdown/theme
-*= style
-*= jquery-ui-timepicker-addon
-*= codemirror/codemirror
-*= codemirror/clike
-*= codemirror/xml
 */
+
+body {
+	background-image:url("/assets/login_bg.jpg");
+	background-color:#222;
+}
+.notice {
+	background-color:#fff;
+}
+.warning {
+	background-color:#fff;
+}
