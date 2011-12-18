@@ -5,13 +5,12 @@
 *= require rails.validations
 *= require jquery.asmselect
 *= require jquery.autocomplete.min
-*= require rails.validations
 *= require jquery.lightbox_me
 *= require jquery-ui-timepicker-addon
 *= require codemirror/codemirror
 *= require codemirror/clike
 *= require codemirror/xml
-*= require highcharts/highcharts
+*= require highcharts
 *= require overlay.js
 *= require_self
 *= */
