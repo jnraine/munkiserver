@@ -5,27 +5,15 @@
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>Munki Server: <%= controller.action_name %></title>
-	<%= stylesheet_link_tag 'blueprint/screen.css', :media => "screen, projection" %>
-	<%= stylesheet_link_tag 'blueprint/print.css', :media => "print" %>
-	<!--[if lt IE 8]>
-	<link rel="stylesheet" href="stylesheets/blueprint/ie.css" type="text/css" media="screen, projection">
-	<![endif]-->
-	<%= stylesheet_link_tag 'style' %>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-	<%= csrf_meta_tag %>
 	
-	<style type="text/css">
-		body {
-			background-image:url("/assets/login_bg.jpg");
-			background-color:#222;
-		}
-		.notice {
-			background-color:#fff;
-		}
-		.warning {
-			background-color:#fff;
-		}
-	</style>
+	<%= stylesheet_link_tag "application" %>
+	<%= javascript_include_tag "application" %>
+	
+	<%= blueprint_ie_fix_stylesheet_link_tag %>
+
+	<%= content_for :head %>
+	
+	<%= csrf_meta_tag %>
 </head>
 <body>
 <div id="session_flash">

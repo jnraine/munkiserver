@@ -1,6 +1,8 @@
 <% content_for :head do %>
+<style type="text/css">
+
 	body {
-		background-image:url("/assets/login_bg.jpg");
+		background-image:url(<%= asset_path 'login_bg.jpg'%>);
 		background-color:#222;
 	}
 	.notice {
@@ -9,6 +11,7 @@
 	.warning {
 		background-color:#fff;
 	}
+</style>
 <% end %>
 
 <div id="login_form">

@@ -8,9 +8,7 @@
 	
 	<%= stylesheet_link_tag "application" %>
 	
-	<!--[if lt IE 8]>
-		<%= stylesheet_link_tag "blueprint/ie.css", :media => "screen, projection" %>
-	<![endif]-->
+	<%= blueprint_ie_fix_stylesheet_link_tag %>
 
 	<%= javascript_include_tag 'application' %>
 	
