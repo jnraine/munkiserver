@@ -6,9 +6,9 @@
 *= require jquery-ui-timepicker-addon
 *= require dropdown/styles
 *= require dropdown/theme
+*= require style
 *= require codemirror/codemirror
 *= require codemirror/clike
 *= require codemirror/xml
-*= require style
 *= require_self
 */

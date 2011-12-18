@@ -328,11 +328,26 @@ $(document).ready(function() {
 		$(this).find(".helpful_info_message").fadeOut("fast");
 	}));
 	
-	
 	// Add zebra strips to tables
 	var odd = true;
-	$(".zebra tbody tr:odd").each(function() {
-		$(this).addClass("odd");
+	var stateCount = 0;
+	$(".zebra tbody tr").each(function() {
+		// Reset state count if necessary
+		if(stateCount === 0) {
+			// Flip the state of the odd switch
+			if(odd) {
+				odd = false;
+			} else {
+				odd = true;
+			}
+			stateCount = $(this).find("td").first().attr("rowspan");
+		}
+		
+		// Set odd
+		if(odd) {
+			$(this).addClass("odd");
+		}
+		stateCount--;
 	});
 	
     initializeDatePicker();
