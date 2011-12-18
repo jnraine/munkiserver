@@ -10,7 +10,6 @@
 *= require codemirror/codemirror
 *= require codemirror/clike
 *= require codemirror/xml
-*= require highcharts
 *= require overlay.js
 *= require_self
 *= */
