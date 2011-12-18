@@ -31,6 +31,9 @@ GEM
       multi_json (~> 1.0)
     archive-tar-minitar (0.5.2)
     arel (2.2.1)
+    blueprint-rails (0.1.2)
+      railties (~> 3.0)
+      thor (~> 0.14)
     builder (3.0.0)
     cancan (1.6.7)
     chronic (0.6.6)
@@ -145,6 +148,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  blueprint-rails
   cancan
   client_side_validations
   coffee-rails

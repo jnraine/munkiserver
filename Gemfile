@@ -13,6 +13,7 @@ gem "plist"
 gem "cancan"
 gem "highline"
 gem "newrelic_rpm"
+gem "blueprint-rails"
 
 group :development do
   gem "ruby-debug19" , :require => "ruby-debug"

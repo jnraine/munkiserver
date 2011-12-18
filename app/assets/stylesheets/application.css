@@ -1,13 +1,12 @@
 /*
-*= require style
-*= require blueprint/screen
-*= require blueprint/print
+*= require blueprint
+*= require dropdown/styles
+*= require dropdown/theme
 *= require jquery.asmselect
 *= require jquery.autocomplete
 *= require jqueryTabs
-*= require dropdown/styles
-*= require dropdown/theme
 *= require jquery-ui-timepicker-addon
+*= require style
 *= require codemirror/codemirror
 *= require codemirror/clike
 *= require codemirror/xml
