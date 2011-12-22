@@ -1,6 +1,6 @@
 namespace :chore do
   desc "Removes MissingManifests created after X days ago (defaults to 30 days)"  
-  task :cleanup_missing_manifests, [:days_kept] => [:environment] do
+  task :cleanup_missing_manifests, [:days_kept] => [:environment] do |t, args|
     args.with_defaults(:days_kept => 30)
     results = MissingManifest.where("created_at < :date", :date => (Date.today - args[:days_kept].to_i.days)).destroy_all
     puts "Destroyed #{results.count} missing manifests"
