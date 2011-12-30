@@ -15,8 +15,12 @@ gem "highline"
 gem "newrelic_rpm"
 
 group :development do
-  gem "ruby-debug19" , :require => "ruby-debug"
-  gem "rails-erd"
   gem "textmate_backtracer"
+end
+
+group :test, :development do
   gem "pry-rails"
+  gem "ruby-debug19" , :require => "ruby-debug"
+  gem "rspec-rails", "~> 2.6"
+  gem "capybara"
 end
