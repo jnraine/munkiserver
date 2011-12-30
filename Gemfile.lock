@@ -44,6 +44,7 @@ GEM
     client_side_validations (3.1.0)
     cocaine (0.2.0)
     coderay (0.9.8)
+    database_cleaner (0.7.0)
     diff-lcs (1.1.3)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -147,6 +148,7 @@ DEPENDENCIES
   cancan
   capybara
   client_side_validations
+  database_cleaner
   highline
   newrelic_rpm
   nokogiri
