@@ -21,6 +21,8 @@ group :test, :development do
   gem "pry-rails"
   gem "rspec-rails", "~> 2.6"
   gem "capybara"
+  gem "guard-rspec"
+  gem "guard-cucumber"
 end
 
 group :test do
