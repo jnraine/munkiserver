@@ -21,11 +21,13 @@ group :test, :development do
   gem "pry-rails"
   gem "rspec-rails", "~> 2.6"
   gem "capybara"
+  gem "launchy"
   gem "guard-rspec"
   gem "guard-cucumber"
 end
 
 group :test do
   gem 'cucumber-rails'
+  gem "factory_girl_rails"
   gem 'database_cleaner'
 end

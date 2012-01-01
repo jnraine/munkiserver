@@ -17,7 +17,7 @@ Munki::Application.routes.draw do
   match 'checkin/:id' => 'computers#checkin', :via => :post
 
   # Make munki-client-friendly URLs
-  match ':id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
+  match ':id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/, :as => "computer_manifest"
   match 'computers/:id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
   
   match 'catalogs/:unit_id-:environment_name.plist' => 'catalogs#show', :format => 'plist'
