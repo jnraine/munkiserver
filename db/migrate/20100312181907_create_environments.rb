@@ -3,7 +3,7 @@ class CreateEnvironments < ActiveRecord::Migration
     create_table :environments do |t|
       t.string :name
       t.text :description
-      t.text :environment_ids, :default => "--- []"
+      t.text :environment_ids
 
       t.timestamps
     end

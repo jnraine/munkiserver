@@ -11,7 +11,7 @@ class CreateComputers < ActiveRecord::Migration
       t.integer :environment_id
       # To allow for raw text to be added
       t.text :raw_tags
-      t.text :raw_mode, :default => false
+      t.text :raw_mode
       t.timestamps
     end
   end

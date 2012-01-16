@@ -12,6 +12,8 @@ gem "plist"
 gem "cancan"
 gem "highline"
 gem "newrelic_rpm", :group => :production
+gem "mysql2", "< 0.3"
+gem "taps"
 
 group :development do
   gem "textmate_backtracer"
