@@ -769,6 +769,10 @@ class Package < ActiveRecord::Base
   def self.has_required_package?(package)
     RequireItem.where(:package_id => package.id).first.present?
   end
+  
+  def has_installer_item_size?
+    installer_item_size != nil and installer_item_size > 0
+  end
 
   private
     # Run makepkginfo on server against package file to generate a pkginfo
