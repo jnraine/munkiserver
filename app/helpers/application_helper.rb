@@ -227,7 +227,7 @@ module ApplicationHelper
   # Should be refactored to be more efficient
   def unit_link(unit, controller)
     raise ArgumentError.new("Unit passed to unit_link method was nil") if unit.nil?
-    known = {"computers" => Computer,"packages" => Package,"computer_groups" => ComputerGroup,"bundles" => Bundle,"shared_packages" => Package,"user_groups" => UserGroup, "permissions" => Permission}
+    known = ActiveSupport::OrderedHash.new({"computers" => Computer,"packages" => Package,"computer_groups" => ComputerGroup,"bundles" => Bundle,"shared_packages" => Package,"user_groups" => UserGroup, "permissions" => Permission})
     controller = known.keys.first unless known.keys.include?(controller)
     authorized = false
     # Try to authorize for a specific controller ahead of time

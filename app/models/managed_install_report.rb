@@ -44,7 +44,7 @@ class ManagedInstallReport < ActiveRecord::Base
     default_opts = {:unit => nil, :start_date => nil, :end_date => nil}
     opts = default_opts.merge(opts)
     
-    checkins_by_day = {}
+    checkins_by_day = ActiveSupport::OrderedHash.new
     opts[:start_date].step(opts[:end_date],1) do |date|
       checkins_by_day[date.to_s] = cached_checkins_on_date(:date => date, :unit => opts[:unit])
     end
