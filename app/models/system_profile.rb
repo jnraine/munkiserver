@@ -51,7 +51,7 @@ class SystemProfile < ActiveRecord::Base
     # Format the keys
     f_item_0 = underscore_keys(item_0)
     # Delete elements with keys not listed in allowed_keys
-    f_item_0.delete_if do |k| 
+    f_item_0.delete_if do |k,v|
       if !allowed_keys.include?(k)
         logger.debug "Removing #{k} key from SPHardwareDataType data set"
         true
@@ -74,7 +74,7 @@ class SystemProfile < ActiveRecord::Base
     # Fix special cases
     f_item_0["os_64bit_kernel_and_kexts"] = f_item_0.delete("64bit_kernel_and_kexts")
     # Delete elements with keys not listed in allowed_keys
-    f_item_0.delete_if do |k| 
+    f_item_0.delete_if do |k,v|
       if !allowed_keys.include?(k)
         logger.debug "Removing #{k} key from SPSoftwareDataType data set"
         true

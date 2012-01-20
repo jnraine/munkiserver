@@ -130,7 +130,7 @@ class ManagedInstallReport < ActiveRecord::Base
     report_hash["munki_warnings"] = report_hash.delete("warnings")
     # Delete invalid keys
     valid_attributes = self.new.attributes.keys
-    report_hash.delete_if do |k| 
+    report_hash.delete_if do |k,v|
       if !valid_attributes.include?(k)
         logger.debug "Invalid key (#{k}) found while creating #{self.class.to_s} object from report hash"
         true
