@@ -208,7 +208,7 @@ class ComputersController < ApplicationController
     else
       flash[:error] = "#{@computer.name}'s warranty could not be updated."
     end
-    redirect_to computer_path(@computer.unit, @computer, anchor: 'warranty_tab')
+    redirect_to computer_path(@computer.unit, @computer, :anchor => 'warranty_tab')
   end
   
   private

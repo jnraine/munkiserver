@@ -44,7 +44,7 @@ class ManagedInstallReport < ActiveRecord::Base
     default_opts = {:unit => nil, :start_date => nil, :end_date => nil}
     opts = default_opts.merge(opts)
     
-    checkins_by_day = {}
+    checkins_by_day = ActiveSupport::OrderedHash.new
     opts[:start_date].step(opts[:end_date],1) do |date|
       checkins_by_day[date.to_s] = cached_checkins_on_date(:date => date, :unit => opts[:unit])
     end
@@ -107,9 +107,8 @@ class ManagedInstallReport < ActiveRecord::Base
 
     scope = ManagedInstallReport.scoped
     scope = scope.where(:computer_id => opts[:unit].computers.map(&:id)) if opts[:unit].present?
-    scope = scope.where('created_at >= ? and created_at <= ?', opts[:date].beginning_of_day, opts[:date].end_of_day)
-    scope = scope.select("DISTINCT(computer_id)")
-    scope.count
+    scope = scope.where(:created_at => (opts[:date].beginning_of_day..opts[:date].end_of_day))
+    scope = scope.count(:computer_id, :distinct => true)
   end
   
   # Creates a ManagedInstallReport object based on a plist file
@@ -131,7 +130,7 @@ class ManagedInstallReport < ActiveRecord::Base
     report_hash["munki_warnings"] = report_hash.delete("warnings")
     # Delete invalid keys
     valid_attributes = self.new.attributes.keys
-    report_hash.delete_if do |k| 
+    report_hash.delete_if do |k,v|
       if !valid_attributes.include?(k)
         logger.debug "Invalid key (#{k}) found while creating #{self.class.to_s} object from report hash"
         true

@@ -12,7 +12,7 @@ class SystemProfile < ActiveRecord::Base
   # hash that can be used to create a new SystemProfile record.
   def self.format_system_profiler_plist(system_profiler_plist_file)
     xml_string = system_profiler_plist_file.read if system_profiler_plist_file.present?
-    self.format_system_profiler_hash(Plist.parse_xml(xml_string.force_encoding("UTF-8"))) if xml_string.present?
+    self.format_system_profiler_hash(Plist.parse_xml(xml_string.to_utf8)) if xml_string.present?
   end
   
   # Creates a SystemProfile object based on a system profiler 
@@ -51,7 +51,7 @@ class SystemProfile < ActiveRecord::Base
     # Format the keys
     f_item_0 = underscore_keys(item_0)
     # Delete elements with keys not listed in allowed_keys
-    f_item_0.delete_if do |k| 
+    f_item_0.delete_if do |k,v|
       if !allowed_keys.include?(k)
         logger.debug "Removing #{k} key from SPHardwareDataType data set"
         true
@@ -74,7 +74,7 @@ class SystemProfile < ActiveRecord::Base
     # Fix special cases
     f_item_0["os_64bit_kernel_and_kexts"] = f_item_0.delete("64bit_kernel_and_kexts")
     # Delete elements with keys not listed in allowed_keys
-    f_item_0.delete_if do |k| 
+    f_item_0.delete_if do |k,v|
       if !allowed_keys.include?(k)
         logger.debug "Removing #{k} key from SPSoftwareDataType data set"
         true
