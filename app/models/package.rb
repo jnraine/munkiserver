@@ -888,7 +888,7 @@ class Package < ActiveRecord::Base
       # Ensure the installer_item_location is correct
       package.installer_item_location = File.basename(package_file.path)
       # Ensure the hash is correct
-      package.add_raw_tag("installer_item_hash",Digest::SHA256.file(package_file).hexdigest)
+      package.add_raw_tag("installer_item_hash",Digest::SHA256.file(package_file.path).hexdigest)
       # Apply munkiserver attributes
       package = self.apply_special_attributes(package,options[:special_attributes])
       # Apply attributes from existing version in the same unit
