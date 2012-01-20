@@ -44,7 +44,7 @@ class Warranty < ActiveRecord::Base
         hash
       end
     rescue URI::Error
-      computer = Computer.where(serial_number: serial)
+      computer = Computer.where(:serial_number => serial)
       Rails.logger.error "Invalid serial number #{serial} for computer #{computer}"
       puts "Invalid serial number #{serial} for computer #{computer}"
     rescue SocketError
@@ -56,24 +56,24 @@ class Warranty < ActiveRecord::Base
     hw_coverage_end_date = Date.parse(hash['HW_END_DATE']) if hash['HW_END_DATE'].present?
     phone_coverage_end_date = Date.parse(hash['PH_END_DATE']) if hash['PH_END_DATE'].present?
 
-    { serial_number:        serial, 
-      product_description:  hash['PROD_DESCR'],
-      product_type:         hash['PRODUCT_TYPE'],
+    { :serial_number =>           serial,
+      :product_description =>     hash['PROD_DESCR'],
+      :product_type =>            hash['PRODUCT_TYPE'],
 
-      purchase_date:           purchase_date,
-      hw_coverage_end_date:    hw_coverage_end_date,
-      phone_coverage_end_date: phone_coverage_end_date,      
+      :purchase_date =>           purchase_date,
+      :hw_coverage_end_date =>    hw_coverage_end_date,
+      :phone_coverage_end_date => phone_coverage_end_date,
 
-      registered:             hash['IS_REGISTERED'] == 'Y',
-      hw_coverage_expired:    hash['HW_HAS_COVERAGE'] == 'N',
-      app_registered:         hash['HW_HAS_APP'] == 'Y',
-      app_eligible:           hash['IS_APP_ELIGIBLE'] == 'Y',
-      phone_coverage_expired: hash['PH_HAS_COVERAGE'] == 'N',
+      :registered =>              hash['IS_REGISTERED'] == 'Y',
+      :hw_coverage_expired =>     hash['HW_HAS_COVERAGE'] == 'N',
+      :app_registered =>          hash['HW_HAS_APP'] == 'Y',
+      :app_eligible =>            hash['IS_APP_ELIGIBLE'] == 'Y',
+      :phone_coverage_expired =>  hash['PH_HAS_COVERAGE'] == 'N',
       
-      specs_url:            "http://support.apple.com/specs/#{serial}",
-      hw_support_url:       hash['HW_SUPPORT_LINK'],
-      forum_url:            hash['FORUMS_URL'],
-      phone_support_url:    hash['PHONE_SUPPORT_LINK'],
+      :specs_url =>               "http://support.apple.com/specs/#{serial}",
+      :hw_support_url =>          hash['HW_SUPPORT_LINK'],
+      :forum_url =>               hash['FORUMS_URL'],
+      :phone_support_url =>       hash['PHONE_SUPPORT_LINK'],
     }
   end
     
