@@ -12,7 +12,7 @@ class SystemProfile < ActiveRecord::Base
   # hash that can be used to create a new SystemProfile record.
   def self.format_system_profiler_plist(system_profiler_plist_file)
     xml_string = system_profiler_plist_file.read if system_profiler_plist_file.present?
-    self.format_system_profiler_hash(Plist.parse_xml(xml_string.force_encoding("UTF-8"))) if xml_string.present?
+    self.format_system_profiler_hash(Plist.parse_xml(xml_string.to_utf8)) if xml_string.present?
   end
   
   # Creates a SystemProfile object based on a system profiler 
