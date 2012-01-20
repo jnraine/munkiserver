@@ -107,9 +107,8 @@ class ManagedInstallReport < ActiveRecord::Base
 
     scope = ManagedInstallReport.scoped
     scope = scope.where(:computer_id => opts[:unit].computers.map(&:id)) if opts[:unit].present?
-    scope = scope.where('created_at >= ? and created_at <= ?', opts[:date].beginning_of_day, opts[:date].end_of_day)
-    scope = scope.select("DISTINCT(computer_id)")
-    scope.count
+    scope = scope.where(:created_at => (opts[:date].beginning_of_day..opts[:date].end_of_day))
+    scope = scope.count(:computer_id, :distinct => true)
   end
   
   # Creates a ManagedInstallReport object based on a plist file

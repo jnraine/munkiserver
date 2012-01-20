@@ -26,7 +26,7 @@ class Package < ActiveRecord::Base
   serialize :supported_architectures, Array
   serialize :raw_tags
   
-  scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u.id) }
+  scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u) }
   scope :shared, where(:shared => true)
   scope :from_other_unit, lambda {|p| where("unit_id != ?", p.unit_id)}
   scope :has_greater_version, lambda {|p| where("version > ?", p.version)}
@@ -109,7 +109,7 @@ class Package < ActiveRecord::Base
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)
     # Installer item locations from unit
-    installer_item_locations = Package.where("unit_id == #{unit.id}").map(&:installer_item_location)
+    installer_item_locations = Package.where(:unit_id => unit).map(&:installer_item_location)
     # Packages shared from other units
     # TO-DO at the time of writing this there didn't seem to be a nice way to complete "NOT IN" sql statement so I hand coded it...possible sql injection security hole
     packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN (#{installer_item_locations.map {|e| "'#{e}'"}.join(",")})")
