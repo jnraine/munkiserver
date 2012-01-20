@@ -202,7 +202,7 @@ class Computer < ActiveRecord::Base
     i = 0
     formatted = []
     while(i < 12 and i < value.length) do
-      formatted << value[i]
+      formatted << value[i,1]
       formatted << ":" if i.odd? and i != 11
       i += 1
     end
