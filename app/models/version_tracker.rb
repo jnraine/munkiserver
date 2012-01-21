@@ -139,7 +139,7 @@ class VersionTracker < ActiveRecord::Base
     if f.instance_of?(StringIO)
       image_data = f
       f = Tempfile.new(original_filename)
-      f.write(image_data.string.force_encoding("UTF-8"))
+      f.write(image_data.string.to_utf8)
     end
     # Temp stuff
     tmp_dir = Pathname.new(File.dirname(f.path))
