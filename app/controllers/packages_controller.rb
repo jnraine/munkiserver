@@ -121,7 +121,7 @@ class PackagesController < ApplicationController
           fresh_when :etag => @package, :last_modified => @package.created_at.utc, :public => true
         end
         
-        format.json { render :text => {:installer_item_location => @package.installer_item_location}.to_json }
+        format.json { render :text => @package.to_json(:methods => [:name, :display_name]) }
       else
         render page_not_found
       end
