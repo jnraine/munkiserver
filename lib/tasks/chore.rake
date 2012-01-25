@@ -68,4 +68,15 @@ namespace :chore do
       end
     end
   end
+  
+  desc "Destroy item model records that reference nil packages"
+  task :destroy_stale_item_records => :environment do
+    InstallItem.destroy_stale_records
+    BundleItem.destroy_stale_records
+    ManagedUpdateItem.destroy_stale_records
+    OptionalInstallItem.destroy_stale_records
+    RequireItem.destroy_stale_records
+    UninstallItem.destroy_stale_records
+    UpdateForItem.destroy_stale_records
+  end
 end
