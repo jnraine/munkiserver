@@ -938,6 +938,7 @@ class Package < ActiveRecord::Base
       # Move tmp_file to the package store
       begin
         FileUtils.mv package_file.tempfile.path, destination_path
+        FileUtils.chmod 0644, destination_path
       rescue Errno::EACCES => e
         raise PackageError.new("Unable to write to package store")
       end
