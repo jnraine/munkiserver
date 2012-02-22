@@ -200,7 +200,7 @@ class PackagesController < ApplicationController
     elsif [:index, :new, :create, :edit_multiple, :update_multiple, :check_for_updates, :index_shared, :import_shared, :import_multiple_shared].include?(action)
       @package = Package.new(:unit_id => current_unit.id)
     elsif [:download].include?(action)      
-      @package = Package.find(params[:id])
+      @package = Package.find(params[:id].to_i)
     elsif [:environment_change].include?(action)      
       @package = Package.find(params[:package_id])
     else
