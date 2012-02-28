@@ -32,5 +32,4 @@ Munki::Application.configure do
 
   # Enable threaded mode
   # config.threadsafe!
-  config.action_dispatch.x_sendfile_header = "X-Sendfile"
 end
