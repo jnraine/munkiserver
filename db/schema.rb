@@ -26,10 +26,10 @@ ActiveRecord::Schema.define(:version => 20111210185512) do
     t.text     "description"
     t.integer  "unit_id"
     t.integer  "environment_id"
-    t.text     "raw_tags"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "shortname"
+    t.text     "raw_tags"
     t.text     "raw_mode"
   end
 
@@ -47,11 +47,11 @@ ActiveRecord::Schema.define(:version => 20111210185512) do
     t.text     "description"
     t.integer  "unit_id"
     t.integer  "environment_id"
-    t.text     "raw_tags"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "configuration_id"
     t.string   "shortname"
+    t.text     "raw_tags"
     t.text     "raw_mode"
   end
 
@@ -72,12 +72,12 @@ ActiveRecord::Schema.define(:version => 20111210185512) do
     t.integer  "computer_group_id"
     t.integer  "unit_id"
     t.integer  "environment_id"
-    t.text     "raw_tags"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "hostname",             :default => ""
     t.integer  "configuration_id"
     t.string   "shortname"
+    t.text     "raw_tags"
     t.datetime "last_report_at"
     t.text     "raw_mode"
   end
