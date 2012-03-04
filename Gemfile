@@ -13,7 +13,6 @@ gem "plist"
 gem "cancan"
 gem "highline"
 gem "newrelic_rpm"
-gem "blueprint-rails"
 gem "highcharts-rails", "~> 2.1.9"
 # gem "dynamic_form" # enabling this should allow the removal of vendor/dynamic_form
 
