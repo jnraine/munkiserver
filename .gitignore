@@ -12,3 +12,5 @@ log/*.log
 tmp/**/*
 tmp/
 .sass-cache/
+
+.rvmrc
