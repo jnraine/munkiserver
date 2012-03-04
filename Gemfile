@@ -14,7 +14,7 @@ gem "cancan"
 gem "highline"
 gem "newrelic_rpm"
 gem "highcharts-rails", "~> 2.1.9"
-# gem "dynamic_form" # enabling this should allow the removal of vendor/dynamic_form
+gem "dynamic_form" # enabling this should allow the removal of vendor/dynamic_form
 
 group :development do
   # gem "ruby-debug19" , :require => "ruby-debug"
