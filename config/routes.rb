@@ -20,7 +20,7 @@ Munki::Application.routes.draw do
   match ':id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
   match 'computers/:id.plist', :controller => 'computers', :action => 'show', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
   
-  match 'catalogs/:unit_id-:environment_name.plist' => 'catalogs#show', :format => 'plist'
+  match 'catalogs/:unit_environment' => 'catalogs#show', :format => 'plist', :via => :get
   match 'pkgs/:id' => 'packages#download', :as => 'download_package', :id => /[A-Za-z0-9_\-\.%]+/
   match '/configuration/:id.plist', :controller => 'computers', :action => 'show', :format => 'client_prefs', :id => /[A-Za-z0-9_\-\.:]+/
   

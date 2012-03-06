@@ -4,6 +4,8 @@ source 'http://gemcutter.org'
 
 gem "rails", "3.2"
 gem "sqlite3-ruby", :require => "sqlite3"
+gem "execjs"
+gem "therubyracer"
 gem 'will_paginate', '~> 3.0' # version added for rails 3 compatibility
 gem "nokogiri"
 gem "paperclip"
