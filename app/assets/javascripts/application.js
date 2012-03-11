@@ -11,6 +11,7 @@
 *= require codemirror/clike
 *= require codemirror/xml
 *= require overlay.js
+*= require highcharts
 *= require_self
 *= */
 

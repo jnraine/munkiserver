@@ -2,7 +2,7 @@
 source 'http://gemcutter.org'
 
 
-gem "rails", "3.2"
+gem "rails", "3.2.2"
 gem "sqlite3-ruby", :require => "sqlite3"
 gem "execjs"
 gem "therubyracer"
