@@ -20,7 +20,10 @@ module Munki
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-        
+
+    # Add additional asset pipeline paths
+    config.assets.paths << Rails.root.join("app", "assets", "paperclip")
+
     # Load server configuration YAML file
     settings = nil
     begin
