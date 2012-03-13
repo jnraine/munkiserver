@@ -8,6 +8,7 @@ app/assets/paperclip
 !app/views/packages
 gem.old
 public/icons
+public/assets
 db/*.sqlite3*
 log/*.log
 tmp/**/*
