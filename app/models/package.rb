@@ -21,10 +21,10 @@ class Package < ActiveRecord::Base
   has_many :user_uninstall_items, :dependent => :destroy
   has_many :user_allowed_items, :dependent => :destroy
   
-  serialize :installs
-  serialize :receipts
+  serialize :installs, Array
+  serialize :receipts, Array
   serialize :supported_architectures, Array
-  serialize :raw_tags
+  serialize :raw_tags, Hash
 
   after_initialize :init
   
@@ -83,13 +83,6 @@ class Package < ActiveRecord::Base
       relation = relation.where(:version => params[:version]) if params[:version].present?
       relation.first
     end
-  end
-
-  # Initialize serialized data
-  def init
-    self.receipts ||= [].to_yaml
-    self.installs ||= [].to_yaml
-    self.raw_tags ||= {}.to_yaml
   end
 
   # An hash of params to be used for linking to a package instance
@@ -781,6 +774,13 @@ class Package < ActiveRecord::Base
   end
 
   private
+    # Initialize serialized data
+    def init
+      self.receipts ||= Array.new
+      self.installs ||= Array.new
+      self.raw_tags ||= Hash.new
+    end
+
     # Run makepkginfo on server against package file to generate a pkginfo
     def self.process_package_file(package_file,options = {})
       if Munki::Application::MUNKI_TOOLS_AVAILABLE and options[:pkginfo_file].nil?
