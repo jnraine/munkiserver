@@ -87,9 +87,9 @@ class Package < ActiveRecord::Base
 
   # Initialize serialized data
   def init
-    self.receipts ||= [].to_yaml
-    self.installs ||= [].to_yaml
-    self.raw_tags ||= {}.to_yaml
+    self.receipts ||= []
+    self.installs ||= []
+    self.raw_tags ||= {}
   end
 
   # An hash of params to be used for linking to a package instance
