@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
       # Let them pass
     else
       flash[:warning] = "You must be logged in to view that page"
-      redirect_to login_path(:redirect => request.request_uri)
+      redirect_to login_path(:redirect => request.url)
     end
   end
   
