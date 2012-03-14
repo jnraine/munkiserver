@@ -3,7 +3,6 @@ config/settings.yaml
 config/database.yml
 *.DS_Store
 packages/
-app/assets/paperclip
 # Don't ignore app/views/packages
 !app/views/packages
 gem.old
