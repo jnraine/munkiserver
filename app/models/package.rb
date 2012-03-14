@@ -219,12 +219,14 @@ class Package < ActiveRecord::Base
   # Virutal attribute getter
   # Converts raw_tags hash into plist
   def raw_tags_plist
+logger.debug "DEBUG raw_tags_plist GET #{plist_virtual_attribute_get(:raw_tags)}"
     plist_virtual_attribute_get(:raw_tags)
   end
   
   # Setter for the raw_tags attribute. Converts the plist string value to
   # a ruby object and assigns it to the attribute. Takes a raw plist string.
   def raw_tags_plist=(value)
+logger.debug "DEBUG raw_tags_plist SET #{value}"
     begin
       obj = value.from_plist
       yaml = obj.to_yaml
@@ -233,6 +235,7 @@ class Package < ActiveRecord::Base
     rescue NoMethodError
       yaml = value.to_yaml
     end
+logger.debug "DEBUG yaml write #{yaml}"
     write_attribute(:raw_tags,yaml) unless yaml.nil?
     yaml
   end

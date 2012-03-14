@@ -30,11 +30,13 @@ class PackagesController < ApplicationController
 
   def update
     respond_to do |format|
+#raise Exception.new(params)
       if @package.update_attributes(params[:package])
         flash[:notice] = "Package was successfully updated."
         format.html { redirect_to package_path(@package.to_params) }
         format.xml { head :ok }
       else
+#binding.pry
         flash[:error] = "Could not update package!"
         format.html { render :action => "edit" }
         format.xml { render :xml => @package.errors, :status => :unprocessable_entity }
