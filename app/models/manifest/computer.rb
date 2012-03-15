@@ -212,7 +212,7 @@ class Computer < ActiveRecord::Base
   # Bulk update
   def self.bulk_update_attributes(computers,computer_attributes)
     if computer_attributes.nil? or computers.empty? 
-      raise ComputerError.new ("Nothing to update")
+      raise ComputerError.new("Nothing to update")
     else
       computers.each do |c|
         c.update_attributes(computer_attributes)
