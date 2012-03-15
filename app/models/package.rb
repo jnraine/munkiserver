@@ -755,7 +755,7 @@ class Package < ActiveRecord::Base
   # Update multiple attributes
   def self.bulk_update_attributes(packages,package_attributes)
     if package_attributes.nil? or packages.empty?
-      raise PackageError.new ("Nothing to update")
+      raise PackageError.new("Nothing to update")
     else
       results = packages.map do |p|
         p.update_attributes(package_attributes)
