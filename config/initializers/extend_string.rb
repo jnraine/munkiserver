@@ -1,3 +1,4 @@
+require 'iconv' unless RUBY_VERSION =~ /^1\.9/
 class String
   def each(&block)
     self.each_line(&block)
