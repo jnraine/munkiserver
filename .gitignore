@@ -6,7 +6,7 @@ packages/
 # Don't ignore app/views/packages
 !app/views/packages
 gem.old
-public/icons
+public/system
 public/assets
 db/*.sqlite3*
 log/*.log
