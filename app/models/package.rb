@@ -205,14 +205,7 @@ class Package < ActiveRecord::Base
   def installs_plist=(value)
     plist_virtual_attribute_set(:installs,value)
   end
-
-  # For deserialization of raw_tags
-  def raw_tags
-#    if self["raw_tags"].class == "String"
-      self["raw_tags"].from_yaml
-#    end
-  end
-
+  
   # Virutal attribute getter
   # Converts raw_tags hash into plist
   def raw_tags_plist
