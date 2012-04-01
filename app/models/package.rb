@@ -27,7 +27,7 @@ class Package < ActiveRecord::Base
   serialize :raw_tags
   serialize :installer_choices_xml
   
-  scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u) }
+  scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u).order("created_at DESC") }
   scope :shared, where(:shared => true)
   scope :from_other_unit, lambda {|p| where("unit_id != ?", p.unit_id)}
   scope :has_greater_version, lambda {|p| where("version > ?", p.version)}
@@ -121,7 +121,7 @@ class Package < ActiveRecord::Base
   
   # Recent items from other units that are shared
   def self.shared_recent(unit, time = 7.days.ago)
-    shared_to_unit(unit).where("created_at > ?", time)
+    shared_to_unit(unit).where("created_at > ?", time).order("created_at DESC")
   end
   
   # Returns array of packages shared to this unit that have been imported.  This is determined by
