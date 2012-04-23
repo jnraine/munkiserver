@@ -88,10 +88,11 @@ class User < ActiveRecord::Base
     if is_root?
       Unit.all
     else
-      Unit.all(:joins => "INNER JOIN permissions ON permissions.unit_id = units.id", 
-               :conditions => ["(permissions.principal_id = ? AND permissions.principal_type = ?) OR
-                                (permissions.principal_id IN (?) AND permissions.principal_type = ?)",
-                                id, self.class.to_s, group_ids.join(", "), "UserGroup"]).uniq
+      scope = Unit.scoped
+      scope = scope.joins("INNER JOIN permissions ON permissions.unit_id = units.id")
+      scope = scope.where("(permissions.principal_id = ? AND permissions.principal_type = 'User')
+        OR (permissions.principal_id IN (?) AND permissions.principal_type = 'UserGroup')", 
+        id, group_ids).uniq   
     end
   end
   
