@@ -752,6 +752,10 @@ class Package < ActiveRecord::Base
     "#{id}-#{to_s(:download_filename)}"
   end
   
+  def name_version
+    "#{package_branch.name}-#{version}"
+  end
+  
   # Update multiple attributes
   def self.bulk_update_attributes(packages,package_attributes)
     if package_attributes.nil? or packages.empty?

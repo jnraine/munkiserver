@@ -24,8 +24,18 @@
 			<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
 		<% end %>
 	<% else %>
-	<%= form_tag edit_multiple_packages_path, :method => :get, :id => "bulk_edit_form", :remote => true do %>
-		<p><%= record_count(@packages) %><%= submit_tag "Edit Selection", :id => "bulk_edit" %></p>	
+	<%= form_tag batch_action_packages_path, :method => :get, :id => "package_batch_action", :remote => true do %>
+		<%= record_count(@packages) %>
+		<div id="batch_actions">
+		  <%= link_to content_tag(:span, "Batch Actions"), "#batch_action_popover", :id => "batch_action_button", :class => "dropdown button" %>
+		  <div id="batch_actions_dropdown" class="dropdown-menu batch_action_menu">
+		    <div id="batch_actions_list">
+          <%= link_to "Edit Selection", "#", { :remote => true, :class => "batch_action", :id => "edit" } %>
+          <%= link_to "Delete Selection", "#", { :remote => true, :class => "batch_action", :id => "delete" } %>
+        </div>
+      </div>
+    </div>
 		<%= package_table(@packages) %>
 	<% end %>
+
 <% end %>

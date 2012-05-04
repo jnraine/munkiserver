@@ -117,9 +117,10 @@ a:hover {
 
 /* Computer Table */
 #bulk_edit{
-	float: right;
-	display:inline;
+       float: right;
+       display:inline;
 }
+
 /* Sticky footer */
 
 * {
@@ -184,6 +185,17 @@ input:disabled {
 	color:#666;
 }
 
+a.button {
+  color: #FFF;
+}
+
+a.button.disabled {
+  color: #666;
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
 label {
 	cursor:pointer;
 }
@@ -211,6 +223,16 @@ textarea {
 }
 .record_header_text p {
 	margin:0em;
+}
+
+/* Package index */
+#batch_action_button {
+	float: right;
+	display:inline;
+}
+
+#batch_action_delete_packages table td {
+  text-align: center;
 }
 
 /* Package picker */

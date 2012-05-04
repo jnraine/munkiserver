@@ -1,0 +1,25 @@
+<div id="batch_action_delete_packages">
+<h2>Confirm Deletion of <%= @packages.count %> Packages</h2>
+<%= form_for(@packages, :url => destroy_multiple_packages_path, :html => { :method => :delete })  do |f| %>
+	<%= f.error_messages %>
+	<% @packages.each do |p| %>
+		<%= hidden_field_tag "selected_records[]", p.id %>
+	<% end %>
+	 <p><em>Are you sure you want to delete the packages listed below?</em></p>
+	<table>
+	  <% @packages.each_with_index do |p,i| %>
+  		<tr>
+  			<td>
+				    <%= "#{i+1}. #{p.name_version}" %>
+  			</td>
+  		</tr>
+  	<% end %>
+  	<tr>
+			<td>
+				<%= f.submit "Delete" %>
+				<a href="#" class="cancel">Cancel</a>
+			</td>
+		</tr>
+	</table>
+<% end %>
+</div>
