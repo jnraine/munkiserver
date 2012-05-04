@@ -109,10 +109,10 @@ class Package < ActiveRecord::Base
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)
     # Installer item locations from unit
-    installer_item_locations = Package.where("unit_id == #{unit.id}").map(&:installer_item_location)
+    installer_item_locations = Package.where(:unit_id => unit.id).map(&:installer_item_location)
     # Packages shared from other units
     # TO-DO at the time of writing this there didn't seem to be a nice way to complete "NOT IN" sql statement so I hand coded it...possible sql injection security hole
-    packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN (#{installer_item_locations.map {|e| "'#{e}'"}.join(",")})")
+    packages = Package.shared.where("unit_id != ?", unit.id).where("installer_item_location NOT IN (#{installer_item_locations.map {|e| "'#{e}'"}.join(",")})")
     # Delete packages that refer to an installer item used by another package in unit
     # packages.delete_if {|p| installer_item_locations.include?(p.installer_item_location)}
 
@@ -127,9 +127,9 @@ class Package < ActiveRecord::Base
   # installer_item_location value
   def self.shared_to_unit_and_imported(unit)
     # Installer item locations from unit
-    installer_item_locations = Package.where("unit_id == #{unit.id}").map(&:installer_item_location)
+    installer_item_locations = Package.where(:unit_id => unit.id).map(&:installer_item_location)
     # Packages shared from other units
-    Package.shared.where("unit_id != #{unit.id}").where(:installer_item_location => installer_item_locations)
+    Package.shared.where("unit_id != ?",unit.id).where(:installer_item_location => installer_item_locations)
   end
   
   # Virtual attribute for accessing the associated package
