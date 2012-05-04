@@ -246,12 +246,21 @@ $(document).ready(function() {
 		e.hide().show('slide', {direction: "left", easing: "easeOutBounce"}, 500);
 	  }
 	}
-	
+
+  // Uses the link's 'id' attribute and creates hidden field with that value
+  // To pass to the batch_action controller action
+	$(".batch_action").click(function() {
+	  var action = $('<input>').attr('type','hidden').attr('name','batch_action').val($(this).attr('id'));
+	  $(this).closest('form').append($(action));
+	  $(this).closest('form').submit();
+	  return false;
+	});
+
 	initializeBulkEdit();
 	// uncheck the .select_all checkbox when one or more checkbox is not selected
-	$(".bulk_edit_checkbox").change(function(){
-	var totalCheckboxes = $(this).parents("table").find(".bulk_edit_checkbox").length;
-	var totalChecked = $(this).parents("table").find(".bulk_edit_checkbox:checked").length;
+	$(".batch_action_checkbox").change(function(){
+	var totalCheckboxes = $(this).parents("table").find(".batch_action_checkbox").length;
+	var totalChecked = $(this).parents("table").find(".batch_action_checkbox:checked").length;
 	selectAll = $(this).parents("table").find(".select_all");
 		if (totalCheckboxes != totalChecked) {
 			selectAll.attr("checked", false);
@@ -578,19 +587,22 @@ function initalizeLightBoxMe(){
 // uncheck all the checkbox and hide the submit button
 function initializeBulkEdit() {
 	
-	$("#bulk_edit").attr("disabled",true);
+	$("#batch_action_button").attr("disabled",true);
+	$("#batch_action_button").addClass("disabled");
 	
 	$(".select_all").change(function() {
 	    // select all enabled checkboxes
 		$(this).parents("table").find(":checkbox:enabled").attr("checked",$(this).attr("checked"));
 	});
 	
-	// show bulk edit button when 2 or more checkbox is selected
+	// show batch_action button when 2 or more checkbox is selected
 	$(":checkbox").change(function(){
-		if ($(".bulk_edit_checkbox:checked").length > 0) {
-			$("#bulk_edit").attr("disabled",false);
+		if ($(".batch_action_checkbox:checked").length > 0) {
+			$("#batch_action_button").attr("disabled",false);
+      $("#batch_action_button").removeClass("disabled");
 		} else{
-			$("#bulk_edit").attr("disabled",true);
+			$("#batch_action_button").attr("disabled",true);
+      $("#batch_action_button").addClass("disabled");
 		}
 	});
 	$(":checkbox").change();

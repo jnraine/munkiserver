@@ -1,23 +1,25 @@
 <% item_list.each do |item| %>
-	<div class="packageListItem">
-		<% if target.respond_to?(:installed?) and target.installed?(item.package) %>
-			<span class="installed-mark">&nbsp;&#10003;</span>
-		<% else %>
-			<span class="not-installed-mark">&nbsp;&#10003;</span>
-		<% end %>
-		<%= image_tag item.package.icon.url(:tiny) if item.package.icon %>
-		<% if item.package_id.blank? %>
-			<% if can? :read, item.package %>
-				<span><%= link_to item.package, package_path(item.package.to_params) %></span>
-			<% else %>
-				<span><%= item.package %></span>	  
-			<% end %>
-		<% else %>
-			<% if can? :read, item.package %>
-				<span><%= link_to item.package.to_s(:pretty_with_version), package_path(item.package.to_params) %></span>
-			<% else %>
-				<span><%= item.package.to_s(:pretty_with_version) %></span>	  
-			<% end %>
-		<% end %>
-	</div>
+  <% if item.package.present? %>
+  	<div class="packageListItem">
+  		<% if target.respond_to?(:installed?) and target.installed?(item.package) %>
+  			<span class="installed-mark">&nbsp;&#10003;</span>
+  		<% else %>
+  			<span class="not-installed-mark">&nbsp;&#10003;</span>
+  		<% end %>
+  		<%= image_tag item.package.icon.url(:tiny) if item.package.icon.present? %>
+  		<% if item.package_id.blank? %>
+  			<% if can? :read, item.package %>
+  				<span><%= link_to item.package, package_path(item.package.to_params) %></span>
+  			<% else %>
+  				<span><%= item.package %></span>	  
+  			<% end %>
+  		<% else %>
+  			<% if can? :read, item.package %>
+  				<span><%= link_to item.package.to_s(:pretty_with_version), package_path(item.package.to_params) %></span>
+  			<% else %>
+  				<span><%= item.package.to_s(:pretty_with_version) %></span>	  
+  			<% end %>
+  		<% end %>
+  	</div>
+	<% end %>
 <% end %>

@@ -64,7 +64,7 @@
 				<td><strong>Package size</strong></td>
 				<td><%= humanize_kilobytes(@package.installer_item_size) %></td>
 			</tr>
-			<% if !@package.installer_item_size == 0 or @package.installer_item_size < 0 %>
+			<% if @package.has_installer_item_size? %>
 				<tr>
 					<td><strong>Installed size</strong> </td>
 					<td><%= humanize_kilobytes(@package.installed_size) %></td>

@@ -94,7 +94,8 @@ class VersionTracker < ActiveRecord::Base
       # In case our web site is malformed, let's catch the errors
       begin
         # Grab the icon image
-        icon_url = info_doc.at_css("#appiconinfo")[:src]
+        icon_image_tag = info_doc.at_css("#appiconinfo")
+        icon_url = icon_image_tag[:src] if icon_image_tag.present?
         # Grab all the download links available
         get_download_links(info_doc)
         latest_version = nil
@@ -115,7 +116,7 @@ class VersionTracker < ActiveRecord::Base
       
       # If package doesn't have an icon then scrape the icon from macupdate.com
       if self.icon.nil? or new_web_id
-        self.icon = scrape_icon(icon_url)
+        self.icon = scrape_icon(icon_url) unless icon_url.blank?
       end
       # Strip down any white speace before and after the description string
       self.description = description.lstrip.rstrip
@@ -139,7 +140,7 @@ class VersionTracker < ActiveRecord::Base
     if f.instance_of?(StringIO)
       image_data = f
       f = Tempfile.new(original_filename)
-      f.write(image_data.string.force_encoding("UTF-8"))
+      f.write(image_data.string.to_utf8)
     end
     # Temp stuff
     tmp_dir = Pathname.new(File.dirname(f.path))

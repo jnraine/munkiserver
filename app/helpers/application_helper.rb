@@ -227,7 +227,7 @@ module ApplicationHelper
   # Should be refactored to be more efficient
   def unit_link(unit, controller)
     raise ArgumentError.new("Unit passed to unit_link method was nil") if unit.nil?
-    known = {"computers" => Computer,"packages" => Package,"computer_groups" => ComputerGroup,"bundles" => Bundle,"shared_packages" => Package,"user_groups" => UserGroup, "permissions" => Permission}
+    known = known_controllers
     controller = known.keys.first unless known.keys.include?(controller)
     authorized = false
     # Try to authorize for a specific controller ahead of time
@@ -238,8 +238,22 @@ module ApplicationHelper
         controller = known.keys.first
       end
     end
-    raise RuntimException.new("#{current_user} does is not authorized to any read actions within the known controllers!") if not authorized
+    raise RuntimeError.new("#{current_user} does is not authorized to any read actions within the known controllers!") if not authorized
     {:controller => controller, :action => :index, :unit_shortname => unit.to_param}
+  end
+  
+  # 
+  # A hash of controller names and their corresponding model constants.  Using OrderedHash to maintain Ruby 1.8 support
+  # 
+  def known_controllers
+    h = ActiveSupport::OrderedHash.new
+    h["computers"] = Computer
+    h["packages"] = Package
+    h["computer_groups"] = ComputerGroup
+    h["shared_packages"] = Package
+    h["user_groups"] = UserGroup
+    h["permissions"] = Permission
+    h
   end
   
   # Return a macupdate.com URL for the given package
@@ -249,5 +263,9 @@ module ApplicationHelper
   
   def principal_list_item(principal, opts={})
     render :partial => 'shared/principal_list_item', :locals => {:principal => principal, :disabled => opts[:disabled]}
+  end
+  
+  def js_redirect_to(path)
+    render js: %(window.location.pathname='#{path}') and return
   end
 end

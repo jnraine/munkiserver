@@ -202,7 +202,7 @@ class Computer < ActiveRecord::Base
     i = 0
     formatted = []
     while(i < 12 and i < value.length) do
-      formatted << value[i]
+      formatted << value[i,1]
       formatted << ":" if i.odd? and i != 11
       i += 1
     end
@@ -212,7 +212,7 @@ class Computer < ActiveRecord::Base
   # Bulk update
   def self.bulk_update_attributes(computers,computer_attributes)
     if computer_attributes.nil? or computers.empty? 
-      raise ComputerError.new ("Nothing to update")
+      raise ComputerError.new("Nothing to update")
     else
       computers.each do |c|
         c.update_attributes(computer_attributes)

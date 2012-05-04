@@ -117,9 +117,10 @@ a:hover {
 
 /* Computer Table */
 #bulk_edit{
-	float: right;
-	display:inline;
+       float: right;
+       display:inline;
 }
+
 /* Sticky footer */
 
 * {
@@ -184,6 +185,17 @@ input:disabled {
 	color:#666;
 }
 
+a.button {
+  color: #FFF;
+}
+
+a.button.disabled {
+  color: #666;
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
 label {
 	cursor:pointer;
 }
@@ -211,6 +223,16 @@ textarea {
 }
 .record_header_text p {
 	margin:0em;
+}
+
+/* Package index */
+#batch_action_button {
+	float: right;
+	display:inline;
+}
+
+#batch_action_delete_packages table td {
+  text-align: center;
 }
 
 /* Package picker */
@@ -464,7 +486,7 @@ thead th a:hover,
 	display: inline;
 }
 
-#lightbox_target, #effectiveItems{
+#lightbox_target, #effectiveItems {
 	text-align: center;
 	-moz-border-radius: 6px;
     background: #eef2f7;
@@ -473,7 +495,7 @@ thead th a:hover,
     -webkit-box-shadow: rgba(0,0,0,.6) 0px 2px 12px;
     -moz-box-shadow:  rgba(0,0,0,.6) 0px 2px 12px;;
     padding: 14px 22px;
-    width: 500px;
+    width: 600px;
     position: relative;
     display: none;
 }

@@ -25,8 +25,9 @@ class Package < ActiveRecord::Base
   serialize :receipts
   serialize :supported_architectures, Array
   serialize :raw_tags
+  serialize :installer_choices_xml
   
-  scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u.id) }
+  scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u).order("created_at DESC") }
   scope :shared, where(:shared => true)
   scope :from_other_unit, lambda {|p| where("unit_id != ?", p.unit_id)}
   scope :has_greater_version, lambda {|p| where("version > ?", p.version)}
@@ -120,7 +121,7 @@ class Package < ActiveRecord::Base
   
   # Recent items from other units that are shared
   def self.shared_recent(unit, time = 7.days.ago)
-    shared_to_unit(unit).where("created_at > ?", time)
+    shared_to_unit(unit).where("created_at > ?", time).order("created_at DESC")
   end
   
   # Returns array of packages shared to this unit that have been imported.  This is determined by
@@ -594,7 +595,7 @@ class Package < ActiveRecord::Base
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
               :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method, :unattended_install, :unattended_uninstall,
               :preinstall_script, :postinstall_script, :uninstall_script, :preuninstall_script, :postuninstall_script,
-              :requires,:update_for,:catalogs,:version, :force_install_after_date]
+              :requires,:update_for,:catalogs,:version, :force_install_after_date, :installer_choices_xml]
        
       keys.each do |key|
         h[key.to_s] = self.send(key) if self.send(key).present?
@@ -743,10 +744,14 @@ class Package < ActiveRecord::Base
     "#{id}-#{to_s(:download_filename)}"
   end
   
+  def name_version
+    "#{package_branch.name}-#{version}"
+  end
+  
   # Update multiple attributes
   def self.bulk_update_attributes(packages,package_attributes)
     if package_attributes.nil? or packages.empty?
-      raise PackageError.new ("Nothing to update")
+      raise PackageError.new("Nothing to update")
     else
       results = packages.map do |p|
         p.update_attributes(package_attributes)
@@ -760,6 +765,10 @@ class Package < ActiveRecord::Base
   
   def self.has_required_package?(package)
     RequireItem.where(:package_id => package.id).first.present?
+  end
+  
+  def has_installer_item_size?
+    installer_item_size != nil and installer_item_size > 0
   end
 
   private
@@ -812,9 +821,9 @@ class Package < ActiveRecord::Base
     
       # Parse plist
       begin
-        pkginfo_hash = Plist.parse_xml(pkginfo_file.read)
-      rescue RuntimeError => e
-        raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml raised RuntimeError: #{e}")
+        pkginfo_hash = Plist.parse_xml(pkginfo_file.read.to_utf8)
+      rescue Exception => e
+        raise PackageError.new("Unable to parse pkginfo file -- Plist.parse_xml raised an exception: #{e}")
       end
     
       # Make sure pkginfo_hash isn't nil
@@ -876,7 +885,7 @@ class Package < ActiveRecord::Base
       # Ensure the installer_item_location is correct
       package.installer_item_location = File.basename(package_file.path)
       # Ensure the hash is correct
-      package.add_raw_tag("installer_item_hash",Digest::SHA256.file(package_file).hexdigest)
+      package.add_raw_tag("installer_item_hash",Digest::SHA256.file(package_file.path).hexdigest)
       # Apply munkiserver attributes
       package = self.apply_special_attributes(package,options[:special_attributes])
       # Apply attributes from existing version in the same unit
@@ -926,6 +935,7 @@ class Package < ActiveRecord::Base
       # Move tmp_file to the package store
       begin
         FileUtils.mv package_file.tempfile.path, destination_path
+        FileUtils.chmod 0644, destination_path
       rescue Errno::EACCES => e
         raise PackageError.new("Unable to write to package store")
       end

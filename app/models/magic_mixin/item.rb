@@ -32,6 +32,18 @@ module Item
         static_options + dynamic_options
       end
       
+      def self.destroy_stale_records
+        Rails.logger.info "Destroying #{self.to_s} records with nil package reference..."
+        records_with_nil_packages.map do |item|
+          Rails.logger.info "Destroying item.inspect"
+          item.destroy
+        end
+      end
+      
+      def self.records_with_nil_packages
+        self.all.delete_if {|item| item.present? }
+      end
+      
       # ===================
       # = Code ends here! =
       # ===================
