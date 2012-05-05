@@ -12,6 +12,7 @@
 *= require codemirror/xml
 *= require overlay.js
 *= require highcharts
+*= require jquery.dropdown
 *= require_self
 *= */
 
