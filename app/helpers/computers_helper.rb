@@ -10,8 +10,8 @@ module ComputersHelper
 
   # Prints a computer table listing
   # Is paginated by default using will_paginate.  Pass false to disable.
-  def computer_table(computers, paginate = true, bulk_edit = true)
-    render :partial => 'computers/computer_table', :locals => {:computers => computers, :paginate => paginate, :bulk_edit => bulk_edit}
+  def computer_table(computers, paginate = true, batch_actions = true)
+    render :partial => 'computers/computer_table', :locals => {:computers => computers, :paginate => paginate, :batch_actions => batch_actions}
   end
 
 	def computer_group_links

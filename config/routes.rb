@@ -34,9 +34,12 @@ Munki::Application.routes.draw do
       get 'update_warranty', :action => "update_warranty", :as => 'update_warranty'
       
       collection do
+        get :batch_action
         post :create_import#, :force_redirect
         put :update_multiple
         get :edit_multiple
+        get :delete_multiple
+        delete :destroy_multiple
       end
     end
     

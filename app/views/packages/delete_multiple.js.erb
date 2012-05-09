@@ -1,2 +1,2 @@
-$('<div id="lightbox_target"></div>').appendTo("body").html("<%= escape_javascript(render("delete_multiple")) %>");
+$('<div id="lightbox_target"></div>').appendTo("body").html("<%= escape_javascript(render("shared/delete_multiple", :objects => @packages, :name_attr => "name_version")) %>");
 initalizeLightBoxMe();

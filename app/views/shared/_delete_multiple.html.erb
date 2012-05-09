@@ -1,0 +1,26 @@
+<% name_attr ||= "name" %>
+<div class="batch_action_delete">
+<h2>Confirm Deletion of <%= objects.count %> <%= controller.controller_name.titleize %></h2>
+<%= form_for(objects, :url => polymorphic_path(controller.controller_name, :action => :destroy_multiple), :html => { :method => :delete })  do |f| %>
+	<%= f.error_messages %>
+	<% objects.each do |o| %>
+		<%= hidden_field_tag "selected_records[]", o.id %>
+	<% end %>
+	 <p><em>Are you sure you want to delete the <%= controller.controller_name %> listed below?</em></p>
+	<table>
+	  <% objects.each_with_index do |o,i| %>
+  		<tr>
+  			<td>
+				    <%= "#{i+1}. #{o.send("#{name_attr}")}" %>
+  			</td>
+  		</tr>
+  	<% end %>
+  	<tr>
+			<td>
+				<%= f.submit "Delete" %>
+				<a href="#" class="cancel">Cancel</a>
+			</td>
+		</tr>
+	</table>
+<% end %>
+</div>
