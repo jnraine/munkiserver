@@ -1,7 +1,7 @@
 //Source: http://davidwalsh.name/twitter-dropdown-jquery
 $(document).ready(function() {
 	/* for keeping track of what's "open" */
-	var activeClass = 'dropdown-active', showingDropdown, showingMenu, showingParent;
+	var activeClass = 'action-active', showingDropdown, showingMenu, showingParent;
 	/* hides the current menu */
 	var hideMenu = function() {
 		if(showingDropdown) {
@@ -11,14 +11,14 @@ $(document).ready(function() {
 	};
 	
 	/* recurse through dropdown menus */
-	$('.dropdown').each(function() {
+	$('.batch_action_dropdown').each(function() {
 		/* track elements: menu, parent */
 		var dropdown = $(this);
-		var menu = dropdown.next('div.dropdown-menu'), parent = dropdown.parent();
+		var menu = dropdown.next('div.batch_actions_menu'), parent = dropdown.parent();
 		/* function that shows THIS menu */
 		var showMenu = function() {
 			hideMenu();
-			showingDropdown = dropdown.addClass('dropdown-active');
+			showingDropdown = dropdown.addClass('action-active');
 			showingMenu = menu.show();
 			showingParent = parent;
 		};
