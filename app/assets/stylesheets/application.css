@@ -11,6 +11,6 @@
 *= require codemirror/codemirror
 *= require codemirror/clike
 *= require codemirror/xml
-*= require jquery.batchAction
+*= require batch_actions
 *= require style
 */

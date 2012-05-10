@@ -12,7 +12,7 @@
 *= require codemirror/xml
 *= require overlay.js
 *= require highcharts
-*= require jquery.batchAction.js
+*= require batch_actions
 *= require_self
 *= */
 
@@ -257,7 +257,7 @@ $(document).ready(function() {
 	  return false;
 	});
 
-	initializeBulkEdit();
+	initializeBatchActions();
 	// uncheck the .select_all checkbox when one or more checkbox is not selected
 	$(".batch_action_checkbox").change(function(){
 	var totalCheckboxes = $(this).parents("table").find(".batch_action_checkbox").length;
@@ -586,7 +586,7 @@ function initalizeLightBoxMe(){
 			onLoad: selectToEdit() });	
 }
 // uncheck all the checkbox and hide the submit button
-function initializeBulkEdit() {
+function initializeBatchActions() {
 	
 	$("#batch_action_button").attr("disabled",true);
 	$("#batch_action_button").addClass("disabled");
