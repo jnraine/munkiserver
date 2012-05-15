@@ -63,6 +63,7 @@ class PackagesController < ApplicationController
         format.html { redirect_to edit_package_path(@package.to_params) }
       else
         # Failure
+        @package.delete_package_file_if_necessary
         flash[:error] = "Failed to add package"
         flash[:error] = flash[:error] + ": " + exceptionMessage if exceptionMessage.present?
         format.html { render :action => "new"}
