@@ -27,6 +27,8 @@ class Package < ActiveRecord::Base
   serialize :raw_tags
   serialize :installer_choices_xml
   
+  after_initialize :init
+  
   scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u).order("created_at DESC") }
   scope :shared, where(:shared => true)
   scope :from_other_unit, lambda {|p| where("unit_id != ?", p.unit_id)}
@@ -84,6 +86,13 @@ class Package < ActiveRecord::Base
     end
   end
 
+  # Initialize serialized data
+  def init
+    self.receipts ||= []
+    self.installs ||= []
+    self.raw_tags ||= {}
+  end
+
   # An hash of params to be used for linking to a package instance
   # takes an optional params to specify the target unit
   def to_params
@@ -110,10 +119,11 @@ class Package < ActiveRecord::Base
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)
     # Installer item locations from unit
-    installer_item_locations = Package.where(:unit_id => unit).map(&:installer_item_location)
+    installer_item_locations = Package.where(:unit_id => unit.id).map(&:installer_item_location)
+    # Set Null value if no item locations yet defined as MySQL must have a value for NOT IN()
+    installer_item_locations = (installer_item_locations.map {|e| "'#{e}'"}.join(",")).nil? || "NULL"
     # Packages shared from other units
-    # TO-DO at the time of writing this there didn't seem to be a nice way to complete "NOT IN" sql statement so I hand coded it...possible sql injection security hole
-    packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN (#{installer_item_locations.map {|e| "'#{e}'"}.join(",")})")
+    packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN(#{installer_item_locations})")
     # Delete packages that refer to an installer item used by another package in unit
     # packages.delete_if {|p| installer_item_locations.include?(p.installer_item_location)}
 
@@ -128,7 +138,7 @@ class Package < ActiveRecord::Base
   # installer_item_location value
   def self.shared_to_unit_and_imported(unit)
     # Installer item locations from unit
-    installer_item_locations = Package.where("unit_id == #{unit.id}").map(&:installer_item_location)
+    installer_item_locations = Package.where(:unit_id => unit.id).map(&:installer_item_location)
     # Packages shared from other units
     Package.shared.where("unit_id != #{unit.id}").where(:installer_item_location => installer_item_locations)
   end
@@ -210,12 +220,14 @@ class Package < ActiveRecord::Base
   # Virutal attribute getter
   # Converts raw_tags hash into plist
   def raw_tags_plist
+logger.debug "DEBUG raw_tags_plist GET #{plist_virtual_attribute_get(:raw_tags)}"
     plist_virtual_attribute_get(:raw_tags)
   end
   
   # Setter for the raw_tags attribute. Converts the plist string value to
   # a ruby object and assigns it to the attribute. Takes a raw plist string.
   def raw_tags_plist=(value)
+logger.debug "DEBUG raw_tags_plist SET #{value}"
     begin
       obj = value.from_plist
       yaml = obj.to_yaml
@@ -224,6 +236,7 @@ class Package < ActiveRecord::Base
     rescue NoMethodError
       yaml = value.to_yaml
     end
+logger.debug "DEBUG yaml write #{yaml}"
     write_attribute(:raw_tags,yaml) unless yaml.nil?
     yaml
   end

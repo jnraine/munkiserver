@@ -1,3 +1,20 @@
+/*
+*= require jquery
+*= require jquery_ujs
+*= require jquery-ui
+*= require rails.validations
+*= require jquery.asmselect
+*= require jquery.autocomplete.min
+*= require jquery.lightbox_me
+*= require jquery-ui-timepicker-addon
+*= require codemirror/codemirror
+*= require codemirror/clike
+*= require codemirror/xml
+*= require overlay.js
+*= require highcharts
+*= require_self
+*= */
+
 $(document).ready(function() {
 	// Turn all multiple select tags into asmSelect tags
 	initializeAsmSelect(".asmSource");

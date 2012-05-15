@@ -7,7 +7,7 @@ class DashboardWidget
     include ActionView::Helpers::AssetTagHelper
   end
   
-  @@action_view = ActionView::Base.new(Rails.configuration.paths.app.views.first)
+  @@action_view = ActionView::Base.new(Rails.configuration.paths["app/views"])
   @@action_view.extend UrlHelpers
   @@user = nil
   

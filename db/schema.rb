@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111208121600) do
+ActiveRecord::Schema.define(:version => 20111210185512) do
 
   create_table "bundle_items", :force => true do |t|
     t.integer  "manifest_id"
@@ -26,11 +26,11 @@ ActiveRecord::Schema.define(:version => 20111208121600) do
     t.text     "description"
     t.integer  "unit_id"
     t.integer  "environment_id"
-    t.text     "raw_tags"
-    t.text     "raw_mode",       :default => "f"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "shortname"
+    t.text     "raw_tags"
+    t.text     "raw_mode"
   end
 
   create_table "client_logs", :force => true do |t|
@@ -47,12 +47,12 @@ ActiveRecord::Schema.define(:version => 20111208121600) do
     t.text     "description"
     t.integer  "unit_id"
     t.integer  "environment_id"
-    t.text     "raw_tags"
-    t.text     "raw_mode",         :default => "f"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "configuration_id"
     t.string   "shortname"
+    t.text     "raw_tags"
+    t.text     "raw_mode"
   end
 
   create_table "computer_models", :force => true do |t|
@@ -72,14 +72,14 @@ ActiveRecord::Schema.define(:version => 20111208121600) do
     t.integer  "computer_group_id"
     t.integer  "unit_id"
     t.integer  "environment_id"
-    t.text     "raw_tags"
-    t.text     "raw_mode",             :default => "f"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "hostname",             :default => ""
     t.integer  "configuration_id"
     t.string   "shortname"
+    t.text     "raw_tags"
     t.datetime "last_report_at"
+    t.text     "raw_mode"
   end
 
   create_table "configurations", :force => true do |t|
@@ -101,9 +101,9 @@ ActiveRecord::Schema.define(:version => 20111208121600) do
   create_table "environments", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.text     "environment_ids", :default => "--- []"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "environment_ids"
   end
 
   create_table "icons", :force => true do |t|
@@ -161,6 +161,30 @@ ActiveRecord::Schema.define(:version => 20111208121600) do
     t.datetime "updated_at"
   end
 
+  create_table "memberships", :force => true do |t|
+    t.integer  "unit_id"
+    t.integer  "user_id"
+    t.boolean  "create_computer",        :default => true
+    t.boolean  "read_computer",          :default => true
+    t.boolean  "edit_computer",          :default => true
+    t.boolean  "destroy_computer",       :default => true
+    t.boolean  "create_bundle",          :default => true
+    t.boolean  "read_bundle",            :default => true
+    t.boolean  "edit_bundle",            :default => true
+    t.boolean  "destroy_bundle",         :default => true
+    t.boolean  "create_computer_group",  :default => true
+    t.boolean  "read_computer_group",    :default => true
+    t.boolean  "edit_computer_group",    :default => true
+    t.boolean  "destroy_computer_group", :default => true
+    t.boolean  "create_package",         :default => true
+    t.boolean  "read_package",           :default => true
+    t.boolean  "edit_package",           :default => true
+    t.boolean  "destroy_package",        :default => true
+    t.boolean  "edit_unit",              :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "missing_manifests", :force => true do |t|
     t.string   "manifest_type"
     t.string   "identifier"
@@ -207,14 +231,11 @@ ActiveRecord::Schema.define(:version => 20111208121600) do
     t.integer  "unit_id"
     t.integer  "environment_id"
     t.integer  "package_category_id"
-    t.text     "receipts",                  :default => "--- []"
     t.text     "description"
     t.integer  "icon_id"
     t.string   "filename"
-    t.text     "supported_architectures",   :default => "--- []"
     t.text     "minimum_os_version"
     t.text     "maximum_os_version"
-    t.text     "installs",                  :default => "--- []"
     t.string   "RestartAction"
     t.string   "package_path"
     t.boolean  "autoremove",                :default => false
@@ -231,7 +252,6 @@ ActiveRecord::Schema.define(:version => 20111208121600) do
     t.integer  "uninstaller_item_size"
     t.boolean  "uninstallable",             :default => true
     t.string   "installer_item_checksum"
-    t.text     "raw_tags",                  :default => "--- {}"
     t.integer  "raw_mode_id",               :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -243,6 +263,10 @@ ActiveRecord::Schema.define(:version => 20111208121600) do
     t.boolean  "unattended_install",        :default => false
     t.boolean  "unattended_uninstall",      :default => false
     t.datetime "force_install_after_date"
+    t.text     "receipts"
+    t.text     "supported_architectures"
+    t.text     "installs"
+    t.text     "raw_tags"
   end
 
   create_table "permissions", :force => true do |t|

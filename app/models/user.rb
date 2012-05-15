@@ -88,18 +88,11 @@ class User < ActiveRecord::Base
     if is_root?
       Unit.all
     else
-      # Unit.find_by_sql("SELECT DISTINCT \'units\'.* FROM \'units\' INNER JOIN \'permissions\' ON \'units\'.id = \'permissions\'.unit_id WHERE (((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = '#{self.class.to_s}')) OR ((\'permissions\'.principal_id = #{id}) AND (\'permissions\'.principal_type = '#{self.class.to_s}')))")
-      Unit.find_by_sql("SELECT DISTINCT 'units'.* FROM 'units' 
-                        INNER JOIN 'permissions' ON 'units'.id = 'permissions'.unit_id 
-                        WHERE (
-                          (
-                            ('permissions'.principal_id = #{id}) AND ('permissions'.principal_type = '#{self.class.to_s}')
-                          )
-                          OR (
-                            ('permissions'.principal_id IN (#{group_ids.join(", ")})) AND ('permissions'.principal_type = 'UserGroup')
-                          )
-                        )
-      ")
+      scope = Unit.scoped
+      scope = scope.joins("INNER JOIN permissions ON permissions.unit_id = units.id")
+      scope = scope.where("(permissions.principal_id = ? AND permissions.principal_type = 'User')
+        OR (permissions.principal_id IN (?) AND permissions.principal_type = 'UserGroup')", 
+        id, group_ids).uniq   
     end
   end
   

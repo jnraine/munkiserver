@@ -14,7 +14,7 @@ namespace :bootstrap do
   
   desc "Intialize PackageCategory with default categories"
   task :package_categories => :environment do
-    path = Rails.root.to_s + "/public/default_icons/package_categories"
+    path = "#{Rails.root}/lib/default_icons/package_categories"
     a = [{:name => "Misc", :icon_path => "#{path}/package.png"},
          {:name => "Application", :icon_path => "#{path}/application.png"},
          {:name => "Admin", :icon_path => "#{path}/admin.png"},
@@ -42,7 +42,7 @@ namespace :bootstrap do
   
   desc "Initialize ComputerModel with Apple products"
   task :computer_models => :environment do
-    path = Rails.root.to_s + "/public/default_icons/computer_models"
+    path = "#{Rails.root}/lib/default_icons/computer_models"
     a = [{:name => "eMac",:icon_path => "#{path}/com.apple.emac.png"},
          {:name => "iBook G4 (12-inch)",:icon_path => "#{path}/com.apple.ibook-g4-12.png"},
          {:name => "iBook G4 (14-inch)",:icon_path => "#{path}/com.apple.ibook-g4-14.png"},

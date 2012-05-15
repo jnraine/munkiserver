@@ -5,19 +5,12 @@
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>Munki Server: <%= controller.action_name %></title>
-	<%= stylesheet_link_tag 'blueprint/screen.css', :media => "screen, projection" %>
-	<%= stylesheet_link_tag 'blueprint/print.css', :media => "print" %>
-	<!--[if lt IE 8]>
-	<link rel="stylesheet" href="stylesheets/blueprint/ie.css" type="text/css" media="screen, projection">
-	<![endif]-->
-	<%= stylesheet_link_tag 'jquery.asmselect', 'jquery.autocomplete', 'jqueryTabs.css' %>
-	<%= stylesheet_link_tag 'dropdown/styles.css', 'dropdown/theme.css' %>
-	<%= stylesheet_link_tag 'style', 'jquery-ui-timepicker-addon' %>
-	<%= stylesheet_link_tag 'codemirror/codemirror.css', 'codemirror/clike.css', 'codemirror/xml.css' %>
+	
+	<%= stylesheet_link_tag "application" %>
 
-	<%= javascript_include_tag "jquery.min", "jquery-ui.min", "rails.jquery", "application","jquery.asmselect", "jquery.autocomplete.min", "rails.validations", "jquery.lightbox_me", "jquery-ui-timepicker-addon"%>
-	<%= javascript_include_tag "codemirror/codemirror.js", "codemirror/clike.js", "codemirror/xml.js" %>
-	<%= javascript_include_tag "highcharts/highcharts.js" %>
+	<%= javascript_include_tag 'application' %>
+	
+	<%= content_for :head %>
 	
 	<%= csrf_meta_tag %>
 </head>
@@ -163,7 +156,6 @@
 
 <div class="footer">
 	<div class="container">
-		<!-- <%= `echo $PATH` %> -->
 		<p class="span-8 last prepend-8 append-8 text-center">
 			munki server <%= Munki::Application::VERSION %><br>
 			munki tools <%= Munki::Application::MUNKITOOLS_VERSION %>
@@ -171,11 +163,6 @@
 		
 		<%= image_tag 'footer_graphic.png', :id => "footer_graphic" %>
 	</div>
-	<script type="text/javascript">
-
-	var x = document.getElementById("site_title");
-	console.log(x.innerHTML);
-	</script>
 </div>
 </body>
 </html>
