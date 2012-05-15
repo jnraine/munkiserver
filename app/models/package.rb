@@ -123,7 +123,8 @@ class Package < ActiveRecord::Base
     # Set Null value if no item locations yet defined as MySQL must have a value for NOT IN()
     installer_item_locations = (installer_item_locations.map {|e| "'#{e}'"}.join(",")).nil? || "NULL"
     # Packages shared from other units
-    packages = Package.shared.where("unit_id != #{unit.id}").where("installer_item_location NOT IN(#{installer_item_locations})")
+    # TO-DO at the time of writing this there didn't seem to be a nice way to complete "NOT IN" sql statement so I hand coded it...possible sql injection security hole
+    packages = Package.shared.where("unit_id != ?", unit.id).where("installer_item_location NOT IN (#{installer_item_locations.map {|e| "'#{e}'"}.join(",")})")
     # Delete packages that refer to an installer item used by another package in unit
     # packages.delete_if {|p| installer_item_locations.include?(p.installer_item_location)}
 
@@ -140,7 +141,7 @@ class Package < ActiveRecord::Base
     # Installer item locations from unit
     installer_item_locations = Package.where(:unit_id => unit.id).map(&:installer_item_location)
     # Packages shared from other units
-    Package.shared.where("unit_id != #{unit.id}").where(:installer_item_location => installer_item_locations)
+    Package.shared.where("unit_id != ?",unit.id).where(:installer_item_location => installer_item_locations)
   end
   
   # Virtual attribute for accessing the associated package
@@ -216,36 +217,25 @@ class Package < ActiveRecord::Base
   def installs_plist=(value)
     plist_virtual_attribute_set(:installs,value)
   end
-  
+
   # Virutal attribute getter
   # Converts raw_tags hash into plist
   def raw_tags_plist
-logger.debug "DEBUG raw_tags_plist GET #{plist_virtual_attribute_get(:raw_tags)}"
     plist_virtual_attribute_get(:raw_tags)
   end
   
   # Setter for the raw_tags attribute. Converts the plist string value to
   # a ruby object and assigns it to the attribute. Takes a raw plist string.
   def raw_tags_plist=(value)
-logger.debug "DEBUG raw_tags_plist SET #{value}"
-    begin
-      obj = value.from_plist
-      yaml = obj.to_yaml
-    rescue TypeError
-      yaml = value.to_yaml
-    rescue NoMethodError
-      yaml = value.to_yaml
-    end
-logger.debug "DEBUG yaml write #{yaml}"
-    write_attribute(:raw_tags,yaml) unless yaml.nil?
-    yaml
+    obj = value.to_s.from_plist
+    self.raw_tags = obj
   end
   
   def add_raw_tag(key,value)
     self.raw_mode_id = 1 if no_raw?
-    raw_tags_hash = self.raw_tags
-    raw_tags_hash[key] = value
-    write_attribute(:raw_tags,raw_tags_hash)
+    h = self.raw_tags
+    h[key] = value
+    self.raw_tags = h
   end
   
   # Virtual attribute that parses the array value of a tabled asm select into package and 

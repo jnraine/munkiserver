@@ -1,6 +1,6 @@
 <div id="bulk_edit_packages">
 <h2>Bulk Edit Packages</h2>
-<% form_for(@packages, :url => edit_multiple_packages_path, :method => :put)  do |f| %>
+<%= form_for(@packages, :url => edit_multiple_packages_path, :method => :put)  do |f| %>
 	<%= f.error_messages %>
 	<% for p in @packages %>
 	<tr>
