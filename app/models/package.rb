@@ -123,7 +123,6 @@ class Package < ActiveRecord::Base
     # Set Null value if no item locations yet defined as MySQL must have a value for NOT IN()
     installer_item_locations = (installer_item_locations.map {|e| "'#{e}'"}.join(",")).nil? || "NULL"
     # Packages shared from other units
-    # TO-DO at the time of writing this there didn't seem to be a nice way to complete "NOT IN" sql statement so I hand coded it...possible sql injection security hole
     packages = Package.shared.where("unit_id != ?", unit.id).where("installer_item_location NOT IN (?)", installer_item_locations)
     # Delete packages that refer to an installer item used by another package in unit
     # packages.delete_if {|p| installer_item_locations.include?(p.installer_item_location)}
