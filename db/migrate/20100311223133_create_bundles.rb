@@ -8,7 +8,7 @@ class CreateBundles < ActiveRecord::Migration
       
       # To allow for raw text to be added
       t.text :raw_tags
-      t.text :raw_mode, :default => false
+      t.text :raw_mode
 
       t.timestamps
     end

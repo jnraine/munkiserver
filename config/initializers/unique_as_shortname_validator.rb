@@ -17,7 +17,7 @@ class UniqueAsShortnameValidator < ActiveModel::EachValidator
     
     single_result_is_not_this_record = (matching_records.count == 1 and matching_records.first.id != record.id)
     if single_result_is_not_this_record or matching_records.count > 1
-      record.errors.add_to_base "Shortname generated from #{attribute} of this record is already taken, please give another name"
+      record.errors[:base] << "Shortname generated from #{attribute} of this record is already taken, please give another name"
     end
   end
 end
