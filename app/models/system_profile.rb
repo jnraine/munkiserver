@@ -1,7 +1,7 @@
 class SystemProfile < ActiveRecord::Base
   belongs_to :computer
   
-  has_many :sp_printers
+  has_many :sp_printers, :dependent => :destroy
 
   # Include helpers
   include ActionView::Helpers
