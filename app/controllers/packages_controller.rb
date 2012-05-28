@@ -83,6 +83,18 @@ class PackagesController < ApplicationController
     end
   end
   
+  # Allows actions on multiple, user selected, items
+  def batch_action
+    case params[:batch_action]
+    when "edit"
+      redirect_to :action => :edit_multiple, :selected_records => params[:selected_records]
+    when "delete"
+      redirect_to :action => :delete_multiple, :selected_records => params[:selected_records]
+    else
+      render :nothing => true
+    end
+  end
+  
   # Allows multiple edits
   def edit_multiple
     @packages = Package.find(params[:selected_records])
@@ -114,6 +126,22 @@ class PackagesController < ApplicationController
     end
   end
   
+  # Render the delete confirmation modal window
+  def delete_multiple
+    @packages = Package.find(params[:selected_records])
+  end
+  
+  def destroy_multiple
+    @packages = Package.find(params[:selected_records])
+    @packages.each do |package|
+      package.destroy
+    end
+    flash[:notice] = "#{params[:selected_records].length} Packages were destroyed successfully"
+
+    respond_to do |format|
+      format.html { redirect_to packages_path(current_unit) }
+    end
+  end
   
   # Used to download the actual package (typically a .dmg)
   def download
@@ -200,7 +228,7 @@ class PackagesController < ApplicationController
     action = params[:action].to_sym
     if [:show, :edit, :update, :destroy].include?(action)
       @package = Package.find_where_params(params)
-    elsif [:index, :new, :create, :edit_multiple, :update_multiple, :check_for_updates, :index_shared, :import_shared, :import_multiple_shared].include?(action)
+    elsif [:index, :new, :create, :batch_action, :delete_multiple, :destroy_multiple, :edit_multiple, :update_multiple, :check_for_updates, :index_shared, :import_shared, :import_multiple_shared].include?(action)
       @package = Package.new(:unit_id => current_unit.id)
     elsif [:download].include?(action)      
       @package = Package.find(params[:id].to_i)

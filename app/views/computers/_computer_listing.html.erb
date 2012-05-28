@@ -20,7 +20,7 @@
 		<%= submit_tag "Filter", :name => nil %>
 	<% end %>
 	</div>
-	<%= form_tag edit_multiple_computers_path(current_unit), :id => "bulk_edit_form", :method => 'GET', :remote => true do %>
+	<%= form_tag batch_action_computers_path(current_unit), :id => "computer_batch_action", :method => :get, :remote => true do %>
 		<%= computer_table(@computers) %>
 	<% end %>
 </div>

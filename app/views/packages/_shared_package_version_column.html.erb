@@ -2,7 +2,7 @@
 	<% if package.shared_installer_item_location(current_unit).present? %>
 	<%= check_box_tag("selected_records[]", package.id, false, {:disabled => true})%>
 	<% else %>
-	<%= check_box_tag("selected_records[]", package.id, false, :class => "package_branch_#{package.package_branch_id} bulk_edit_checkbox") %>
+	<%= check_box_tag("selected_records[]", package.id, false, :class => "package_branch_#{package.package_branch_id} batch_action_checkbox") %>
 	<% end %>
 </td>
 <td>

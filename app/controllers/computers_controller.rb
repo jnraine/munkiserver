@@ -144,6 +144,17 @@ class ComputersController < ApplicationController
     render :text => ''
   end
   
+  # Allows actions on multiple, user selected, items
+  def batch_action
+    case params[:batch_action]
+    when "edit"
+      redirect_to :action => :edit_multiple, :selected_records => params[:selected_records]
+    when "delete"
+      redirect_to :action => :delete_multiple, :selected_records => params[:selected_records]
+    else
+      render :nothing => true
+    end
+  end
   
   # Allows multiple edits
   def edit_multiple
@@ -180,6 +191,23 @@ class ComputersController < ApplicationController
           flash[:error] = "None of the #{results.length} computer objects were updated !"
           format.html { redirect_to(:action => "index") }
         end
+    end
+  end
+  
+  # Render the delete confirmation modal window
+  def delete_multiple
+    @computers = Computer.find(params[:selected_records])
+  end
+  
+  def destroy_multiple
+    @computers = Computer.find(params[:selected_records])
+    @computers.each do |computer|
+      computer.destroy
+    end
+    flash[:notice] = "#{params[:selected_records].length} Computers were destroyed successfully"
+
+    respond_to do |format|
+      format.html { redirect_to computers_path(current_unit) }
     end
   end
   
@@ -220,7 +248,7 @@ class ComputersController < ApplicationController
       @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     elsif [:update_warranty].include?(action)      
       @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:computer_id]))
-    elsif [:index, :new, :create, :edit_multiple, :update_multiple, :import, :create_import].include?(action)      
+    elsif [:index, :new, :create, :batch_action, :delete_multiple, :destroy_multiple, :edit_multiple, :update_multiple, :import, :create_import].include?(action)      
       @computer = Computer.new({:unit_id => current_unit.id})
     elsif [:unit_change].include?(action)      
       @computer = Computer.find(params[:computer_id])

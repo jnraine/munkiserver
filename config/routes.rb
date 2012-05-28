@@ -35,9 +35,12 @@ Munki::Application.routes.draw do
       get 'update_warranty', :action => "update_warranty", :as => 'update_warranty'
       
       collection do
+        get :batch_action
         post :create_import#, :force_redirect
         put :update_multiple
         get :edit_multiple
+        get :delete_multiple
+        delete :destroy_multiple
       end
     end
     
@@ -50,8 +53,11 @@ Munki::Application.routes.draw do
         match "shared/import/:id", :action => 'import_shared', :via => :put, :as => "import_shared_package"
         match "shared/import_multiple_shared", :action => 'import_multiple_shared', :via => :put, :as => "import_multiple_shared_packages"
         match "shared", :action => 'index_shared', :via => :get, :as => "shared_packages"
+        match 'batch_action(.:format)', :action => 'batch_action', :via => :get, :as => 'batch_action_packages'
         match 'multiple(.:format)', :action => 'edit_multiple', :via => :get, :as => 'edit_multiple_packages'
         match 'multiple(.:format)', :action => 'update_multiple', :via => :put
+        match 'delete_multiple(.:format)', :action => 'delete_multiple', :via => :get, :as => 'delete_multiple_packages'
+        match 'multiple(.:format)', :action => 'destroy_multiple', :via => :delete, :as => 'destroy_multiple_packages'
         match 'check_for_updates', :action => 'check_for_updates', :via => :get, :as => 'check_for_package_updates'
         get ':package_id/environment_change(.:format)', :action => "environment_change", :as => 'package_environment_change'
         constraints({:version => /.+/}) do
