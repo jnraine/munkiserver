@@ -1,5 +1,7 @@
 class Bundle < ActiveRecord::Base
   include IsAManifest
+  include HasAUnit
+  include HasAnEnvironment
 
   scope :order_alphabetical, order("name")
   

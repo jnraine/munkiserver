@@ -1,5 +1,7 @@
 class ComputerGroup < ActiveRecord::Base
   include IsAManifest
+  include HasAUnit
+  include HasAnEnvironment
   
   has_many :computers
   

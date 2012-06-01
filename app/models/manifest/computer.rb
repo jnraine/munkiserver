@@ -1,5 +1,8 @@
 class Computer < ActiveRecord::Base
   include IsAManifest
+  include HasAUnit
+  include HasAnEnvironment
+  include HasAnIcon
   
   belongs_to :computer_model
   belongs_to :computer_group
@@ -47,7 +50,7 @@ class Computer < ActiveRecord::Base
     environment = Environment.where(:id => environment_id).first
     environment ||= self.environment
     environment ||= Environment.start
-    ComputerGroup.unit_and_environment(unit, environment).map {|cg| [cg.name,cg.id] }
+    ComputerGroup.unit(unit).environment(environment).map {|cg| [cg.name,cg.id] }
   end
 
   # Alias the computer_model icon to this computer

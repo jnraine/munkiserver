@@ -33,8 +33,6 @@ module IsAManifest
       has_many :optional_install_items, :as => :manifest, :dependent => :destroy
             
       attr_is_hash :version_rollback
-      
-      include IsAUnitMember
     end
   end
   

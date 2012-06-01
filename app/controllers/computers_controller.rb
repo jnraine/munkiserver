@@ -5,7 +5,7 @@ class ComputersController < ApplicationController
   
   def index
     # Scope computers to unit/environment and then order by relevent column and direction
-    @computers = Computer.unit_and_environment(current_unit, current_environment)
+    @computers = Computer.unit(current_unit).environment(current_environment)
     @computers = @computers.order(sort_column + ' ' + sort_direction)
     
     # Search for value on name attribute

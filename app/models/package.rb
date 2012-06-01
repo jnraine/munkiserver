@@ -2,7 +2,9 @@ require 'digest'
 require 'os_range_helper'
 
 class Package < ActiveRecord::Base
-  include IsAUnitMember
+  include HasAUnit
+  include HasAnEnvironment
+  include HasAnIcon
   
   # Dependancy relationships
   belongs_to :package_branch, :autosave => true

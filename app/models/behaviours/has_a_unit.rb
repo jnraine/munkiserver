@@ -1,23 +1,14 @@
-# Special ActiveRecord::Base mixin module
-module IsAUnitMember
+module HasAUnit
   # Used to augment the class definition
   # of the class passed as an argument
   # Put class customization in here!
   def self.included(base)
     base.extend ClassMethods
-    base.class_eval do
-      has_one :icon, :as => :record
-    
+    base.class_eval do    
       belongs_to :unit
-      belongs_to :environment
     
       scope :unit, lambda { |u| u.present? ? where(:unit_id => u.id) : where(:unit_id => nil) }
-      scope :environment, lambda { |p| where(:environment_id => p.id) }
-      scope :environment_ids, lambda { |ids| where(:environment_id => ids) }
-      scope :environments, lambda { |p| where(:environment_id => p.collect(&:id)) }
-      scope :unit_and_environment, lambda { |u,e| where(:unit_id => u.id, :environment_id => e.id) }
-    
-      validates_presence_of :environment_id
+      
       validates_presence_of :unit_id
     end
   end

@@ -191,8 +191,7 @@ class PackagesController < ApplicationController
       end
     end
   end
-  
-  private
+    
   # Load a singular resource into @package for all actions
   def load_singular_resource
     action = params[:action].to_sym

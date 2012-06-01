@@ -234,7 +234,7 @@ class PackageBranch < ActiveRecord::Base
   # Get package branches with packages in a specified unit and environment
   # TO-DO Not very efficient, could be refactored
   def self.unit_and_environment(unit,environment, scope_results = true)
-    pbs = Package.unit(unit).environment(environment).map {|p| p.package_branch }.uniq
+    pbs = Package.unit(unit).environment(environment).includes(:package_branch).map {|p| p.package_branch }.uniq
     pbs.each {|pb| pb.bind_to_scope(unit,environment) if scope_results }
     pbs
   end
