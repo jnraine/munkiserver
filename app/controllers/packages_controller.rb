@@ -5,7 +5,7 @@ class PackagesController < ApplicationController
     # TO-DO This query can be rethought because of the way the view uses this list of packages
     # it might be better to grab all the package branches from this environment and then iterate
     # through those grabbing all the different versions using the @packages@ method.
-    @packages = Package.latest_from_unit_and_environment(current_unit,current_environment).sort{|a,b|a.package_branch.name <=> b.package_branch.name}
+    @packages = Package.latest_from_unit_and_environment(current_unit,current_environment).sort {|a,b| a.package_branch.name <=> b.package_branch.name }
 
     respond_to do |format|
       format.html
@@ -30,13 +30,11 @@ class PackagesController < ApplicationController
 
   def update
     respond_to do |format|
-#raise Exception.new(params)
       if @package.update_attributes(params[:package])
         flash[:notice] = "Package was successfully updated."
         format.html { redirect_to package_path(@package.to_params) }
         format.xml { head :ok }
       else
-#binding.pry
         flash[:error] = "Could not update package!"
         format.html { render :action => "edit" }
         format.xml { render :xml => @package.errors, :status => :unprocessable_entity }

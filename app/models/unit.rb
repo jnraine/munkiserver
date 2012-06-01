@@ -1,7 +1,4 @@
 class Unit < ActiveRecord::Base
-  magic_mixin :client_pref
-  
-  # Relationships
   has_many :computers, :dependent => :destroy
   has_many :computer_groups, :dependent => :destroy
   has_many :bundles, :dependent => :destroy

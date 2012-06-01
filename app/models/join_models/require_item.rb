@@ -1,3 +1,3 @@
 class RequireItem < ActiveRecord::Base
-  magic_mixin :item
+  include IsAnItem
 end

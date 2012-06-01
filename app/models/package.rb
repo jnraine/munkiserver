@@ -2,7 +2,7 @@ require 'digest'
 require 'os_range_helper'
 
 class Package < ActiveRecord::Base
-  magic_mixin :unit_member
+  include IsAUnitMember
   
   # Dependancy relationships
   belongs_to :package_branch, :autosave => true

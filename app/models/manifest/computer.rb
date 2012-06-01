@@ -1,6 +1,5 @@
 class Computer < ActiveRecord::Base
-  magic_mixin :manifest
-  # magic_mixin :client_pref
+  include IsAManifest
   
   belongs_to :computer_model
   belongs_to :computer_group
@@ -106,13 +105,9 @@ class Computer < ActiveRecord::Base
     h
   end
   
-  # Extended from manifest magic_mixin, adds mac_address matching
+  # Add mac_address matching
   def self.find_for_show(unit, id)
-    record = find_for_show_super(unit, id)
-    # For mac_address
-    record ||= self.where(:mac_address => id).first
-    # Return record
-    record
+    find_for_show_super(unit, id) || where(:mac_address => id).first
   end
 
   def client_identifier

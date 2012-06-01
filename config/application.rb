@@ -34,7 +34,7 @@ module Munki
     config.autoload_paths += %W(
         #{Rails.root}/app/models/widgets  
         #{Rails.root}/app/models/join_models
-        #{Rails.root}/app/models/magic_mixin
+        #{Rails.root}/app/models/behaviours
         #{Rails.root}/app/models/manifest
         #{Rails.root}/app/models/service
         #{Rails.root}/app/models/privilege_granters

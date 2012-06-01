@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
   
   # Stub for controllers to override
   def load_singular_resource
-    raise Exception.new("Unable to load singular resource for #{params[:action]} action of #{params[:controller]} controller.")
+    raise Exception.new("#{params[:controller].capitalize} controller has not implemented load_singular_resource")
   end
   
   def authorize_resource

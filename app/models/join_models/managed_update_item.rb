@@ -1,3 +1,3 @@
 class ManagedUpdateItem < ActiveRecord::Base
-  magic_mixin :item
+  include IsAnItem
 end

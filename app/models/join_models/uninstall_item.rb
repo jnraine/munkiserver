@@ -1,3 +1,3 @@
 class UninstallItem < ActiveRecord::Base
-  magic_mixin :item
+  include IsAnItem
 end

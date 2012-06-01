@@ -1,5 +1,5 @@
 class Bundle < ActiveRecord::Base
-  magic_mixin :manifest
+  include IsAManifest
 
   scope :order_alphabetical, order("name")
   

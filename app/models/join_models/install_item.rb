@@ -1,4 +1,4 @@
 class InstallItem < ActiveRecord::Base
-  magic_mixin :item
+  include IsAnItem
 end
 

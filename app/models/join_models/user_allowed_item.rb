@@ -1,3 +1,3 @@
 class UserAllowedItem < ActiveRecord::Base
-  magic_mixin :item
+  include IsAnItem
 end
