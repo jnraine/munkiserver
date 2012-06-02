@@ -5,7 +5,8 @@ class PackagesController < ApplicationController
     # TO-DO This query can be rethought because of the way the view uses this list of packages
     # it might be better to grab all the package branches from this environment and then iterate
     # through those grabbing all the different versions using the @packages@ method.
-    @packages = Package.latest_from_unit_and_environment(current_unit,current_environment).sort {|a,b| a.package_branch.name <=> b.package_branch.name }
+    # @packages = Package.latest_from_unit_and_environment(current_unit,current_environment).sort {|a,b| a.package_branch.name <=> b.package_branch.name }
+    @package_branches = PackageBranch.unit(current_unit).order("name ASC").includes(:packages)
 
     respond_to do |format|
       format.html
@@ -46,28 +47,20 @@ class PackagesController < ApplicationController
   end
 
   def create
-    exceptionMessage = nil
-    begin
-      @package = Package.create(:package_file => params[:package_file],
-                                :pkginfo_file => params[:pkginfo_file],
-                                :makepkginfo_options => params[:makepkginfo_options],
-                                :special_attributes => {:unit_id => current_unit.id})
-    rescue PackageError => e
-      exceptionMessage = e.to_s
-    end
+    process_package_upload = ProcessPackageUpload.new(:package_file => params[:package_file], 
+                                                      :pkginfo_file => params[:pkginfo_file], 
+                                                      :makepkginfo_options => params[:makepkginfo_options], 
+                                                      :special_attributes => {:unit_id => current_unit.id})
+    process_package_upload.process
 
     respond_to do |format|
-      if @package.save
-        # Success
-        flash[:notice] = "Package successfully saved"
-        format.html { redirect_to edit_package_path(@package.to_params) }
+      if process_package_upload.processed?
+        flash[:notice] = "Package successfully uploaded"
+        format.html { redirect_to edit_package_path process_package_upload.package.to_params }
       else
-        # Failure
-        @package.delete_package_file_if_necessary
-        flash[:error] = "Failed to add package"
-        flash[:error] = flash[:error] + ": " + exceptionMessage if exceptionMessage.present?
-        format.html { render :action => "new"}
-      end
+        flash[:error] = "A problem occurred while processing package upload: #{process_package_upload.error_message}"
+        format.html { render :action => :new }
+      end      
     end
   end
 
