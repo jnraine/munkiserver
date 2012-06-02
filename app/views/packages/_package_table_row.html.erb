@@ -1,20 +1,20 @@
 <tr>
-	<td rowspan="<%= package.versions.count %>"><%= image_tag(package.icon.url(:small), :class => "thumbnail", "data-package-branch-id" => package.package_branch_id) if package.icon %></td>
-	<td rowspan="<%= package.versions.count %>">
-		<%= package.display_name %><br />
-		<em><%= package.name %></em>
+	<td rowspan="<%= package_branch.packages.count %>"><%= image_tag(package_branch.packages.first.icon.url(:small), :class => "thumbnail", "data-package-branch-id" => package_branch.id) if package_branch.packages.first %></td>
+	<td rowspan="<%= package_branch.packages.count %>">
+		<%= package_branch.display_name %><br />
+		<em><%= package_branch.name %></em>
 	</td>
-	<%= render :partial => 'package_version_column', :locals => {:pkg => package.versions.first} %>
-	<td rowspan="<%= package.versions.count %>" class="centerize">
-		<% unless package.has_dependencies? %>
-			<%= update_or_import(package) %>
+	<%= render :partial => 'package_version_column', :locals => {:pkg => package_branch.packages.first} %>
+	<td rowspan="<%= package_branch.packages.count %>" class="centerize">
+		<% unless package_branch.packages.first.has_dependencies? %>
+			<%= update_or_import(package_branch.packages.first) %>
 		<% end %>
 	</td>
 </tr>
-<% package.versions.each_with_index do |pkg,i| %>
+<% package_branch.packages.each_with_index do |package , i| %>
 	<% unless i == 0 %>
 		<tr>
-			<%= render :partial => 'package_version_column', :locals => {:pkg => pkg} %>
+			<%= render :partial => 'package_version_column', :locals => {:pkg => package} %>
 		</tr>
 	<% end %>
 <% end %>

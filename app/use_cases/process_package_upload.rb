@@ -156,7 +156,7 @@ class ProcessPackageUpload
         pkginfo.delete("catalogs")
       
         name = PackageBranch.conform_to_name_constraints(pkginfo["name"])
-        package.package_branch = retrieve_package_branch(name, pkginfo["display_name"], special_attributes[:unit_id])
+        package.package_branch = retrieve_package_branch(name, pkginfo["display_name"], special_attributes[:unit_id], PackageCategory.default(package.installer_type).id)
         pkginfo.delete("name")
       
         pkginfo.each do |k,v|
@@ -168,7 +168,6 @@ class ProcessPackageUpload
         end
       
         package.attributes = pkginfo
-        package.package_category_id = PackageCategory.default(package.installer_type).id
         package.installer_item_location = File.basename(package_file.path)
         package.add_raw_tag("installer_item_hash", Digest::SHA256.file(package_file.path).hexdigest)
         package = apply_special_attributes(package, special_attributes)
@@ -185,15 +184,16 @@ class ProcessPackageUpload
     
       # Create a new package branch if not existing
       # else pick the existing package branch and assign to the package
-      def retrieve_package_branch(name, display_name, unit_id)
-        PackageBranch.where(:name => name, :unit_id => unit_id).first || create_package_branch(name, display_name, unit_id)
+      def retrieve_package_branch(name, display_name, unit_id, package_category_id)
+        PackageBranch.where(:name => name, :unit_id => unit_id).first || create_package_branch(name, display_name, unit_id, package_category_id)
       end
     
-      def create_package_branch(name, display_name, unit_id)
+      def create_package_branch(name, display_name, unit_id, package_category_id)
         PackageBranch.create! do |pb|
           pb.name = name
           pb.display_name = display_name
           pb.unit_id = unit_id
+          pb.package_category_id = package_category_id
         end
       end
 

@@ -22,8 +22,10 @@ class PackageBranch < ActiveRecord::Base
   has_many :require_items, :dependent => :destroy
   has_many :update_for_items, :dependent => :destroy
   has_many :notifications, :as => :notified
-  has_many :packages, :order => "version DESC"
+  has_many :packages, :order => "version DESC", :dependent => :destroy
   has_one :version_tracker, :dependent => :destroy, :autosave => true
+  
+  belongs_to :package_category
   
   before_validation :require_display_name
   before_save :require_version_tracker

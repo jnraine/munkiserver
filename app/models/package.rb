@@ -8,7 +8,6 @@ class Package < ActiveRecord::Base
   
   # Dependancy relationships
   belongs_to :package_branch
-  belongs_to :package_category
   belongs_to :icon
   has_many :dependents, :class_name => "RequireItem", :dependent => :destroy
   has_many :require_items, :as => :manifest, :dependent => :destroy
@@ -281,6 +280,10 @@ class Package < ActiveRecord::Base
   # Returns a URL path to the package download
   def public_filename
     "/packages/#{environment_id}/#{unit_id}/#{installer_item_location}"
+  end
+  
+  def package_category
+    package_branch.package_category
   end
   
   # If there is no associated icon, then it asks for the package categories icon instead

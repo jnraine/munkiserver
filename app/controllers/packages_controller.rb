@@ -2,11 +2,7 @@ class PackagesController < ApplicationController
   cache_sweeper :package_sweeper, :only => [:create, :edit, :destroy]
   
   def index
-    # TO-DO This query can be rethought because of the way the view uses this list of packages
-    # it might be better to grab all the package branches from this environment and then iterate
-    # through those grabbing all the different versions using the @packages@ method.
-    # @packages = Package.latest_from_unit_and_environment(current_unit,current_environment).sort {|a,b| a.package_branch.name <=> b.package_branch.name }
-    @package_branches = PackageBranch.unit(current_unit).order("name ASC").includes(:packages)
+    @package_branches = PackageBranch.unit(current_unit).order("name ASC").includes(:packages, :package_category)
 
     respond_to do |format|
       format.html

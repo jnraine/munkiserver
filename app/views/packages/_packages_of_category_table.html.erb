@@ -1,12 +1,12 @@
-<h4><%= category_name.capitalize %></h4>
+<h4><%= category.name.capitalize %></h4>
 <table class="zebra packages">
 	<thead>
 		<tr>
 			<!-- <th> Checkbox</th> -->
 			<th><!-- Icon --></th>
 			<th>Display Name<br/><em>Branch</em></th>
-			<th><%= check_box_tag("selected_#{category_name.downcase}", nil, false, :class => "select_all") %></th> 
-			<th>package</th>
+			<th><%= check_box_tag("selected_#{category.name.downcase}", nil, false, :class => "select_all") %></th> 
+			<th>Version</th>
 			<th>Actions</th>
 			<th>
 				Update
@@ -14,7 +14,7 @@
 			</th>
 		</tr>
 	</thead>
-	<% packages.each do |package| %>
-		<%= render :partial => 'package_table_row', :locals => {:package => package} %>
+	<% package_branches.each do |package_branch| %>
+		<%= render :partial => 'package_table_row', :locals => {:package_branch => package_branch} %>
 	<% end %>
 </table>

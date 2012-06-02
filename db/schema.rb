@@ -189,9 +189,10 @@ ActiveRecord::Schema.define(:version => 20120602001304) do
   create_table "package_branches", :force => true do |t|
     t.string   "name"
     t.string   "display_name"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
     t.integer  "unit_id"
+    t.integer  "package_category_id"
   end
 
   create_table "package_categories", :force => true do |t|
