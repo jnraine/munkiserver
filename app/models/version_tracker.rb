@@ -1,9 +1,10 @@
-class VersionTracker < ActiveRecord::Base
-  require 'nokogiri'  
-  require 'open-uri'
-  require 'net/http'
+require 'nokogiri'
+require 'open-uri'
+require 'net/http'
+require 'cgi'
 
-  MAC_UPDATE_SITE_URL = "www.macupdate.com" #for Net HTTP response
+class VersionTracker < ActiveRecord::Base
+  MAC_UPDATE_SITE_URL = "http://www.macupdate.com" #for Net HTTP response
   MAC_UPDATE_SEARCH_URL = "http://www.macupdate.com/find/mac/" #append search package name in the end of URL
   MAC_UPDATE_PACKAGE_URL = "http://www.macupdate.com/app/mac/" #append web_id in the end of URL
   
@@ -90,7 +91,7 @@ class VersionTracker < ActiveRecord::Base
   def scrape_latest_version(new_web_id = false)
     if looks_good?
       # Load informational page from version tracker
-      info_doc = Nokogiri::HTML(open(info_url))
+      info_doc = retrieve_web_page
       # In case our web site is malformed, let's catch the errors
       begin
         # Grab the icon image
@@ -133,10 +134,27 @@ class VersionTracker < ActiveRecord::Base
     end
   end
   
+  def retrieve_web_page
+    url = URI.parse(info_url)
+    http = Net::HTTP.new(url.host, url.port)
+    response = http.get(CGI::escape(url.path))
+    prev_redirect = ""
+    while response.header['location']
+      raise "Recursive redirect: #{response.header['location']}" if prev_redirect == response.header['location']
+      prev_redirect = response.header['location']
+      url = URI.parse(CGI::escape(response.header['location']))
+      http = Net::HTTP.new(url.host, url.port)
+      response = http.get(CGI::escape(url.path))
+    end
+    
+    Nokogiri::HTML(response.body)
+  end
+  
   # Get the package icon download url and download the icon
   def scrape_icon(icon_url)
     original_filename = icon_url.match(/(\/)([^\/]+)$/)[2]
-    f = open(icon_url)
+    url = URI.parse(icon_url)
+    f = Net::HTTP.new(url.host, url.port).get(url.path)
     if f.instance_of?(StringIO)
       image_data = f
       f = Tempfile.new(original_filename)
@@ -172,7 +190,9 @@ class VersionTracker < ActiveRecord::Base
   # Retrieves and assigns the first web ID from a macupdate search
   def retrieve_web_id
     if macupdate_is_up?
-      info_doc = Nokogiri::HTML(open(MAC_UPDATE_SEARCH_URL + self.package_branch.name))
+      url = URI.parse(MAC_UPDATE_SEARCH_URL + package_branch.name)
+      pry.binding
+      info_doc = Nokogiri::HTML(Net::HTTP.new(url.host, url.port).get(CGI::escape(url.path)).body)
       # if macupdate return a search page
       if info_doc.css(".titlelink").present?
         href_match = info_doc.css(".titlelink").first[:href].match(/([0-9]{4,})/) if info_doc.css(".titlelink").first.present?
@@ -180,8 +200,6 @@ class VersionTracker < ActiveRecord::Base
         # if macupdate redirect to the single page
       elsif info_doc.css("#listingarea script").text.include?("document.location")
         self.web_id = info_doc.css("#listingarea script").text.match(/([0-9]+{4,})/)[0].to_i unless info_doc.css("#listingarea script").text.match(/([0-9]+{4,})/).nil?
-      else
-        # do nothing
       end
     end
   end
