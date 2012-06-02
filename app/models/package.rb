@@ -7,8 +7,7 @@ class Package < ActiveRecord::Base
   include HasAnIcon
   
   # Dependancy relationships
-  belongs_to :package_branch, :autosave => true
-  accepts_nested_attributes_for :package_branch
+  belongs_to :package_branch
   belongs_to :package_category
   belongs_to :icon
   has_many :dependents, :class_name => "RequireItem", :dependent => :destroy
@@ -37,7 +36,6 @@ class Package < ActiveRecord::Base
   scope :has_greater_version, lambda {|p| where("version > ?", p.version)}
   scope :other, lambda{|p| where("id <> ?", p.id)}
   
-  before_save :save_package_branch
   before_save :handle_environment_change
   
   validates :version, :presence => true
@@ -142,32 +140,12 @@ class Package < ActiveRecord::Base
     Package.shared.where("unit_id != ?",unit.id).where(:installer_item_location => installer_item_locations)
   end
   
-  # Virtual attribute for accessing the associated package
-  # branch name which this package belongs to
   def name
     package_branch.name unless package_branch.nil?
   end
-
-  # Virtual setter for name attribute
-  # Assigns an existing PackageBranch if one exists matching value, otherwise, a new one is created.
-  def name=(value)
-    if value != self.name
-      # If the value is new, find or create the package branch and assign it
-      # and delete the old one if no other package references it
-      self.package_branch.destroy if Package.find_all_by_package_branch_id(self.package_branch_id).length == 1
-      self.package_branch = PackageBranch.find_or_create_by_name(value)
-    end
-  end
   
-  # Virtual attribute for accessing the associated package
-  # branch display name which this package belongs to
   def display_name
     package_branch.display_name unless package_branch.nil?
-  end
-  
-  # Virtual attribute setter
-  def display_name=(value)
-    package_branch.display_name = value
   end
   
   def plist_virtual_attribute_set(attribute, value)
@@ -267,11 +245,6 @@ class Package < ActiveRecord::Base
       end
     end
     items
-  end
-
-  # Attempts to save the package branch and returns the result
-  def save_package_branch
-    package_branch.save if package_branch.changed?
   end
   
   def environments
