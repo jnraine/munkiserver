@@ -3,14 +3,13 @@
 class PackageBranch < ActiveRecord::Base
   include HasAUnit
 
-  # Validations
   validates_presence_of :name, :display_name
-  validates_uniqueness_of :name, :display_name
+  validates_uniqueness_of :name, :scope => [:unit_id]
   validates_format_of :name, :with => /^[^ -.]+$/, :message => "must not contain spaces or hyphens or dots"
   
   attr_protected :id, :name
   
-  attr_accessor :unit_id, :environment_id
+  attr_accessor :environment_id
   
   # Relationships
   has_many :install_items, :dependent => :destroy
@@ -23,10 +22,8 @@ class PackageBranch < ActiveRecord::Base
   has_many :require_items, :dependent => :destroy
   has_many :update_for_items, :dependent => :destroy
   has_many :notifications, :as => :notified
-  # has many Packages
-  has_many :all_packages, :order => 'version desc', :class_name => "Package"
+  has_many :packages, :order => "version DESC"
   has_one :version_tracker, :dependent => :destroy, :autosave => true
-  
   
   before_validation :require_display_name
   before_save :require_version_tracker
@@ -48,15 +45,8 @@ class PackageBranch < ActiveRecord::Base
     end
   end
   
-  # Returns the latest package (based on version)
-  # in the package branch.  Results are scoped if scoped? returns true
-  def latest(unit_member = nil)
-    package(unit_member)
-  end
-  
-  # Get all package branches mentioned by unit
-  def self.unit(unit)
-    Package.unit(unit).map {|p| p.package_branch }.uniq
+  def latest
+    packages.limit(1).first
   end
   
   # Get the latest package within a unit and environment
@@ -76,15 +66,6 @@ class PackageBranch < ActiveRecord::Base
   
   def packages_where_unit_and_environment(unit,environment)
     packages.where(:environment_id => environment.id, :unit_id => unit.id)
-  end
-  
-  # Provides a scoped (if applicable) search in the Package association
-  def packages
-    if scoped?
-      all_packages.where(:unit_id => @unit_id, :environment_id => @environment_id)
-    else
-      all_packages
-    end
   end
   
   # Return all the packages that are shared and from the given unit

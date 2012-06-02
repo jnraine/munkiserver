@@ -75,15 +75,12 @@ class Package < ActiveRecord::Base
                                                ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']]}
   
   def self.find_where_params(params)
-    unit = Unit.where(:shortname => params[:unit_shortname]).first
-    package_branch = PackageBranch.where(:name => params[:package_branch]).first
+    unit = Unit.where(:shortname => params["unit_shortname"]).select("id").first
+    package_branch = PackageBranch.where(:name => params["package_branch"], :unit_id => unit.id).select("id").first if unit.present?
 
-    if unit.present? and package_branch.present?
-      relation = self.unit(unit)
-      relation = relation.where(:package_branch_id => package_branch.id)
-      relation = relation.order('version DESC')
-      relation = relation.limit(1)
-      relation = relation.where(:version => params[:version]) if params[:version].present?
+    if package_branch.present?
+      relation = where(:package_branch_id => package_branch.id).order("version DESC").limit(1)
+      relation = relation.where(:version => params["version"]) if params["version"].present?
       relation.first
     end
   end
@@ -353,12 +350,12 @@ class Package < ActiveRecord::Base
   # Checks if the current package is the latest (newest version) 
   # package in the package branch in this unit.
   def latest_in_unit?
-    latest_in_unit.id == id
+    latest_in_unit.id == id unless latest_in_unit.nil?
   end
   
-  #Return the latest package within this unit
+  # Return the latest package within this unit
   def latest_in_unit
-    package_branch.packages.unit(self.unit).order("version DESC").first
+    package_branch.latest
   end
   # Return true if the pacakge is the greatest within current unit and environment
   def latest_in_unit_and_environment?
@@ -703,7 +700,6 @@ class Package < ActiveRecord::Base
       value
     end
   end
-
   
   # A list of attributes that are inherited by new packages, if a previous version exists
   def self.inherited_attributes

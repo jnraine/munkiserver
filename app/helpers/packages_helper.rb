@@ -29,15 +29,13 @@ module PackagesHelper
   end
 
 	def package_header(package, editable = nil)
-	  packages = Package.where(:package_branch_id => package.package_branch_id, :unit_id => package.unit_id).order("version ASC")
 	  editable ||= false
-    render :partial => 'record_header', :locals => {
-                              														:title => package.display_name,
-                              														:img => package.icon,
-                              														:soft_info => package.name,
-                              														:bold_info => package.version,
-                              														:packages => packages,
-                              														:editable => editable }
+    render :partial => 'record_header', :locals => {:title => package.display_name,
+                              											:img => package.icon,
+                              											:soft_info => package.name,
+                              											:bold_info => package.version,
+                              											:packages => package.package_branch.packages,
+                              											:editable => editable }
 	end
 	
 	def recent_packages
