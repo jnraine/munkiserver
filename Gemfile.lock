@@ -34,6 +34,7 @@ GEM
     chronic (0.6.7)
     client_side_validations (3.1.4)
     cocaine (0.2.1)
+    coderay (1.0.6)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -60,6 +61,7 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    method_source (0.7.1)
     mime-types (1.17.2)
     multi_json (1.1.0)
     mysql2 (0.3.11)
@@ -72,6 +74,12 @@ GEM
       mime-types
     plist (3.1.0)
     polyglot (0.3.3)
+    pry (0.9.9.6)
+      coderay (~> 1.0.5)
+      method_source (~> 0.7.1)
+      slop (>= 2.4.4, < 3)
+    pry-rails (0.1.6)
+      pry
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -112,6 +120,7 @@ GEM
     sequel (3.20.0)
     sinatra (1.0)
       rack (>= 1.0)
+    slop (2.4.4)
     sprockets (2.1.2)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -159,6 +168,7 @@ DEPENDENCIES
   nokogiri
   paperclip
   plist
+  pry-rails
   rails (= 3.2.2)
   rails-erd
   sass-rails
