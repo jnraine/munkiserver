@@ -9,7 +9,7 @@ module HasAUnit
     
       scope :unit, lambda { |u| u.present? ? where(:unit_id => u.id) : where(:unit_id => nil) }
       
-      validates_presence_of :unit_id
+      validates :unit_id, :presence => true
     end
   end
 

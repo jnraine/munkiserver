@@ -1,6 +1,8 @@
 # PackageBranch records don't belong to a specific unit or environment but an specific instance can be
 # scoped to return only results from a specific unit or environment
 class PackageBranch < ActiveRecord::Base
+  include HasAUnit
+
   # Validations
   validates_presence_of :name, :display_name
   validates_uniqueness_of :name, :display_name
