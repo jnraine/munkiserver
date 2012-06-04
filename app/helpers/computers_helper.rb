@@ -3,10 +3,10 @@ module ComputersHelper
   # Builds a computer page (show/edit) header from a computer object
   def computer_header(computer)
     render :partial => 'shared/record_header', :locals => {:title => computer,
-                              														 :img => computer.icon,
-                              														 :soft_info => computer.computer_group,
-                              														 :bold_info => computer.mac_address }
-	end
+                                                           :img => computer.icon,
+                                                           :soft_info => computer.computer_group,
+                                                           :bold_info => computer.mac_address }
+  end
 
   # Prints a computer table listing
   # Is paginated by default using will_paginate.  Pass false to disable.
@@ -14,7 +14,7 @@ module ComputersHelper
     render :partial => 'computers/computer_table', :locals => {:computers => computers, :paginate => paginate, :bulk_edit => bulk_edit}
   end
 
-	def computer_group_links
+  def computer_group_links
     computer_groups = ComputerGroup.unit(current_unit)
     unless computer_groups.empty?
       render :partial => 'computer_group_link', :collection => computer_groups

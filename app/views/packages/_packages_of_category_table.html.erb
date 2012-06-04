@@ -15,7 +15,7 @@
   </thead>
   <% package_branches.each do |package_branch| %>
     <% if package_branch.packages.environment(current_environment).present? %>
-      <%= render :partial => 'package_table_row', :locals => {:package_branch => package_branch, :packages => package_branch.packages.environment(current_environment)} %>
+      <%= render :partial => 'packages/package_table_row', :locals => {:package_branch => package_branch, :packages => package_branch.packages.environment(current_environment)} %>
     <% end %>
   <% end %>
 </table>

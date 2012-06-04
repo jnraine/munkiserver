@@ -56,12 +56,19 @@ Munki::Application.routes.draw do
         get ':package_id/environment_change(.:format)', :action => "environment_change", :as => 'package_environment_change'
         constraints({:version => /.+/}) do
           constraints(ExtractFormatFromParam.new(:version)) do
-            match ':package_branch(/:version)/edit(.:format)', :action => 'edit', :via => :get, :as => 'edit_package'
-            match ':package_branch(/:version)(.:format)', :action => 'show', :via => :get, :as => 'package'
-            match ':package_branch(/:version)(.:format)', :action => 'update', :via => :put
-            match ':package_branch(/:version)(.:format)', :action => 'destroy', :via => :delete
+            match ':package_branch/:version/edit(.:format)', :action => 'edit', :via => :get, :as => 'edit_package'
+            match ':package_branch/:version(.:format)', :action => 'show', :via => :get, :as => 'package'
+            match ':package_branch/:version(.:format)', :action => 'update', :via => :put
+            match ':package_branch/:version(.:format)', :action => 'destroy', :via => :delete
           end
         end
+      end
+    end
+    
+    controller :package_branches do
+      scope "/packages" do
+        match ":name(.:format)", :action => "edit", :via => :get, :as => "edit_package_branch"
+        match ":name(.:format)", :action => 'update', :via => :put
       end
     end
     

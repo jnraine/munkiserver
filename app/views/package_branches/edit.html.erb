@@ -1,0 +1,22 @@
+<%= package_branch_header(@package_branch) %>
+
+<%= form_for(@package_branch, :url => edit_package_branch_path(@package_branch.to_params)) do |f| %>
+  <%= f.error_messages %>
+  <table class="form">
+    <tr>
+      <td>Name</td>
+      <td><%= f.text_field :name, :size => 18 %></td>
+    </tr>
+    <tr>
+      <td>Display Name</td>
+      <td><%= f.text_field :display_name, :size => 18 %></td>
+    </tr>
+    <tr>
+      <td>Category</td>
+      <td><%= f.collection_select :package_category_id, PackageCategory.all, :id, :name %>
+    </tr>
+  </table>
+  <p><%= f.submit "Update" %></p>
+<% end %>
+
+<%= package_table([@package_branch])%>

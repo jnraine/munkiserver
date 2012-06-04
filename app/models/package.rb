@@ -95,7 +95,7 @@ class Package < ActiveRecord::Base
     params = {}
     params[:unit_shortname] = unit
     params[:package_branch] = package_branch
-    params[:version] = version unless self.latest_in_unit?
+    params[:version] = version
     params
   end
   

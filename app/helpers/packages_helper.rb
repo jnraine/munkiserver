@@ -49,7 +49,7 @@ module PackagesHelper
     
     output = ""
     categorized.each_pair do |category, package_branches|
-      output += render :partial => 'packages_of_category_table', :locals => {:category => category, :package_branches => package_branches}  
+      output += render :partial => 'packages/packages_of_category_table', :locals => {:category => category, :package_branches => package_branches}  
     end
     output.html_safe
   end

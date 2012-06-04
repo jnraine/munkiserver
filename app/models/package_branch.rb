@@ -7,8 +7,7 @@ class PackageBranch < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => [:unit_id]
   validates_format_of :name, :with => /^[^ -.]+$/, :message => "must not contain spaces or hyphens or dots"
   
-  attr_protected :id, :name
-  
+  attr_accessible :name, :display_name, :package_category_id
   attr_accessor :environment_id
   
   # Relationships
@@ -169,11 +168,6 @@ class PackageBranch < ActiveRecord::Base
     Environment.find_by_id(@environment_id)
   end
   
-  # Get the associated unit
-  def unit
-    Unit.find_by_id(@unit_id)
-  end
-  
   # True if there is a newer version of in this package branch
   # available from a unit different than unit
   def new_version_shared?(unit)
@@ -237,5 +231,10 @@ class PackageBranch < ActiveRecord::Base
   
   def to_param
     name
+  end
+  
+  def to_params
+    {:unit_shortname => unit.shortname,
+     :name => name}
   end
 end
