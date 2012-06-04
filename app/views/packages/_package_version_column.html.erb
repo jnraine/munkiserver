@@ -1,19 +1,19 @@
 <td>
-	<%= check_box_tag("selected_records[]", pkg.id, false, :class => "package_branch_#{pkg.package_branch_id} bulk_edit_checkbox") %>
+  <%= check_box_tag("selected_records[]", pkg.id, false, :class => "package_branch_#{pkg.package_branch_id} bulk_edit_checkbox") %>
 </td>
 <td>
     <% if can? :show, pkg %>
-    	<%= link_to "#{pkg.version}", package_path(pkg.to_params), :title => "Show" %>
-	<% end %>
+      <%= link_to "#{pkg.version}", package_path(pkg.to_params), :title => "Show" %>
+  <% end %>
 </td>
 <td>
     <% if can? :edit, pkg %>
-   	    <%= link_to image_tag("edit.png", :class => "inline-icon", :title => "Edit"), edit_package_path(pkg.to_params) %>
-   	<% end %>
-	<% if can? :download, pkg %>
-    	<%= link_to image_tag("download.png", :class => "inline-icon", :title => "Download"), download_package_path(pkg.download_name) %>
-	<% end %>
-	<% if can? :destroy, pkg %>
-    	<%= link_to(image_tag("delete.png", :class => "inline-icon", :title => "Remove"), package_path(pkg.to_params), :confirm => "Are you sure you would like to remove #{pkg}?", :method => :delete, :title => "Remove") %>
-	<% end %>
+         <%= link_to image_tag("edit.png", :class => "inline-icon", :title => "Edit"), edit_package_path(pkg.to_params) %>
+     <% end %>
+  <% if can? :download, pkg %>
+      <%= link_to image_tag("download.png", :class => "inline-icon", :title => "Download"), download_package_path(pkg.download_name) %>
+  <% end %>
+  <% if can? :destroy, pkg %>
+      <%= link_to(image_tag("delete.png", :class => "inline-icon", :title => "Remove"), package_path(pkg.to_params), :confirm => "Are you sure you would like to remove #{pkg}?", :method => :delete, :title => "Remove") %>
+  <% end %>
 </td>

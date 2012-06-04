@@ -57,7 +57,7 @@ module PackagesHelper
   # Check version tracker for package updates, display available updates
   def available_updates
     # Grab all package branches in for this unit
-    pbs = PackageBranch.unit(current_unit)
+    pbs = PackageBranch.unit(current_unit).includes(:version_tracker)
     # Remove branches if there isn't a new version
     pbs.delete_if {|pb| !pb.new_version?(current_unit) }.compact
     render :partial => 'available_updates', :locals => {:package_branches => pbs}

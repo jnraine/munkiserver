@@ -30,6 +30,8 @@ class PackageBranch < ActiveRecord::Base
   before_validation :require_display_name
   before_save :require_version_tracker
 
+  scope :find_for_index, lambda {|unit| unit(unit).order("name ASC").includes({:packages => [:environment, :package_branch]}, :package_category) }
+
   # Conforms a string to the package branch name constraints
   # => Replaces anything that are not alpheranumrical to underscores
   def self.conform_to_name_constraints(name)

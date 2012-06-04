@@ -1,31 +1,31 @@
 <% content_for :sidebar do %>
-	<%= recent_packages %>
-	<%= available_updates %>
+  <%= recent_packages %>
+  <%= available_updates %>
 <% end %>
 
 <h2>Listing packages</h2>
 <p id="environment_links">
-	|
-	<% Environment.all.each do |env| %>
-		<% if current_environment.id == env.id %>
-			<%= env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})" %>
-		<% else %>
-			<%= link_to env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})", packages_path(current_unit, :eid => env.id) %>
-		<% end %>
-		|
-	<% end %>
+  |
+  <% @environments.each do |env| %>
+    <% if current_environment.id == env.id %>
+      <%= env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})" %>
+    <% else %>
+      <%= link_to env.to_s + " (#{Package.where(:unit_id => current_unit.id, :environment_id => env.id).count})", packages_path(current_unit, :eid => env.id) %>
+    <% end %>
+    |
+  <% end %>
 </p>
 
 <h3><%= current_environment %></h3>
 
-	<% if @package_branches.length == 0 %>
-		<h5>There are no packages in the <%= current_environment.to_s.downcase %> environment</h5>
-		<% if can? :create, Package.new_for_can(current_unit) %>
-			<p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
-		<% end %>
-	<% else %>
-	<%= form_tag edit_multiple_packages_path, :method => :get, :id => "bulk_edit_form", :remote => true do %>
-		<p><%= record_count(@package_branches.map(&:packages).flatten) %><%= submit_tag "Edit Selection", :id => "bulk_edit" %></p>	
-		<%= package_table(@package_branches) %>
-	<% end %>
+  <% if @package_branches.length == 0 %>
+    <h5>There are no packages in the <%= current_environment.to_s.downcase %> environment</h5>
+    <% if can? :create, Package.new_for_can(current_unit) %>
+      <p>Why don't you <%= link_to "upload a package", new_package_path %> or two?</p>
+    <% end %>
+  <% else %>
+  <%= form_tag edit_multiple_packages_path, :method => :get, :id => "bulk_edit_form", :remote => true do %>
+    <p><%= record_count(@package_branches.map(&:packages).flatten) %><%= submit_tag "Edit Selection", :id => "bulk_edit" %></p>  
+    <%= package_table(@package_branches) %>
+  <% end %>
 <% end %>
