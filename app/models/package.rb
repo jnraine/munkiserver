@@ -316,7 +316,7 @@ class Package < ActiveRecord::Base
     begin
       i = Icon.find(icon_id)
     rescue ActiveRecord::RecordNotFound
-      i = package_branch.version_tracker.icon
+      i = package_branch.version_tracker.icon if package_branch.version_tracker
       i ||= package_category.icon if package_category.respond_to?(:icon)
     end
     i
