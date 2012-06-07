@@ -111,7 +111,7 @@ class PackageBranch < ActiveRecord::Base
   
   # True if a newer version is available in this branch
   def new_version?(unit = nil)
-    if version_tracker.version.nil?
+    if version_tracker.nil? or version_tracker.version.nil?
       return false
     else
       version_string = vtv(unit)
