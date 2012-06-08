@@ -26,7 +26,7 @@ class String
         if forced.valid_encoding?
           forced
         else
-          raise EncodingError("Unable to convert string from #{self.encoding} to UTF-8. The encode method threw " + e + " and forced encoding failed to produce a valid string encoding")
+          raise EncodingError("Unable to convert string from #{self.encoding} to UTF-8. The encode method threw '" + e.message + "' and forced encoding failed to produce a valid string encoding")
         end
       end
     else
