@@ -24,8 +24,8 @@ module IsAnItem
   end
 
   def package
-    p = Package.where(:id => self.package_id).first
-    p ||= package_branch.latest(manifest) if package_branch.present?
+    p = Package.where(:id => package_id).first
+    p ||= package_branch.packages.environment(manifest.environment).first if package_branch.present?
     p
   end
   

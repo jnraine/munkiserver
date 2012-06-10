@@ -74,12 +74,12 @@ module IsAManifest
       environment = Environment.where(:id => environment_id).first
       environment ||= Environment.start
 
-      pkg_branch_options = PackageBranch.unit_and_environment(model_obj.unit,environment).collect { |e| [e.name,e.id] }.sort{|a,b| a[0] <=> b[0]}
+      pkg_branch_options = PackageBranch.unit(model_obj.unit).environment(environment).collect { |e| [e.name,e.id] }.sort{|a,b| a[0] <=> b[0]}
 
       if model_obj.class == Bundle
-        bundle_options = Bundle.where('id <> ?',model_obj.id).unit_and_environment(model_obj.unit,environment).collect { |e| [e.name,e.id] }
+        bundle_options = Bundle.where('id <> ?', model_obj.id).unit(model_obj.unit).environment(environment).collect { |e| [e.name,e.id] }
       else
-        bundle_options = Bundle.unit_and_environment(model_obj.unit,environment).collect { |e| [e.name,e.id] }
+        bundle_options = Bundle.unit(model_obj.unit).environment(environment).collect { |e| [e.name,e.id] }
       end
       bundle_options.sort!{|a,b| a[0] <=> b[0] }
 
