@@ -3,7 +3,7 @@
 class PackageBranch < ActiveRecord::Base
   include HasAUnit
 
-  validates_presence_of :name, :display_name
+  validates_presence_of :name, :display_name, :package_category_id
   validates_uniqueness_of :name, :scope => [:unit_id]
   validates_format_of :name, :with => /^[^ -.]+$/, :message => "must not contain spaces or hyphens or dots"
   
@@ -15,9 +15,9 @@ class PackageBranch < ActiveRecord::Base
   has_many :uninstall_items, :dependent => :destroy
   has_many :managed_update_items, :dependent => :destroy
   has_many :optional_install_items, :dependent => :destroy
-  has_many :user_install_items, :dependent => :destroy
-  has_many :user_uninstall_items, :dependent => :destroy
-  has_many :user_allowed_items, :dependent => :destroy
+  # has_many :user_install_items, :dependent => :destroy
+  # has_many :user_uninstall_items, :dependent => :destroy
+  # has_many :user_allowed_items, :dependent => :destroy
   has_many :require_items, :dependent => :destroy
   has_many :update_for_items, :dependent => :destroy
   has_many :notifications, :as => :notified
@@ -236,5 +236,9 @@ class PackageBranch < ActiveRecord::Base
   def to_params
     {:unit_shortname => unit.shortname,
      :name => name}
+  end
+  
+  def obsolete?
+    packages.empty? and install_items.empty? and uninstall_items.empty? and managed_update_items.empty? and optional_install_items.empty? and require_items.empty? and update_for_items.empty?
   end
 end

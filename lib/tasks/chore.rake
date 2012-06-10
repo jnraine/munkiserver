@@ -79,4 +79,9 @@ namespace :chore do
     UninstallItem.destroy_stale_records
     UpdateForItem.destroy_stale_records
   end
+  
+  desc "Migrate to unit-scoped package branches"
+  task :migrate_package_branches => :environment do
+    MigratePackageBranches.new(Logger.new(STDOUT)).migrate
+  end
 end

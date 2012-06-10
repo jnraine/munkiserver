@@ -28,6 +28,10 @@ module IsAnItem
     p ||= package_branch.latest(manifest) if package_branch.present?
     p
   end
+  
+  def obsolete?
+    manifest.nil?
+  end
    
   # Returns array of versions for use with options_for_select view method
   def versions_for_select(unit_member)

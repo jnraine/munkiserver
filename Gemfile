@@ -22,10 +22,15 @@ gem "highcharts-rails", "~> 2.1.9"
 gem "dynamic_form" # enabling this should allow the removal of vendor/dynamic_form
 
 group :development do
-  # gem "ruby-debug19" , :require => "ruby-debug"
   gem "rails-erd"
   gem "textmate_backtracer"
   gem 'pry-rails'
+end
+
+group :test do
+  gem "rspec-rails", "~> 2.10.1"
+  gem "factory_girl", "~> 3.3.0"
+  gem "capybara", "~> 1.1.2"
 end
 
 group :assets do
