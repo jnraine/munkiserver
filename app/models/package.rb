@@ -341,23 +341,9 @@ class Package < ActiveRecord::Base
   end
 
   # Extend destroy method
-  # TO-DO Delete package from hard drive if no other package is referring to it
   def destroy
     delete_package_file_if_necessary
-    destroy_pb_if_necessary
     super
-  end
-  
-  # Destroy associated package_branch if the
-  # package_branch only references the current package.
-  def destroy_pb_if_necessary
-    pb = package_branch
-    p = pb.packages.first
-    # If there is only one package in the package branch and it is
-    # this one, destroy the package branch
-    if pb.packages.length == 1 and pb.packages.first.id == self.id
-      pb.destroy
-    end
   end
   
   # Delete package on filesystem if no other package record is referring to it
