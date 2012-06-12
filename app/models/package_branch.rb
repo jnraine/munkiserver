@@ -30,7 +30,7 @@ class PackageBranch < ActiveRecord::Base
   before_save :require_version_tracker
 
   scope :find_for_index, lambda {|unit, env| unit(unit).environment(env).order("name ASC").includes({:packages => [:environment, :package_branch]}, :package_category) }
-  scope :environment, lambda {|env| joins(:packages).where('"packages"."environment_id" = ?', env.id) }
+  scope :environment, lambda {|env| joins(:packages).where(:packages => {:environment_id => env.id}) }
 
   # Conforms a string to the package branch name constraints
   # => Replaces anything that are not alpheranumrical to underscores

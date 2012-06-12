@@ -2,7 +2,7 @@ class PackagesController < ApplicationController
   cache_sweeper :package_sweeper, :only => [:create, :edit, :destroy]
   
   def index
-    @package_branches = PackageBranch.find_for_index(current_unit, current_environment).delete_if {|pb| pb.packages.environment(current_environment).empty? }
+    @package_branches = PackageBranch.find_for_index(current_unit, current_environment)
     @environments = Environment.all
 
     respond_to do |format|
