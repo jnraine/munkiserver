@@ -191,7 +191,7 @@ class ProcessPackageUpload
       def create_package_branch(name, display_name, unit_id, package_category_id)
         PackageBranch.create! do |pb|
           pb.name = name
-          pb.display_name = display_name
+          pb.display_name = display_name || name
           pb.unit_id = unit_id
           pb.package_category_id = package_category_id
         end

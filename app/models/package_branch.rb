@@ -15,9 +15,6 @@ class PackageBranch < ActiveRecord::Base
   has_many :uninstall_items, :dependent => :destroy
   has_many :managed_update_items, :dependent => :destroy
   has_many :optional_install_items, :dependent => :destroy
-  # has_many :user_install_items, :dependent => :destroy
-  # has_many :user_uninstall_items, :dependent => :destroy
-  # has_many :user_allowed_items, :dependent => :destroy
   has_many :require_items, :dependent => :destroy
   has_many :update_for_items, :dependent => :destroy
   has_many :notifications, :as => :notified
@@ -26,7 +23,6 @@ class PackageBranch < ActiveRecord::Base
   
   belongs_to :package_category
   
-  before_validation :require_display_name
   before_save :require_version_tracker
 
   scope :find_for_index, lambda {|unit, env| unit(unit).environment(env).order("name ASC").includes({:packages => [:environment, :package_branch]}, :package_category) }
@@ -132,11 +128,6 @@ class PackageBranch < ActiveRecord::Base
   # Checks if version_tracker is nil and creates one if it is
   def require_version_tracker
     self.version_tracker = build_version_tracker if self.version_tracker.nil?
-  end
-  
-  # Checks if display_name is blank, if so, it makes it the value of name
-  def require_display_name
-    self.display_name = self.name if self.display_name.blank?
   end
   
   # Grabs vtv from latest package
