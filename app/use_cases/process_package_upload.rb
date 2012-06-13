@@ -152,13 +152,13 @@ class ProcessPackageUpload
     class << self
       def assemble(package_file, pkginfo, special_attributes)
         package = Package.new
-      
         pkginfo.delete("catalogs")
-      
-        name = PackageBranch.conform_to_name_constraints(pkginfo["name"])
-        package.package_branch = retrieve_package_branch(name, pkginfo["display_name"], special_attributes[:unit_id], PackageCategory.default(package.installer_type).id)
-        pkginfo.delete("name")
-      
+        branch_attributes = {:name => pkginfo.delete("name"),
+                             :display_name => pkginfo.delete("display_name"),
+                             :unit_id => special_attributes[:unit_id], 
+                             :package_category_id => PackageCategory.default(pkginfo[:installer_type]).id}
+        package.package_branch = retrieve_package_branch(branch_attributes)
+        
         pkginfo.each do |k,v|
           unless Package.known_attributes.include?(k)
             package.raw_tags = package.raw_tags.merge({k => v})
@@ -184,17 +184,23 @@ class ProcessPackageUpload
     
       # Create a new package branch if not existing
       # else pick the existing package branch and assign to the package
-      def retrieve_package_branch(name, display_name, unit_id, package_category_id)
-        PackageBranch.where(:name => name, :unit_id => unit_id).first || create_package_branch(name, display_name, unit_id, package_category_id)
+      def retrieve_package_branch(attributes)
+        attributes[:name] = PackageBranch.conform_to_name_constraints(attributes[:name])
+        
+        if branch = PackageBranch.where(:name => attributes[:name], :unit_id => attributes[:unit_id]).first
+          branch
+        else
+          create_package_branch(attributes)
+        end
       end
     
-      def create_package_branch(name, display_name, unit_id, package_category_id)
-        PackageBranch.create! do |pb|
-          pb.name = name
-          pb.display_name = display_name || name
-          pb.unit_id = unit_id
-          pb.package_category_id = package_category_id
-          pb.version_tracker = pb.build_version_tracker
+      def create_package_branch(attributes)
+        PackageBranch.create! do |branch|
+          branch.name = attributes[:name]
+          branch.display_name = attributes[:display_name] || attributes[:name]
+          branch.unit_id = attributes[:unit_id]
+          branch.package_category_id = attributes[:package_category_id]
+          branch.version_tracker = branch.build_version_tracker
         end
       end
 
