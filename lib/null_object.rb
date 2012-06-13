@@ -6,15 +6,23 @@ class NullObject
     true
   end
   
+  def blank?
+    true
+  end
+  
   def present?
     false
+  end
+  
+  def empty?
+    true
   end
   
   def method_missing(method, *args)
     self
   end
-end
-
-def Maybe(object)
-  object.present? ? object : NullObject.new
+  
+  def self.Maybe(object)
+    object.present? ? object : NullObject.new
+  end
 end

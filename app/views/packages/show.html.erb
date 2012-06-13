@@ -104,7 +104,7 @@
 				<td>
 					<% if @package.package_branch.version_tracker.web_id.present? %>
 						<%= @package.package_branch.version_tracker.web_id %>
-						- <%= link_to "Package Info", @package.package_branch.version_tracker.info_url, :target => "_blank" %>
+						- <%= link_to "Package Info", @package.package_branch.version_tracker.page_url, :target => "_blank" %>
 					<% else %>
 						None
 					<% end %>

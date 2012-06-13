@@ -36,9 +36,7 @@ module IsAnItem
   # Returns array of versions for use with options_for_select view method
   def versions_for_select(unit_member)
     static_options = [['Most Recent','']]
-    pb = package_branch
-    pb.bind_to_scope(unit_member)
-    dynamic_options = pb.packages.map {|p| [p.version, p.id]}
+    dynamic_options = package_branch.packages.map {|p| [p.version, p.id]}
     static_options + dynamic_options
   end
 end

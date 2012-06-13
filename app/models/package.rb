@@ -36,6 +36,7 @@ class Package < ActiveRecord::Base
   scope :other, lambda{|p| where("id <> ?", p.id)}
   
   before_save :handle_environment_change
+  after_destroy :destroy_package_branch
   
   validates :version, :presence => true
   validates :installer_item_location, :presence => true
@@ -87,6 +88,10 @@ class Package < ActiveRecord::Base
     self.receipts ||= []
     self.installs ||= []
     self.raw_tags ||= {}
+  end
+  
+  def destroy_package_branch
+    package_branch.destroy if package_branch.packages.empty?
   end
 
   # An hash of params to be used for linking to a package instance
@@ -288,13 +293,11 @@ class Package < ActiveRecord::Base
   
   # If there is no associated icon, then it asks for the package categories icon instead
   def icon
-    begin
-      i = Icon.find(icon_id)
-    rescue ActiveRecord::RecordNotFound
-      i = package_branch.version_tracker.icon if package_branch.version_tracker
-      i ||= package_category.icon if package_category.respond_to?(:icon)
-    end
-    i
+    icon = Icon.where(:id => icon_id).first
+    icon ||= package_branch.icon
+    icon ||= package_category.icon
+
+    icon
   end
   
   # Setter for new_icon virtual attribute
@@ -453,7 +456,7 @@ class Package < ActiveRecord::Base
     environment_id ||= model_obj.environment_id
     environment = Environment.find(environment_id)
     # Get all the package branches associated with this unit and environment
-    update_for_options = PackageBranch.unit_and_environment(model_obj.unit,environment).map { |e| [e.to_s,e.to_s] unless e.id == model_obj.package_branch.id }.compact.sort{|a,b| a[0] <=> b[0]}
+    update_for_options = PackageBranch.where("id <> ?", model_obj.package_branch.id).unit_and_environment(model_obj.unit, environment).map { |e| [e.to_s,e.to_s] }
     update_for_selected = model_obj.update_for.map(&:package_branch).map(&:to_s)
     # update_for_selected = model_obj.update_for_items.map(&:package_branches).map(&:to_s)
     requires_options = Package.unit(model_obj.unit).environment(environment).where("id != #{model_obj.id}").map { |e| [e.to_s(:version),e.to_s(:version)] }.sort{|a,b| a[0] <=> b[0]}

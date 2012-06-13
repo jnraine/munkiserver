@@ -22,8 +22,6 @@ class PackageBranch < ActiveRecord::Base
   has_one :version_tracker, :dependent => :destroy, :autosave => true
   
   belongs_to :package_category
-  
-  before_save :require_version_tracker
 
   scope :find_for_index, lambda {|unit, env| unit(unit).environment(env).order("name ASC").includes({:packages => [:environment, :package_branch]}, :package_category) }
   scope :environment, lambda {|env| joins(:packages).where(:packages => {:environment_id => env.id}) }
@@ -125,34 +123,10 @@ class PackageBranch < ActiveRecord::Base
     p.first
   end
   
-  # Checks if version_tracker is nil and creates one if it is
-  def require_version_tracker
-    self.version_tracker = build_version_tracker if self.version_tracker.nil?
-  end
-  
   # Grabs vtv from latest package
   def vtv(unit = nil)
     p = unit.present? ? latest_where_unit(unit) : latest
     p.vtv unless p.nil?
-  end
-
-  # Sets iVars @environment_id and @unit_id to bind this record, temporarily, to a certain scope
-  def bind_to_scope(param1, param2 = nil)
-    if param2.nil?
-      # If only one param passed, assume it to be a unit_member
-      @environment_id = param1.environment_id
-      @unit_id        = param1.unit_id
-    else
-      # If both, assume first to be unit, second to be environment
-      @unit_id        = param1.id
-      @environment_id = param2.id
-    end
-    self.scoped?
-  end
-  
-  # Return boolean if @unit_id and @environment_id is set
-  def scoped?
-    @environment_id.present? and @unit_id.present?
   end
   
   # Get the associated environment
@@ -206,10 +180,8 @@ class PackageBranch < ActiveRecord::Base
   
   # Get package branches with packages in a specified unit and environment
   # TO-DO Not very efficient, could be refactored
-  def self.unit_and_environment(unit,environment, scope_results = true)
-    pbs = Package.unit(unit).environment(environment).includes(:package_branch).map {|p| p.package_branch }.uniq
-    pbs.each {|pb| pb.bind_to_scope(unit,environment) if scope_results }
-    pbs
+  def self.unit_and_environment(unit,environment)
+    Package.unit(unit).environment(environment).uniq_by {|branch| branch.id }
   end
   
   # Overrides default to string method.  Specifies version if this package
@@ -232,5 +204,9 @@ class PackageBranch < ActiveRecord::Base
   
   def obsolete?
     packages.empty? and install_items.empty? and uninstall_items.empty? and managed_update_items.empty? and optional_install_items.empty? and require_items.empty? and update_for_items.empty?
+  end
+  
+  def icon
+    version_tracker.icon unless version_tracker.nil?
   end
 end
