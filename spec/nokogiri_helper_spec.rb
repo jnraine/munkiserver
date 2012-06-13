@@ -14,6 +14,12 @@ describe NokogiriHelper, :vcr do
       end
     end
     
+    context "given an unescaped URL" do
+      it "returns a nokogiri document" do
+        NokogiriHelper.page("http://www.macupdate.com/find/mac/Foo App").title.should match("foo")
+      end
+    end
+    
     context "give a URL to of a non-existing domain (another problem)" do
       it "returns a NullObject" do
         NokogiriHelper.page("http://www.notasitefoobarbaz.com").should be_nil

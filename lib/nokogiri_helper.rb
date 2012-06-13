@@ -2,7 +2,7 @@ module NokogiriHelper
   # Retrieve a web page, following any redirects presented. Throws exception
   # for recurisive redirects.
   def retrieve_response(page_url)
-    url = URI.parse(page_url)
+    url = URI.parse(URI.escape(page_url))
     response = Net::HTTP.get_response(url)
     prev_redirect = ""
     while response.header['location']
@@ -10,7 +10,7 @@ module NokogiriHelper
         raise "Recursive redirect: #{response.header['location']}" 
       end
       prev_redirect = response.header['location']
-      url = URI.parse(response.header['location'])
+      url = URI.parse(URI.escape(response.header['location']))
       response = Net::HTTP.get_response(url)
     end
     
@@ -18,7 +18,6 @@ module NokogiriHelper
   end
   
   def page(page_url)
-    uri = URI.parse(page_url)
     response = retrieve_response(page_url)
     Nokogiri::HTML(response.body)
   rescue SocketError
@@ -29,6 +28,18 @@ module NokogiriHelper
   def redirect_url(url_string)
     Net::HTTP.get_response(URI.parse(url_string)).header["location"]
   end
+  
+  def escape_url(url_string)
+    if match = url_string.match(/(?<domain>https*:\/\/.+?)(?<path>\/.+)/)
+      domain = match[:domain]
+      path = CGI::escape(match[:path])
+      domain + path
+    else
+      raise NokogiriHelperError.new("Unable to parse URL string: #{url_string}")
+    end
+  end
 
   extend self
 end
+
+class NokogiriHelperError < Exception; end
