@@ -15,6 +15,15 @@
       <td>Category</td>
       <td><%= f.collection_select :package_category_id, PackageCategory.all, :id, :name %>
     </tr>
+    <tr>
+      <td>
+        MacUpdate.com Web ID
+      </td>
+      <td>
+        <%= f.text_field :version_tracker_web_id, :size => 10 %>
+        <%= helpful_info("The ID of an application on macupdate.com") %>
+      </td>
+    </tr>
   </table>
   <p><%= f.submit "Update" %></p>
 <% end %>

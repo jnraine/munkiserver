@@ -121,7 +121,7 @@ class PackagesController < ApplicationController
   
   # Used to check for available updates across all units
   def check_for_updates
-    call_rake("packages:check_for_updates")
+    Backgrounder.call_rake("packages:check_for_updates")
     flash[:notice] = "Checking for updates now"
     redirect_to :back
   end

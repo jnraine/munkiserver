@@ -84,4 +84,9 @@ namespace :chore do
   task :migrate_package_branches => :environment do
     MigratePackageBranches.new(Logger.new(STDOUT)).migrate
   end
+  
+  desc "Fetch data for a version tracker record"
+  task :fetch_version_tracker_data => :environment do
+    VersionTracker.fetch_data(ENV['ID'])
+  end
 end

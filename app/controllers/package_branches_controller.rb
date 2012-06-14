@@ -4,11 +4,13 @@ class PackageBranchesController < ApplicationController
 
   def update
     respond_to do |format|
+      @package_branch.version_tracker_web_id = params[:package_branch].delete(:version_tracker_web_id)
+      
       if @package_branch.update_attributes(params[:package_branch])
         flash[:notice] = "#{@package_branch.display_name} was successfully updated."
         format.html { redirect_to edit_package_branch_path(@package_branch.to_params) }
       else
-        flash[:error] = "An error occurred while updating #{@package_branch.name}"
+        flash[:error] = "An error occurred while updating #{@package_branch.display_name}"
         format.html { render :action => "edit" }
       end
     end

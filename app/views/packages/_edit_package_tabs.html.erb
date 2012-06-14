@@ -4,7 +4,6 @@
     <li><a href="#advanced"><span>Advanced</span></a></li>
     <li><a href="#plists"><span>Plists</span></a></li>
     <li><a href="#scripts"><span>Scripts</span></a></li>
-    <li><a href="#tracker"><span>Web Version Tracker</span></a></li>
   </ul>
   
   <!-- First tab starts here -->
@@ -303,24 +302,5 @@
         </tr>
 
       </table>
-  </div>
-  
-  <!-- Fifth tab starts here -->
-  <div id="tracker">
-    <table class="form">
-      <td colspan='2'>
-        <h4>Web Version Tracker <%= helpful_info('This will keep tracking the version of the current package against the corresponding packages on MacUpdate.com') %></h4>
-      </td>
-      <tr>
-        <td>
-          MacUpdate.com Web ID or URL
-        </td>
-        <td>
-          <%= f.text_field :version_tracker_web_id, :size => 70 %>
-          <%= helpful_info("Optionally, specify a version string used when comparing this package to the latest on macupdate.com") %>
-        </td>
-
-      </tr>
-    </table>
   </div>
 </div>

@@ -28,16 +28,6 @@ module NokogiriHelper
   def redirect_url(url_string)
     Net::HTTP.get_response(URI.parse(url_string)).header["location"]
   end
-  
-  def escape_url(url_string)
-    if match = url_string.match(/(?<domain>https*:\/\/.+?)(?<path>\/.+)/)
-      domain = match[:domain]
-      path = CGI::escape(match[:path])
-      domain + path
-    else
-      raise NokogiriHelperError.new("Unable to parse URL string: #{url_string}")
-    end
-  end
 
   extend self
 end

@@ -80,10 +80,10 @@ describe VersionTracker, :vcr do
   
   describe "#scrape_icon" do
     context "given a page with an icon" do
-      it "returns an unsaved icon" do
+      it "returns a saved icon" do
         icon = VersionTracker.new.scrape_icon(firefox_page)
         icon.should be_an(Icon)
-        icon.should be_new_record
+        icon.should_not be_new_record
       end
     end
     

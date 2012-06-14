@@ -1,4 +1,9 @@
 class NullObject
+
+  def self.Maybe(object)
+    object.present? ? object : NullObject.new
+  end
+  
   def initialize(*args)
   end
   
@@ -22,7 +27,7 @@ class NullObject
     self
   end
   
-  def self.Maybe(object)
-    object.present? ? object : NullObject.new
+  def to_s
+    ""
   end
 end

@@ -9,6 +9,7 @@ class Package < ActiveRecord::Base
   # Dependancy relationships
   belongs_to :package_branch
   belongs_to :icon
+  
   has_many :dependents, :class_name => "RequireItem", :dependent => :destroy
   has_many :require_items, :as => :manifest, :dependent => :destroy
   has_many :updates, :class_name => "UpdateForItem", :dependent => :destroy
@@ -20,6 +21,8 @@ class Package < ActiveRecord::Base
   has_many :user_install_items, :dependent => :destroy
   has_many :user_uninstall_items, :dependent => :destroy
   has_many :user_allowed_items, :dependent => :destroy
+  
+  has_one :version_tracker, :through => :package_branch, :autosave => true
   
   serialize :installs
   serialize :receipts
@@ -408,30 +411,6 @@ class Package < ActiveRecord::Base
   def update_for=(list)
     build_package_association_assignment(:update_for_items,list)
   end
-
-  # Getter for virtual attribute
-  def version_tracker_web_id
-    package_branch.version_tracker.web_id unless package_branch.version_tracker.nil?
-  end
-  
-  # Setter for virtual attribute
-  def version_tracker_web_id=(value)
-    if package_branch.version_tracker.nil?
-      raise PackageError.new("No version tracker record found")
-    elsif value.blank?
-      package_branch.version_tracker.web_id = nil
-    elsif value.to_s.match('[0-9]+')[0].to_i.present?
-      package_branch.version_tracker.web_id = value.to_s.match('[0-9]+')[0].to_i    
-    end
-  end
-  
-  # Require icon
-  def require_icon
-    if self.icon == nil
-      self.icon = Icon.new
-      self.icon.save
-    end
-  end
   
   # Get the latest package from a specific unit and environment
   def self.latest_from_unit_and_environment(u,e)
@@ -677,11 +656,8 @@ class Package < ActiveRecord::Base
     {}
   end
   
-  # Returns array of attributes that a package object knows how to deal with
-  # Includes manually added virtual attributes, not stored directly to a db column
   def self.known_attributes
-    # TO-DO find a better way to return a list of attribute keys
-    @known_attributes = Package.new.attributes.keys + ["display_name"]
+    @known_attributes ||= Package.new.attributes.keys
   end
   
   # True if update_for or requires have items

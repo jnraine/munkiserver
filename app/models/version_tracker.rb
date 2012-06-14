@@ -13,8 +13,8 @@ class VersionTracker < ActiveRecord::Base
   belongs_to :package_branch
   belongs_to :icon, :dependent => :destroy, :autosave => true
   
-  before_save :refresh_data
-  before_create :fetch_data
+  after_save :refresh_data
+  after_create :background_fetch_data
   
   def self.update_all
     branches = PackageBranch.all
@@ -24,22 +24,33 @@ class VersionTracker < ActiveRecord::Base
     end
   end
   
-  def refresh_data(options = {})
-    fetch_data(options) if web_id_changed?
+  def self.fetch_data(id)
+    tracker = VersionTracker.where(:id => id).first
+    if tracker.present?
+      tracker.fetch_data
+      tracker.save!
+    end
   end
   
-  def fetch_data(options = {})
-    options = {:refresh_icon => false}.merge(options)
+  def refresh_data
+    background_fetch_data if web_id_changed?
+  end
+  
+  def background_fetch_data
+    Backgrounder.call_rake("chore:fetch_version_tracker_data", :id => id)
+  end
+  
+  def fetch_data
     self.web_id = retrieve_web_id if web_id.blank?
     page = NokogiriHelper.page(page_url)
     self.assign_data(scrape_data(page))
-    self.icon = scrape_icon(page)
+    self.icon = scrape_icon(page) if icon.nil?
     self.download_links = scrape_download_links(page)
   end
   
   def assign_data(data)
-    self.version = data[:version]
-    self.description = data[:description]
+    self.version = data[:version].to_s
+    self.description = data[:description].to_s
   end
   
   # Return true if macupdate is reachable
