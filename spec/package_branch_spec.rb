@@ -1,6 +1,15 @@
 require 'spec_helper'
 
 describe PackageBranch do
+  before(:all) do
+    module VersionTracker::Backgrounder
+      def call_rake(*args)
+      end
+      
+      extend self
+    end
+  end
+  
   describe "#version_tracker_web_id" do
     it "returns the web ID of the associated version tracker", :vcr do
       branch = FactoryGirl.create(:package_branch)
