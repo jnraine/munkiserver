@@ -29,6 +29,7 @@ class VersionTracker < ActiveRecord::Base
     if tracker.present?
       tracker.fetch_data
       tracker.save!
+      tracker
     end
   end
   
@@ -44,8 +45,10 @@ class VersionTracker < ActiveRecord::Base
     self.web_id = retrieve_web_id if web_id.blank?
     page = NokogiriHelper.page(page_url)
     self.assign_data(scrape_data(page))
-    self.icon = scrape_icon(page) if icon.nil?
+    self.icon = scrape_icon(page)
     self.download_links = scrape_download_links(page)
+
+    self
   end
   
   def assign_data(data)
