@@ -87,6 +87,6 @@ namespace :chore do
   
   desc "Fetch data for a version tracker record"
   task :fetch_version_tracker_data => :environment do
-    VersionTracker.fetch_data(ENV['ID'])
+    puts VersionTracker.fetch_data(ENV['ID']).inspect
   end
 end
