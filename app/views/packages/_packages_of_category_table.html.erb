@@ -7,10 +7,6 @@
       <th><%= check_box_tag("selected_#{category.name.downcase}", nil, false, :class => "select_all") %></th> 
       <th>Version</th>
       <th>Actions</th>
-      <th>
-        Update
-        <%= helpful_info("If a checkmark appears, there is a newer version of this package shared by another unit Or there is a new version available to download from the Version Tracker. Go to 'shared packages' to import Or Go download the new package and add as a new package.") %>
-      </th>
     </tr>
   </thead>
   <% package_branches.each do |package_branch| %>

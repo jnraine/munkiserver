@@ -1,15 +1,12 @@
 <tr>
-  <td rowspan="<%= packages.count %>"><%= image_tag(packages.first.icon.url(:small), :class => "thumbnail", "data-package-branch-id" => package_branch.id) %></td>
+  <td rowspan="<%= packages.count %>">
+    <%= image_tag(packages.first.icon.url(:small), :class => "thumbnail", "data-package-branch-id" => package_branch.id) %>
+  </td>
   <td rowspan="<%= packages.count %>">
     <%= link_to package_branch.display_name, edit_package_branch_path(package_branch.to_params) %><br />
     <em><%= package_branch.name %></em>
   </td>
   <%= render :partial => "packages/package_version_column", :locals => {:pkg => packages.first} %>
-  <td rowspan="<%= packages.count %>" class="centerize">
-    <% unless package_branch.packages.first.has_dependencies? %>
-      <%= update_or_import(package_branch.packages.first) %>
-    <% end %>
-  </td>
 </tr>
 <% packages.each_with_index do |package, i| %>
   <% unless i == 0 %>
