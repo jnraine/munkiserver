@@ -29,7 +29,7 @@ class PackageBranch < ActiveRecord::Base
   # Conforms a string to the package branch name constraints
   # => Replaces anything that are not alpheranumrical to underscores
   def self.conform_to_name_constraints(name)
-    name.gsub(/[^A-Za-z0-9_]+/,"_")
+    name.downcase.gsub(/[^A-Za-z0-9_]+/,"_")
   end
   
   # Check if there exists a pacakge branch display name that matches the 
