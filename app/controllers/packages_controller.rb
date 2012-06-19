@@ -139,23 +139,19 @@ class PackagesController < ApplicationController
     @grouped_branches = @branches.group_by {|branch| branch.unit }
   end
   
-  # Import two or more packages from other units,
-  # after import default to staging enviroment, and package shared status to false
+  # Import shared packages from another unit
   def import_multiple_shared
-    shared_packages = Package.shared.where("unit_id != #{current_unit.id}").find(params[:selected_records])
-    results = []
-    shared_packages.each do |shared_package|
-      package = Package.import_package(current_unit, shared_package)
-      results << package.save
-    end
+    cloned_packages = Package.clone_packages(Package.shared.where(:id => params[:selected_records]), current_unit)
+    save_results = cloned_packages.map(&:save)
+
     respond_to do |format|
-      if results.include?(false)
-        flash[:error] = "Failed to import packages"
-        format.html { redirect_to shared_packages_path(current_unit) }
-      else
+      unless save_results.include?(false)
         flash[:notice] = "Successfully imported packages"
-        format.html { redirect_to shared_packages_path(current_unit) }
+      else  
+        flash[:error] = "Failed to import all or some packages"
       end
+      
+      format.html { redirect_to shared_packages_path(current_unit) }
     end
   end
     

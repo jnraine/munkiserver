@@ -259,8 +259,9 @@ class Package < ActiveRecord::Base
   end
   
   # If package changed environment, remove all releations in install/uninstall/optional items
+  # TO-DO: THIS IS SO UGLY
   def handle_environment_change
-    if environment_id_changed?
+    if environment_id_changed? and not new_record?
       # Handle references to this package
       self.optional_install_items.each(&:destroy)
       self.install_items.each(&:destroy)
@@ -620,26 +621,49 @@ class Package < ActiveRecord::Base
     end
   end
   
-  # Import package from other units to current_unit
-  # new package will inherite most of the attributes from orginal
-  # except for the list of the attributes below
-  def self.import_package(unit, shared_package)
-    package = Package.new(shared_package.attributes)
-    # Do custom stuff to imported package
-    package.unit = unit
-    package.environment = Environment.start
-    package.update_for = []
-    package.requires = []
-    package.icon = shared_package.icon
-    package.shared = false
-    package
+  def self.clone_packages(target_packages, unit)
+    target_packages.map {|target_package| clone_package(target_package, unit) }
+  end
+  
+  # Clone package to a given unit. Cloned package maintains cloneable attributes
+  # and is assigned others based on the unit.
+  def self.clone_package(target_package, unit)
+    target_branch = target_package.package_branch
+
+    Package.new do |p|
+      target_package.cloneable_attributes.each do |name, value|
+        p[name] = value
+      end
+      
+      branch_attributes = {:name => target_branch.name,
+                           :display_name => target_branch.display_name,
+                           :unit_id => unit.id,
+                           :package_category_id => target_branch.package_category_id}
+      p.package_branch = ProcessPackageUpload::PackageAssembler.retrieve_package_branch(branch_attributes)
+      
+      p.unit = unit
+      p.environment = Environment.start
+    end
+  end
+  
+  def self.clone_attributes
+    ["version", "description", "icon_id", "filename", "minimum_os_version", "maximum_os_version", "RestartAction", "package_path", "autoremove", "version_tracker_version", "installer_type", "installed_size", "installer_item_size", "installer_item_location", "installer_choices_xml", "use_installer_choices", "uninstall_method", "uninstaller_item_location", "uninstaller_item_size", "uninstallable", "installer_item_checksum", "raw_mode_id", "preinstall_script", "postinstall_script", "uninstall_script", "preuninstall_script", "postuninstall_script", "unattended_install", "unattended_uninstall", "force_install_after_date", "receipts", "supported_architectures", "installs", "raw_tags"]
+  end
+  
+  def cloneable_attributes
+    cloneable_attributes = {}
+    self.class.clone_attributes.each do |attribute_name|
+      cloneable_attributes[attribute_name] = self[attribute_name]
+    end
+    
+    cloneable_attributes
   end
   
   # over write the default get description, check if nil then get the description from version_trackers
   def description
     value = super
-    if value.blank? and self.package_branch.version_tracker.present?
-      self.package_branch.version_tracker.description
+    if value.blank? and package_branch.present? and package_branch.version_tracker.present?
+      package_branch.version_tracker.description
     else
       value
     end
