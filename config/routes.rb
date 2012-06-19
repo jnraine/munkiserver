@@ -47,7 +47,6 @@ Munki::Application.routes.draw do
       
       scope '/packages' do
         match 'add(.:format)', :action => 'new', :via => :get, :as => 'new_package'
-        match "shared/import/:id", :action => 'import_shared', :via => :put, :as => "import_shared_package"
         match "shared/import_multiple_shared", :action => 'import_multiple_shared', :via => :put, :as => "import_multiple_shared_packages"
         match "shared", :action => 'index_shared', :via => :get, :as => "shared_packages"
         match 'multiple(.:format)', :action => 'edit_multiple', :via => :get, :as => 'edit_multiple_packages'
