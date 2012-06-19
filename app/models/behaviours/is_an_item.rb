@@ -24,7 +24,8 @@ module IsAnItem
   end
 
   def package
-    p = Package.where(:id => package_id).first if package_id.present?
+    p = Package.find(:id => package_id) if package_id.present?
+    logger.info self.inspect
     p ||= package_branch.packages.group_by {|p| p.environment_id }[manifest.environment_id].first if package_branch.present?
     p
   end

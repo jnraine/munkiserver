@@ -19,20 +19,13 @@ module IsAManifest
       has_many :install_items, :as => :manifest, :dependent => :destroy
       has_many :uninstall_items, :as => :manifest,:dependent => :destroy
     
-      # A list of user allowed install/uninstall items
-      has_many :user_allowed_items, :as => :manifest, :dependent => :destroy
-    
-      # User specified install and uninstall items
-      has_many :user_install_items, :as => :manifest, :dependent => :destroy
-      has_many :user_uninstall_items, :as => :manifest, :dependent => :destroy
-    
       # Managed Updates items
       has_many :managed_update_items, :as => :manifest, :dependent => :destroy
 
       # Optional Install items
       has_many :optional_install_items, :as => :manifest, :dependent => :destroy
-            
-      attr_is_hash :version_rollback
+      
+      scope :eager_items, includes(item_includes)
     end
   end
   
@@ -116,6 +109,24 @@ module IsAManifest
         :select_title => "Select optional intalls",
         :options => pkg_branch_options,
         :selected_options => model_obj.optional_installs_package_branch_ids }]
+    end
+    
+    def item_associations
+      [:package, {:package_branch => [:packages]}, :manifest]
+    end
+    
+    # Array of associations to load for associates items
+    def item_includes
+      [
+        {:install_items => item_associations},
+        {:uninstall_items => item_associations},
+        {:managed_update_items => item_associations},
+        {:optional_install_items => item_associations}
+      ]
+    end
+    
+    def bundle_includes
+      [{:bundles => item_includes}, {:bundle_items => :bundle}]
     end
   end
       

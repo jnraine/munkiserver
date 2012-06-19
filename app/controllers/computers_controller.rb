@@ -218,7 +218,7 @@ class ComputersController < ApplicationController
     action = params[:action].to_sym
     if [:show].include?(action)      
       @computer = Computer.find_for_show_fast(params[:id], current_unit)
-    elsif [:edit, :update, :destroy].include?(action)      
+    elsif [:edit, :update, :destroy].include?(action)
       @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))
     elsif [:update_warranty].include?(action)      
       @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:computer_id]))

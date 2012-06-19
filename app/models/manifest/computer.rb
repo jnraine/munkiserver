@@ -25,7 +25,7 @@ class Computer < ActiveRecord::Base
   validates_uniqueness_of :mac_address,:name, :hostname
   
   scope :search, lambda {|column, term|where(["#{column.to_s} LIKE ?", "%#{term}%"]) unless term.blank? or column.blank?}
-  scope :eager_items, includes({:install_items => [:package, {:package_branch => [:packages]}, :manifest]})
+  scope :eager_manifests, includes(bundle_includes + [{:computer_group => item_includes + bundle_includes}])
   
   # before_save :require_computer_group
   
@@ -115,7 +115,7 @@ class Computer < ActiveRecord::Base
   end
   
   def self.find_for_show_fast(shortname, unit)
-    Computer.unit(unit).where(:shortname => shortname).eager_items.first
+    Computer.unit(unit).where(:shortname => shortname).eager_items.eager_manifests.first
   end
 
   def client_identifier
