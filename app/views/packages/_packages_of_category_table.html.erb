@@ -10,8 +10,9 @@
     </tr>
   </thead>
   <% package_branches.each do |package_branch| %>
-    <% if package_branch.packages.environment(current_environment).present? %>
-      <%= render :partial => 'packages/package_table_row', :locals => {:package_branch => package_branch, :packages => package_branch.packages.environment(current_environment)} %>
+    <% packages = package_branch.packages.group_by {|p| p.environment_id }[current_environment.id] %>
+    <% if packages.present? %>
+      <%= render :partial => 'packages/package_table_row', :locals => {:package_branch => package_branch, :packages => packages} %>
     <% end %>
   <% end %>
 </table>
