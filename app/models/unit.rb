@@ -4,6 +4,7 @@ class Unit < ActiveRecord::Base
   has_many :bundles, :dependent => :destroy
   has_many :packages, :dependent => :destroy
   has_many :principals, :through => :permissions
+  has_many :package_branches, :dependent => :destroy
   
   scope :from_other_unit, lambda {|u| where("id != ?", u.id)}
   

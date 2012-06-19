@@ -135,13 +135,8 @@ class PackagesController < ApplicationController
   end
 
   def index_shared
-    @packages = Package.shared.where("unit_id != #{current_unit.id}")
-    pb_ids = []
-    @packages.each do |p|
-      pb_ids << p.package_branch_id
-    end
-    @package_branches = PackageBranch.find(pb_ids.uniq)
-    @other_units = Unit.from_other_unit(current_unit)
+    @branches = PackageBranch.not_unit(current_unit).shared.includes(:shared_packages)
+    @grouped_branches = @branches.group_by {|branch| branch.unit }
   end
   
   # Updates the shared package resource by adding a new instance of that package

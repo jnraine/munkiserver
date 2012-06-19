@@ -1,20 +1,20 @@
-<% if packages.present? %>
-	<table class="zebra">
-	<thead>
-		<tr>
-			<th><!-- Icon --></th>
-			<th>Display Name<br/><em>Branch</em></th>
-			<th><%= check_box_tag("selected_all", nil, false, :class => "select_all") %></th>
-			<th>Version</th>
-			<th>Update For</th>
-			<th>Requires</th>
-			<th>Status</th>
-		</tr>
-	</thead>
-		<% package_branches.each do |package_branch| %>
-			<%= render :partial => 'shared_package_table_row', :locals => {:packages => packages, :package_branch => package_branch, :unit => unit} %>
-		<% end %>
-	</table>
+<% if branches.present? %>
+  <table class="zebra">
+  <thead>
+    <tr>
+      <th><!-- Icon --></th>
+      <th>Display Name<br/><em>Branch</em></th>
+      <th><%= check_box_tag("selected_all", nil, false, :class => "select_all") %></th>
+      <th>Version</th>
+      <th>Update For</th>
+      <th>Requires</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+    <% branches.each do |branch| %>
+      <%= render :partial => 'shared_package_table_row', :locals => {:branch => branch} %>
+    <% end %>
+  </table>
 <% else %>
-	<p><em>There are no shared packages from this unit.</em></p>
+  <p><em>There are no shared packages from this unit.</em></p>
 <% end %>

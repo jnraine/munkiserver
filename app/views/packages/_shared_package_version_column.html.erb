@@ -1,36 +1,36 @@
 <td>
-	<% if package.shared_installer_item_location(current_unit).present? %>
-	<%= check_box_tag("selected_records[]", package.id, false, {:disabled => true})%>
-	<% else %>
-	<%= check_box_tag("selected_records[]", package.id, false, :class => "package_branch_#{package.package_branch_id} bulk_edit_checkbox") %>
-	<% end %>
+  <% if package.shared_installer_item_location(current_unit).present? %>
+    <%= check_box_tag("selected_records[]", package.id, false, {:disabled => true}) %>
+  <% else %>
+    <%= check_box_tag("selected_records[]", package.id, false, :class => "package_branch_#{package.package_branch_id} bulk_edit_checkbox") %>
+  <% end %>
 </td>
 <td>
-	<%= "#{package.version}" %>
+  <%= "#{package.version}" %>
 </td>
 <td>
-	<% package.update_for.each do |uf| %>
-		<%= "#{uf.name} (#{uf.version})" %><br />
-	<% end %>
+  <% package.update_for.each do |uf| %>
+    <%= "#{uf.name} (#{uf.version})" %><br />
+  <% end %>
 </td>
 <td>
-	<% package.requires.each do |r| %>
-		<%= "#{r.name} (#{r.version})" %><br />
-	<% end %>
+  <% package.requires.each do |r| %>
+    <%= "#{r.name} (#{r.version})" %><br />
+  <% end %>
 </td>
 <td>
-	<% if package.shared_installer_item_location(current_unit).present? %>
-		<ul class="dropdown dropdown-horizontal imported_link">
-			<li class="dir imported">
-				<a class="no_action" href="#">Imported</a>
-				<ul>
-					<% package.shared_installer_item_location(current_unit).each do |p| %>
-						<li><%= link_to "#{p.name} #{p.version}", package_path(p.to_params) %></li>
-					<% end %>
-				</ul>
-			</li>
-		</ul>
-	<% else %>
-		Not Imported
-	<% end %>
+  <% if package.shared_installer_item_location(current_unit).present? %>
+    <ul class="dropdown dropdown-horizontal imported_link">
+      <li class="dir imported">
+        <a class="no_action" href="#">Imported</a>
+        <ul>
+          <% package.shared_installer_item_location(current_unit).each do |p| %>
+            <li><%= link_to "#{p.name} #{p.version}", package_path(p.to_params) %></li>
+          <% end %>
+        </ul>
+      </li>
+    </ul>
+  <% else %>
+    Not Imported
+  <% end %>
 </td>

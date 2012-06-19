@@ -8,6 +8,7 @@ module HasAUnit
       belongs_to :unit
     
       scope :unit, lambda { |u| u.present? ? where(:unit_id => u.id) : where(:unit_id => nil) }
+      scope :not_unit, lambda { |u| where("#{self.to_s.tableize}.unit_id <> ?", u.id) }
       
       validates :unit_id, :presence => true
     end

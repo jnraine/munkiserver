@@ -19,6 +19,7 @@ class PackageBranch < ActiveRecord::Base
   has_many :update_for_items, :dependent => :destroy
   has_many :notifications, :as => :notified
   has_many :packages, :order => "version DESC", :dependent => :destroy
+  has_many :shared_packages, :class_name => "Package", :conditions => {:shared => true}
   has_one :version_tracker, :dependent => :destroy, :autosave => true
   
   belongs_to :package_category
@@ -26,6 +27,7 @@ class PackageBranch < ActiveRecord::Base
   scope :find_for_index, lambda {|unit, env| has_versions.unit(unit).environment(env).order("name ASC").includes({:packages => [:environment, :package_branch]}, :package_category) }
   scope :environment, lambda {|env| joins(:packages).where(:packages => {:environment_id => env.id}) }
   scope :has_versions, where('(SELECT COUNT(*) FROM "packages" WHERE "packages"."package_branch_id" = "package_branches"."id") > 0')
+  scope :shared, includes(:packages).where("packages.shared" => true)
 
   # Conforms a string to the package branch name constraints
   # => Replaces anything that are not alpheranumrical to underscores

@@ -1,22 +1,22 @@
 <h2>Shared Packages</h2>
-<% if @packages.present? %>
-	<%= form_tag import_multiple_shared_packages_path(current_unit), :id => "multiple_import_form", :method => 'PUT' do %>
-		<p><em>Dependencies (found in "Update For" and "Requires" columns) are not imported!</em>
-		<%= submit_tag "Import Selection", :id => "bulk_edit", :confirm => "Are you sure you want to import the selected packages?" %></p>
-		<div id="tabs">
-			<ul>
-				<% @other_units.each do |unit| %>
-					<li><a href="#<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab">
-						<span><%= unit.name %> (<%= count_shared_packages(@packages, unit)%>)</span></a></li>
-				<% end %>
-			</ul>
-				<% @other_units.each do |unit| %>
-					<div id="<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab">
-						<%= shared_package_table(@packages, unit)%>
-					</div>
-				<% end %>
-		</div>
-	<% end %>
+<% if @branches.present? %>
+  <%= form_tag import_multiple_shared_packages_path(current_unit), :id => "multiple_import_form", :method => 'PUT' do %>
+    <p><em>Dependencies (found in "Update For" and "Requires" columns) are not imported!</em>
+    <%= submit_tag "Import Selection", :id => "bulk_edit", :confirm => "Are you sure you want to import the selected packages?" %></p>
+    <div id="tabs">
+      <ul>
+        <% @grouped_branches.each do |unit, branches| %>
+          <li><a href="#<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab">
+            <span><%= unit.name %> (<%= unit.packages.shared.count %>)</span></a></li>
+        <% end %>
+      </ul>
+        <% @grouped_branches.each do |unit, branches| %>
+          <div id="<%= unit.name.downcase.lstrip.rstrip.gsub(/[^a-z0-9]+/, '-') %>_tab">
+            <%= shared_package_table(branches)%>
+          </div>
+        <% end %>
+    </div>
+  <% end %>
 <% else %>
-	<h5>There are no shared packages</h5>
+  <h5>There are no shared packages</h5>
 <% end %>

@@ -1,14 +1,4 @@
-class SharedPackagesController < ApplicationController
-  def index
-    @packages = Package.shared.where("unit_id != #{current_unit.id}")
-    pb_ids = []
-    @packages.each do |p|
-      pb_ids << p.package_branch_id
-    end
-    @package_branches = PackageBranch.find(pb_ids.uniq)
-    @other_units = Unit.from_other_unit(current_unit)
-  end
-  
+class SharedPackagesController < ApplicationController  
   # Updates the shared package resource by adding a new instance of that package
   # to the current unit.  This is very basic and gets complicated when that package
   # has dependencies.  This still needs to be sorted out.
@@ -55,10 +45,10 @@ class SharedPackagesController < ApplicationController
   # package from this unit and see if we can act upon it -- we use a record 
   # instead of the Package class to give unit context.
   def load_singular_resource
-    @shared_package = Package.where(:unit_id => current_unit.id).limit(1).first
+    @example_package = Package.where(:unit_id => current_unit.id).limit(1).first
   end
   
   def authorize_resource
-    authorize! params[:action], @shared_package
+    authorize! params[:action], @example_package
   end
 end

@@ -1,20 +1,20 @@
+<% packages = branch.shared_packages %>
 <tr>
-	<td rowspan="<%= package_branch.shared_packages_from_unit(unit).count %>">
-	<%= image_tag(package_branch.shared_packages_from_unit(unit).first.icon.url(:small), :class => "thumbnail", "data-package-branch-id" => package_branch.id) if package_branch.shared_packages_from_unit(unit).first.icon %>
-	</td>
-	<td rowspan="<%= package_branch.shared_packages_from_unit(unit).count %>">
-		<%= package_branch.display_name %><br />
-		<em><%= package_branch.name %></em>
-	</td>
-	<%= render :partial => 'shared_package_version_column', :locals => {:package => package_branch.shared_packages_from_unit(unit).first} %>
-	<td rowspan="<%= package_branch.shared_packages_from_unit(unit).count %>" class="centerize">
-	
-	</td>
+  <td rowspan="<%= packages.count %>">
+  <%= image_tag(packages.first.icon.url(:small), :class => "thumbnail", "data-package-branch-id" => branch.id) if packages.first %>
+  </td>
+  <td rowspan="<%= packages.count %>">
+    <%= branch.display_name %><br />
+    <em><%= branch.name %></em>
+  </td>
+  <%= render :partial => 'shared_package_version_column', :locals => {:package => packages.first} %>
+  <td rowspan="<%= packages.count %>" class="centerize">
+  </td>
 </tr>
-<% package_branch.shared_packages_from_unit(unit).each_with_index do |package,i| %>
-	<% unless i == 0 %>
-		<tr>
-			<%= render :partial => 'shared_package_version_column', :locals => {:package => package} %>
-		</tr>
-	<% end %>
+<% packages.each_with_index do |package,i| %>
+  <% unless i == 0 %>
+    <tr>
+      <%= render :partial => 'shared_package_version_column', :locals => {:package => package} %>
+    </tr>
+  <% end %>
 <% end %>
