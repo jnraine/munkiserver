@@ -24,7 +24,8 @@ class Computer < ActiveRecord::Base
   validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/ # mac_address attribute must look something like ff:12:ff:34:ff:56
   validates_uniqueness_of :mac_address,:name, :hostname
   
-  scope :search, lambda{|column, term|where(["#{column.to_s} LIKE ?", "%#{term}%"]) unless term.blank? or column.blank?}
+  scope :search, lambda {|column, term|where(["#{column.to_s} LIKE ?", "%#{term}%"]) unless term.blank? or column.blank?}
+  scope :eager_items, includes({:install_items => [:package, {:package_branch => [:packages]}, :manifest]})
   
   # before_save :require_computer_group
   
@@ -111,6 +112,10 @@ class Computer < ActiveRecord::Base
   # Add mac_address matching
   def self.find_for_show(unit, id)
     find_for_show_super(unit, id) || where(:mac_address => id).first
+  end
+  
+  def self.find_for_show_fast(shortname, unit)
+    Computer.unit(unit).where(:shortname => shortname).eager_items.first
   end
 
   def client_identifier
