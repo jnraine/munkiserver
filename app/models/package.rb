@@ -50,7 +50,7 @@ class Package < ActiveRecord::Base
   validates :receipts, :array => true
   validates :installs, :array => true
   validates :raw_tags, :hash => true
-  validates :version, :uniqueness_in_unit => true  
+  validates_uniqueness_of :version, :scope => [:unit_id, :package_branch_id]
   validates :force_install_after_date_string, :date_time => true, :allow_blank => true
   
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
