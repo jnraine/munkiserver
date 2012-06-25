@@ -89,4 +89,22 @@ namespace :chore do
   task :fetch_version_tracker_data => :environment do
     puts VersionTracker.fetch_data(ENV['ID']).inspect
   end
+
+  desc "Destroy package branches that have no packages"
+  task :destroy_unused_package_branches => :environment do
+    unused_branches = PackageBranch.has_no_versions
+    if unused_branches.present?
+      puts "Attempting to destroy #{unused_branches.count} package branches: "
+      unused_branches.each do |branch| 
+        print "\t#{branch.name}..."
+        if branch.destroy
+          puts "destroyed"
+        else
+          puts "failed"
+        end
+      end
+    else
+      puts "No unused branches found"
+    end
+  end
 end

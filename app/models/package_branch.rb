@@ -27,6 +27,7 @@ class PackageBranch < ActiveRecord::Base
   scope :find_for_index, lambda {|unit, env| has_versions.unit(unit).environment(env).order("name ASC").includes({:packages => [:environment, :package_branch]}, :package_category) }
   scope :environment, lambda {|env| joins(:packages).where(:packages => {:environment_id => env.id}) }
   scope :has_versions, where('(SELECT COUNT(*) FROM `packages` WHERE `packages`.`package_branch_id` = `package_branches`.`id`) > 0')
+  scope :has_no_versions, where('(SELECT COUNT(*) FROM `packages` WHERE `packages`.`package_branch_id` = `package_branches`.`id`) = 0')
   scope :shared, includes(:packages).where("packages.shared" => true)
 
   # Conforms a string to the package branch name constraints
