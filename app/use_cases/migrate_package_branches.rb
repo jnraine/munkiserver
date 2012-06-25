@@ -73,7 +73,7 @@ class MigratePackageBranches
       if original_branch.unit.blank?
         log.info "Migrating #{package.to_s(:pretty_with_version)}'s package branch..."
 
-        new_branch = retrieve_unit_scoped_branch(original_branch, package.unit, PackageCategory.where(package.package_category_id).first)
+        new_branch = retrieve_unit_scoped_branch(original_branch, package.unit, PackageCategory.where(:id => package.package_category_id).first)
         package.package_branch = new_branch
         package.save!
         
