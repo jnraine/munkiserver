@@ -12,6 +12,6 @@ end
 # every night at 12 pm 
 every 1.day, :at => '2:00am' do
   rake "chore:cleanup_system_profiles"
-  rake "chore:cleanup_old_managed_install_report"
+  rake "chore:cleanup_old_managed_install_reports"
   rake "chore:cleanup_missing_manifests"
 end
