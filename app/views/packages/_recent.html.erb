@@ -10,9 +10,6 @@
 			
 			<% shared_pkgs.each do |pkg| %>
 				<%= pkg.to_s(:pretty_with_version) %>
-				<% if can? :create, Package.new_for_can(current_unit) %>
-					[<%= link_to "import", import_shared_package_path(current_unit,pkg), {"data-confirm" => "Are you sure you want to import #{pkg.to_s(:pretty_with_version)} from #{pkg.unit} unit?"} %>]<br />
-				<% end %>
 			<% end -%>
 	</div>
 <% end %>
