@@ -31,7 +31,7 @@ class Ability
     can :download, Package
     # Allow client computer requests
     can :checkin, Computer
-    can :show, Computer
+    can :show_plist, Computer
     # Allow any request to retrieve catalogs
     can :read, Catalog
     # Allow everyone to edit their user record
