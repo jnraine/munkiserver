@@ -1,5 +1,13 @@
+# Load server configuration YAML file
+settings = {}
+begin
+  settings = YAML.load(File.read("#{Rails.root}/config/settings.yaml"))
+rescue Errno::ENOENT
+  # config/settings.yaml doesn't exist
+end
+
 # Set path to image magick
-path = nil
+path = settings[:image_magick_path]
 
 # See if the system knows
 if path.nil?

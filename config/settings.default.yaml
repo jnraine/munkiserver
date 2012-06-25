@@ -10,3 +10,4 @@
   # :sendmail_settings:
   #    :location: /usr/sbin/sendmail
   # :host: "ives.itds.sfu.ca:3000"
+# :image_magick_path: "/foo/bar/baz"
