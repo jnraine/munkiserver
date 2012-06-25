@@ -24,7 +24,7 @@ Munki::Application.routes.draw do
   match 'catalogs/:unit_environment' => 'catalogs#show', :format => 'plist', :via => :get
   match 'pkgs/:id' => 'packages#download', :as => 'download_package', :id => /[A-Za-z0-9_\-\.%]+/
   match '/configuration/:id.plist', :controller => 'computers', :action => 'show', :format => 'client_prefs', :id => /[A-Za-z0-9_\-\.:]+/
-  
+
   # add units into URLs
   scope "/:unit_shortname" do
     resources :computers do
@@ -92,5 +92,8 @@ Munki::Application.routes.draw do
   match "permissions/edit/:principal_pointer(/:unit_id)" => "permissions#edit", :as => "edit_permissions", :via => "GET"
   match "permissions" => "permissions#update", :as => "update_permissions", :via => "PUT"
   
+  # Redirect unit hostname to computer index
+  match "/:unit_shortname" => redirect("/%{unit_shortname}/computers")
+
   root :to => redirect("/login")
 end
