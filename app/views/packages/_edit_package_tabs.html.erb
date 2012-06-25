@@ -14,7 +14,7 @@
           Package Branch
         </td>
         <td>
-          <%= f.collection_select :package_branch_id, PackageBranch.unit(current_unit), :id, :name %>
+          <%= f.collection_select :package_branch_id, PackageBranch.unit(current_unit).sort {|a,b| a.name.downcase <=> b.name.downcase}, :id, :name %>
         </td>
       </tr>
       <tr>
