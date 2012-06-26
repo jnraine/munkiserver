@@ -280,6 +280,26 @@ namespace :bootstrap do
       end
     end
   end
+
+  desc "Create site_default manifest" 
+  task :site_default_manifest => :environment do
+    if Computer.find_by_mac_address("00:00:00:00:00:00").blank?
+      Rake::Task["bootstrap:unit"].invoke if Unit.all.empty?
+      Rake::Task["bootstrap:environments"].invoke if Environment.all.empty?
+      c = Computer.new
+      c.name = "site_default"
+      c.environment = Environment.find_by_name("Production") || Environment.first
+      c.hostname = "site-default"
+      c.mac_address = "00:00:00:00:00:00"
+      c.description = "This computer record serves as a fallback manifest for computers without a ClientIdentifier"
+      c.unit_id = Unit.first.id
+      if c.save
+        puts "Saved site_default manifest to first unit"
+      else
+        puts "Failed to save site_default manifest to first unit: #{c.errors.messages.inspect}"
+      end
+    end
+  end
 end
 
 private
