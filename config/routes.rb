@@ -19,6 +19,7 @@ Munki::Application.routes.draw do
   # Make munki client API
   match ':id.plist', :controller => 'computers', :action => 'show_plist', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/, :as => "computer_manifest"
   match 'computers/:id.plist', :controller => 'computers', :action => 'show_plist', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
+  match 'site_default', :controller => 'computers', :action => 'show_plist', :format => 'manifest', :id => '00:00:00:00:00:00', :as => "computer_manifest"
   
   match 'pkgs/:id.json' => 'packages#download', :format => :json, :id => /[A-Za-z0-9_\-\.%]+/
   match 'catalogs/:unit_environment' => 'catalogs#show', :format => 'plist', :via => :get
