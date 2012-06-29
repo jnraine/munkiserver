@@ -18,3 +18,6 @@ config/newrelic.yml
 config/setup_load_paths.rb
 
 spec/support/cassettes
+
+munkiscripts*.dmg
+munkiscripts.pkg

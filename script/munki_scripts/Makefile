@@ -42,7 +42,7 @@ $(DMG_OUT): $(PKG_OUT)
 	cp $(PKG_OUT) $(TMPDIR)
 	$(HDIUTIL) create -srcfolder $(TMPDIR) $(DMG_OUT)
 	rm -r $(TMPDIR) ./build
-	cp $(DMG_OUT) $(DMG2_OUT)
+	cp $(DMG_OUT) $(DMG2_OUT) && rm $(DMG_OUT)
 
 clean:
 	sudo rm -rf $(TMPDIR) ./build
