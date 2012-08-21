@@ -60,19 +60,20 @@ class Computer < ActiveRecord::Base
   end
   
   # Returns a hash representing the ManagedInstalls.plist
-    # that should be placed in /Library/Preferences on this client
-    def client_prefs
-      url = ActionMailer::Base.default_url_options[:host]
-      { :ClientIdentifier => client_identifier,
-        :DaysBetweenNotifications => 1,
-        :InstallAppleSoftwareUpdates => true,
-        :LogFile => "/Library/Managed Installs/Logs/ManagedSoftwareUpdate.log",
-        :LoggingLevel => 1,
-        :ManagedInstallsDir => "/Library/Managed Installs",
-        :ManifestURL => url,
-        :SoftwareRepoURL => url,
-        :UseClientCertificate => false }
-    end
+  # that should be placed in /Library/Preferences on this client
+  def client_prefs
+    url = ActionMailer::Base.default_url_options[:host]
+    url ||= "localhost"
+    { :ClientIdentifier => client_identifier,
+      :DaysBetweenNotifications => 1,
+      :InstallAppleSoftwareUpdates => true,
+      :LogFile => "/Library/Managed Installs/Logs/ManagedSoftwareUpdate.log",
+      :LoggingLevel => 1,
+      :ManagedInstallsDir => "/Library/Managed Installs",
+      :ManifestURL => url,
+      :SoftwareRepoURL => url,
+      :UseClientCertificate => false }
+  end
   
   # For will_paginate gem.  Sets the default number of records per page.
   def self.per_page

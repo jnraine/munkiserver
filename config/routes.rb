@@ -34,6 +34,7 @@ Munki::Application.routes.draw do
       get 'environment_change(.:format)', :action => "environment_change", :as => 'environment_change'
       get 'unit_change(.:format)', :action => "unit_change", :as => 'unit_change'
       get 'update_warranty', :action => "update_warranty", :as => 'update_warranty'
+      get 'client_prefs', :on => :member, :as => "client_prefs"
       
       collection do
         post :create_import#, :force_redirect

@@ -45,7 +45,7 @@ module PrivilegeGranter
   # = Computers =
   # =============
   def read_computers(unit_ids)
-    can [:read, :download, :update_warranty], Computer, :unit_id => unit_ids
+    can [:read, :client_prefs, :download, :update_warranty], Computer, :unit_id => unit_ids
     can :read, ManagedInstallReport
   end
 

@@ -49,11 +49,20 @@ class ComputersController < ApplicationController
       if @computer.present?
         format.html
         format.plist { render :text => @computer.to_plist}
-        format.client_prefs { render :text => @computer.client_prefs.to_plist }
       else
         format.html { render page_not_found }
         format.plist { render page_not_found }
         format.client_prefs { render page_not_found }
+      end
+    end
+  end
+
+  def client_prefs
+    respond_to do |format|
+      if @computer.present?
+        format.plist { render :text => @computer.client_prefs.to_plist}
+      else
+        format.plist { render page_not_found }
       end
     end
   end
@@ -226,7 +235,7 @@ class ComputersController < ApplicationController
   # This is really dense...refactor?
   def load_singular_resource
     action = params[:action].to_sym
-    if [:show].include?(action)      
+    if [:show, :client_prefs].include?(action)      
       @computer = Computer.find_for_show_fast(params[:id], current_unit)
     elsif [:show_plist].include?(action)      
       @computer = Computer.find_for_show(nil, params[:id])
