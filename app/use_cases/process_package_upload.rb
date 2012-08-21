@@ -156,7 +156,7 @@ class ProcessPackageUpload
         branch_attributes = {:name => pkginfo.delete("name"),
                              :display_name => pkginfo.delete("display_name"),
                              :unit_id => special_attributes[:unit_id], 
-                             :package_category_id => PackageCategory.default(pkginfo[:installer_type]).id}
+                             :package_category_id => PackageCategory.default(pkginfo["installer_type"]).id}
         package.package_branch = retrieve_package_branch(branch_attributes)
         
         pkginfo.each do |k,v|
