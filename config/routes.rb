@@ -56,12 +56,10 @@ Munki::Application.routes.draw do
         match 'check_for_updates', :action => 'check_for_updates', :via => :get, :as => 'check_for_package_updates'
         get ':package_id/environment_change(.:format)', :action => "environment_change", :as => 'package_environment_change'
         constraints({:version => /.+/}) do
-          constraints(ExtractFormatFromParam.new(:version)) do
-            match ':package_branch/:version/edit(.:format)', :action => 'edit', :via => :get, :as => 'edit_package'
-            match ':package_branch/:version(.:format)', :action => 'show', :via => :get, :as => 'package'
-            match ':package_branch/:version(.:format)', :action => 'update', :via => :put
-            match ':package_branch/:version(.:format)', :action => 'destroy', :via => :delete
-          end
+          match ':package_branch/:version/edit(.:format)', :action => 'edit', :via => :get, :as => 'edit_package'
+          match ':package_branch/:version(.:format)', :action => 'show', :via => :get, :as => 'package'
+          match ':package_branch/:version(.:format)', :action => 'update', :via => :put
+          match ':package_branch/:version(.:format)', :action => 'destroy', :via => :delete
         end
       end
     end
