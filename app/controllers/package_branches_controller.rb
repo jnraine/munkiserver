@@ -20,7 +20,7 @@ class PackageBranchesController < ApplicationController
   def load_singular_resource
     action = params[:action].to_sym
     if [:edit, :update].include?(action)
-      @package_branch = PackageBranch.find_by_name(params[:name])
+      @package_branch = PackageBranch.unit(current_unit).find_by_name(params[:name])
     else
       raise Exception.new("Unable to load singular resource for #{action} action in #{params[:controller]} controller.")
     end
