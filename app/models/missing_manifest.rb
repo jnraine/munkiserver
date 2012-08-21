@@ -20,6 +20,9 @@ class MissingManifest < ActiveRecord::Base
   
   def get_hostname(ip)
     Socket.gethostbyaddr(ip.split(".").map(&:to_i).pack("CCCC")).first
+  rescue SocketError => e
+    Rails.logger.error "An error occurred while retrieving the hostname given #{ip}: #{e.message}"
+    ""
   end
   
   def request_time
