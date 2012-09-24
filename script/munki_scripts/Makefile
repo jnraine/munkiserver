@@ -1,7 +1,7 @@
-PKGMAKER = packagemaker
+PKGMAKER = "$(shell mdfind kMDItemCFBundleIdentifier == com.apple.PackageMaker | head -n 1)/Contents/MacOS/PackageMaker"
 HDIUTIL = hdiutil
 TMPDIR = ./build/munkiserverscripts
-TARGETPATH = /etc/munki
+TARGETPATH = /usr/local/munki
 ID = com.github.jnraine.munkiserver.clientscripts
 PKG_OUT = munkiscripts.pkg
 DMG_OUT = munkiscripts.dmg
