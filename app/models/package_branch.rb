@@ -159,11 +159,11 @@ class PackageBranch < ActiveRecord::Base
     packages_with_updates = []
     if unit.present?
       latest_packages = Package.latest_where_unit(unit)
-      packages_with_updates = latest_packages.delete_if {|p| !p.new_version? }      
+      packages_with_updates = latest_packages.delete_if {|p| p.nil? or !p.new_version? }      
     else
       Unit.all.each do |unit|
         latest_packages = Package.latest_where_unit(unit)
-        packages_with_updates += latest_packages.delete_if {|p| !p.new_version? }
+        packages_with_updates += latest_packages.delete_if {|p| p.nil? or !p.new_version? }
       end
     end
     packages_with_updates
