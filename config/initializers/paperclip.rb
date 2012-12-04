@@ -17,7 +17,7 @@ end
 
 # Check a couple places it may be
 if path.nil?
-  ["/opt/local/bin","/usr/bin"].each do |possible_path|
+  ["/usr/local/bin","/opt/local/bin","/usr/bin"].each do |possible_path|
     path = possible_path if File.exists?(Pathname.new(possible_path) + "identify")
   end
 end
