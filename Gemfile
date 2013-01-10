@@ -1,7 +1,7 @@
 # Edit this Gemfile to bundle your application's dependencies.
 source 'http://gemcutter.org'
 
-gem "rails", "3.2.2"
+gem "rails", "3.2.11"
 gem "sqlite3-ruby", :require => "sqlite3"
 gem "execjs"
 gem "therubyracer"
