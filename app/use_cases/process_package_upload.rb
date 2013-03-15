@@ -128,13 +128,20 @@ class ProcessPackageUpload
         if package_file.nil? and not fileurl.empty?
           file = Tempfile.new('munkiserver')
           file.binmode
-          file << open(fileurl).read
           
           package_file = OpenStruct.new
-          package_file.original_filename = File.basename(fileurl)
           package_file.tempfile = OpenStruct.new
           package_file.tempfile.path = file.path
-          Rails.logger.warn package_file
+          
+          open(fileurl) { |u|
+            begin
+              file << u.read
+            rescue OpenURI::HTTPError => e
+              raise Error.new("Download failed: " + e.message)
+              false
+            end
+            package_file.original_filename = File.basename(u.base_uri.request_uri)
+          }
         end
 
         # Get the absolute path for the package store
