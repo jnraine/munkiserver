@@ -140,7 +140,11 @@ class ProcessPackageUpload
               raise Error.new("Download failed: " + e.message)
               false
             end
-            package_file.original_filename = File.basename(u.base_uri.request_uri)
+            if defined? u.base_uri
+              package_file.original_filename = File.basename(u.base_uri.request_uri)
+            else
+              package_file.original_filename = File.basename(fileurl)
+            end
           }
         end
 
