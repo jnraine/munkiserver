@@ -9,9 +9,11 @@ class MissingManifest < ActiveRecord::Base
     else
       MissingManifest.where("created_at > ?", 7.days.ago)
     end
+    scope = scope.merge(not_dismissed)
     scope = scope.limit(options[:limit]) if options[:limit].present?
     scope.order("created_at DESC")
   }
+  scope :not_dismissed, where(:dismissed => false)
   
   def request_ip=(value)
     self.hostname = get_hostname(value)
