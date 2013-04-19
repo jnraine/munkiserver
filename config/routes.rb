@@ -87,6 +87,7 @@ Munki::Application.routes.draw do
   
   match 'dashboard' => "dashboard#index", :as => "dashboard"
   match 'dashboard/widget/:name' => 'dashboard#widget', :as => "widget"
+  match 'dashboard/dismiss_manifest/:id' => 'dashboard#dismiss_manifest', :as => "dismiss_manifest"
   
   match "permissions" => "permissions#index", :as => "permissions", :via => "GET"
   match "permissions/edit/:principal_pointer(/:unit_id)" => "permissions#edit", :as => "edit_permissions", :via => "GET"

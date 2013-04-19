@@ -1,9 +1,9 @@
 <% if @widget.missing_manifests.present? %>
 	<% @widget.missing_manifests.each do |missing_manifest|%>
-		<div class="alert-message">
+		<div class="alert-message" id="missing_manifest_<%= missing_manifest.id %>">
 			<p>
 				<strong><%= missing_manifest %></strong> request manifest for "<strong><%= missing_manifest.identifier %></strong>"
-				<small><%= missing_manifest.request_time %></small>
+				<small><%= missing_manifest.request_time %> — <%= link_to "dismiss", dismiss_manifest_path(missing_manifest), :remote => true %></small>
 			</p>
 		</div>
 	<% end %>

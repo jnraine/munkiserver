@@ -12,6 +12,14 @@ class DashboardController < ApplicationController
     end
   end
   
+  def dismiss_manifest
+    respond_to do |format|
+      @missing_manifest = MissingManifest.find(params[:id])
+      @missing_manifest.update_attributes :dismissed => true
+      format.js
+    end
+  end
+  
   private
   def authorize_resource
     authorize! params[:action], :dashboard
