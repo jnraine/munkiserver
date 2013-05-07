@@ -2,6 +2,10 @@
 Choose a .dmg
 <%= helpful_info("You cannot upload packages, applications, or Adobe installers without wrapping them in a disk image first!") %><br />
 <p><%= file_field_tag :package_file %></p>
+
+Alternatively enter a URL from where to download the .dmg<br />
+<p><%= text_field_tag "fileurl" %></p>
+
 <% unless Munki::Application::MUNKI_TOOLS_AVAILABLE %>
 	<p>
 		Choose a pkginfo plist

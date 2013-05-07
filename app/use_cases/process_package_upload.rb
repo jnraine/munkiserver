@@ -7,7 +7,7 @@ class ProcessPackageUpload
 
   def process
     params.validate
-    params.package_file = PackageFileHandler.handle(params.package_file)
+    params.package_file = PackageFileHandler.handle(params.package_file, params.fileurl)
     params.pkginfo = PkginfoGenerator.generate(params.package_file, params[:pkginfo_file], params[:makepkginfo_options])
     self.package = PackageAssembler.assemble(params.package_file, params.pkginfo, params[:special_attributes])
   rescue ProcessPackageUpload::Error => e
@@ -35,7 +35,7 @@ class ProcessPackageUpload
     # Checks to ensure what should be present is. If something is missing, raise 
     # Error exception.
     def validate
-      raise Error.new("Please select a file") if hash[:package_file].nil?
+      raise Error.new("Please select a file") if hash[:package_file].nil? and hash[:fileurl].empty?
       raise Error.new("Must provide a special attributes") if hash[:special_attributes].nil?
       raise Error.new("Must provide a unit ID") if hash[:special_attributes][:unit_id].nil?
       raise Error.new("Must provide an environment ID") if hash[:special_attributes][:environment_id].nil?
@@ -43,6 +43,10 @@ class ProcessPackageUpload
     
     def package_file
       @package_file ||= hash[:package_file]
+    end
+    
+    def fileurl
+      @fileurl ||= hash[:fileurl]
     end
     
     def [](key)
@@ -117,8 +121,32 @@ class ProcessPackageUpload
     class << self
       # Renames and moves temporary files to the appropriate package store. Returns
       # a File object for newly renamed/moved file
-      def handle(package_file)
+      def handle(package_file, fileurl)
         destination_path = nil
+        
+        # Download DMG from URL
+        if package_file.nil? and not fileurl.empty?
+          file = Tempfile.new('munkiserver')
+          file.binmode
+          
+          package_file = OpenStruct.new
+          package_file.tempfile = OpenStruct.new
+          package_file.tempfile.path = file.path
+          
+          open(fileurl) { |u|
+            begin
+              file << u.read
+            rescue OpenURI::HTTPError => e
+              raise Error.new("Download failed: " + e.message)
+              false
+            end
+            if defined? u.base_uri
+              package_file.original_filename = File.basename(u.base_uri.request_uri)
+            else
+              package_file.original_filename = File.basename(fileurl)
+            end
+          }
+        end
 
         # Get the absolute path for the package store
         unique_name = uniquify_name(package_file.original_filename)
