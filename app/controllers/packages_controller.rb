@@ -44,9 +44,9 @@ class PackagesController < ApplicationController
   end
 
   def create
-    process_package_upload = ProcessPackageUpload.new(:package_file => params[:package_file], 
-                                                      :fileurl => params[:fileurl],
-                                                      :pkginfo_file => params[:pkginfo_file], 
+    process_package_upload = ProcessPackageUpload.new(:package_file => params[:package_file],
+                                                      :file_url => params[:file_url],
+                                                      :pkginfo_file => params[:pkginfo_file],
                                                       :makepkginfo_options => params[:makepkginfo_options], 
                                                       :special_attributes => {:unit_id => current_unit.id})
     process_package_upload.process
