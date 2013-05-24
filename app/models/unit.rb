@@ -41,7 +41,7 @@ class Unit < ActiveRecord::Base
       if principal.is_a? User
         users << principal
       elsif principal.is_a? UserGroup
-        users + principal.users
+        users += principal.users
       else
         raise UserGroupException.new("While retrieving users who can read #{controller_name} from a unit (#{self}), found a principal that was not a User or UserGroup record!")
       end
