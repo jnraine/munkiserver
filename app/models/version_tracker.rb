@@ -2,9 +2,10 @@ require 'nokogiri'
 require 'open-uri'
 require 'net/http'
 require 'cgi'
+require 'openssl'
 
 class VersionTracker < ActiveRecord::Base
-  MAC_UPDATE_SITE_URL = "http://www.macupdate.com"
+  MAC_UPDATE_SITE_URL = "https://www.macupdate.com"
   MAC_UPDATE_SEARCH_URL = "#{MAC_UPDATE_SITE_URL}/find/mac/"
   MAC_UPDATE_PACKAGE_URL = "#{MAC_UPDATE_SITE_URL}/app/mac/"
   
@@ -59,7 +60,12 @@ class VersionTracker < ActiveRecord::Base
   # Return true if macupdate is reachable
   def macupdate_is_up?
     begin
-      response = Net::HTTP.get_response(URI.parse(MAC_UPDATE_SITE_URL))
+      uri = URI.parse(MAC_UPDATE_SITE_URL)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      request = Net::HTTP::Get.new(uri.request_uri)
+      response = http.request(request)
       response.instance_of?(Net::HTTPOK)
     rescue SocketError, Errno::ETIMEDOUT, Errno::ECONNREFUSED
       return false
@@ -75,7 +81,7 @@ class VersionTracker < ActiveRecord::Base
   def scrape_download_links(page)
     download_links = []
     page.css("#downloadlink").each do |link_element|
-      download_url = NokogiriHelper.redirect_url(MAC_UPDATE_SITE_URL + link_element[:href])
+      download_url = MAC_UPDATE_SITE_URL + link_element[:href]
       caption = link_element.parent().css(".info").text.lstrip.rstrip        
       text = link_element.text
       download_links << self.download_links.build({:text => text, :url => download_url, :caption => caption})
@@ -94,8 +100,12 @@ class VersionTracker < ActiveRecord::Base
   def scrape_icon(page)
     if image_element = page.at_css("#appiconinfo")
       url_string = image_element[:src]
-      url = URI.parse(url_string)
-      response_body = Net::HTTP.get_response(url).body
+      uri = URI.parse(url_string)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      request = Net::HTTP::Get.new(uri.request_uri)       
+      response_body = http.request(request).body
       image_file = Tempfile.new("icon", :encoding => response_body.encoding.name)
       image_file.write(response_body)
       icon = Icon.new({:photo => image_file})
