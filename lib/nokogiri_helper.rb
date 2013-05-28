@@ -1,25 +1,6 @@
 module NokogiriHelper
-  # Retrieve a web page, following any redirects presented. Throws exception
-  # for recurisive redirects.
-  def retrieve_response(page_url)
-    url = URI.parse(URI.escape(page_url))
-    response = Net::HTTP.get_response(url)
-    prev_redirect = ""
-    while response.header['location']
-      if prev_redirect == response.header['location']
-        raise "Recursive redirect: #{response.header['location']}" 
-      end
-      prev_redirect = response.header['location']
-      url = URI.parse(URI.escape(response.header['location']))
-      response = Net::HTTP.get_response(url)
-    end
-    
-    response
-  end
-  
   def page(page_url)
-    response = retrieve_response(page_url)
-    Nokogiri::HTML(response.body)
+    response = Nokogiri::HTML(open(page_url))
   rescue SocketError
     NullObject.new
   end
