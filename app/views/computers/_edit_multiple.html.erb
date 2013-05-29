@@ -43,6 +43,7 @@
 			</td>
 			<td>
 				<%= f.submit "Update" %>
+				<%= f.submit "Delete", :confirm => "Are you sure you want to delete these #{@computers.count} computer records?" %>
 				<a href="#" class="cancel">Cancel</a>
 			</td>
 		</tr>
