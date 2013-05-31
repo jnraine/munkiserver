@@ -8,7 +8,7 @@
 		<!-- <h3>Grab</h3>
 			<p>
 				Find an application on macupdate.com and paste the ID or URL here
-				<%= helpful_info("This only works for drag-and-drop apps wrapped in DMGs. Support will come for different cases...but not yet. The ID for an application can be found at the end of the URL: e.g. http://http://www.macupdate.com/app/mac/\n/########/application-name") %>
+				<%= helpful_info("This only works for drag-and-drop apps wrapped in DMGs. Support will come for different cases...but not yet. The ID for an application can be found at the end of the URL: e.g. https://www.macupdate.com/app/mac/\n/########/application-name") %>
 			</p>
 			<%= form_for(@package, :html => {:multipart => true, :id => "new_version_tracker_package_form"}) do |f| %>
 				<p><%= text_field_tag :version_tracker_web_id, nil, :size => 75 %></p>
