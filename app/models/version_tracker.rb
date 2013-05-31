@@ -60,7 +60,7 @@ class VersionTracker < ActiveRecord::Base
   # Return true if macupdate is reachable
   def macupdate_is_up?
     begin
-      uri = URI.parse(MAC_UPDATE_SITE_URL)
+      uri = URI.parse(URI.escape(MAC_UPDATE_SITE_URL))
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -100,7 +100,7 @@ class VersionTracker < ActiveRecord::Base
   def scrape_icon(page)
     if image_element = page.at_css("#appiconinfo")
       url_string = image_element[:src]
-      uri = URI.parse(url_string)
+      uri = URI.parse(URI.escape(url_string))
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
