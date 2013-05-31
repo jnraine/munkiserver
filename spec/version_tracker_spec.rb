@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe VersionTracker, :vcr do
-  let(:firefox_page) { NokogiriHelper.page("http://www.macupdate.com/app/mac/10700/firefox") }
+  let(:firefox_page) { NokogiriHelper.page("https://www.macupdate.com/app/mac/10700/firefox") }
   let(:google_page) { NokogiriHelper.page("http://www.google.com") }
   
   describe "#fetch_data" do
