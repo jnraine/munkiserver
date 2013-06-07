@@ -5,11 +5,11 @@ class Package < ActiveRecord::Base
   include HasAUnit
   include HasAnEnvironment
   include HasAnIcon
-  
+
   # Dependancy relationships
   belongs_to :package_branch
   belongs_to :icon
-  
+
   has_many :dependents, :class_name => "RequireItem", :dependent => :destroy
   has_many :require_items, :as => :manifest, :dependent => :destroy
   has_many :updates, :class_name => "UpdateForItem", :dependent => :destroy
@@ -21,26 +21,26 @@ class Package < ActiveRecord::Base
   has_many :user_install_items, :dependent => :destroy
   has_many :user_uninstall_items, :dependent => :destroy
   has_many :user_allowed_items, :dependent => :destroy
-  
+
   has_one :version_tracker, :through => :package_branch, :autosave => true
-  
+
   serialize :installs
   serialize :receipts
   serialize :supported_architectures, Array
   serialize :raw_tags
   serialize :installer_choices_xml
-  
+
   after_initialize :init
-  
+
   scope :recent, lambda {|u| where("created_at > ?", 7.days.ago).where(:unit_id => u).order("created_at DESC") }
   scope :shared, where(:shared => true)
   scope :from_other_unit, lambda {|p| where("unit_id != ?", p.unit_id)}
   scope :has_greater_version, lambda {|p| where("version > ?", p.version)}
   scope :other, lambda{|p| where("id <> ?", p.id)}
-  
+
   before_save :handle_environment_change
   after_destroy :destroy_package_branch
-  
+
   validates :version, :presence => true
   validates :installer_item_location, :presence => true
   validates :package_branch_id, :presence => true
@@ -52,9 +52,9 @@ class Package < ActiveRecord::Base
   validates :raw_tags, :hash => true
   validates_uniqueness_of :version, :scope => [:unit_id, :package_branch_id]
   validates :force_install_after_date_string, :date_time => true, :allow_blank => true
-  
+
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
-                  :os_versions             => [[['Any','']], os_range(10,8,0..2), os_range(10,7,0..5), os_range(10,6,0..8), os_range(10,5,0..11)].flatten(1),
+                  :os_versions             => [[['Any','']], os_range(10,8,0..4), os_range(10,7,0..5), os_range(10,6,0..8), os_range(10,5,0..11)].flatten(1),
                   :installer_types         => [['Package',''],
                                                ['Copy From DMG', 'copy_from_dmg'],
                                                ['App DMG','appdmg'],
@@ -66,15 +66,15 @@ class Package < ActiveRecord::Base
                                                ['AdobeSetup']],
                   :supported_architectures => ['i386','x86_64','ppc','Power Macintosh'],
                   :uninstall_method        => [['Remove Copied Items','remove_copied_items'],
-                                               ['Remove Packages','removepackages'], 
-                                               ['Remove App', 'remove_app'], 
+                                               ['Remove Packages','removepackages'],
+                                               ['Remove App', 'remove_app'],
                                                ['Uninstall Script', 'uninstall_script'],
                                                ['Uninstaller Script Location', ''],
-                                               ['Uninstall Item Location', 'uninstaller_item_location'],                                                
+                                               ['Uninstall Item Location', 'uninstaller_item_location'],
                                                ['AdobeUberUninstaller','AdobeUberUninstaller'],
                                                ['AdobeSetup','AdobeSetup'],
                                                ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']]}
-  
+
   def self.find_where_params(params)
     unit = Unit.where(:shortname => params["unit_shortname"]).select("id").first
     package_branch = PackageBranch.where(:name => params["package_branch"], :unit_id => unit.id).select("id").first if unit.present?
@@ -92,7 +92,7 @@ class Package < ActiveRecord::Base
     self.installs ||= []
     self.raw_tags ||= {}
   end
-  
+
   def destroy_package_branch
     package_branch.destroy if package_branch.packages.empty?
   end
@@ -106,20 +106,20 @@ class Package < ActiveRecord::Base
     params[:version] = version
     params
   end
-  
+
   def force_install_after_date
     self[:force_install_after_date]
   end
-  
+
   def force_install_after_date_string
     self.force_install_after_date.utc.strftime("%Y-%m-%d %I:%M %p") if self.force_install_after_date
   end
-  
+
   def force_install_after_date_string=(time_str)
-    self.force_install_after_date = ActiveSupport::TimeZone.new('UTC').parse(time_str)  
+    self.force_install_after_date = ActiveSupport::TimeZone.new('UTC').parse(time_str)
   end
 
-  # Returns array of packages shared to this unit that have not been imported yet.  This is 
+  # Returns array of packages shared to this unit that have not been imported yet.  This is
   # determined by comparing installer_item_location values.
   def self.shared_to_unit(unit)
     # Installer item locations from unit
@@ -132,12 +132,12 @@ class Package < ActiveRecord::Base
     # packages.delete_if {|p| installer_item_locations.include?(p.installer_item_location)}
 
   end
-  
+
   # Recent items from other units that are shared
   def self.shared_recent(unit, time = 7.days.ago)
     shared_to_unit(unit).where("created_at > ?", time).order("created_at DESC")
   end
-  
+
   # Returns array of packages shared to this unit that have been imported.  This is determined by
   # installer_item_location value
   def self.shared_to_unit_and_imported(unit)
@@ -146,15 +146,15 @@ class Package < ActiveRecord::Base
     # Packages shared from other units
     Package.shared.where("unit_id != ?",unit.id).where(:installer_item_location => installer_item_locations)
   end
-  
+
   def name
     package_branch.name unless package_branch.nil?
   end
-  
+
   def display_name
     package_branch.display_name unless package_branch.nil?
   end
-  
+
   def plist_virtual_attribute_set(attribute, value)
     begin
        obj = value.from_plist
@@ -165,7 +165,7 @@ class Package < ActiveRecord::Base
        self.send("#{attribute}=", nil)
      end
   end
-  
+
   def plist_virtual_attribute_get(attribute)
     begin
       send(attribute).to_plist
@@ -175,26 +175,26 @@ class Package < ActiveRecord::Base
       # instance_variable_get("@cached_#{attribute}_plist")
     end
   end
-  
+
   # Virtual attribute getter
   # Converts the receipts array into a plist
   def receipts_plist
     plist_virtual_attribute_get(:receipts)
   end
-  
+
   # Virtual attribute setter
   # Takes a plist string and converts it to a ruby object and assigns it to receipts
   # If the plist string passed is not valid, nil is assigned instead
   def receipts_plist=(value)
     plist_virtual_attribute_set(:receipts,value)
   end
-  
+
   # Virtual attribute getter
   # Converts the installs array into a plist
   def installs_plist
     plist_virtual_attribute_get(:installs)
   end
-  
+
   # Virtual attribute setter
   # Takes a plist string and converts it to a ruby object and assigns it to receipts
   def installs_plist=(value)
@@ -206,28 +206,28 @@ class Package < ActiveRecord::Base
   def raw_tags_plist
     plist_virtual_attribute_get(:raw_tags)
   end
-  
+
   # Setter for the raw_tags attribute. Converts the plist string value to
   # a ruby object and assigns it to the attribute. Takes a raw plist string.
   def raw_tags_plist=(value)
     obj = value.to_s.from_plist
     self.raw_tags = obj
   end
-  
+
   def add_raw_tag(key,value)
     self.raw_mode_id = 1 if no_raw?
     h = self.raw_tags
     h[key] = value
     self.raw_tags = h
   end
-  
-  # Virtual attribute that parses the array value of a tabled asm select into package and 
+
+  # Virtual attribute that parses the array value of a tabled asm select into package and
   # package branches and assigns that value to the upgrade_for attribute
   def update_for_tas=(value)
     self.update_for = Package.parse_package_strings(value) if value != nil
   end
 
-  # Virtual attribute that parses the array value of a tabled asm select into package and 
+  # Virtual attribute that parses the array value of a tabled asm select into package and
   # package branches and assigns that value to the requires attribute
   def requires_tas=(value)
     self.requires = Package.parse_package_strings(value) if value != nil
@@ -253,11 +253,11 @@ class Package < ActiveRecord::Base
     end
     items
   end
-  
+
   def environments
     [environment]
   end
-  
+
   # If package changed environment, remove all releations in install/uninstall/optional items
   # TO-DO: THIS IS SO UGLY
   def handle_environment_change
@@ -270,7 +270,7 @@ class Package < ActiveRecord::Base
       # Handle references to the package branch
       num_of_packages = self.package_branch.packages.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was).count
       if num_of_packages == 1
-        # There is only one version of this package in the environment 
+        # There is only one version of this package in the environment
         # and unit and we are about to move it.  Before doing so, destroy
         # all install items within that scope.
         computers = Computer.where(:unit_id => self.unit_id, :environment_id => self.environment_id_was)
@@ -285,16 +285,16 @@ class Package < ActiveRecord::Base
       end
     end
   end
-  
+
   # Returns a URL path to the package download
   def public_filename
     "/packages/#{environment_id}/#{unit_id}/#{installer_item_location}"
   end
-  
+
   def package_category
     package_branch.package_category
   end
-  
+
   # If there is no associated icon, then it asks for the package categories icon instead
   def icon
     icon = Icon.where(:id => icon_id).first
@@ -303,7 +303,7 @@ class Package < ActiveRecord::Base
 
     icon
   end
-  
+
   # Setter for new_icon virtual attribute
   # Creates a new icon object and assigns to self.icon
   def new_icon=(value)
@@ -314,8 +314,8 @@ class Package < ActiveRecord::Base
       self.icon = i if i.save
     end
   end
-  
-  # Return array of IDs of packages that share the same 
+
+  # Return array of IDs of packages that share the same
   # installer item location.  Optionally, can pass a unit
   # to scope the results to.
   def shared_installer_item_location(unit = nil, reload = false)
@@ -329,13 +329,13 @@ class Package < ActiveRecord::Base
       end
       @shared_installer_item_location_packages[unit_id]
   end
-  
-  # Checks if the current package is the latest (newest version) 
+
+  # Checks if the current package is the latest (newest version)
   # package in the package branch in this unit.
   def latest_in_unit?
     latest_in_unit.id == id unless latest_in_unit.nil?
   end
-  
+
   # Return the latest package within this unit
   def latest_in_unit
     package_branch.latest
@@ -352,7 +352,7 @@ class Package < ActiveRecord::Base
     delete_package_file_if_necessary
     super
   end
-  
+
   # Delete package on filesystem if no other package record is referring to it
   def delete_package_file_if_necessary
     # Unless, other packages reference the package on the filesystem
@@ -364,7 +364,7 @@ class Package < ActiveRecord::Base
       end
     end
   end
-  
+
   # Assign the list of items to a specific association (assoc)
   # Copied from manifest magic mixin model.
   def build_package_association_assignment(assoc,list)
@@ -383,12 +383,12 @@ class Package < ActiveRecord::Base
       end
     end
   end
-  
+
   # Virtual attributes that aggregates the require_items
   def requires
     require_items.collect(&:package)
   end
-  
+
   def require_ids
     requires.map(&:id)
   end
@@ -396,23 +396,23 @@ class Package < ActiveRecord::Base
   def requires=(list)
     build_package_association_assignment(:require_items,list)
   end
-  
+
   # Virtual attributes that aggregates the update_for_items
   def update_for
     update_for_items.collect(&:package)
   end
-  
+
   # Getter that aggregates the update_for_items package branch ids
   # TO-DO This is an unintuative design and will be confusing: update_for returns packages, update_for_ids returns package branch IDs
   def update_for_ids
     update_for_items.map(&:package_branch).map(&:id)
   end
-  
+
   # Pass an array of packages and package branches
   def update_for=(list)
     build_package_association_assignment(:update_for_items,list)
   end
-  
+
   # Get the latest package from a specific unit and environment
   def self.latest_from_unit_and_environment(u,e)
     pbs = PackageBranch.unit_and_environment(u,e)
@@ -423,7 +423,7 @@ class Package < ActiveRecord::Base
   def self.latest_where_unit(unit)
     PackageBranch.unit(unit).map {|pb| pb.latest_where_unit(unit) }
   end
-  
+
   # Default parameters for the table_asm_select method
   # Returns values for self
   def tas_params(environment_id = nil)
@@ -441,7 +441,7 @@ class Package < ActiveRecord::Base
     # update_for_selected = model_obj.update_for_items.map(&:package_branches).map(&:to_s)
     requires_options = Package.unit(model_obj.unit).environment(environment).where("id != #{model_obj.id}").map { |e| [e.to_s(:version),e.to_s(:version)] }.sort{|a,b| a[0] <=> b[0]}
     requires_selected = model_obj.require_items.map(&:package).map {|e| e.to_s(:version) }
-    
+
     model_name = self.to_s.underscore
 
     # Array for table_asm_select
@@ -460,7 +460,7 @@ class Package < ActiveRecord::Base
       :selected_options => requires_selected,
       :helpful_string => "Select a specific package that this package needs installed"},]
   end
-  
+
   # Return a blank receipt array
   def self.blank_receipt
     { 'name' => '',
@@ -469,7 +469,7 @@ class Package < ActiveRecord::Base
       'installed_size' => '',
       'version' => ''}
   end
-  
+
   # Return a blank receipt array
   def self.blank_install
     { 'type' => '',
@@ -479,12 +479,12 @@ class Package < ActiveRecord::Base
       'CFBundleShortVersionString' => '',
       'md5checksum' => ''}
   end
-  
+
   # Returns true if installer type is a .pkg/.mpkg (in other words, blank)
   def installer_package?
     installer_type.blank?
   end
-  
+
   # Returns true if installer type is appdmg
   def installer_appdmg?
     installer_type == "appdmg"
@@ -494,10 +494,10 @@ class Package < ActiveRecord::Base
   def installer_AdobeUberInstaller?
     installer_type == "AdobeUberInstaller"
   end
-  
+
   # Overrides default to string method.  Specifies version if this package
   # isn't the latest of the current units
-  def to_s(style = nil)    
+  def to_s(style = nil)
     case style
     when :unique then
       if latest_in_unit?
@@ -513,11 +513,11 @@ class Package < ActiveRecord::Base
     else name
     end
   end
-  
+
   def versions
     package_branch.packages_like_unit_member(self)
   end
-  
+
   # Get the version that corresponds with the version tracker version
   # This is intended to handle some oddities in the version tracker
   # database.  For example, if you version 3.0.1 and version tracker
@@ -530,12 +530,12 @@ class Package < ActiveRecord::Base
     vtv = version if vtv.blank?
     vtv
   end
-  
+
   # Calls package_branch new version check method
   def new_version?
     package_branch.new_version?(self.unit)
   end
-  
+
   # Create a hash intended for plist output
   # Won't include the entire object attributes
   # but only the ones relevant for munki clients
@@ -550,47 +550,47 @@ class Package < ActiveRecord::Base
               :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method, :unattended_install, :unattended_uninstall,
               :preinstall_script, :postinstall_script, :uninstall_script, :preuninstall_script, :postuninstall_script,
               :requires,:update_for,:catalogs,:version, :force_install_after_date, :installer_choices_xml]
-       
+
       keys.each do |key|
         h[key.to_s] = self.send(key) if self.send(key).present?
       end
-      
+
       # Add append any special cases to the hash
-      
+
       # Supported Architectures
       sa = self.supported_architectures.delete_if {|e| e == ""}
       h["supported_architectures"] = sa unless sa.empty?
       # Requires
       h["requires"] = self.requires.map {|p| p.to_s(:version) } unless self.requires.empty?
       h["installer_item_location"] = download_name
-      
+
       # Add any raw tags
       h = h.merge(raw_tags) if append_raw?
-      
+
       h.delete("RestartAction") if h["RestartAction"] == "None"
     end
     h
   end
-  
+
   # Tells plist gem how to serialize this object
   # Turns the package into a string and then converts
   # that string into a plist node using the Plist gem
   def to_plist_node
     Plist::Emit.plist_node(self.to_s)
   end
-  
+
   def no_raw?
     raw_mode_id == 0
   end
-  
+
   def append_raw?
     raw_mode_id == 1
   end
-  
+
   def exclusively_raw?
     raw_mode_id == 2
   end
-  
+
   # Store raw_mode ID map
   # Used in the view or other places that benefit from human readable names
   def self.raw_mode(int)
@@ -600,7 +600,7 @@ class Package < ActiveRecord::Base
       when 2 then "Exclusive"
     end
   end
-  
+
   def raw_mode
     self.raw_mode(raw_mode_id)
   end
@@ -611,7 +611,7 @@ class Package < ActiveRecord::Base
     # Fix ^M encoding CR issue
     plist.gsub(/\r\n?/, "\n")
   end
-  
+
   # If the package branch's version tracker "looks_good", returns true
   def trackable?
     begin
@@ -620,11 +620,11 @@ class Package < ActiveRecord::Base
       false
     end
   end
-  
+
   def self.clone_packages(target_packages, unit)
     target_packages.map {|target_package| clone_package(target_package, unit) }
   end
-  
+
   # Clone package to a given unit. Cloned package maintains cloneable attributes
   # and is assigned others based on the unit.
   def self.clone_package(target_package, unit)
@@ -634,31 +634,31 @@ class Package < ActiveRecord::Base
       target_package.cloneable_attributes.each do |name, value|
         p[name] = value
       end
-      
+
       branch_attributes = {:name => target_branch.name,
                            :display_name => target_branch.display_name,
                            :unit_id => unit.id,
                            :package_category_id => target_branch.package_category_id}
       p.package_branch = ProcessPackageUpload::PackageAssembler.retrieve_package_branch(branch_attributes)
-      
+
       p.unit = unit
       p.environment = Environment.start
     end
   end
-  
+
   def self.clone_attributes
     ["version", "description", "icon_id", "filename", "minimum_os_version", "maximum_os_version", "RestartAction", "package_path", "autoremove", "version_tracker_version", "installer_type", "installed_size", "installer_item_size", "installer_item_location", "installer_choices_xml", "use_installer_choices", "uninstall_method", "uninstaller_item_location", "uninstaller_item_size", "uninstallable", "installer_item_checksum", "raw_mode_id", "preinstall_script", "postinstall_script", "uninstall_script", "preuninstall_script", "postuninstall_script", "unattended_install", "unattended_uninstall", "force_install_after_date", "receipts", "supported_architectures", "installs", "raw_tags"]
   end
-  
+
   def cloneable_attributes
     cloneable_attributes = {}
     self.class.clone_attributes.each do |attribute_name|
       cloneable_attributes[attribute_name] = self[attribute_name]
     end
-    
+
     cloneable_attributes
   end
-  
+
   # over write the default get description, check if nil then get the description from version_trackers
   def description
     value = super
@@ -668,22 +668,22 @@ class Package < ActiveRecord::Base
       value
     end
   end
-  
+
   # A list of attributes that are inherited by new packages, if a previous version exists
   def self.inherited_attributes
     [:description, :icon, :package_category_id]
   end
-  
+
   # Returns a hash of default attributes that are used to intialize
   # a new package object.
   def self.default_attributes
     {}
   end
-  
+
   def self.known_attributes
     @known_attributes ||= Package.new.attributes.keys
   end
-  
+
   # True if update_for or requires have items
   def has_dependencies?
     update_for.length > 0 or requires.length > 0
@@ -696,16 +696,16 @@ class Package < ActiveRecord::Base
       ""
     end
   end
-  
+
   def find_by_name (param)
     p = Package.new
     param = p.package_branch.name
   end
-  
+
   def download_name
     "#{id}-#{to_s(:download_filename)}"
   end
-  
+
   # Update multiple attributes
   def self.bulk_update_attributes(packages,package_attributes)
     if package_attributes.nil? or packages.empty?
@@ -719,12 +719,12 @@ class Package < ActiveRecord::Base
       {:total => packages.count, :successes => successes.count, :failures => failures.count}
     end
   end
-  
-  
+
+
   def self.has_required_package?(package)
     RequireItem.where(:package_id => package.id).first.present?
   end
-  
+
   def has_installer_item_size?
     installer_item_size != nil and installer_item_size > 0
   end
