@@ -1,12 +1,13 @@
-# This was based off of a script by Gary Larizza.
+# This was based off of a script by Gary Larizza & Joseph Chilcote
 # https://github.com/glarizza/scripts/blob/master/ruby/warranty.rb
+# https://github.com/chilcote/warranty/blob/master/warranty.rb
 
 require 'open-uri'
 require 'openssl'
 
 # This is a complete hack to disregard SSL Cert validity for the Apple
 #  Selfserve site.  We had SSL errors as we're behind a proxy.  I'm
-#  open suggestions for doing it 'Less-Hacky.' You can delete this 
+#  open suggestions for doing it 'Less-Hacky.' You can delete this
 #  code if your network does not have SSL issues with open-uri.
 module OpenSSL
   module SSL
@@ -18,9 +19,9 @@ OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 class Warranty < ActiveRecord::Base
   belongs_to :computer
   has_many :notifications, :as => :notified
-  
+
   validates_format_of :serial_number, :with => /^[a-zA-Z0-9]+$/
-  
+
   scope :expire_after, lambda {|time| where("hw_coverage_end_date > ?", time)}
   scope :expire_before, lambda {|time| where("hw_coverage_end_date < ?", time)}
   scope :belong_to_unit, lambda {|unit| where(:computer_id => Computer.where(:unit_id => unit))}
@@ -30,19 +31,30 @@ class Warranty < ActiveRecord::Base
     if serial.blank?
       Rails.logger.warn "Blank serial number for computer #{computer}"
     end
-    
-    hash = {}
+
     begin
-      open('https://selfsolve.apple.com/warrantyChecker.do?sn=' + serial.upcase) do |item|
-        if item.string.match(/ERROR_CODE/)
-          raise WarrantyException.new("Unable to retrieve warranty information for serial number #{serial.upcase}")
-        end
-        warranty_array = item.string.strip.split('"')
-        warranty_array.each do |array_item|
-          hash[array_item] = warranty_array[warranty_array.index(array_item) + 2] if array_item =~ /[A-Z][A-Z\d]+/
-        end
-        hash
-      end
+      uri              = URI.parse('https://selfsolve.apple.com/wcResults.do')
+      http             = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl     = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      request          = Net::HTTP::Post.new(uri.request_uri)
+
+      # Prepare POST data
+      request.set_form_data(
+        {
+          'sn'       => serial,
+          'Continue' => 'Continue',
+          'cn'       => '',
+          'locale'   => '',
+          'caller'   => '',
+          'num'      => '0'
+        }
+      )
+
+      # POST data and get the response
+      response      = http.request(request)
+      response_data = response.body
+
     rescue URI::Error
       computer = Computer.where(:serial_number => serial)
       Rails.logger.error "Invalid serial number #{serial} for computer #{computer}"
@@ -50,33 +62,49 @@ class Warranty < ActiveRecord::Base
     rescue SocketError
       # No internet connection return nil
     end
-    
-    purchase_date = Date.parse(hash['PURCHASE_DATE']) if hash['PURCHASE_DATE'].present?
-    # change from COV_END_DATE to HW_END_DATE, experiencing glitches inaccurate dates from Apple using COV_END_DATE
-    hw_coverage_end_date = Date.parse(hash['HW_END_DATE']) if hash['HW_END_DATE'].present?
-    phone_coverage_end_date = Date.parse(hash['PH_END_DATE']) if hash['PH_END_DATE'].present?
+
+    begin
+      snippet = serial[-3,3]
+      snippet = serial[-4,4] if serial.length == 12
+      prod_desc = "Could not retrieve description"
+      open('http://support-sp.apple.com/sp/product?cc=' + snippet + '&lang=en_US').each do |line|
+        prod_desc = line.split('Code>')[1].split('</config')[0]
+      end
+    rescue
+      Rails.logger.warn "Could not retrieve production description for computer #{computer}"
+    end
+
+    hw_warranty_status = response_data.split('warrantyPage.warrantycheck.displayHWSupportInfo').last.split('Repairs and Service Coverage: ')[1] =~ /^Active/ ? true : false
+    ph_warranty_status = response_data.split('warrantyPage.warrantycheck.displayPHSupportInfo').last.split('Telephone Technical Support: ')[1] =~ /^Active/ ? true : false
+    reg_status =   reg_status= response_data.split('warrantyPage.setClassAndShow').last.split(';')[0].split(',').last =~ /true/ ? true : false
+    hw_has_app = response_data.split('warrantyPage.warrantycheck.displayEligibilityInfo').last.split(';')[0].split(',')[2] =~ /Covered/ ? true : false
+    app_eligibile_status = response_data.split('warrantyPage.warrantycheck.displayEligibilityInfo').last.split(';')[0].split(',')[2] =~ /Eligible/ ? true : false unless hw_has_app
+
+    hw_expiration_date = response_data.split('Estimated Expiration Date: ')[1].split('<')[0] if hw_warranty_status
+    ph_expiration_date = response_data.split('Estimated Expiration Date: ')[1].split('<')[0] if ph_warranty_status
+
 
     { :serial_number =>           serial,
-      :product_description =>     hash['PROD_DESCR'],
-      :product_type =>            hash['PRODUCT_TYPE'],
+      #:product_description =>    hash['PROD_DESCR'],
+      :product_type =>            prod_desc,
 
-      :purchase_date =>           purchase_date,
-      :hw_coverage_end_date =>    hw_coverage_end_date,
-      :phone_coverage_end_date => phone_coverage_end_date,
+      #:purchase_date =>           purchase_date,
+      :hw_coverage_end_date =>    hw_expiration_date,
+      :phone_coverage_end_date => ph_expiration_date,
 
-      :registered =>              hash['IS_REGISTERED'] == 'Y',
-      :hw_coverage_expired =>     hash['HW_HAS_COVERAGE'] == 'N',
-      :app_registered =>          hash['HW_HAS_APP'] == 'Y',
-      :app_eligible =>            hash['IS_APP_ELIGIBLE'] == 'Y',
-      :phone_coverage_expired =>  hash['PH_HAS_COVERAGE'] == 'N',
-      
+      :registered =>              reg_status == true,
+      :hw_coverage_expired =>     hw_warranty_status == false,
+      :app_registered =>          hw_has_app == true,
+      :app_eligible =>            app_eligibile_status == true,
+      :phone_coverage_expired =>  ph_warranty_status == false,
+
       :specs_url =>               "http://support.apple.com/specs/#{serial}",
-      :hw_support_url =>          hash['HW_SUPPORT_LINK'],
-      :forum_url =>               hash['FORUMS_URL'],
-      :phone_support_url =>       hash['PHONE_SUPPORT_LINK'],
+      :hw_support_url =>          "https://expresslane.apple.com/GetSASO?sn=#{serial}",
+      #:forum_url =>               hash['FORUMS_URL'],
+      :phone_support_url =>       "https://expresslane.apple.com/GetproductgroupList.do?serialno=#{serial}"
     }
   end
-    
+
   def get_status(bool)
     if bool
       "green"
@@ -88,19 +116,19 @@ class Warranty < ActiveRecord::Base
   def registered_status
     get_status(registered)
   end
-  
+
   def hw_coverage_status
     get_status(!hw_coverage_expired)
   end
-  
+
   def phone_coverage_status
     get_status(!phone_coverage_expired)
   end
-  
+
   def app_eligibility_status
     get_status(app_eligible)
   end
-  
+
   # Return true if warranty is about to expire in 90, 30, 15, 5 days
   def notification_due?
     notification_due = false
@@ -114,7 +142,7 @@ class Warranty < ActiveRecord::Base
     end
     notification_due
   end
-  
+
   # Return how many days until the warrany expires
   def days_left
     if hw_coverage_end_date.present?
@@ -122,7 +150,7 @@ class Warranty < ActiveRecord::Base
       diff.to_i
     end
   end
-  
+
   # Return an array of real dates notifications suppose to be sent, starting with the earliest
   def planned_notification_dates
     interval = [90,30,15,5]
@@ -132,14 +160,14 @@ class Warranty < ActiveRecord::Base
     end
     dates_interval.sort
   end
-  
+
   def in_the_past(date)
     date < Time.now.to_date
   end
-  
+
   def last_notice_before(date)
     @last_notice ||= notifications.map(&:created_at).sort.last
     @last_notice.nil? or @last_notice < date
   end
-  
+
 end

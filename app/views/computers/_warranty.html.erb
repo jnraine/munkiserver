@@ -16,18 +16,6 @@
 			<td><%= warranty.product_type %></td>
 		</tr>
 		<tr>
-			<td><strong>Product Description</strong></td>
-			<td><%= warranty.product_description %></td>
-		</tr>
-		<tr>
-			<td><strong>Purchase Date</strong></td>
-			<% if warranty.purchase_date.present? %>
-			<td><%= warranty.purchase_date.to_s(:readable_date) %></td>
-			<% else %>
-			<td>Purchase date unknown</td>
-			<% end %>
-		</tr>
-		<tr>
 			<td><strong>Last updated</strong></td>
 			<td><%= warranty.updated_at.to_s(:readable_date) %></td>
 		</tr>
@@ -42,10 +30,6 @@
 		<tr>
 			<td><strong>Technical Phone Support</strong></td>
 			<td><%= link_to warranty.phone_support_url, warranty.phone_support_url %></td>
-		</tr>
-		<tr>
-			<td><strong>Forum Support</strong></td>
-			<td><%= link_to warranty.forum_url, warranty.forum_url %></td>
 		</tr>
 	</table>
 
