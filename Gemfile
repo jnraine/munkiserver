@@ -24,6 +24,7 @@ group :development do
   gem "rails-erd"
   gem "textmate_backtracer"
   gem 'pry-rails'
+  gem 'meta_request'
 end
 
 group :test do
