@@ -1,7 +1,7 @@
 # Edit this Gemfile to bundle your application's dependencies.
 source 'http://gemcutter.org'
 
-gem "rails", "3.2.11"
+gem "rails", "3.2.12"
 gem "sqlite3-ruby", :require => "sqlite3"
 gem "execjs"
 gem "therubyracer"
@@ -17,7 +17,6 @@ gem "highline"
 gem "mysql2", "> 0.3"
 gem "taps"
 
-gem "newrelic_rpm"
 gem "highcharts-rails", "~> 2.1.9"
 gem "dynamic_form" # enabling this should allow the removal of vendor/dynamic_form
 
