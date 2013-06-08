@@ -2,7 +2,7 @@ class ComputerGroupsController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   def index
-    @computer_groups = ComputerGroup.unit(current_unit).order_alphabetical
+    @computer_groups = ComputerGroup.unit(current_unit)
     
     respond_to do |format|
       format.html
