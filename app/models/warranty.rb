@@ -4,6 +4,7 @@
 
 require 'open-uri'
 require 'openssl'
+require 'net/http'
 
 # This is a complete hack to disregard SSL Cert validity for the Apple
 #  Selfserve site.  We had SSL errors as we're behind a proxy.  I'm
