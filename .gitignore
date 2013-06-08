@@ -21,3 +21,4 @@ spec/support/cassettes
 
 munkiscripts*.dmg
 munkiscripts.pkg
+script/munki_scripts/build/*
