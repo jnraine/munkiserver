@@ -24,6 +24,8 @@ class Computer < ActiveRecord::Base
   validates_format_of :mac_address, :with => /^([0-9a-f]{2}(:|$)){6}$/ # mac_address attribute must look something like ff:12:ff:34:ff:56
   validates_uniqueness_of :mac_address,:name, :hostname
   
+  default_scope order(:name)
+  
   scope :search, lambda {|column, term|where(["#{column.to_s} LIKE ?", "%#{term}%"]) unless term.blank? or column.blank?}
   scope :eager_manifests, includes(bundle_includes + [{:computer_group => item_includes + bundle_includes}])
   
