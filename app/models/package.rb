@@ -560,7 +560,8 @@ class Package < ActiveRecord::Base
       # Take care of the straight forward mappings
       keys = [:name,:display_name,:receipts,:description,:minimum_os_version,:maximum_os_version,
               :installs,:RestartAction,:package_path,:autoremove,:installer_type,:installed_size,:installer_item_size,
-              :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method, :unattended_install, :unattended_uninstall,
+              :installer_item_location,:uninstaller_item_location,:uninstaller_item_size,:uninstallable, :uninstall_method,
+              :unattended_install, :unattended_uninstall, :installcheck_script, :uninstallcheck_script,
               :preinstall_script, :postinstall_script, :uninstall_script, :preuninstall_script, :postuninstall_script,
               :requires,:update_for,:catalogs,:version, :force_install_after_date, :installer_choices_xml]
 
@@ -660,7 +661,7 @@ class Package < ActiveRecord::Base
   end
 
   def self.clone_attributes
-    ["version", "description", "icon_id", "filename", "minimum_os_version", "maximum_os_version", "RestartAction", "package_path", "autoremove", "version_tracker_version", "installer_type", "installed_size", "installer_item_size", "installer_item_location", "installer_choices_xml", "use_installer_choices", "uninstall_method", "uninstaller_item_location", "uninstaller_item_size", "uninstallable", "installer_item_checksum", "raw_mode_id", "preinstall_script", "postinstall_script", "uninstall_script", "preuninstall_script", "postuninstall_script", "unattended_install", "unattended_uninstall", "force_install_after_date", "receipts", "supported_architectures", "installs", "raw_tags"]
+    ["version", "description", "icon_id", "filename", "minimum_os_version", "maximum_os_version", "RestartAction", "package_path", "autoremove", "version_tracker_version", "installer_type", "installed_size", "installer_item_size", "installer_item_location", "installer_choices_xml", "use_installer_choices", "uninstall_method", "uninstaller_item_location", "uninstaller_item_size", "uninstallable", "installer_item_checksum", "raw_mode_id", "preinstall_script", "postinstall_script", "uninstall_script", "preuninstall_script", "postuninstall_script", "installcheck_script", "uninstallcheck_script", "unattended_install", "unattended_uninstall", "force_install_after_date", "receipts", "supported_architectures", "installs", "raw_tags"]
   end
 
   def cloneable_attributes

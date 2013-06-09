@@ -211,17 +211,18 @@
   <div id="plists">
       <table class="form">
         
-          <tr>
-            <td colspan="2">
-              <h4>
-                Receipts
-                <%= helpful_info("Must be a valid plist with an array as the root object") %>
-              </h4>
-              <div id="receipts_plist_container" class="toggle_container">
-                <%= f.text_area :receipts_plist, :size => "80x20", "data-format" => 'xml' %>
-              </div>
-            </td>
-          </tr>
+        <tr>
+          <td colspan="2">
+            <h4>
+              Receipts
+              <%= helpful_info("Must be a valid plist with an array as the root object") %>
+            </h4>
+            <div id="receipts_plist_container" class="toggle_container">
+              <%= f.text_area :receipts_plist, :size => "80x20", "data-format" => 'xml' %>
+            </div>
+          </td>
+        </tr>
+        
         <tr>
           <td colspan="2">
             <h4>
@@ -254,7 +255,42 @@
 
         <tr>
           <td colspan="2">
+            <h4>
+              Install Check Script
+              <%= helpful_info("If present, this script is executed to determine if an item needs to be installed. A return code of 0 means install is needed; any other return code causes install to be skipped.") %>
+            </h4>
+            <div id="installcheck_script_container" class="toggle_container">
+              <%= f.text_area :installcheck_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+            </div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td colspan="2">
+            <h4>
+              Uninstall Check Script
+              <%= helpful_info("If present, this script is executed to determine if an item needs to be uninstalled. A return code of 0 means uninstall is needed; any other return code causes uninstall to be skipped.") %>
+            </h4>
+            <div id="uninstallcheck_script_container" class="toggle_container">
+              <%= f.text_area :uninstallcheck_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+            </div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td colspan="2">
+            <h4>
+              Pre Install Script
+              <%= helpful_info("Enter the content of the script here to run before the installation") %>
+            </h4>
+            <div id="preinstall_script_container" class="toggle_container">
+              <%= f.text_area :preinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+            </div>
+          </td>
+        </tr>
 
+        <tr>
+          <td colspan="2">
             <h4>
               Pre Install Script
               <%= helpful_info("Enter the content of the script here to run before the installation") %>
