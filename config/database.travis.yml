@@ -1,0 +1,5 @@
+test:
+  adapter: mysql2
+  database: munkiserver
+  username: root
+  encoding: utf8
