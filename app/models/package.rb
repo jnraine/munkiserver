@@ -73,7 +73,8 @@ class Package < ActiveRecord::Base
                                                ['Uninstall Item Location', 'uninstaller_item_location'],
                                                ['AdobeUberUninstaller','AdobeUberUninstaller'],
                                                ['AdobeSetup','AdobeSetup'],
-                                               ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']]}
+                                               ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']
+                                               ['No PKG', 'nopkg']]}
 
   def self.find_where_params(params)
     unit = Unit.where(:shortname => params["unit_shortname"]).select("id").first
