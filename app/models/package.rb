@@ -53,28 +53,40 @@ class Package < ActiveRecord::Base
   validates_uniqueness_of :version, :scope => [:unit_id, :package_branch_id]
   validates :force_install_after_date_string, :date_time => true, :allow_blank => true
 
-  FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
-                  :os_versions             => [[['Any','']], os_range(10,8,0..4), os_range(10,7,0..5), os_range(10,6,0..8), os_range(10,5,0..11)].flatten(1),
-                  :installer_types         => [['Package',''],
-                                               ['Copy From DMG', 'copy_from_dmg'],
-                                               ['App DMG','appdmg'],
-                                               ['AdobeUberInstaller'],
-                                               ['AdobeAcrobatUpdater'],
-                                               ['AdobeCS5PatchInstaller'],
-                                               ['AdobeCS5Installer'],
-                                               ['AdobeCS5AAMEEPackage'],
-                                               ['AdobeSetup']],
-                  :supported_architectures => ['i386','x86_64','ppc','Power Macintosh'],
-                  :uninstall_method        => [['Remove Copied Items','remove_copied_items'],
-                                               ['Remove Packages','removepackages'],
-                                               ['Remove App', 'remove_app'],
-                                               ['Uninstall Script', 'uninstall_script'],
+  FORM_OPTIONS = {:restart_actions         => [['None',     'None'],
+                                               ['Logout',   'RequiredLogout'],
+                                               ['Restart',  'RequiredRestart'],
+                                               ['Shutdown', 'Shutdown']
+                                              ],
+                  :os_versions             => [[['Any','']],
+                                                os_range(10,8,0..4),
+                                                os_range(10,7,0..5),
+                                                os_range(10,6,0..8),
+                                                os_range(10,5,0..11)
+                                              ].flatten(1),
+                  :installer_types         => [['Package',                   ''],
+                                               ['Copy From DMG',             'copy_from_dmg'],
+                                               ['App DMG',                   'appdmg'],
+                                               ['Adobe Uber Installer',      'AdobeUberInstaller'],
+                                               ['Adobe Acrobat Updater',     'AdobeAcrobatUpdater'],
+                                               ['Adobe CS5 Patch Installer', 'AdobeCS5PatchInstaller'],
+                                               ['Adobe CS5 Installer',       'AdobeCS5Installer'],
+                                               ['Adobe CS5 AAMEE Package',   'AdobeCS5AAMEEPackage'],
+                                               ['Adobe Setup',               'AdobeSetup'],
+                                               ['NoPKG',                     'nopkg']
+                                             ],
+                  :supported_architectures => ['i386', 'x86_64', 'ppc', 'Power Macintosh'],
+                  :uninstall_method        => [['Remove Copied Items',         'remove_copied_items'],
+                                               ['Remove Packages',             'removepackages'],
+                                               ['Remove App',                  'remove_app'],
+                                               ['Uninstall Script',            'uninstall_script'],
                                                ['Uninstaller Script Location', ''],
-                                               ['Uninstall Item Location', 'uninstaller_item_location'],
-                                               ['AdobeUberUninstaller','AdobeUberUninstaller'],
-                                               ['AdobeSetup','AdobeSetup'],
-                                               ['AdobeCS5AAMEEPackage','AdobeCS5AAMEEPackage']
-                                               ['No PKG', 'nopkg']]}
+                                               ['Uninstall Item Location',     'uninstaller_item_location'],
+                                               ['AdobeUberUninstaller',        'AdobeUberUninstaller'],
+                                               ['AdobeSetup',                  'AdobeSetup'],
+                                               ['AdobeCS5AAMEEPackage',        'AdobeCS5AAMEEPackage']
+                                              ]}
+
 
   def self.find_where_params(params)
     unit = Unit.where(:shortname => params["unit_shortname"]).select("id").first
