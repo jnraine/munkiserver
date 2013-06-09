@@ -10,3 +10,8 @@ script:
   
 before_script:
   - cp config/database.travis.yml config/database.yml
+
+notifications:
+  email:
+    on_success: change # default: change
+    on_failure: change # default: always
