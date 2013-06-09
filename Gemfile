@@ -30,11 +30,11 @@ group :development do
 end
 
 group :test do
-  gem "rspec-rails", "~> 2.10.1"
-  gem "factory_girl", "~> 3.3.0"
-  gem "capybara", "~> 1.1.2"
-  gem "vcr", "~> 2.2.0"
-  gem "webmock", "~> 1.8.7"
+  gem 'rspec-rails', '~> 2.13'
+  gem 'factory_girl', '~> 3.3.0'
+  gem 'capybara', '~> 1.1.2'
+  gem 'vcr', '~> 2.4.0'
+  gem 'webmock', '~> 1.8.7'
 end
 
 group :assets do
