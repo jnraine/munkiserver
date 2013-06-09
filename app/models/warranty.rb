@@ -55,11 +55,10 @@ class Warranty < ActiveRecord::Base
       # POST data and get the response
       response      = http.request(request)
       response_data = response.body
-
+      
     rescue URI::Error
       computer = Computer.where(:serial_number => serial)
       Rails.logger.error "Invalid serial number #{serial} for computer #{computer}"
-      puts "Invalid serial number #{serial} for computer #{computer}"
     rescue SocketError
       # No internet connection return nil
     end
@@ -75,35 +74,37 @@ class Warranty < ActiveRecord::Base
       Rails.logger.warn "Could not retrieve production description for computer #{computer}"
     end
 
-    hw_warranty_status = response_data.split('warrantyPage.warrantycheck.displayHWSupportInfo').last.split('Repairs and Service Coverage: ')[1] =~ /^Active/ ? true : false
-    ph_warranty_status = response_data.split('warrantyPage.warrantycheck.displayPHSupportInfo').last.split('Telephone Technical Support: ')[1] =~ /^Active/ ? true : false
-    reg_status =   reg_status= response_data.split('warrantyPage.setClassAndShow').last.split(';')[0].split(',').last =~ /true/ ? true : false
-    hw_has_app = response_data.split('warrantyPage.warrantycheck.displayEligibilityInfo').last.split(';')[0].split(',')[2] =~ /Covered/ ? true : false
-    app_eligibile_status = response_data.split('warrantyPage.warrantycheck.displayEligibilityInfo').last.split(';')[0].split(',')[2] =~ /Eligible/ ? true : false unless hw_has_app
+    begin
+      hw_warranty_status = response_data.split('warrantyPage.warrantycheck.displayHWSupportInfo').last.split('Repairs and Service Coverage: ')[1] =~ /^Active/ ? true : false
+      ph_warranty_status = response_data.split('warrantyPage.warrantycheck.displayPHSupportInfo').last.split('Telephone Technical Support: ')[1] =~ /^Active/ ? true : false
+      reg_status = response_data.split('warrantyPage.setClassAndShow').last.split(';')[0].split(',').last =~ /true/ ? true : false
+      hw_has_app = response_data.split('warrantyPage.warrantycheck.displayEligibilityInfo').last.split(';')[0].split(',')[2] =~ /Covered/ ? true : false
+      app_eligibile_status = response_data.split('warrantyPage.warrantycheck.displayEligibilityInfo').last.split(';')[0].split(',')[2] =~ /Eligible/ ? true : false unless hw_has_app
 
-    hw_expiration_date = response_data.split('Estimated Expiration Date: ')[1].split('<')[0] if hw_warranty_status
-    ph_expiration_date = response_data.split('Estimated Expiration Date: ')[1].split('<')[0] if ph_warranty_status
+      hw_expiration_date = response_data.split('Estimated Expiration Date: ')[1].split('<')[0] if hw_warranty_status
+      ph_expiration_date = response_data.split('Estimated Expiration Date: ')[1].split('<')[0] if ph_warranty_status
 
 
-    { :serial_number =>           serial,
-      #:product_description =>    hash['PROD_DESCR'],
-      :product_type =>            prod_desc,
+      { :serial_number =>           serial,
+        :product_type =>            prod_desc,
 
-      #:purchase_date =>           purchase_date,
-      :hw_coverage_end_date =>    hw_expiration_date,
-      :phone_coverage_end_date => ph_expiration_date,
+        :hw_coverage_end_date =>    hw_expiration_date,
+        :phone_coverage_end_date => ph_expiration_date,
 
-      :registered =>              reg_status == true,
-      :hw_coverage_expired =>     hw_warranty_status == false,
-      :app_registered =>          hw_has_app == true,
-      :app_eligible =>            app_eligibile_status == true,
-      :phone_coverage_expired =>  ph_warranty_status == false,
+        :registered =>              reg_status == true,
+        :hw_coverage_expired =>     hw_warranty_status == false,
+        :app_registered =>          hw_has_app == true,
+        :app_eligible =>            app_eligibile_status == true,
+        :phone_coverage_expired =>  ph_warranty_status == false,
 
-      :specs_url =>               "http://support.apple.com/specs/#{serial}",
-      :hw_support_url =>          "https://expresslane.apple.com/GetSASO?sn=#{serial}",
-      #:forum_url =>               hash['FORUMS_URL'],
-      :phone_support_url =>       "https://expresslane.apple.com/GetproductgroupList.do?serialno=#{serial}"
-    }
+        :specs_url =>               "http://support.apple.com/specs/#{serial}",
+        :hw_support_url =>          "https://expresslane.apple.com/GetSASO?sn=#{serial}",
+        :phone_support_url =>       "https://expresslane.apple.com/GetproductgroupList.do?serialno=#{serial}"
+      }
+    rescue
+      Rails.logger.error "Cannot parse web page output #{computer} with #{serial} - likely an issue with a semi-registered computer."
+      {}
+    end
   end
 
   def get_status(bool)
