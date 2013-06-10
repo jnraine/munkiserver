@@ -1,0 +1,11 @@
+<h2>New package</h2>
+<div id="new_package_form_container">
+	<h3>Upload</h3>
+	<%= form_for(@package, :html => {:multipart => true, :id => "new_upload_package_form"}) do |f| %>
+		<%= render :partial => 'add_package_form_contents', :locals => {:f => f} %>
+	<% end %>
+</div>
+<div id="progress_container">
+	<h4 class="title">Creating new package</h4>
+	<p><%= image_tag('horizontal_progress.gif') %></p>
+</div>
