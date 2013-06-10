@@ -20,9 +20,9 @@ describe NokogiriHelper, :vcr do
       end
     end
     
-    context "give a URL to of a non-existing domain (another problem)" do
+    context "given problematic URLs" do
       it "returns a NullObject" do
-        NokogiriHelper.page("http://www.notasitefoobarbaz.com").should be_nil
+        NokogiriHelper.page("http://www.google.com/does/not/exist/returns/404").should be_nil # 404s
       end
     end
   end
