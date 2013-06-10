@@ -41,6 +41,15 @@ class PackagesController < ApplicationController
   end
 
   def new
+    # Set some sensible defaults for a new package -- likely a nopkg oriented install
+    @package.version = '1.0'
+    @package.installer_type = 'nopkg'
+    @package.uninstall_method = 'uninstall_script'
+    @package.installcheck_script = "#!/bin/sh"
+    @package.uninstallcheck_script = "#!/bin/sh"
+  end
+
+  def upload
   end
 
   def create
@@ -161,7 +170,7 @@ class PackagesController < ApplicationController
     action = params[:action].to_sym
     if [:show, :edit, :update, :destroy].include?(action)
       @package = Package.find_where_params(params)
-    elsif [:index, :new, :create, :edit_multiple, :update_multiple, :check_for_updates, :index_shared, :import_shared, :import_multiple_shared].include?(action)
+    elsif [:index, :new, :upload, :create, :edit_multiple, :update_multiple, :check_for_updates, :index_shared, :import_shared, :import_multiple_shared].include?(action)
       @package = Package.new(:unit_id => current_unit.id)
     elsif [:download].include?(action)      
       @package = Package.find(params[:id].to_i)
