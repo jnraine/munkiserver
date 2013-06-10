@@ -3,167 +3,167 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<title>Munki Server: <%= controller.action_name %></title>
-	
-	<%= stylesheet_link_tag "application" %>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title>Munki Server: <%= controller.action_name %></title>
 
-	<%= javascript_include_tag 'application' %>
-	
-	<%= content_for :head %>
-	
-	<%= csrf_meta_tag %>
+  <%= stylesheet_link_tag "application" %>
+
+  <%= javascript_include_tag 'application' %>
+
+  <%= content_for :head %>
+
+  <%= csrf_meta_tag %>
 </head>
 <body>
 <%= image_tag 'header_graphic.png', :id => "header_graphic" %>
 <%= image_tag 'loading_graphic.gif', :id => "loading_graphic" %>
 <div class="wrapper">
-	<div class="container">
-		<div id="words_header" class="span-7 prepend-2 append-5">
-			<p id="site_motto">Manage your <span class="jump_text">macs</span></p>
-			<h1 id="site_title">Munki Server</h1>
-		</div>
-	
-		<div id="app-menu" class="span-7 last">
-			<ul class="dropdown dropdown-horizontal">
-				<% if can? :read, User.new %>
-					<li class="dir">
-						<%= link_to("Users", users_path)%>
-						<ul>
-							<li><%= link_to "List users", users_path %></li>
-							<% if can? :create, User %>
-								<li><%= link_to "Create user", new_user_path %></li>
-							<% end %>
-						</ul>
-					</li>
-				<% end %>
-				<% if can? :read, Unit %>
-					<li class="dir">
-						<%= link_to("Units", units_url)%>
-						<ul>
-							<li><%= link_to "List units", units_path %></li>
-							<% if can? :create, Unit %>
-								<li><%= link_to "Add unit", new_unit_path %></li>
-							<% end %>
-						</ul>
-					</li>
-				<% end %>
-				<!-- ><li class="dir">
-					<%= link_to "Settings", "..." %>
-					<ul>
+  <div class="container">
+    <div id="words_header" class="span-7 prepend-2 append-5">
+      <p id="site_motto">Manage your <span class="jump_text">macs</span></p>
+      <h1 id="site_title">Munki Server</h1>
+    </div>
 
-					</ul>
-				</li> -->
-				<li class="dir">
-					<%= link_to "Dashboard", dashboard_path %>
-				</li>
-				<% if can? :read, Permission %>
-					<li class="dir">
-						<%= link_to "Permissions", permissions_path %>
-					</li>
-				<% end %>
-				<% if logged_in? %>
-					<li><%= link_to("Logout", logout_path) %> (<%= link_to current_user, edit_user_path(current_user) %>)</li>
-				<% end %>
-			</ul>
-		</div>
-	
-		<div id="unit_menu" class="span-24 last">
-			<ul>
-				<%= unit_menu %>
-			</ul>
-		</div>
-	
-		<div id="units_submenu" class="span-23 prepend-1 last">
-			<% if current_unit.present? %>
-				<ul class="dropdown dropdown-horizontal">
-					<% if can? :read, Computer.new_for_can(current_unit) %>
-						<li class="dir<%= " current" if current_link?("Computers") %>">
-							<%= link_to "Computers", computers_url(current_unit) %>
-							<ul>
-								<li><%= link_to "List computers", computers_path(current_unit) %></li>
-								<% if can? :create, Computer.new_for_can(current_unit) %>
-									<li><%= link_to "Add computer", new_computer_path(current_unit) %></li>
-									<li><%= link_to "Import ARD list", import_new_computer_path(current_unit) %></li>
-								<% end %>
-							</ul>
-						</li>
-					<% end %>
-					<% if can? :read, ComputerGroup.new_for_can(current_unit) %>
-						<li class="dir<%= " current" if current_link?("Computer Groups") %>">
-							<%= link_to "Computer Groups", computer_groups_url(current_unit) %>
-							<ul>
-								<li><%= link_to "List computer groups", computer_groups_url(current_unit) %></li>
-								<% if can? :create, ComputerGroup.new_for_can(current_unit) %>
-									<li><%= link_to "Add computer group", new_computer_group_url(current_unit) %></li>
-								<% end %>
-							</ul>
-						</li>
-					<% end %>
-					<% if can? :read, UserGroup.new_for_can(current_unit) %>
-						<li class="dir<%= " current" if current_link?("User Groups") %>">
-							<%= link_to "User Groups", user_groups_path(current_unit) %>
-							<ul>
-								<li><%= link_to "List user groups", user_groups_path(current_unit) %></li>
-								<% if can? :create, UserGroup.new_for_can(current_unit) %>
-									<li><%= link_to "Add user group", new_user_group_path(current_unit) %></li>
-								<% end %>
-							</ul>
-						</li>
-					<% end %>
-					<% if can? :read, Bundle.new_for_can(current_unit) %>
-						<li class="dir<%= " current" if current_link?("Bundles") %>">
-						<%= link_to "Bundles", bundles_url(current_unit) %>
-							<ul>
-								<li><%= link_to "List bundles", bundles_url(current_unit) %></li>
-								<% if can? :create, Bundle.new_for_can(current_unit) %>
-									<li><%= link_to "Add bundle", new_bundle_url(current_unit) %></li>
-								<% end %>
-							</ul>
-						</li>
-					<% end %>
-					<% if can? :read, Package.new_for_can(current_unit) %>
-						<li class="dir<%= " current" if current_link?("Packages") %>">
-						<%= link_to "Packages", packages_path(current_unit) %>
-							<ul>
-								<li><%= link_to "List Packages", packages_path(current_unit) %></li>
-								<li><%= link_to "List Shared Packages", shared_packages_path(current_unit) %></li>
-								<% if can? :create, Package.new_for_can(current_unit) %>
-									<li><%= link_to "Upload Package", upload_package_path(current_unit) %></li>
-									<li><%= link_to "Create Empty Package", new_package_path(current_unit) %></li>
-								<% end %>
-								<li><%= link_to "Check for updates", check_for_package_updates_path(current_unit) %></li>
-							</ul>
-						</li>
-					<% end %>
-				</ul>
-			<% end %>
-		</div>
-		<div id="main-content" class="span-16 prepend-1 append-bottom append-1">
-			<% flash.each do |key, msg| %>
-				<%= content_tag :div, msg, :class => "message #{key}" %>
-			<% end %>
-			<%= yield %>
-		</div>
-		<%= yield :dashboard %>
-	<div id="sidebar" class="span-6 last">
-		<%= render :partial => "shared/sidebar" %>
-		<%= yield :sidebar %>
-	</div>
-	
-	</div>
-	<div class="push"></div>
+    <div id="app-menu" class="span-7 last">
+      <ul class="dropdown dropdown-horizontal">
+        <% if can? :read, User.new %>
+          <li class="dir">
+            <%= link_to("Users", users_path)%>
+            <ul>
+              <li><%= link_to "List users", users_path %></li>
+              <% if can? :create, User %>
+              <li><%= link_to "Create user", new_user_path %></li>
+              <% end %>
+            </ul>
+          </li>
+        <% end %>
+        <% if can? :read, Unit %>
+          <li class="dir">
+            <%= link_to("Units", units_url)%>
+            <ul>
+              <li><%= link_to "List units", units_path %></li>
+              <% if can? :create, Unit %>
+                <li><%= link_to "Add unit", new_unit_path %></li>
+              <% end %>
+            </ul>
+          </li>
+        <% end %>
+        <!-- ><li class="dir">
+          <%= link_to "Settings", "..." %>
+          <ul>
+
+          </ul>
+        </li> -->
+        <li class="dir">
+          <%= link_to "Dashboard", dashboard_path %>
+        </li>
+        <% if can? :read, Permission %>
+          <li class="dir">
+            <%= link_to "Permissions", permissions_path %>
+          </li>
+        <% end %>
+        <% if logged_in? %>
+          <li><%= link_to("Logout", logout_path) %> (<%= link_to current_user, edit_user_path(current_user) %>)</li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div id="unit_menu" class="span-24 last">
+      <ul>
+        <%= unit_menu %>
+      </ul>
+    </div>
+
+    <div id="units_submenu" class="span-23 prepend-1 last">
+      <% if current_unit.present? %>
+        <ul class="dropdown dropdown-horizontal">
+          <% if can? :read, Computer.new_for_can(current_unit) %>
+            <li class="dir<%= " current" if current_link?("Computers") %>">
+              <%= link_to "Computers", computers_url(current_unit) %>
+              <ul>
+                <li><%= link_to "List computers", computers_path(current_unit) %></li>
+                <% if can? :create, Computer.new_for_can(current_unit) %>
+                  <li><%= link_to "Add computer", new_computer_path(current_unit) %></li>
+                  <li><%= link_to "Import ARD list", import_new_computer_path(current_unit) %></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+          <% if can? :read, ComputerGroup.new_for_can(current_unit) %>
+            <li class="dir<%= " current" if current_link?("Computer Groups") %>">
+              <%= link_to "Computer Groups", computer_groups_url(current_unit) %>
+              <ul>
+                <li><%= link_to "List computer groups", computer_groups_url(current_unit) %></li>
+                <% if can? :create, ComputerGroup.new_for_can(current_unit) %>
+                  <li><%= link_to "Add computer group", new_computer_group_url(current_unit) %></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+          <% if can? :read, UserGroup.new_for_can(current_unit) %>
+            <li class="dir<%= " current" if current_link?("User Groups") %>">
+              <%= link_to "User Groups", user_groups_path(current_unit) %>
+              <ul>
+                <li><%= link_to "List user groups", user_groups_path(current_unit) %></li>
+                <% if can? :create, UserGroup.new_for_can(current_unit) %>
+                  <li><%= link_to "Add user group", new_user_group_path(current_unit) %></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+          <% if can? :read, Bundle.new_for_can(current_unit) %>
+            <li class="dir<%= " current" if current_link?("Bundles") %>">
+            <%= link_to "Bundles", bundles_url(current_unit) %>
+              <ul>
+                <li><%= link_to "List bundles", bundles_url(current_unit) %></li>
+                <% if can? :create, Bundle.new_for_can(current_unit) %>
+                  <li><%= link_to "Add bundle", new_bundle_url(current_unit) %></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+          <% if can? :read, Package.new_for_can(current_unit) %>
+            <li class="dir<%= " current" if current_link?("Packages") %>">
+            <%= link_to "Packages", packages_path(current_unit) %>
+              <ul>
+                <li><%= link_to "List Packages", packages_path(current_unit) %></li>
+                <li><%= link_to "List Shared Packages", shared_packages_path(current_unit) %></li>
+                <% if can? :create, Package.new_for_can(current_unit) %>
+                  <li><%= link_to "Upload Package", upload_package_path(current_unit) %></li>
+                  <li><%= link_to "Create Empty Package", new_package_path(current_unit) %></li>
+                <% end %>
+                <li><%= link_to "Check for updates", check_for_package_updates_path(current_unit) %></li>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+    <div id="main-content" class="span-16 prepend-1 append-bottom append-1">
+      <% flash.each do |key, msg| %>
+        <%= content_tag :div, msg, :class => "message #{key}" %>
+      <% end %>
+      <%= yield %>
+    </div>
+    <%= yield :dashboard %>
+  <div id="sidebar" class="span-6 last">
+    <%= render :partial => "shared/sidebar" %>
+    <%= yield :sidebar %>
+  </div>
+
+  </div>
+  <div class="push"></div>
 </div>
 
 <div class="footer">
-	<div class="container">
-		<p class="span-8 last prepend-8 append-8 text-center">
-			munki server <%= Munki::Application::VERSION %><br>
-			munki tools <%= Munki::Application::MUNKITOOLS_VERSION %>
-		</p>
-		
-		<%= image_tag 'footer_graphic.png', :id => "footer_graphic" %>
-	</div>
+  <div class="container">
+    <p class="span-8 last prepend-8 append-8 text-center">
+      munki server <%= Munki::Application::VERSION %><br>
+      munki tools <%= Munki::Application::MUNKITOOLS_VERSION %>
+    </p>
+
+    <%= image_tag 'footer_graphic.png', :id => "footer_graphic" %>
+  </div>
 </div>
 </body>
 </html>
