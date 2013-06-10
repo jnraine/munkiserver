@@ -19,6 +19,8 @@ config/setup_load_paths.rb
 
 spec/support/cassettes
 
+coverage/
+
 munkiscripts*.dmg
 munkiscripts.pkg
 script/munki_scripts/build/*
