@@ -126,11 +126,12 @@
 						<li class="dir<%= " current" if current_link?("Packages") %>">
 						<%= link_to "Packages", packages_path(current_unit) %>
 							<ul>
-								<li><%= link_to "List packages", packages_path(current_unit) %></li>
+								<li><%= link_to "List Packages", packages_path(current_unit) %></li>
+								<li><%= link_to "List Shared Packages", shared_packages_path(current_unit) %></li>
 								<% if can? :create, Package.new_for_can(current_unit) %>
-									<li><%= link_to "Add package", new_package_path(current_unit) %></li>
+									<li><%= link_to "Upload Package", upload_package_path(current_unit) %></li>
+									<li><%= link_to "Create Empty Package", new_package_path(current_unit) %></li>
 								<% end %>
-								<li><%= link_to "Shared packages", shared_packages_path(current_unit) %></li>	
 								<li><%= link_to "Check for updates", check_for_package_updates_path(current_unit) %></li>
 							</ul>
 						</li>
