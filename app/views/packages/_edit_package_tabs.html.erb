@@ -2,7 +2,7 @@
   <ul>
     <li><a href="#basics"><span>Basics</span></a></li>
     <li><a href="#advanced"><span>Advanced</span></a></li>
-    <li><a href="#plists"><span>Plists</span></a></li>
+    <li><a href="#install-conditions"><span>Install Conditions</span></a></li>
     <li><a href="#scripts"><span>Scripts</span></a></li>
   </ul>
   
@@ -203,55 +203,30 @@
         </td>
       </tr>
 
+      <tr>
+        <td colspan="2">
+          <h4>
+            Raw tags 
+            <%= f.select :raw_mode_id, options_for_select([[Package.raw_mode(0),0],[Package.raw_mode(1),1],[Package.raw_mode(2),2]],@package.raw_mode_id) %>
+            <%= helpful_info("Raw tags allow the ability to add extra Plist tags to the manifest.  Must be formatted as a valid plist with a dictionary at the root. If you define a tag that is already defined above, the raw tag overwrites it.  In append mode, the tags are added to the info plist.  In exclusive mode, only the tags shown here are used.") %>
+          </h4>
+          <div id="raw_tags_container" class="toggle_container">
+            <%= text_area_tag "package[raw_tags_plist]", (@package.raw_tags_plist unless @package.raw_tags.nil?), :size => "80x15", "data-format" => 'xml' %>
+          </div>
+        </td>
+      </tr>
 
     </table>
   </div>  
   
   <!-- Third tab starts here -->
-  <div id="plists">
+  <div id="install-conditions">
       <table class="form">
-        
         <tr>
           <td colspan="2">
-            <h4>
-              Receipts
-              <%= helpful_info("Must be a valid plist with an array as the root object") %>
-            </h4>
-            <div id="receipts_plist_container" class="toggle_container">
-              <%= f.text_area :receipts_plist, :size => "80x20", "data-format" => 'xml' %>
-            </div>
+            <p>See <%= link_to "How Munki Decides What Needs To Be Installed", "https://code.google.com/p/munki/wiki/HowMunkiDecidesWhatNeedsToBeInstalled", target: "_new" %>.</p>
           </td>
         </tr>
-        
-        <tr>
-          <td colspan="2">
-            <h4>
-              Installs
-              <%= helpful_info("Must be a valid plist with an array as the root object") %>
-            </h4>
-            <div id="installs_plist_container" class="toggle_container">
-              <%= f.text_area :installs_plist, :size => "80x20", "data-format" => 'xml' %>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <h4>
-              Raw tags 
-              <%= f.select :raw_mode_id, options_for_select([[Package.raw_mode(0),0],[Package.raw_mode(1),1],[Package.raw_mode(2),2]],@package.raw_mode_id) %>
-              <%= helpful_info("Raw tags allow the ability to add extra Plist tags to the manifest.  Must be formatted as a valid plist with a dictionary at the root. If you define a tag that is already defined above, the raw tag overwrites it.  In append mode, the tags are added to the info plist.  In exclusive mode, only the tags shown here are used.") %>
-            </h4>
-            <div id="raw_tags_container" class="toggle_container">
-              <%= text_area_tag "package[raw_tags_plist]", (@package.raw_tags_plist unless @package.raw_tags.nil?), :size => "80x15", "data-format" => 'xml' %>
-            </div>
-          </td>
-        </tr>
-      </table>
-  </div>
-  
-  <!-- Fourth tab starts here -->
-  <div id="scripts">
-      <table class="form">
 
         <tr>
           <td colspan="2">
@@ -264,7 +239,7 @@
             </div>
           </td>
         </tr>
-        
+
         <tr>
           <td colspan="2">
             <h4>
@@ -276,18 +251,36 @@
             </div>
           </td>
         </tr>
-        
+
         <tr>
           <td colspan="2">
             <h4>
-              Pre Install Script
-              <%= helpful_info("Enter the content of the script here to run before the installation") %>
+              Installs
+              <%= helpful_info("Must be a valid plist with an array as the root object") %>
             </h4>
-            <div id="preinstall_script_container" class="toggle_container">
-              <%= f.text_area :preinstall_script, :size => "80x20", "data-format" => 'text/x-csrc' %>
+            <div id="installs_plist_container" class="toggle_container">
+              <%= f.text_area :installs_plist, :size => "80x20", "data-format" => 'xml' %>
             </div>
           </td>
         </tr>
+
+        <tr>
+          <td colspan="2">
+            <h4>
+              Receipts
+              <%= helpful_info("Must be a valid plist with an array as the root object") %>
+            </h4>
+            <div id="receipts_plist_container" class="toggle_container">
+              <%= f.text_area :receipts_plist, :size => "80x20", "data-format" => 'xml' %>
+            </div>
+          </td>
+        </tr>
+      </table>
+  </div>
+  
+  <!-- Fourth tab starts here -->
+  <div id="scripts">
+      <table class="form">
 
         <tr>
           <td colspan="2">
