@@ -238,7 +238,7 @@ $(document).ready(function() {
 	$("select#managed_install_reports").change();
 	
 	// client side validation $ animation
-	clientSideValidations.callbacks.element.fail = function(element, message, callback) {
+	ClientSideValidations.callbacks.element.fail = function(element, message, callback) {
 	  callback();
 	  if (element.data('valid') !== false) {
 		e = element.parent().find('.message');
