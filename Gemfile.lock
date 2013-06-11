@@ -73,16 +73,16 @@ GEM
       multi_json (~> 1.0)
     factory_girl (3.3.0)
       activesupport (>= 3.0.0)
-    ffi (1.8.1)
+    ffi (1.9.0)
     highcharts-rails (2.1.9)
       railties (~> 3.1)
     highline (1.6.19)
     hike (1.2.3)
     i18n (0.6.4)
     journey (1.0.4)
-    jquery-rails (3.0.1)
-      railties (>= 3.0, < 5.0)
-      thor (>= 0.14, < 2.0)
+    jquery-rails (2.0.3)
+      railties (>= 3.1.0, < 5.0)
+      thor (~> 0.14)
     jquery-ui-rails (4.0.3)
       jquery-rails
       railties (>= 3.1.0)
@@ -236,7 +236,7 @@ DEPENDENCIES
   factory_girl (~> 3.3.0)
   highcharts-rails (~> 2.1.9)
   highline
-  jquery-rails
+  jquery-rails (~> 2.0.1)
   jquery-ui-rails
   meta_request
   mysql2 (> 0.3)
