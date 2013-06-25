@@ -8,13 +8,13 @@ describe VersionTracker, :vcr do
     context "given a package branch with a perfect macupdate.com page" do
       it "fetches and assigns all kinds of stuff" do
         branch = FactoryGirl.create(:package_branch, :display_name => "Firefox")
-        tracker = VersionTracker.new do |t|
-          t.package_branch = branch
+        tracker = VersionTracker.new do |vt|
+          vt.package_branch = branch
         end
         
         tracker.fetch_data
-        [tracker.icon, tracker.description, tracker.version, tracker.download_links].each do |attr|
-          attr.should be_present
+        [:icon, :description, :version, :download_links].each do |method_name|
+          tracker.send(method_name).should be_present, "expected #{method_name} to be present"
         end
       end
     end
