@@ -82,7 +82,7 @@ class VersionTracker < ActiveRecord::Base
     download_links = []
     page.css("#downloadlink").each do |link_element|
       download_url = MAC_UPDATE_SITE_URL + link_element[:href]
-      caption = link_element.parent().css(".info").text.lstrip.rstrip        
+      caption = link_element.parent().css(".info").text.lstrip.rstrip
       text = link_element.text
       download_links << self.download_links.build({:text => text, :url => download_url, :caption => caption})
     end
@@ -100,21 +100,20 @@ class VersionTracker < ActiveRecord::Base
   def scrape_icon(page)
     if image_element = page.at_css("#appiconinfo")
       url_string = image_element[:src]
-      uri = URI.parse(URI.escape(url_string))
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      request = Net::HTTP::Get.new(uri.request_uri)       
-      response_body = http.request(request).body
-      image_file = Tempfile.new("icon", :encoding => response_body.encoding.name)
-      image_file.write(response_body)
+      image_file = open(url_string)
       icon = Icon.new({:photo => image_file})
-      if icon.save
-        icon
-      else
-        nil
-      end
+      icon if icon.save
     end
+  end
+
+  def url_to_file(url_string)
+    puts url_string
+    uri = URI.parse(URI.escape(url_string))
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Get.new(uri.request_uri)
+    response_body = http.request(request).body
   end
 
   # Retrieves and returns web ID of first search result

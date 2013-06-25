@@ -44,7 +44,7 @@
 						<%= link_to 'Edit', edit_computer_path(c.unit, c) %> |
 					<% end %>
 					<% if can? :destroy, c %>
-						<%= link_to 'Destroy', computer_path(c.unit, c) , :confirm => "Are you sure you want to destroy #{c.hostname}?", :method => :delete %><br />
+						<%= link_to 'Destroy', computer_path(c.unit, c) , :confirm => "Are you sure you want to destroy #{c.name}?", :method => :delete %><br />
 					<% end %>
 					<%= link_to 'Manifest', computer_path(c.unit, c, :format => :plist) %> |
 					<%= link_to 'Client Prefs', client_prefs_computer_path(c.unit, c, :format => :plist) %>
