@@ -3,7 +3,7 @@
 require 'osx/cocoa'
 include OSX
 
-MAC_ADDRESS = `ifconfig en0 | awk '/ether/ {print $2}'`.strip
+MAC_ADDRESS = `ifconfig en0 | awk '$1=="ether" {print $2}'`.strip
 BUNDLE_ID = "ManagedInstalls"
 
 def set_preference(key, value)
