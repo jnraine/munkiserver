@@ -132,8 +132,8 @@ $(document).ready(function() {
 	
 	
 	// Get the changed environment ID or Unit ID, and reload the edit partical
-	// effected pages including Computer, ComputerGroup, Bundles, Packages (only for environment ID)
-	// effect Computer only if change Unit ID
+	// affected pages including Computer, ComputerGroup, Bundles, Packages (only for environment ID)
+	// affect Computer only if change Unit ID
 	// animate during the ajax call
 	$("select.environment, select.unit").live('change', function(){
 	  $form = $(this).parents("form");
