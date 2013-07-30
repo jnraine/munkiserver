@@ -34,6 +34,8 @@ class ProcessPackageUpload
     # Checks to ensure what should be present is. If something is missing, raise 
     # Error exception.
     def validate
+      hash[:makepkginfo_options].delete("name") if hash[:makepkginfo_options][:name].blank?
+
       raise Error.new("Please select a file or specify a URL") if hash[:package_file].blank? and hash[:file_url].blank?
       raise Error.new("Must provide a special attributes") if hash[:special_attributes].nil?
       raise Error.new("Must provide a unit ID") if hash[:special_attributes][:unit_id].nil?
