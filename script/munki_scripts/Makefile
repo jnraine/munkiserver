@@ -6,7 +6,7 @@ ID = com.github.jnraine.munkiserver.clientscripts
 PKG_OUT = munkiscripts.pkg
 DMG_OUT = munkiscripts.dmg
 TITLE = "MunkiServer Client Scripts"
-FILES = postflight.rb preflight.rb
+FILES = postflight preflight
 FILE_DST = postflight preflight
 
 VERSION = $(shell date -j +"%Y%m%d")
@@ -19,15 +19,15 @@ ifeq ($(shell git rev-parse --git-dir >/dev/null 2>&1; echo $$?),0) # we are in 
 endif
 DMG2_OUT = munkiscripts-$(VERSION).dmg
 
-all: dmg
+all: clean dmg
 pkg: $(PKG_OUT)
 dmg: $(DMG_OUT)
 
 $(PKG_OUT): $(FILES)
 	mkdir -p $(TMPDIR)$(TARGETPATH)
 	$(foreach var,$(FILES), cp $(var) $(TMPDIR)$(TARGETPATH);)
-	mv $(TMPDIR)$(TARGETPATH)/postflight.rb $(TMPDIR)$(TARGETPATH)/postflight
-	mv $(TMPDIR)$(TARGETPATH)/preflight.rb $(TMPDIR)$(TARGETPATH)/preflight
+	mv $(TMPDIR)$(TARGETPATH)/postflight $(TMPDIR)$(TARGETPATH)/postflight
+	mv $(TMPDIR)$(TARGETPATH)/preflight $(TMPDIR)$(TARGETPATH)/preflight
 	sudo chown -R root:wheel $(TMPDIR)
 	sudo chmod 755 $(TMPDIR)
 	$(foreach var,$(FILE_DST), sudo chown root:wheel $(TMPDIR)$(TARGETPATH)/$(var);)

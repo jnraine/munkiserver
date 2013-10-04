@@ -1,0 +1,62 @@
+#!/usr/bin/python
+#encoding=utf-8
+
+import os, random, re, sys
+from munkilib import munkicommon
+
+def munkiserver_url():
+    return munkicommon.pref("ManifestURL")
+    
+def cacert_file():
+    return munkicommon.pref("SoftwareRepoCACertificate")
+
+def client_identifier():
+    ci = munkicommon.pref("ClientIdentifier")
+    if ci:
+        stripped_ci = re.search("(.*)(\.plist)", ci).group(1)
+        return stripped_ci
+    else:
+        exit(1)
+    
+def checkin_url():
+    return munkiserver_url() + "/checkin/" + client_identifier()
+    
+def managed_install_dir():
+    return munkicommon.pref("ManagedInstallDir")
+
+def latest_managed_install_report_path():
+    return managed_install_dir() + "/ManagedInstallReport.plist"
+    
+def ssl_option():
+    if cacert_file():
+        return "--cacert \"{1}\"".format(cacert_file())
+    else:
+        return ""
+
+def timeout_option():
+    if munkicommon.pref("PostflightTimeout"):
+        timeoutVal = munkicommon.pref("PostflightTimeout")
+    else:
+        timeoutVal = 90
+    
+    return "--max-time {timeout}".format(timeout=timeoutVal)
+        
+def in_debug_or_test_mode():
+    if len(sys.argv) == 2 and (sys.argv[1] == "debug" or sys.argv[1] == "test"):
+        return True
+    else:
+        return False
+    
+def system_profiler_plist():
+    tmp_path = "/tmp/system_profiler_{random}.plist".format(random=random.randint(0,1000))
+    os.popen("/usr/sbin/system_profiler -xml SPHardwareDataType SPSoftwareDataType SPPrintersDataType > {path}".format(path=tmp_path))
+    return tmp_path
+    
+post_command = "/usr/bin/curl {timeout} {ssl} --form \"managed_install_report_plist=@{lmirp}\" --form \"system_profiler_plist=@{spp}\" {cu}".format(timeout=timeout_option(), ssl=ssl_option(), lmirp=latest_managed_install_report_path(), spp=system_profiler_plist(), cu=checkin_url())
+
+if in_debug_or_test_mode():
+    print post_command
+    exit(0)
+else:
+    os.popen(post_command)
+    exit(0)

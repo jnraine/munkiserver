@@ -1,0 +1,98 @@
+#!/usr/bin/python
+#encoding=utf-8
+
+#######################################################################################################
+# This preflight script will do two things, 1) Set ClientIdentifer and 2) Block Updates, if applicable
+#
+# ClientIdenfier is set to mac_address_en0.plist, (eg. ab:ab:ab:ab:ab.plist)
+#
+# This preflight script will Block Updates during the specified time, as long it is in `auto` mode and
+# the current time is int the appropriate range.  Set the range, by setting the following keys in
+# the /Library/Preferences/ManagedInstalls.plist file
+#
+#   BlockUpdateStartTime - set to the start time in military, (e.g. "08:00")
+#
+#   BlockUpdateEndTime   - set to the end time in military, (e.g. "18:00")
+#
+#   BlockUpdateDays - set to days the block should take effect, defaults to all days. You can NOT set
+#                   the value or set it to "All".  If you would only like a specific set of days, define#
+#                   define the value in a string like "0, 3, 5" to only block on Mon, Wed, Fri.
+#                   0 is Monday, 7 is Sunday
+#
+#######################################################################################################
+
+import os, sys, time, commands, datetime
+from dateutil.parser import parse
+
+from munkilib import munkicommon
+
+def set_client_identifier(ci):
+    """set ClientIdentifier based on MAC Address"""
+    munkicommon.set_pref("ClientIdentifier", ci)
+
+def get_mac_address(iface):
+    """docstring for get_mac_address"""
+    val = os.popen("ifconfig %s | awk '/ether/ {print $2}'" % iface).read().rstrip()
+    val += '.plist'
+    return val
+
+def parseTimePref(pref):
+    prefValue = munkicommon.pref(pref)
+    if prefValue:
+        return parse(prefValue)
+    else:
+        return ''
+
+def current_day():
+    """Return the day of the week as an integer, where Monday is 0 and Sunday is 6."""
+    return datetime.datetime.localtime().weekday()
+
+def current_time():
+    """Return the current time in military format"""
+    return 
+
+def should_block_updates():
+    if (in_blocked_mode() and in_blocked_day() and in_blocked_time()):
+        return True
+    else:
+        return False
+
+def in_blocked_mode():
+    runMode = sys.argv[1]
+    if (runMode == 'auto'):
+        return True
+    else:
+        return False
+
+def in_blocked_time():
+    startTime = parseTimePref('BlockUpdateStartTime')
+    endTime = parseTimePref('BlockUpdateEndTime')
+    timeNow = parse(commands.getoutput("date"))
+    timeNow = timeNow.replace(tzinfo = None) # Strip the timezone info
+
+    if (startTime and endTime) and (startTime <= timeNow) and (timeNow <= endTime):
+        return True
+    else:
+        return False
+
+def in_blocked_day():
+    blockedUpdateDays = munkicommon.pref('BlockUpdateDays')
+    todayNum = time.strftime('%w')
+    
+    if (blockedUpdateDays == None) or (blockedUpdateDays == 'All') or (blockedUpdateDays == ''):
+        return True
+    else:
+        blockedDays = [day.strip() for day in blockedUpdateDays.split(',')]
+        return todayNum in blockedDays
+
+# Set Client Identifier
+mac_address = get_mac_address('en0')
+set_client_identifier(mac_address)
+
+# Should we block updates or continue on?
+if should_block_updates():
+    print 'Updates have been blocked at this time.'
+    sys.exit(1)
+else:
+    print 'Updates will continue at this time.'
+    sys.exit(0)
