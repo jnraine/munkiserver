@@ -4,4 +4,4 @@ This directory contains a good starting point for Munki preflight/postflight scr
 
 Alternatively, _make_ can be used to automatically build a pkg or dmg from these files.
 
-View more documentation on (the wiki)[https://github.com/jnraine/munkiserver/wiki/Munkiserver-preflight-and-postflight].
+View more documentation on [the wiki](https://github.com/jnraine/munkiserver/wiki/Munkiserver-preflight-and-postflight).
