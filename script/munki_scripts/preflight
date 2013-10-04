@@ -17,7 +17,7 @@
 #   BlockUpdateDays - set to days the block should take effect, defaults to all days. You can NOT set
 #                   the value or set it to "All".  If you would only like a specific set of days, define#
 #                   define the value in a string like "0, 3, 5" to only block on Mon, Wed, Fri.
-#                   0 is Monday, 7 is Sunday
+#                   0 is Monday, 6 is Sunday
 #
 #######################################################################################################
 
