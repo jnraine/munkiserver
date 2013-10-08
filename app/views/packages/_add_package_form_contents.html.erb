@@ -19,6 +19,12 @@ Alternatively enter a URL from where to download the .dmg<br />
 		Choose a pkginfo plist <%= helpful_info("Generate a pkginfo plist using makepkginfo and upload it")%><br />
 		<p><%= file_field_tag :pkginfo_file %></p>
 	<% end %>
+<!--	<%= text_field_tag "makepkginfo_options[name]" %> -->
+	<%= collection_select(:makepkginfo_options, :name, PackageBranch.order('display_name'), :name, :display_name, {:include_blank => ''}) %>
+	Name
+	<%= helpful_info("Override the package branch.
+	This is useful if the application or package name contains a version number
+	you do not want to include in the branch name.") %><br />
 	<%= text_field_tag "makepkginfo_options[pkgname]" %> 
 	Package name
 	<%= helpful_info("From makepkginfo help page: If the upload is a disk image containing
