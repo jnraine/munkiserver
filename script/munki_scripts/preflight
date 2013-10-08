@@ -32,7 +32,7 @@ def set_client_identifier(ci):
 
 def get_mac_address(iface):
     """docstring for get_mac_address"""
-    val = os.popen("ifconfig %s | awk '/ether/ {print $2}'" % iface).read().rstrip()
+    val = os.popen("ifconfig %s | awk '$1==\"ether\" {print $2}'" % iface).read().rstrip()
     val += '.plist'
     return val
 
