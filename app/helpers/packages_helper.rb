@@ -134,8 +134,8 @@ module PackagesHelper
     Unit.where(:id => import_package(package).unit_id).first.name
   end
   
-  # Need a package and classname to restrieve a list of effected items by Computers, Computer Groups and Bundles
-  def get_effected_items(package, classname)
+  # Need a package and classname to restrieve a list of affected items by Computers, Computer Groups and Bundles
+  def get_affected_items(package, classname)
     # Make sure the selected pacakge is bounded to current unit and environment
     if package.latest_in_unit_and_environment?
       # If package id is blank, than default to the highest version of the package that are blong to current unit & environment
@@ -164,33 +164,33 @@ module PackagesHelper
   end
   
   # Get a list of Computers, Computer Groups and Bundles that have this package set to install
-  def get_effected_install(package)
-    get_effected_items(package, "InstallItem")
-    render :partial => 'effected_items', :locals => {:computers => @computers, 
+  def get_affected_install(package)
+    get_affected_items(package, "InstallItem")
+    render :partial => 'affected_items', :locals => {:computers => @computers, 
                                                      :computer_groups => @computer_groups, 
                                                      :bundles => @bundles}
   end
   
   # Get a list of Computers, Computer Groups and Bundles that have this package set to unisntall
-  def get_effected_uninstall(package)
-    get_effected_items(package, "UninstallItem")
-    render :partial => 'effected_items', :locals => {:computers => @computers, 
+  def get_affected_uninstall(package)
+    get_affected_items(package, "UninstallItem")
+    render :partial => 'affected_items', :locals => {:computers => @computers, 
                                                      :computer_groups => @computer_groups, 
                                                      :bundles => @bundles}
   end
   
   # Get a list of Computers, Computer Groups and Bundles that have this package set as managed update
-  def get_effected_managed_update(package)
-    get_effected_items(package, "ManagedUpdateItem")
-    render :partial => 'effected_items', :locals => {:computers => @computers, 
+  def get_affected_managed_update(package)
+    get_affected_items(package, "ManagedUpdateItem")
+    render :partial => 'affected_items', :locals => {:computers => @computers, 
                                                      :computer_groups => @computer_groups, 
                                                      :bundles => @bundles}
   end
   
   # Get a list of Computers, Computer Groups and Bundles that have this package set as optional install
-  def get_effected_optional_install(package)
-    get_effected_items(package, "OptionalInstallItem")
-    render :partial => 'effected_items', :locals => {:computers => @computers, 
+  def get_affected_optional_install(package)
+    get_affected_items(package, "OptionalInstallItem")
+    render :partial => 'affected_items', :locals => {:computers => @computers, 
                                                      :computer_groups => @computer_groups, 
                                                      :bundles => @bundles}
   end
