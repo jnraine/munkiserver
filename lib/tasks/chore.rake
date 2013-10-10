@@ -107,4 +107,16 @@ namespace :chore do
       puts "No unused branches found"
     end
   end
+
+  desc "Destroy package files that aren't associated with a package"
+  task :destroy_unused_package_files => :environment do
+    Dir["#{Munki::Application::PACKAGE_DIR}/*.*"].each {|path|
+      filename = File.basename(path)
+
+      if Package.where(:installer_item_location => filename).empty?
+        puts "Deleting #{path}"
+        File.delete(path)
+      end
+    }
+  end
 end
