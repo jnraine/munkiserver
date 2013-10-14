@@ -3,7 +3,7 @@
 <% if computers.present? %>
 	<% computers.each do |c| %>
 		<%= image_tag c.icon.url(:tiny) if c.icon %>
-		<%= link_to c.name, computer_url(c.unit, c) %>
+		<%= link_to c.name, computer_path(c.unit, c) %>
 		<br />
 	<% end %>
 <% else %>
@@ -15,7 +15,7 @@
 <br />
 <% if bundles.present? %>
 	<% bundles.each do |b| %>
-		<%= link_to b.name, bundle_url(b.unit, b) %>
+		<%= link_to b.name, bundle_path(b.unit, b) %>
 		<br />
 	<% end %>
 <% else %>
@@ -27,7 +27,7 @@
 <br />
 <% if computer_groups.present? %>
 	<% computer_groups.each do |cg| %>
-		<%= link_to cg.name, computer_group_url(cg.unit, cg) %>
+		<%= link_to cg.name, computer_group_path(cg.unit, cg) %>
 		<br />
 	<% end %>
 <% else %>

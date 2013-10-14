@@ -19,7 +19,7 @@
 		<h4 style="display:inline;">
 			Computer 
 			<% if can? :update, @computer %>
-				(<%= link_to "edit", edit_computer_url(@computer.unit, @computer) %>)
+				(<%= link_to "edit", edit_computer_path(@computer.unit, @computer) %>)
 			<% end %>
 		</h4>
 		<%= link_to "Show effective items", "#effectiveItems", :id => "effectiveItemsLink"  %>
@@ -30,7 +30,7 @@
 			<h4>
 				Computer Group 
 				<% if can? :update, @computer.computer_group %>
-					(<%= link_to "edit", edit_computer_group_url(@computer.computer_group.unit, @computer.computer_group) %>)
+					(<%= link_to "edit", edit_computer_group_path(@computer.computer_group.unit, @computer.computer_group) %>)
 				<% end %>
 			</h4>
 			<%= inventory(@computer.computer_group,@computer) %>

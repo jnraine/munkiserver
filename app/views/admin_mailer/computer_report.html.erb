@@ -5,4 +5,4 @@
 <% end %>
 
 <br />
-<%= link_to "Click Here to view full report", "#{computer_url(@computer.unit,@computer)}\?tab=managed_install_reports_tab&report_id=#{report.id}", :target => "_blank" %>
+<%= link_to "Click Here to view full report", "#{computer_path(@computer.unit,@computer)}\?tab=managed_install_reports_tab&report_id=#{report.id}", :target => "_blank" %>

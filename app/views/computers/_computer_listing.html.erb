@@ -12,7 +12,7 @@
 	</div>
 	<% # computer_group_header(@computer_group_id) %>
 	<div class="span-16 last" style="text-align:right;">
-	<%= form_tag computers_url(current_unit), :id => "filter_form", :method => 'get', :remote => true do %>
+	<%= form_tag computers_path(current_unit), :id => "filter_form", :method => 'get', :remote => true do %>
 		<%= hidden_field_tag "eid", params['eid'] %>
 		<%= hidden_field_tag :sort, params[:sort] %>
 		<%= hidden_field_tag :direction, params[:direction] %>
