@@ -39,7 +39,7 @@
 				<% end %>
 				<% if can? :read, Unit %>
 					<li class="dir">
-						<%= link_to("Units", units_url)%>
+						<%= link_to("Units", units_path)%>
 						<ul>
 							<li><%= link_to "List units", units_path %></li>
 							<% if can? :create, Unit %>
@@ -79,7 +79,7 @@
 				<ul class="dropdown dropdown-horizontal">
 					<% if can? :read, Computer.new_for_can(current_unit) %>
 						<li class="dir<%= " current" if current_link?("Computers") %>">
-							<%= link_to "Computers", computers_url(current_unit) %>
+							<%= link_to "Computers", computers_path(current_unit) %>
 							<ul>
 								<li><%= link_to "List computers", computers_path(current_unit) %></li>
 								<% if can? :create, Computer.new_for_can(current_unit) %>
@@ -91,11 +91,11 @@
 					<% end %>
 					<% if can? :read, ComputerGroup.new_for_can(current_unit) %>
 						<li class="dir<%= " current" if current_link?("Computer Groups") %>">
-							<%= link_to "Computer Groups", computer_groups_url(current_unit) %>
+							<%= link_to "Computer Groups", computer_groups_path(current_unit) %>
 							<ul>
-								<li><%= link_to "List computer groups", computer_groups_url(current_unit) %></li>
+								<li><%= link_to "List computer groups", computer_groups_path(current_unit) %></li>
 								<% if can? :create, ComputerGroup.new_for_can(current_unit) %>
-									<li><%= link_to "Add computer group", new_computer_group_url(current_unit) %></li>
+									<li><%= link_to "Add computer group", new_computer_group_path(current_unit) %></li>
 								<% end %>
 							</ul>
 						</li>
@@ -113,11 +113,11 @@
 					<% end %>
 					<% if can? :read, Bundle.new_for_can(current_unit) %>
 						<li class="dir<%= " current" if current_link?("Bundles") %>">
-						<%= link_to "Bundles", bundles_url(current_unit) %>
+						<%= link_to "Bundles", bundles_path(current_unit) %>
 							<ul>
-								<li><%= link_to "List bundles", bundles_url(current_unit) %></li>
+								<li><%= link_to "List bundles", bundles_path(current_unit) %></li>
 								<% if can? :create, Bundle.new_for_can(current_unit) %>
-									<li><%= link_to "Add bundle", new_bundle_url(current_unit) %></li>
+									<li><%= link_to "Add bundle", new_bundle_path(current_unit) %></li>
 								<% end %>
 							</ul>
 						</li>
