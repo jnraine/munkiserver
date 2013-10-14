@@ -43,5 +43,8 @@ group :assets do
   gem 'uglifier'
 end
 
-gem 'jquery-rails', '~> 2.0.1' # Needs to stay here because numerous jQuery plugins (asmselect, lightbox_me, etc) will break otherwise
+gem 'jquery-rails'
 gem 'jquery-ui-rails'
+
+gem 'puma'
+gem 'dalli'

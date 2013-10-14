@@ -5,7 +5,7 @@ class ComputerGroup < ActiveRecord::Base
   
   has_many :computers
   
-  scope :order_alphabetical, order("name, environment_id")
+  default_scope order(:name, :environment_id)
   
   # Tabled ASM select hash for adding computers to the group
   def computers_tas(environment_id = nil)

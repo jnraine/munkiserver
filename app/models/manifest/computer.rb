@@ -29,6 +29,8 @@ class Computer < ActiveRecord::Base
 
   validates_uniqueness_of :hostname, :allow_blank => true
   
+  default_scope order(:name)
+  
   scope :search, lambda {|column, term|where(["#{column.to_s} LIKE ?", "%#{term}%"]) unless term.blank? or column.blank?}
   scope :eager_manifests, includes(bundle_includes + [{:computer_group => item_includes + bundle_includes}])
   

@@ -66,6 +66,7 @@ GEM
       thor
     crack (0.4.0)
       safe_yaml (~> 0.9.0)
+    dalli (2.6.4)
     diff-lcs (1.2.4)
     dynamic_form (1.1.4)
     erubis (2.7.0)
@@ -117,6 +118,8 @@ GEM
       slop (~> 3.4)
     pry-rails (0.3.1)
       pry (>= 0.9.10)
+    puma (2.6.0)
+      rack (>= 1.1, < 2.0)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -231,12 +234,13 @@ DEPENDENCIES
   client_side_validations
   coffee-rails
   coveralls
+  dalli
   dynamic_form
   execjs
   factory_girl (~> 3.3.0)
   highcharts-rails (~> 2.1.9)
   highline
-  jquery-rails (~> 2.0.1)
+  jquery-rails
   jquery-ui-rails
   meta_request
   mysql2 (> 0.3)
@@ -244,6 +248,7 @@ DEPENDENCIES
   paperclip
   plist
   pry-rails
+  puma
   rails (= 3.2.12)
   rails-erd
   rspec-rails (~> 2.13)
