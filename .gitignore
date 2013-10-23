@@ -2,6 +2,7 @@
 config/settings.yaml
 config/database.yml
 *.DS_Store
+packages
 packages/
 # Don't ignore app/views/packages
 !app/views/packages
