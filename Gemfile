@@ -20,6 +20,8 @@ gem 'taps'
 gem 'highcharts-rails', '~> 2.1.9'
 gem 'dynamic_form' # enabling this should allow the removal of vendor/dynamic_form
 
+gem 'active_record_or'
+
 gem 'coveralls', require: false
 
 group :development do
