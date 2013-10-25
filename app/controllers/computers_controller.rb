@@ -13,7 +13,7 @@ class ComputersController < ApplicationController
     @computers = @computers.order("#{sort_column} #{sort_direction}")
     
     # Search for value on name attribute
-    @computers = @computers.search(:name, params[:name])
+    @computers = @computers.search(:name, params[:search])
     
     # Add pagination using will_paginate gem
     per_page = params[:per_page]
