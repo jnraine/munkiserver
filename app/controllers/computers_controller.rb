@@ -4,9 +4,13 @@ class ComputersController < ApplicationController
   helper_method :sort_column, :sort_direction
   
   def index
+    # Default to scoped (i.e. sorted)
+    @computers = Computer.scoped
+    @computers = Computer.unscoped if params[:sort] # But don't scope if sorting
+    
     # Scope computers to unit/environment and then order by relevent column and direction
-    @computers = Computer.unit(current_unit).environment(current_environment)
-    @computers = @computers.order(sort_column + ' ' + sort_direction)
+    @computers = @computers.unit(current_unit).environment(current_environment)
+    @computers = @computers.order("#{sort_column} #{sort_direction}")
     
     # Search for value on name attribute
     @computers = @computers.search(:name, params[:name])
