@@ -146,7 +146,7 @@ class ProcessPackageUpload
         package_file.tempfile.path = file.path
         
         open(url) do |u|
-          file << u.read
+          IO.copy_stream(u,file)
           file_url_path = u.base_uri.path if u.respond_to?(:base_uri)
           file_url_path ||= URI.parse(url).path
           package_file.original_filename = File.basename(file_url_path)
