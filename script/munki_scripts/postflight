@@ -29,7 +29,7 @@ def latest_managed_install_report_path():
     
 def ssl_option():
     if cacert_file():
-        return "--cacert \"{1}\"".format(cacert_file())
+        return "--cacert \"{0}\"".format(cacert_file())
     else:
         return ""
 
