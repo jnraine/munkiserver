@@ -172,4 +172,20 @@ class Warranty < ActiveRecord::Base
     @last_notice.nil? or @last_notice < date
   end
 
+  def readable_purchase_date
+    readable_date purchase_date
+  end
+
+  def readable_updated_at
+    readable_date updated_at
+  end
+
+  def readable_hw_coverage_end_date
+    readable_date hw_coverage_end_date
+  end
+
+  def readable_date(date)
+    return "Unknown" unless date
+    date.to_s(:readable_date)
+  end
 end

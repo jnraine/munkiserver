@@ -1,6 +1,6 @@
 <h3><%= @computer %> - hardware warranty will expire on <%= @computer.warranty_expiry_date %></h3>
 <% if @computer.warranty.app_eligible %>
-	<p><em>This computer is eligible for AppleCare Protection Plan until <%= @computer.warranty.hw_coverage_end_date.to_s(:readable_date) %>.</em></p>
+	<p><em>This computer is eligible for AppleCare Protection Plan until <%= @computer.warranty.readable_hw_coverage_end_date %>.</em></p>
 <% elsif @computer.warranty.app_registered %>
 	<p><em>This computer is registered for AppleCare Protection Plan.</em></p>
 <% else %>
@@ -25,11 +25,11 @@
 	</tr>
 	<tr>
 		<td><strong>Purchase Date</strong></td>
-		<td><%= @computer.warranty.purchase_date.to_s(:readable_date) %></td>
+		<td><%= @computer.warranty.readable_purchase_date %></td>
 	</tr>
 	<tr>
 		<td><strong>Last updated</strong></td>
-		<td><%= @computer.warranty.updated_at.to_s(:readable_date) %></td>
+		<td><%= @computer.warranty.readable_updated_at %></td>
 	</tr>
 </table>
 <br />
