@@ -10,7 +10,7 @@ class Computer < ActiveRecord::Base
   has_one :system_profile, :dependent => :destroy, :autosave => true
   has_one :warranty, :dependent => :destroy, :autosave => true
   has_many :client_logs
-  has_many :managed_install_reports
+  has_many :managed_install_reports, order: 'created_at DESC'
   
   # Validations
   validate :computer_model
