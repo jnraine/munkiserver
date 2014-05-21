@@ -224,30 +224,34 @@ class Package < ActiveRecord::Base
   # Virtual attribute that parses the array value of a tabled asm select into package and
   # package branches and assigns that value to the upgrade_for attribute
   def update_for_tas=(value)
-    self.update_for = Package.parse_package_strings(value) if value != nil
+    self.update_for = Package.parse_package_strings(value, self.unit, self.environment) if value != nil
   end
 
   # Virtual attribute that parses the array value of a tabled asm select into package and
   # package branches and assigns that value to the requires attribute
   def requires_tas=(value)
-    self.requires = Package.parse_package_strings(value) if value != nil
+    self.requires = Package.parse_package_strings(value, self.unit, self.environment) if value != nil
   end
 
   # Takes an array of strings and returns either a package or a package branch
   # depending on the format of the string.
   # => Package record returned if matching: "#{package_branch_name}-#{version}"
   # => PackageBranch record returned if matching: "#{package_branch_name}"
-  def self.parse_package_strings(a)
+  def self.parse_package_strings(a, unit=nil, environment=nil)
     items = []
-    a.each do |name|
+    a.each do |name|      
       if split = name.match(/(.+)(-)(.+)/)
         # For packages
-        pb = PackageBranch.where(:name => split[1]).limit(1).first
+        pb = PackageBranch.scoped
+        pb = pb.unit(unit).environment(environment) if (unit.present? and environment.present?)
+        pb = pb.where(:name => split[1]).limit(1).first
         p = Package.where(:package_branch_id => pb.id, :version => split[3]).first
         items << p unless p.nil?
       else
         # For package branches
-        pb = PackageBranch.where(:name => name).limit(1).first
+        pb = PackageBranch.scoped
+        pb = pb.unit(unit).environment(environment) if (unit.present? and environment.present?)
+        pb = pb.where(:name => name).limit(1).first
         items << pb unless pb.nil?
       end
     end
