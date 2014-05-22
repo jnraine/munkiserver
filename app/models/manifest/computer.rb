@@ -140,7 +140,7 @@ class Computer < ActiveRecord::Base
   
   # Return the latest instance of ClientLog
   def last_report
-    managed_install_reports.last
+    managed_install_reports.first
   end
   
   # Returns, in words, the time since last run
