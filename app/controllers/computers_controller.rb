@@ -159,6 +159,7 @@ class ComputersController < ApplicationController
       @computer.system_profile.attributes = system_profile_hash
     end
     
+    @computer.last_ip = request.remote_ip
     @computer.save
     
     if @computer.warranty.present? and @computer.serial_number != @computer.warranty.serial_number
