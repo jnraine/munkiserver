@@ -24,6 +24,8 @@ gem 'active_record_or'
 
 gem 'coveralls', require: false
 
+gem 'dotenv-rails'
+
 group :development do
   gem 'rails-erd'
   gem 'textmate_backtracer'

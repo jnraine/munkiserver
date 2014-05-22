@@ -46,7 +46,9 @@ module Munki
     Mime::Type.register "text/plist", :plist
     
     # Where we store the packages
-    PACKAGE_DIR = Rails.root + "packages"
+    package_dir = ENV['PACKAGE_DIR'] || 'packages'
+    PACKAGE_DIR = Rails.root + package_dir
+    
     # Make sure the dir exists
     FileUtils.mkdir_p(PACKAGE_DIR)
     # Command line utilities
