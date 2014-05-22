@@ -565,6 +565,7 @@ class Package < ActiveRecord::Base
       # Requires
       h["requires"] = self.requires.map {|p| p.to_s(:version) } unless self.requires.empty?
       h["installer_item_location"] = download_name
+      h["category"] = self.category.to_s
 
       # Add any raw tags
       h = h.merge(raw_tags) if append_raw?
@@ -659,6 +660,10 @@ class Package < ActiveRecord::Base
     end
 
     cloneable_attributes
+  end
+
+  def category
+    package_category.present? ? package_category : NullCategory.new
   end
 
   # over write the default get description, check if nil then get the description from version_trackers
