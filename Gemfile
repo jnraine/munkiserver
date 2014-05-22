@@ -25,6 +25,7 @@ gem 'active_record_or'
 gem 'coveralls', require: false
 
 gem 'dotenv-rails'
+gem 'rack-timeout'
 
 group :development do
   gem 'rails-erd'

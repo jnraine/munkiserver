@@ -1,1 +1,1 @@
-Rack::Timeout.timeout = 600  # seconds
+Rack::Timeout.timeout = ENV['RACK_TIMEOUT'] || 600  # seconds
