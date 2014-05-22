@@ -303,8 +303,6 @@ class Package < ActiveRecord::Base
   def icon
     icon = Icon.where(:id => icon_id).first
     icon ||= package_branch.icon
-    icon ||= package_category.icon
-    icon ||= Icon.first
     icon
   end
 

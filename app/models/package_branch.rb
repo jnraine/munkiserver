@@ -211,6 +211,9 @@ class PackageBranch < ActiveRecord::Base
   end
   
   def icon
-    version_tracker.icon unless version_tracker.nil?
+    icon = version_tracker.icon unless version_tracker.nil?
+    icon ||= package_category.icon
+    icon ||= Icon.first
+    icon
   end
 end

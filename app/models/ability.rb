@@ -29,6 +29,8 @@ class Ability
   def permit_unprotected_actions
     # Allow clients to download packages
     can :download, Package
+    # Allow clients to download packages
+    can :download_icon, PackageBranch
     # Allow client computer requests
     can :checkin, Computer
     can :show_plist, Computer
