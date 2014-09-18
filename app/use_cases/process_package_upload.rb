@@ -148,6 +148,7 @@ class ProcessPackageUpload
         open(url) do |u|
           IO.copy_stream(u,file)
           file_url_path = u.base_uri.path if u.respond_to?(:base_uri)
+          file_url_path = u.meta['content-disposition'].match(/filename=(\"?)(.+)\1/)[2] if u.respond_to?(:meta) and u.meta.has_key?('content-disposition') and u.meta['content-disposition'].include?('filename=')
           file_url_path ||= URI.parse(url).path
           package_file.original_filename = File.basename(file_url_path)
         end
