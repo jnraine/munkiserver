@@ -556,6 +556,7 @@ class Package < ActiveRecord::Base
       end
 
       # Add append any special cases to the hash
+      h["category"] = self.package_category.to_s
 
       # Supported Architectures
       sa = self.supported_architectures.delete_if {|e| e == ""}

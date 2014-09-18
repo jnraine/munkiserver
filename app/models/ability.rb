@@ -28,10 +28,10 @@ class Ability
   # Permit certain things to all requests
   def permit_unprotected_actions
     # Allow clients to download packages
-    can :download, Package
+    can [:download, :icon], Package
     # Allow client computer requests
     can :checkin, Computer
-    can :show_plist, Computer
+    can [:show_plist, :show_resource], Computer
     # Allow any request to retrieve catalogs
     can :read, Catalog
     # Allow everyone to edit their user record

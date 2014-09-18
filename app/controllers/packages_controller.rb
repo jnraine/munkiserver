@@ -120,6 +120,22 @@ class PackagesController < ApplicationController
     end
   end
   
+  # Used to download the package icon for Munki 2 as a .png
+  def icon
+    respond_to do |format|
+      if @package.present?
+        format.png do
+          send_file @package.icon.photo.path, :url_based_filename => true, :type => "image/png", :disposition => "inline"
+          fresh_when :etag => @package, :last_modified => @package.created_at.utc, :public => true
+        end
+      else
+        render page_not_found
+      end
+    end
+  end
+  
+    
+  
   # Used to check for available updates across all units
   def check_for_updates
     Backgrounder.call_rake("packages:check_for_updates")
@@ -165,6 +181,9 @@ class PackagesController < ApplicationController
       @package = Package.new(:unit_id => current_unit.id)
     elsif [:download].include?(action)      
       @package = Package.find(params[:id].to_i)
+    elsif [:icon].include?(action)
+      package_branch = PackageBranch.where(:name => params[:package_branch]).first
+      @package = Package.where(:package_branch_id => package_branch.id).last
     elsif [:environment_change].include?(action)      
       @package = Package.find(params[:package_id])
     else

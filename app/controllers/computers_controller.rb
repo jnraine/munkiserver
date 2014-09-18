@@ -77,6 +77,12 @@ class ComputersController < ApplicationController
       end
     end
   end
+  
+  def show_resource
+    respond_to do |format|
+      format.zip { render :text => "", :status => 404 }
+    end
+  end
 
   def edit
   end
@@ -237,7 +243,7 @@ class ComputersController < ApplicationController
     action = params[:action].to_sym
     if [:show, :client_prefs].include?(action)      
       @computer = Computer.find_for_show_fast(params[:id], current_unit)
-    elsif [:show_plist].include?(action)      
+    elsif [:show_plist, :show_resource].include?(action)      
       @computer = Computer.find_for_show(nil, params[:id])
     elsif [:edit, :update, :destroy].include?(action)
       @computer = Computer.find_for_show(params[:unit_shortname], CGI::unescape(params[:id]))

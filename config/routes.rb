@@ -20,8 +20,11 @@ Munki::Application.routes.draw do
   match ':id.plist', :controller => 'computers', :action => 'show_plist', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/, :as => "computer_manifest"
   match 'computers/:id.plist', :controller => 'computers', :action => 'show_plist', :format => 'manifest', :id => /[A-Za-z0-9_\-\.%:]+/
   match 'site_default', :controller => 'computers', :action => 'show_plist', :format => 'manifest', :id => '00:00:00:00:00:00', :as => "computer_manifest"
+  match 'client_resources/:id.plist.zip', :controller => 'computers', :action => 'show_resource', :format => :zip, :id => /[A-Za-z0-9_\-\.%:]+/, :as => "computer_resource"
+  match 'client_resources/site_default.zip', :controller => 'computers', :action => 'show_resource', :format => :zip, :id => '00:00:00:00:00:00', :as => "computer_resource"
   
   match 'pkgs/:id.json' => 'packages#download', :format => :json, :id => /[A-Za-z0-9_\-\.%]+/
+  match 'icons/:package_branch.png' => 'packages#icon', :format => :png, :package_branch => /[A-Za-z0-9_\-\.%]+/
   match 'catalogs/:unit_environment' => 'catalogs#show', :format => 'plist', :via => :get
   match 'pkgs/:id' => 'packages#download', :as => 'download_package', :id => /[A-Za-z0-9_\-\.%]+/
   match '/configuration/:id.plist', :controller => 'computers', :action => 'show', :format => 'client_prefs', :id => /[A-Za-z0-9_\-\.:]+/
