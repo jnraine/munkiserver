@@ -54,7 +54,7 @@ class Package < ActiveRecord::Base
   validates :force_install_after_date_string, :date_time => true, :allow_blank => true
 
   FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
-                  :os_versions             => [[['Any','']], os_range(10,9,0..1), os_range(10,8,0..5), os_range(10,7,0..5), os_range(10,6,0..8), os_range(10,5,0..11)].flatten(1),
+                  :os_versions             => [[['Any','']], os_range(10,10,0..1), os_range(10,9,0..5), os_range(10,8,0..5), os_range(10,7,0..5), os_range(10,6,0..8), os_range(10,5,0..8)].flatten(1),
                   :installer_types         => [['Package',''],
                                                ['Copy From DMG', 'copy_from_dmg'],
                                                ['App DMG','appdmg'],
