@@ -20,8 +20,12 @@ class VersionTracker < ActiveRecord::Base
   def self.update_all
     branches = PackageBranch.all
     branches.each do |branch|
-      branch.version_tracker.fetch_data
-      branch.save!
+      begin
+        branch.version_tracker.fetch_data
+        branch.save!
+      rescue
+        nil
+      end
     end
   end
   
