@@ -119,4 +119,17 @@ namespace :chore do
       end
     }
   end
+  
+  desc "Conform RestartActions to only known values"
+  task :conform_restart_actions => :environment do
+    conformed_values = {'RequiredRestart' => 'RequireRestart', 
+                       'RequiredShutdown' => 'RequireRestart',
+                       'RequiredLogout' => 'RequireLogout' }
+
+    conformed_values.each_pair {|old_value, new_value|
+      packages = Package.where(RestartAction: old_value)
+      puts "Conforming #{packages.count} from #{old_value} to #{new_value} "
+      packages.update_all(RestartAction: new_value)
+    }
+  end
 end

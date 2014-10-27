@@ -53,7 +53,7 @@ class Package < ActiveRecord::Base
   validates_uniqueness_of :version, :scope => [:unit_id, :package_branch_id]
   validates :force_install_after_date_string, :date_time => true, :allow_blank => true
 
-  FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequiredLogout'],['Restart','RequiredRestart'],['Shutdown','Shutdown']],
+  FORM_OPTIONS = {:restart_actions         => [['None','None'],['Logout','RequireLogout'],['Restart','RequireRestart'],['Recommend Restart','RecommendRestart']],
                   :os_versions             => [[['Any','']], os_range(10,10,0..2), os_range(10,9,0..5), os_range(10,8,0..5), os_range(10,7,0..5), os_range(10,6,0..8), os_range(10,5,0..11)].flatten(1),
                   :installer_types         => [['Package',''],
                                                ['Copy From DMG', 'copy_from_dmg'],
