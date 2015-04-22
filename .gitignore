@@ -24,3 +24,5 @@ coverage/
 munkiscripts*.dmg
 munkiscripts.pkg
 script/munki_scripts/build/*
+
+.ruby-version

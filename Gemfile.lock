@@ -87,7 +87,7 @@ GEM
       jquery-rails
       railties (>= 3.1.0)
     json (1.8.0)
-    libv8 (3.11.8.17)
+    libv8 (3.16.14.7)
     mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -198,8 +198,8 @@ GEM
       sequel (~> 3.20.0)
       sinatra (~> 1.0.0)
     textmate_backtracer (1.0.0)
-    therubyracer (0.11.4)
-      libv8 (~> 3.11.8.12)
+    therubyracer (0.12.2)
+      libv8 (~> 3.16.14.0)
       ref
     thor (0.18.1)
     tilt (1.4.1)
