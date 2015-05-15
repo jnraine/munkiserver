@@ -25,7 +25,7 @@
 	</tr>
 	<tr>
 		<td><strong>Purchase Date</strong></td>
-		<td><%= @computer.warranty.purchase_date.to_s(:readable_date) %></td>
+		<td><%= @computer.warranty.purchase_date.to_s(:readable_date) if @computer.warranty.purchase_date.present? %></td>
 	</tr>
 	<tr>
 		<td><strong>Last updated</strong></td>
