@@ -2,23 +2,21 @@ namespace :chore do
   desc "Removes MissingManifests created after X days ago (defaults to 30 days)"  
   task :cleanup_missing_manifests, [:days_kept] => [:environment] do |t, args|
     args.with_defaults(:days_kept => 30)
-    results = MissingManifest.where("created_at < :date", :date => (Date.today - args[:days_kept].to_i.days)).destroy_all
-    puts "Destroyed #{results.count} missing manifests"
+    results = MissingManifest.where("created_at < :date", :date => (Date.today - args[:days_kept].to_i.days)).delete_all
+    puts "Destroyed #{results} missing manifests"
   end
   
   desc "Removes ManagedInstallReports created after X days ago (defaults to 30 days)"
   task :cleanup_old_managed_install_reports, [:days_kept] => [:environment] do |t, args|
     args.with_defaults(:days_kept => 30)
-    results = ManagedInstallReport.where("created_at < :date", :date => (Date.today - args[:days_kept].to_i.days)).destroy_all
-    puts "Destroyed #{results.count} managed install reports"
+    results = ManagedInstallReport.where("created_at < :date", :date => (Date.today - args[:days_kept].to_i.days)).delete_all
+    puts "Destroyed #{results} managed install reports"
   end
   
   desc "Removes all unused (unreferenced) SystemProfile records."
   task :cleanup_system_profiles => :environment do
-    results = SystemProfile.unused.map(&:destroy)
-    total = results.count
-    failed = results.delete_if {|e| e}.count
-    puts "Destroyed #{total - failed} out of #{total} unused system profile records"
+    results = SystemProfile.unused.delete_all
+    puts "Destroyed #{results} unused system profile records"
   end
 
   desc "Validates all models stored in the database"
@@ -71,13 +69,13 @@ namespace :chore do
   
   desc "Destroy item model records that reference nil packages"
   task :destroy_stale_item_records => :environment do
-    InstallItem.destroy_stale_records
+    # InstallItem.destroy_stale_records
     BundleItem.destroy_stale_records
-    ManagedUpdateItem.destroy_stale_records
-    OptionalInstallItem.destroy_stale_records
-    RequireItem.destroy_stale_records
-    UninstallItem.destroy_stale_records
-    UpdateForItem.destroy_stale_records
+    # ManagedUpdateItem.destroy_stale_records
+    # OptionalInstallItem.destroy_stale_records
+    # RequireItem.destroy_stale_records
+    # UninstallItem.destroy_stale_records
+    # UpdateForItem.destroy_stale_records
   end
   
   desc "Migrate to unit-scoped package branches"
