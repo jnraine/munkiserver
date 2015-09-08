@@ -66,16 +66,18 @@ module Munki
     # puts "X-Sendfile header is: " + config.action_dispatch.x_sendfile_header
     # config.action_dispatch.x_sendfile_header = "X-Sendfile"
     
-    # Setup action mailer settings
-    if settings.present? and settings[:action_mailer].present?
-      config.action_mailer.default_url_options = { :host => settings[:action_mailer][:host] }
-      config.action_mailer.delivery_method = :sendmail
-      # config.action_mailer.delivery_method = settings[:action_mailer][:delivery_method] 
-      # config.action_mailer.sendmail_settings = settings[:action_mailer][:sendmail_settings] if settings[:action_mailer][:delivery_method] == :sendmail
-      # config.action_mailer.smtp_settings = settings[:action_mailer][:smtp_settings] if settings[:action_mailer][:delivery_method] == :smtp
-      # config.action_mailer.raise_delivery_errors = true
-    else
-      config.action_mailer.delivery_method = :sendmail
-    end
+    # # Setup action mailer settings
+    # if settings.present? and settings[:action_mailer].present?
+    #   config.action_mailer.default_url_options = { :host => settings[:action_mailer][:host] }
+    #   config.action_mailer.delivery_method = :sendmail
+    #   # config.action_mailer.delivery_method = settings[:action_mailer][:delivery_method]
+    #   # config.action_mailer.sendmail_settings = settings[:action_mailer][:sendmail_settings] if settings[:action_mailer][:delivery_method] == :sendmail
+    #   # config.action_mailer.smtp_settings = settings[:action_mailer][:smtp_settings] if settings[:action_mailer][:delivery_method] == :smtp
+    #   # config.action_mailer.raise_delivery_errors = true
+    # else
+    #   config.action_mailer.delivery_method = :sendmail
+    # end
+    
+    config.action_mailer.raise_delivery_errors = false
   end
 end

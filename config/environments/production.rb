@@ -39,12 +39,11 @@ Munki::Application.configure do
   
   # Move me to config file
   webserver = "nginx"
-  memcache = true
   if webserver == "nginx"
     config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
   else
     config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for apache
   end
   
-  config.cache_store = :dalli_store if memcache
+  config.cache_store = :dalli_store, 'localhost', {compress: true, value_max_bytes: 5.megabytes }
 end
