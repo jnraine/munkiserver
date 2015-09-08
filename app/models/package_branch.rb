@@ -185,7 +185,7 @@ class PackageBranch < ActiveRecord::Base
   # Get package branches with packages in a specified unit and environment
   # TO-DO Not very efficient, could be refactored
   def self.unit_and_environment(unit,environment)
-    Package.unit(unit).environment(environment).uniq_by {|branch| branch.id }
+    Package.unit(unit).environment(environment).uniq_by {|package| package.package_branch_id }
   end
   
   # Overrides default to string method.  Specifies version if this package
@@ -211,6 +211,9 @@ class PackageBranch < ActiveRecord::Base
   end
   
   def icon
-    version_tracker.icon unless version_tracker.nil?
+    icon = version_tracker.icon unless version_tracker.nil?
+    icon ||= package_category.icon
+    icon ||= Icon.first
+    icon
   end
 end

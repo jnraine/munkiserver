@@ -38,6 +38,7 @@ module Munki
         #{Rails.root}/app/models/manifest
         #{Rails.root}/app/models/service
         #{Rails.root}/app/models/privilege_granters
+        #{Rails.root}/app/models/null
         #{Rails.root}/lib
     )
 
@@ -45,7 +46,9 @@ module Munki
     Mime::Type.register "text/plist", :plist
     
     # Where we store the packages
-    PACKAGE_DIR = Rails.root + "packages"
+    package_dir = ENV['PACKAGE_DIR'] || 'packages'
+    PACKAGE_DIR = Rails.root + package_dir
+    
     # Make sure the dir exists
     FileUtils.mkdir_p(PACKAGE_DIR)
     # Command line utilities
@@ -63,16 +66,18 @@ module Munki
     # puts "X-Sendfile header is: " + config.action_dispatch.x_sendfile_header
     # config.action_dispatch.x_sendfile_header = "X-Sendfile"
     
-    # Setup action mailer settings
-    if settings.present? and settings[:action_mailer].present?
-      config.action_mailer.default_url_options = { :host => settings[:action_mailer][:host] }
-      config.action_mailer.delivery_method = :sendmail
-      # config.action_mailer.delivery_method = settings[:action_mailer][:delivery_method] 
-      # config.action_mailer.sendmail_settings = settings[:action_mailer][:sendmail_settings] if settings[:action_mailer][:delivery_method] == :sendmail
-      # config.action_mailer.smtp_settings = settings[:action_mailer][:smtp_settings] if settings[:action_mailer][:delivery_method] == :smtp
-      # config.action_mailer.raise_delivery_errors = true
-    else
-      config.action_mailer.delivery_method = :sendmail
-    end
+    # # Setup action mailer settings
+    # if settings.present? and settings[:action_mailer].present?
+    #   config.action_mailer.default_url_options = { :host => settings[:action_mailer][:host] }
+    #   config.action_mailer.delivery_method = :sendmail
+    #   # config.action_mailer.delivery_method = settings[:action_mailer][:delivery_method]
+    #   # config.action_mailer.sendmail_settings = settings[:action_mailer][:sendmail_settings] if settings[:action_mailer][:delivery_method] == :sendmail
+    #   # config.action_mailer.smtp_settings = settings[:action_mailer][:smtp_settings] if settings[:action_mailer][:delivery_method] == :smtp
+    #   # config.action_mailer.raise_delivery_errors = true
+    # else
+    #   config.action_mailer.delivery_method = :sendmail
+    # end
+    
+    config.action_mailer.raise_delivery_errors = false
   end
 end

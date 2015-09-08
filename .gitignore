@@ -2,6 +2,7 @@
 config/settings.yaml
 config/database.yml
 *.DS_Store
+packages
 packages/
 # Don't ignore app/views/packages
 !app/views/packages
@@ -13,6 +14,7 @@ log/*.log
 tmp/**/*
 tmp/
 .sass-cache/
+.env
 
 config/newrelic.yml
 config/setup_load_paths.rb

@@ -1,26 +1,27 @@
 <div id="computer_listing">
 	<div id="environment_links">
 		|
-		<% Environment.all.each do |env| %>
+    <% Environment.all.each do |env| %>
 			<% if current_environment.id == env.id %>
-				<%= env.to_s + " (#{Computer.where(:environment_id => env.id, :unit_id => current_unit.id).count})" %>
+				<%= "#{env} (#{Computer.where(:environment_id => env.id, :unit_id => current_unit.id).count})" %>
 			<% else %>
-				<%= link_to env.to_s + " (#{Computer.where(:environment_id => env.id, :unit_id => current_unit.id).count})", computers_path(current_unit, :eid => env.id) %>
+				<%= link_to "#{env} (#{Computer.where(:environment_id => env.id, :unit_id => current_unit.id).count})", computers_path(current_unit, :eid => env.id) %>
 			<% end %>
 			|
 		<% end %>
 	</div>
-	<% # computer_group_header(@computer_group_id) %>
+  
 	<div class="span-16 last" style="text-align:right;">
-	<%= form_tag computers_url(current_unit), :id => "filter_form", :method => 'get', :remote => true do %>
-		<%= hidden_field_tag "eid", params['eid'] %>
-		<%= hidden_field_tag :sort, params[:sort] %>
+	<%= form_tag computers_path(current_unit), :id => 'filter_form', :method => :get, :remote => true do %>
+		<%= hidden_field_tag :eid,       params[:eid] %>
+		<%= hidden_field_tag :sort,      params[:sort] %>
 		<%= hidden_field_tag :direction, params[:direction] %>
-		<%= text_field_tag "name", params['name'] %>
-		<%= submit_tag "Filter", :name => nil %>
+		<%= text_field_tag   :search,    params[:search] %>
+		<%= submit_tag       'Filter',   :name => nil %>
 	<% end %>
 	</div>
-	<%= form_tag edit_multiple_computers_path(current_unit), :id => "bulk_edit_form", :method => 'GET', :remote => true do %>
+  
+	<%= form_tag edit_multiple_computers_path(current_unit), :id => 'bulk_edit_form', :method => :get, :remote => true do %>
 		<%= computer_table(@computers) %>
 	<% end %>
 </div>

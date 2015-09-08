@@ -6,6 +6,6 @@
 	</div>
 <% end %>
 <h2>New computer</h2>
-<%= form_for(@computer, :validate => true, :html => {"data-environment-change" => computer_environment_change_url(@computer.unit,"new")}) do |f| %>
+<%= form_for(@computer, :validate => true, :html => {"data-environment-change" => computer_environment_change_path(@computer.unit,"new")}) do |f| %>
 	<%= render :partial => 'form', :locals => {:f => f, :submit_value => "Add"} %>
 <% end %>

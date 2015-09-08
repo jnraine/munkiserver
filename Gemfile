@@ -20,7 +20,12 @@ gem 'taps'
 gem 'highcharts-rails', '~> 2.1.9'
 gem 'dynamic_form' # enabling this should allow the removal of vendor/dynamic_form
 
+gem 'active_record_or'
+
 gem 'coveralls', require: false
+
+gem 'dotenv-rails'
+gem 'rack-timeout'
 
 group :development do
   gem 'rails-erd'
@@ -43,5 +48,8 @@ group :assets do
   gem 'uglifier'
 end
 
-gem 'jquery-rails', '~> 2.0.1' # Needs to stay here because numerous jQuery plugins (asmselect, lightbox_me, etc) will break otherwise
+gem 'jquery-rails'
 gem 'jquery-ui-rails'
+
+gem 'puma'
+gem 'dalli'

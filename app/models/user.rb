@@ -24,6 +24,8 @@ class User < ActiveRecord::Base
   
   include Principal
   
+  default_scope order(:username)
+  
   # Generate a random string consisting of strings and digits
   # with a length of up to len characters
   def self.random_string(len)

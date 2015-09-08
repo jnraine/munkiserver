@@ -2,9 +2,9 @@
 	<%= package.to_s(:pretty) %> version <%= package.package_branch.version_tracker.version %> is now available!
 </h3>
 
-<p>The current version is <%= link_to package.to_s(:pretty_with_version), package_url(package.to_params)%></p>
+<p>The current version is <%= link_to package.to_s(:pretty_with_version), package_path(package.to_params)%></p>
 
-<p><%= link_to "Click here to add", new_package_url(package.unit) %> to add a package to <%= package.unit %> unit</p>
+<p><%= link_to "Click here to add", new_package_path(package.unit) %> to add a package to <%= package.unit %> unit</p>
 
 <% if package.package_branch.version_tracker.download_links.present? %>
 	<div>

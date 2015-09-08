@@ -27,6 +27,19 @@ class Icon < ActiveRecord::Base
     end
   end
   
+  def path(type = nil)
+    begin
+      self.photo.path(type)
+    rescue NoMethodError
+      nil
+    end
+    if self.photo.path(type)
+      self.photo.path(type)
+    else
+      ""
+    end
+  end
+  
   def to_s(type = nil)
     self.url(type)
   end

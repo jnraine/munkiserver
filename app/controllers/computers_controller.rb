@@ -4,13 +4,19 @@ class ComputersController < ApplicationController
   helper_method :sort_column, :sort_direction
   
   def index
+    # Default to scoped (i.e. sorted)
+    @computers = Computer.scoped
+    @computers = Computer.unscoped if params[:sort] # But don't scope if sorting
+    
+    # Search for value on name OR hostname OR mac_address attributes
+    @computers = @computers.search(:name, params[:search])
+    @computers = @computers.or.search(:hostname, params[:search])
+    @computers = @computers.or.search(:mac_address, params[:search])
+    
     # Scope computers to unit/environment and then order by relevent column and direction
-    @computers = Computer.unit(current_unit).environment(current_environment)
-    @computers = @computers.order(sort_column + ' ' + sort_direction)
-    
-    # Search for value on name attribute
-    @computers = @computers.search(:name, params[:name])
-    
+    @computers = @computers.unit(current_unit).environment(current_environment)
+    @computers = @computers.order("#{sort_column} #{sort_direction}")
+        
     # Add pagination using will_paginate gem
     per_page = params[:per_page]
     per_page ||= Computer.per_page
@@ -159,6 +165,7 @@ class ComputersController < ApplicationController
       @computer.system_profile.attributes = system_profile_hash
     end
     
+    @computer.last_ip = request.remote_ip
     @computer.save
     
     if @computer.warranty.present? and @computer.serial_number != @computer.warranty.serial_number

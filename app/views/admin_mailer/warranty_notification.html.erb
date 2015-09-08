@@ -25,7 +25,7 @@
 	</tr>
 	<tr>
 		<td><strong>Purchase Date</strong></td>
-		<td><%= @computer.warranty.readable_purchase_date %></td>
+		<td><%= @computer.warranty.purchase_date.to_s(:readable_date) if @computer.warranty.purchase_date.present? %></td>
 	</tr>
 	<tr>
 		<td><strong>Last updated</strong></td>
@@ -33,4 +33,4 @@
 	</tr>
 </table>
 <br />
-<%= link_to "Click here to view full warranty status", "#{computer_url(@computer.unit,@computer)}\?tab=warranty_tab", :target => "_blank" %>
+<%= link_to "Click here to view full warranty status", "#{computer_path(@computer.unit,@computer)}\?tab=warranty_tab", :target => "_blank" %>

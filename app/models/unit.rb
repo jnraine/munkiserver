@@ -6,6 +6,8 @@ class Unit < ActiveRecord::Base
   has_many :principals, :through => :permissions
   has_many :package_branches, :dependent => :destroy
   
+  default_scope order(:name)
+
   scope :from_other_unit, lambda {|u| where("id != ?", u.id)}
   
   validates :name, :presence => true, :unique_as_shortname => true
