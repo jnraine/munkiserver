@@ -185,6 +185,20 @@ class ComputersController < ApplicationController
     p = params[:computer]
     results = []
     exceptionMessage = nil
+
+    if params[:commit] == 'Delete'
+      computercount = params[:selected_records].length
+      params[:selected_records].each do |computer|
+        @computers = Computer.where(:id => params[:selected_records])
+        @computers.each do |this|
+          # results = this.destroy
+          this.destroy
+        end
+      end
+      redirect_to computers_path, :flash => { :notice => "All #{computercount} selected computer records were successfully deleted." }
+      return
+    end
+
     begin
       results = Computer.bulk_update_attributes(@computers, p)
     rescue ComputerError => e

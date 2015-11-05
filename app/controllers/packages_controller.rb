@@ -80,14 +80,41 @@ class PackagesController < ApplicationController
   def update_multiple
     results = {}
     exceptionMessage = nil
+
+    if params[:commit] == 'Delete'
+      computercount = params[:selected_records].length
+      params[:selected_records].each do |computer|
+        @computers = Computer.where(:id => params[:selected_records])
+        @computers.each do |this|
+          # results = this.destroy
+          this.destroy
+        end
+      end
+      redirect_to computers_path, :flash => { :notice => "All #{computercount} selected computer records were successfully deleted." }
+      return
+    end
+
+    if params[:commit] == 'Delete'
+      packagecount = params[:selected_records].length
+      params[:selected_records].each do |package|
+        @packages = Package.where(:id => params[:selected_records])
+        @packages.each do |this|
+          # results = this.destroy
+          this.destroy
+        end
+      end
+      redirect_to packages_path, :flash => { :notice => "All #{packagecount} selected packages were successfully deleted." }
+      return
+    end
+  
     begin
       @packages = Package.where(:id => params[:selected_records])
       results = Package.bulk_update_attributes(@packages, params[:package])
     rescue PackageError => e
       exceptionMessage = e.to_s
     end
-    
-    respond_to do |format|
+ 
+     respond_to do |format|
       if exceptionMessage
         flash[:error] = "A problem occurred: " + exceptionMessage
       elsif results[:total] == results[:successes] and results[:failures] == 0

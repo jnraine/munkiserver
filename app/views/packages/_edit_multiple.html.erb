@@ -104,6 +104,7 @@
 			</td>
 			<td>
 				<%= f.submit "Update" %>
+				<%= f.submit "Delete", :confirm => "Are you sure you want to delete these #{@packages.count} packages?" %>
 				<a href="#" class="cancel">Cancel</a>
 			</td>
 		</tr>
