@@ -6,29 +6,30 @@ class Ability
     # Ensure a user is available
     @user = user
     @user ||= User.new
-    
+
     # Permit user to unprotected actions
     permit_unprotected_actions
-    
+
     # Assign user group permissions
     @user.all_permissions.group_by(&:privilege_id).each do |privilege_id,permissions|
       grant_privilege(Privilege.find(privilege_id),permissions.map(&:unit_id))
     end
-    
+
     # Give "admin" user the keys to the house
     if @user.is_root?
       can :manage, :all
     end
   end
-  
+
   def grant_privilege(privilege,unit)
     self.send(privilege.name,unit)
   end
-  
+
   # Permit certain things to all requests
   def permit_unprotected_actions
+    can :download, Package
     # Allow clients to download packages
-    can [:download, :icon], Package
+    can :download_icon, PackageBranch
     # Allow client computer requests
     can :checkin, Computer
     can [:show_plist, :show_resource], Computer

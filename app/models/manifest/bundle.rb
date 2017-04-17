@@ -3,7 +3,7 @@ class Bundle < ActiveRecord::Base
   include HasAUnit
   include HasAnEnvironment
 
-  scope :order_alphabetical, order("name")
+  default_scope order(:name, :environment_id)
   
   def self.find_for_environment_change(id, current_unit)
     if id == "new"

@@ -11,7 +11,7 @@
 						<%= report.munki_errors.first[0..42] %>... 
 						<small>
 							<%= time_ago_in_words(report.created_at) %> ago
-							<%= link_to "details", "#{computer_url(report.computer.unit,report.computer)}\?tab=managed_install_reports_tab&report_id=#{report.id}", :target => "_blank" %>
+							<%= link_to "details", "#{computer_path(report.computer.unit,report.computer)}\?tab=managed_install_reports_tab&report_id=#{report.id}", :target => "_blank" %>
 						</small>
 						
 					</p>

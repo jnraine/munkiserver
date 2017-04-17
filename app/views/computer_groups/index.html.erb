@@ -22,7 +22,7 @@
 					<%= link_to 'Edit', edit_computer_group_path(cg.unit, cg) %> |
 				<% end %>
 				<% if can? :destroy, cg %>
-					<%= link_to 'Destroy', computer_group_url(current_unit, cg), :confirm => "Are you sure you want to destroy #{cg}?", :method => :delete %> |
+					<%= link_to 'Destroy', computer_group_path(current_unit, cg), :confirm => "Are you sure you want to destroy #{cg}?", :method => :delete %> |
 				<% end %>
 				<%= link_to 'Manifest', computer_group_path(cg.unit, cg, :format => :manifest) %>
 			</td>

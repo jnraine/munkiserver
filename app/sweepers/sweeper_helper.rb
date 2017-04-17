@@ -5,6 +5,9 @@
 module SweeperHelper
   #Generate a cache key for the Catalog _model_
   def catalog_cache_key_generator(options = {})
-    cache_key = {:type => :catalog, :unit => options[:unit_id], :environment_id => options[:environment_id]}
+    # cache_key = { :type => :catalog, :unit => options[:unit_id], :environment_id => options[:environment_id]}
+    cache_key = "catalog/#{options[:unit_id]}/#{options[:environment_id]}"
+    Rails.logger.info "CACHE: Generating unique cache key: #{cache_key}"
+    cache_key
   end
 end

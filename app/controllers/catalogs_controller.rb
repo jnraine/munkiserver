@@ -15,9 +15,11 @@ class CatalogsController < ApplicationController
     respond_to do |format|
       #Fetch the content from the cache, if available.  If not, generate it using the Catalog.generate method
       format.plist { render :text => Rails.cache.fetch(cache_key) {
-          Rails.logger.info "CACHE: Geneterating catalog for #{cache_key}"
-          @catalog = Catalog.generate(unit_id, environment_id)
-          @catalog.to_plist.gsub(/\r\n?/, "\n")
+          Rails.logger.info "CACHE: Generating catalog for #{cache_key}"
+          @catalog = Catalog.generate(unit_id, environment_id).to_plist.gsub(/\r\n?/, "\n")
+          Rails.logger.info "CACHE: Generating catalog complete for #{cache_key}"
+          Rails.logger.info "CACHE: Generated catalog is #{@catalog.length}"
+          @catalog
         }
       }
     end

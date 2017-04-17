@@ -20,7 +20,7 @@
 
 <p><em>Editing the name property will change the package branch of this package</em></p>
 
-<%= form_for(@package, :url => package_path(@package.to_params) ,:html => {:multipart => true, "data-environment-change" => package_environment_change_url(@package.unit,@package.id)} ) do |f| %>
+<%= form_for(@package, :url => package_path(@package.to_params) ,:html => {:multipart => true, "data-environment-change" => package_environment_change_path(@package.unit,@package.id)} ) do |f| %>
 	<%= f.error_messages %>
 	<%= render :partial => "edit_package_tabs", :locals => {:f => f} %>
 	<p style="float:right;"><%= f.submit 'Update' %></p>

@@ -1,5 +1,5 @@
 <h2>New bundle</h2>
 
-<%= form_for @bundle, :validate => true, :html => {"data-environment-change" => bundle_environment_change_url(@bundle.unit,"new")} do |f| %>
+<%= form_for @bundle, :validate => true, :html => {"data-environment-change" => bundle_environment_change_path(@bundle.unit,"new")} do |f| %>
 	<%= render :partial => 'form', :locals => {:f => f, :submit_value => "Create"} %>
 <% end %>

@@ -17,6 +17,8 @@ class UserGroup < ActiveRecord::Base
   validates :name, :presence => true, :unique_as_shortname => true
   validates :shortname, :presence => true, :format => {:with => /^[a-z0-9-]+$/}
   
+  default_scope order(:name)
+  
   scope :where_unit, lambda {|u| where(:unit_id => u.id) }
   scope :not, lambda {|ug| where("id <> ?", ug.id) }
   

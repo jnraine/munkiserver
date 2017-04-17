@@ -14,6 +14,7 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.2.1)
+    active_record_or (1.0.1)
     activemodel (3.2.12)
       activesupport (= 3.2.12)
       builder (~> 3.0.0)
@@ -66,7 +67,13 @@ GEM
       thor
     crack (0.4.0)
       safe_yaml (~> 0.9.0)
+    dalli (2.6.4)
     diff-lcs (1.2.4)
+    dotenv (0.11.1)
+      dotenv-deployment (~> 0.0.2)
+    dotenv-deployment (0.0.2)
+    dotenv-rails (0.11.1)
+      dotenv (= 0.11.1)
     dynamic_form (1.1.4)
     erubis (2.7.0)
     execjs (1.4.0)
@@ -117,6 +124,8 @@ GEM
       slop (~> 3.4)
     pry-rails (0.3.1)
       pry (>= 0.9.10)
+    puma (2.6.0)
+      rack (>= 1.1, < 2.0)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -126,6 +135,7 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
+    rack-timeout (0.0.4)
     rails (3.2.12)
       actionmailer (= 3.2.12)
       actionpack (= 3.2.12)
@@ -226,17 +236,20 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_record_or
   cancan
   capybara (~> 1.1.2)
   client_side_validations
   coffee-rails
   coveralls
+  dalli
+  dotenv-rails
   dynamic_form
   execjs
   factory_girl (~> 3.3.0)
   highcharts-rails (~> 2.1.9)
   highline
-  jquery-rails (~> 2.0.1)
+  jquery-rails
   jquery-ui-rails
   meta_request
   mysql2 (> 0.3)
@@ -244,6 +257,8 @@ DEPENDENCIES
   paperclip
   plist
   pry-rails
+  puma
+  rack-timeout
   rails (= 3.2.12)
   rails-erd
   rspec-rails (~> 2.13)

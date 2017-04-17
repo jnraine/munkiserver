@@ -54,7 +54,7 @@ $(document).ready(function() {
 	});
 	$("#progress_container").hide();
 	$("#new_upload_package_form").submit(function() {
-		var filename = $("#data").val();
+		var filename = $("#package_file").val();
 		dots = filename.split(".");
 		extension = "." + dots[dots.length-1];
 		if (extension == ".dmg") {

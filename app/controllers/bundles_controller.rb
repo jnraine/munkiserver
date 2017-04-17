@@ -1,6 +1,6 @@
 class BundlesController < ApplicationController  
   def index
-    @bundles = Bundle.unit(current_unit).order_alphabetical
+    @bundles = Bundle.unit(current_unit)
     
     respond_to do |format|
       format.html
